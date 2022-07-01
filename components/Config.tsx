@@ -21,21 +21,21 @@ const Config = ({classes}: { classes: any[] }) => {
         }
     }
 
-    function configForClass(_class: any, weekday: number) {
-        const time = timeForClass(_class)
-        return `- activity: ${_class.activityId}
+    useEffect(() => {
+        function configForClass(_class: any) {
+            const time = timeForClass(_class)
+            return `- activity: ${_class.activityId}
     display_name: "${_class.name}"
-    weekday: ${weekday}
+    weekday: ${_class.weekday}
     studio: ${_class.studio.id}
     time:
       hour: ${time.hour}
       minute: ${time.minute}`
-    }
+        }
 
-    useEffect(() => {
         setClassesConfig(
             classes.length > 0 ?
-                `classes:\n  ${classes.map((c: any, weekday: number) => configForClass(c, weekday)).join("\n  ")}` : ''
+                `classes:\n  ${classes.map((c: any) => configForClass(c)).join("\n  ")}` : ''
         )
     }, [classes])
 

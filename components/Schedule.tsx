@@ -1,16 +1,21 @@
-import React, {useState, useEffect} from "react";
+import React from "react";
 import {
-    Box, Button, Card, CardActions, CardContent,
-    Checkbox,
-    Container,
-    Divider,
-    FormControlLabel,
-    FormGroup,
+    Box,
     Stack,
     Typography,
     useTheme
 } from "@mui/material";
 import ClassCard from "./ClassCard";
+
+const WEEKDAY_NAME_TO_NUMBER = new Map([
+    ["Mandag", 0],
+    ["Tirsdag", 1],
+    ["Onsdag", 2],
+    ["Torsdag", 3],
+    ["Fredag", 4],
+    ["Lørdag", 5],
+    ["Søndag", 6]
+])
 
 const Schedule = (
     {
@@ -41,18 +46,14 @@ const Schedule = (
                             </Typography>
                         </Box>
                         {day.classes.length > 0 ? (
-                            day.classes.map((_class: any) =>
-                                (
-                                    // <FormControlLabel
-                                    //     key={_class.id}
-                                    //     control={<Checkbox
-                                    //         onChange={(e) => e.target.checked ? addClass(_class) : removeClass(_class)}/>}
-                                    //     label={`${_class.name} (${timeFromISOString(_class.from)} - ${timeFromISOString(_class.to)})`}
-                                    // />
+                            day.classes.map((_class: any) => {
+                                _class.weekday = WEEKDAY_NAME_TO_NUMBER.get(day.dayName);
+                                return (
                                     <Box key={_class.id} mb={1}>
-                                        <ClassCard _class={_class} addClass={addClass} removeClass={removeClass} />
+                                        <ClassCard _class={_class} addClass={addClass} removeClass={removeClass}/>
                                     </Box>
-                                ))
+                                );
+                            })
                         ) : <p>Ingen gruppetimer</p>}
                     </Box>
                 ))}
