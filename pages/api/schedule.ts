@@ -15,13 +15,13 @@ export default function handler(
     res: NextApiResponse<Schedule>
 ) {
     const token = JSON.parse(req.body).token
-    // Use two fetches to retrieve schedule for the next 7 days
+    // Use two fetches to retrieve schedule for the next 8 days
     const extraFromDate = new Date()
-    extraFromDate.setDate(extraFromDate.getDate() + 3)
+    extraFromDate.setDate(extraFromDate.getDate() + 4)
     fetch(scheduleUrl(token))
         .then(res => res.json())
         .then(json => fetch(scheduleUrl(token, extraFromDate)).then(res => res.json())
-            .then(jsonExtra => ({days: [...json.days, ...jsonExtra.days.slice(1,4)]}))
+            .then(jsonExtra => ({days: [...json.days, ...jsonExtra.days]}))
         )
         .then(totalJson => res.status(200).json(totalJson))
 }
