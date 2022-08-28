@@ -1,7 +1,7 @@
 import type {NextPage} from 'next'
 import React, {useState, useEffect} from "react";
 import {
-    Box,
+    Box, CircularProgress,
     Container,
     Divider,
     Stack,
@@ -72,7 +72,16 @@ const Index: NextPage = () => {
                     </Stack>
 
                 </div>
-            ) : 'Fetching schedule...'}
+            ) : (
+                <Box display={"flex"} flexDirection={"column"} alignItems={"center"} width={"100%"} marginTop={20} gap={4}>
+                    <CircularProgress />
+                    <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+                        <Typography>Fetching schedule</Typography>
+                        <Typography sx={{opacity: 0.4}}>ibooking.sit.no</Typography>
+                    </Box>
+                </Box>
+            )
+            }
         </div>
     )
 }
