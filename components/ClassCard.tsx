@@ -46,7 +46,7 @@ const ClassCard = (
     }
 
     return (
-        <Card sx={checked ? {backgroundColor: "green"}:{}}>
+        <Card sx={checked ? {backgroundColor: "green"} : {backgroundColor: `${_class.color}90`}}>
             <CardContent onClick={toggleChecked} sx={{paddingBottom: 1}}>
                 <Typography sx={checked ? {fontWeight: "bold"}:{}}>
                     {_class.name}
