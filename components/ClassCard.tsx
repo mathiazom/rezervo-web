@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardActions, CardContent, Modal, Typography} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, Collapse, Modal, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
 
@@ -46,8 +46,11 @@ const ClassCard = (
     }
 
     return (
-        <Card sx={checked ? {backgroundColor: "green"} : {backgroundColor: `${_class.color}90`}}>
-            <CardContent onClick={toggleChecked} sx={{paddingBottom: 1}}>
+        <Card sx={{position: "relative", width: "12rem"}}>
+            <Collapse sx={{pointerEvents: "none", backgroundColor: `${_class.color}90`, position: "absolute", height: "100%"}} in={checked} orientation="horizontal" >
+                <Box sx={{width: "12rem"}}/>
+            </Collapse>
+            <CardContent onClick={toggleChecked} sx={{paddingBottom: 1, cursor: "pointer"}}>
                 <Typography sx={checked ? {fontWeight: "bold"}:{}}>
                     {_class.name}
                 </Typography>
