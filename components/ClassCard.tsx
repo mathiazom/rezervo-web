@@ -47,9 +47,7 @@ const ClassCard = (
 
     return (
         <Card sx={{position: "relative", width: "12rem"}}>
-            <Collapse sx={{pointerEvents: "none", backgroundColor: `${_class.color}90`, position: "absolute", height: "100%"}} in={checked} orientation="horizontal" >
-                <Box sx={{width: "12rem"}}/>
-            </Collapse>
+            <Collapse sx={{pointerEvents: "none", backgroundColor: `${_class.color}90`, position: "absolute", height: "100%"}} in={checked} orientation="horizontal" collapsedSize={3} />
             <CardContent onClick={toggleChecked} sx={{paddingBottom: 1, cursor: "pointer"}}>
                 <Typography sx={checked ? {fontWeight: "bold"}:{}}>
                     {_class.name}
