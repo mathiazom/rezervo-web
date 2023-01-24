@@ -13,17 +13,12 @@ import Config from "../components/Config";
 
 const Index: NextPage = () => {
 
-    const [publicToken, setPublicToken] = useState<string | null>(null);
     const [schedule, setSchedule] = useState<any | null>(null);
     const [selectedClasses, setSelectedClasses] = useState<any[]>([]);
 
-    async function fetchSchedule(token: string): Promise<any> {
-        return await fetch("/api/schedule", {method: 'POST', body: JSON.stringify({token: token})})
+    async function fetchSchedule(): Promise<any> {
+        return await fetch("/api/schedule", {method: 'POST'})
             .then(res => res.json())
-    }
-
-    async function fetchPublicToken(): Promise<string> {
-        return await fetch("/api/public_token").then(res => res.json()).then(json => json.token)
     }
 
     function addClass(_class: any) {
@@ -35,13 +30,7 @@ const Index: NextPage = () => {
     }
 
     useEffect(() => {
-        if (publicToken != null) {
-            fetchSchedule(publicToken).then(schedule => setSchedule(schedule))
-        }
-    }, [publicToken]);
-
-    useEffect(() => {
-        fetchPublicToken().then(token => setPublicToken(token));
+        fetchSchedule().then(schedule => setSchedule(schedule))
     }, []);
 
     const theme = useTheme()
