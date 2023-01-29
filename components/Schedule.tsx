@@ -6,6 +6,7 @@ import {
     useTheme
 } from "@mui/material";
 import ClassCard from "./ClassCard";
+import {SitClass, SitSchedule} from "../types/sit_types";
 
 const WEEKDAY_NAME_TO_NUMBER = new Map([
     ["Mandag", 0],
@@ -23,9 +24,9 @@ const Schedule = (
         addClass,
         removeClass
     }: {
-        schedule: any,
-        addClass: (_class: any) => void,
-        removeClass: (_class: any) => void
+        schedule: SitSchedule,
+        addClass: (_class: SitClass) => void,
+        removeClass: (_class: SitClass) => void
     }
 ) => {
 
@@ -33,7 +34,7 @@ const Schedule = (
 
     return (
         <Stack direction={"row"}>
-            {schedule.days.map((day: any) =>
+            {schedule.days.map((day) =>
                 (
                     <Box key={day.date} px={1} width={200}>
                         <Box py={2} width={200}>
@@ -46,7 +47,7 @@ const Schedule = (
                             </Typography>
                         </Box>
                         {day.classes.length > 0 ? (
-                            day.classes.map((_class: any) => {
+                            day.classes.map((_class) => {
                                 _class.weekday = WEEKDAY_NAME_TO_NUMBER.get(day.dayName);
                                 return (
                                     <Box key={_class.id} mb={1}>

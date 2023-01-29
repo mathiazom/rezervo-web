@@ -10,22 +10,23 @@ import {
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import Config from "../components/Config";
+import {SitClass, SitSchedule} from "../types/sit_types";
 
 const Index: NextPage = () => {
 
-    const [schedule, setSchedule] = useState<any | null>(null);
-    const [selectedClasses, setSelectedClasses] = useState<any[]>([]);
+    const [schedule, setSchedule] = useState<SitSchedule | null>(null);
+    const [selectedClasses, setSelectedClasses] = useState<SitClass[]>([]);
 
-    async function fetchSchedule(): Promise<any> {
+    async function fetchSchedule(): Promise<SitSchedule> {
         return await fetch("/api/schedule", {method: 'POST'})
             .then(res => res.json())
     }
 
-    function addClass(_class: any) {
+    function addClass(_class: SitClass) {
         setSelectedClasses((classes) => [...classes, _class])
     }
 
-    function removeClass(_class: any) {
+    function removeClass(_class: SitClass) {
         setSelectedClasses((classes) => classes.filter((c) => c.id != _class.id))
     }
 

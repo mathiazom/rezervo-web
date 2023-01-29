@@ -1,6 +1,7 @@
 import {Box, Button, Card, CardActions, CardContent, Modal, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
+import {SitClass} from "../types/sit_types";
 
 const ClassCard = (
     {
@@ -8,9 +9,9 @@ const ClassCard = (
         addClass,
         removeClass
     }: {
-        _class: any,
-        addClass: (_class: any) => void,
-        removeClass: (_class: any) => void
+        _class: SitClass,
+        addClass: (_class: SitClass) => void,
+        removeClass: (_class: SitClass) => void
     }
 ) => {
 

@@ -1,6 +1,7 @@
 import {Alert, Box, createTheme, ThemeProvider} from "@mui/material";
 import {CopyBlock, obsidian} from "react-code-blocks";
 import React, {useEffect, useState} from "react";
+import {SitClass} from "../types/sit_types";
 
 
 const codeTheme = createTheme({
@@ -9,11 +10,11 @@ const codeTheme = createTheme({
     }
 });
 
-const Config = ({classes}: { classes: any[] }) => {
+const Config = ({classes}: { classes: SitClass[] }) => {
 
     const [classConfig, setClassesConfig] = useState<string>('');
 
-    function timeForClass(_class: any) {
+    function timeForClass(_class: SitClass) {
         const date = new Date(_class.from)
         return {
             hour: date.getHours(),
@@ -22,7 +23,7 @@ const Config = ({classes}: { classes: any[] }) => {
     }
 
     useEffect(() => {
-        function configForClass(_class: any) {
+        function configForClass(_class: SitClass) {
             const time = timeForClass(_class)
             return `- activity: ${_class.activityId}
     display_name: "${_class.name}"
@@ -35,7 +36,7 @@ const Config = ({classes}: { classes: any[] }) => {
 
         setClassesConfig(
             classes.length > 0 ?
-                `classes:\n  ${classes.map((c: any) => configForClass(c)).join("\n  ")}` : ''
+                `classes:\n  ${classes.map((c: SitClass) => configForClass(c)).join("\n  ")}` : ''
         )
     }, [classes])
 
