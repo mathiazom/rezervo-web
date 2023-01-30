@@ -27,7 +27,7 @@ export default async function handler(
     // Use two fetches to retrieve schedule for the next 8 days
     const extraFromDate = new Date()
     extraFromDate.setDate(extraFromDate.getDate() + 4)
-    fetch(scheduleUrl(token))
+    return fetch(scheduleUrl(token))
         .then(res => res.json())
         .then(json => fetch(scheduleUrl(token, extraFromDate)).then(res => res.json())
             .then(jsonExtra => ({days: [...json.days, ...jsonExtra.days]}))
