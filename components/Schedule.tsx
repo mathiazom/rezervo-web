@@ -1,32 +1,16 @@
 import React from "react";
-import {
-    Box,
-    Stack,
-    Typography,
-    useTheme
-} from "@mui/material";
+import {Box, Stack, Typography, useTheme} from "@mui/material";
 import ClassCard from "./ClassCard";
-import {SitClass, SitSchedule} from "../types/sit_types";
-
-const WEEKDAY_NAME_TO_NUMBER = new Map([
-    ["Mandag", 0],
-    ["Tirsdag", 1],
-    ["Onsdag", 2],
-    ["Torsdag", 3],
-    ["Fredag", 4],
-    ["Lørdag", 5],
-    ["Søndag", 6]
-])
+import {SitSchedule} from "../types/sit_types";
+import {weekdayNameToNumber} from "../utils/time_utils";
 
 const Schedule = (
     {
         schedule,
-        addClass,
-        removeClass
+        onSelectedChanged
     }: {
         schedule: SitSchedule,
-        addClass: (_class: SitClass) => void,
-        removeClass: (_class: SitClass) => void
+        onSelectedChanged: (classId: string, selected: boolean) => void
     }
 ) => {
 
@@ -48,10 +32,13 @@ const Schedule = (
                         </Box>
                         {day.classes.length > 0 ? (
                             day.classes.map((_class) => {
-                                _class.weekday = WEEKDAY_NAME_TO_NUMBER.get(day.dayName);
+                                _class.weekday = weekdayNameToNumber(day.dayName);
                                 return (
                                     <Box key={_class.id} mb={1}>
-                                        <ClassCard _class={_class} addClass={addClass} removeClass={removeClass}/>
+                                        <ClassCard
+                                            _class={_class}
+                                            onSelectedChanged={(s) => onSelectedChanged(_class.id.toString(), s)}
+                                        />
                                     </Box>
                                 );
                             })

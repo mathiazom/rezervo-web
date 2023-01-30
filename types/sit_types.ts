@@ -9,7 +9,7 @@ export type SitScheduleDay = {
 }
 
 export type SitClass = {
-    id: string,
+    id: number,
     activityId: string,
     studio: SitStudio,
     from: string,
@@ -22,6 +22,6 @@ export type SitClass = {
 }
 
 export type SitStudio = {
-    id: string,
+    id: number,
     name: string
 }
