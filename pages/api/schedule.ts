@@ -1,9 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {GROUP_BOOKING_URL} from "../../config/config";
-
-type Schedule = {
-    days: any
-}
+import {SitSchedule} from "../../types/sit_types";
 
 function scheduleUrl(token: string, from: Date | null = null) {
     return 'https://ibooking.sit.no/webapp/api/Schedule/getSchedule' +
@@ -15,7 +12,7 @@ function scheduleUrl(token: string, from: Date | null = null) {
 function fetchPublicToken() {
     return fetch(GROUP_BOOKING_URL)
         .then((res) => res.text())
-        .then(text => text.replace(/[\n\r]/g, '').replace(/\s+/g," "))
+        .then(text => text.replace(/[\n\r]/g, '').replace(/\s+/g, " "))
         .then(soup => {
             const matches = soup.match(/<!\[CDATA\[.*?iBookingPreload\(.*?token:.*?"(.+?)".*?]]>/)
             return (matches && matches.length > 1) ? matches[1] : '';
@@ -24,13 +21,13 @@ function fetchPublicToken() {
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Schedule>
+    res: NextApiResponse<SitSchedule>
 ) {
     const token = await fetchPublicToken()
     // Use two fetches to retrieve schedule for the next 8 days
     const extraFromDate = new Date()
     extraFromDate.setDate(extraFromDate.getDate() + 4)
-    fetch(scheduleUrl(token))
+    return fetch(scheduleUrl(token))
         .then(res => res.json())
         .then(json => fetch(scheduleUrl(token, extraFromDate)).then(res => res.json())
             .then(jsonExtra => ({days: [...json.days, ...jsonExtra.days]}))

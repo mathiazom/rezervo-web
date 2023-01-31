@@ -1,6 +1,7 @@
 import {Alert, Box, createTheme, ThemeProvider} from "@mui/material";
 import {CopyBlock, obsidian} from "react-code-blocks";
-import React, {useEffect, useState} from "react";
+import React, {useMemo} from "react";
+import {SitClass} from "../types/sit_types";
 
 
 const codeTheme = createTheme({
@@ -9,20 +10,19 @@ const codeTheme = createTheme({
     }
 });
 
-const Config = ({classes}: { classes: any[] }) => {
+const Config = ({classes, selectClassIds}: { classes: SitClass[], selectClassIds: string[] }) => {
 
-    const [classConfig, setClassesConfig] = useState<string>('');
-
-    function timeForClass(_class: any) {
-        const date = new Date(_class.from)
-        return {
-            hour: date.getHours(),
-            minute: date.getMinutes()
+    // Pre-generate all class config strings
+    const allClassesConfigs = useMemo(() => {
+        function timeForClass(_class: SitClass) {
+            const date = new Date(_class.from)
+            return {
+                hour: date.getHours(),
+                minute: date.getMinutes()
+            }
         }
-    }
 
-    useEffect(() => {
-        function configForClass(_class: any) {
+        function configForClass(_class: SitClass) {
             const time = timeForClass(_class)
             return `- activity: ${_class.activityId}
     display_name: "${_class.name}"
@@ -33,17 +33,17 @@ const Config = ({classes}: { classes: any[] }) => {
       minute: ${time.minute}`
         }
 
-        setClassesConfig(
-            classes.length > 0 ?
-                `classes:\n  ${classes.map((c: any) => configForClass(c)).join("\n  ")}` : ''
-        )
+        return classes.map((c) => [c.id.toString(), configForClass(c)])
     }, [classes])
 
+    const selectedClassesConfig = selectClassIds.length > 0 ?
+        `classes:\n  ${allClassesConfigs.filter(([classId]) => selectClassIds.includes(classId)).map(([, config]) => config).join("\n  ")}` : '';
+
     return (
-        classes.length > 0 ?
+        selectClassIds.length > 0 ?
             <ThemeProvider theme={codeTheme}>
                 <CopyBlock
-                    text={classConfig}
+                    text={selectedClassesConfig}
                     language={"yaml"}
                     wrapLines
                     theme={obsidian}
@@ -52,8 +52,7 @@ const Config = ({classes}: { classes: any[] }) => {
             </ThemeProvider>
             :
             <Box>
-                <Alert severity="info">Select classes to the left to generate your
-                    config.yaml</Alert>
+                <Alert severity="info">Select classes to the left to generate your <code>config.yaml</code></Alert>
             </Box>
     )
 }
