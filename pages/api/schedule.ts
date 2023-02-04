@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {GROUP_BOOKING_URL} from "../../config/config";
-import {SitSchedule} from "../../types/sit_types";
+import {SitSchedule} from "../../types/sitTypes";
 
 function scheduleUrl(token: string, from: Date | null = null) {
     return 'https://ibooking.sit.no/webapp/api/Schedule/getSchedule' +

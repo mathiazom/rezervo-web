@@ -1,5 +1,7 @@
-import '../styles/globals.css'
-import type {AppProps} from 'next/app'
+import '../styles/globals.css';
+import '../styles/animations.css';
+import "../components/ClassCard/ClassCard.css";
+import type {AppProps} from 'next/app';
 import {createTheme, CssBaseline, ThemeProvider, useMediaQuery} from "@mui/material";
 import React from "react";
 
