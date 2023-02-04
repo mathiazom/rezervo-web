@@ -16,12 +16,25 @@ export type SitClass = {
     to: string,
     name: string,
     description: string,
+    category: SitCategory,
     image: string,
     color: string,
+    instructors: SitInstructor[],
     weekday?: number,
 }
 
 export type SitStudio = {
     id: number,
     name: string
+}
+
+export type SitInstructor = {
+    id: number,
+    name: string
+}
+
+export type SitCategory = {
+    id: string,
+    name: string,
+    excelineId: number
 }

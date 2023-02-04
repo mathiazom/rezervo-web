@@ -1,7 +1,7 @@
 import {Alert, Box, createTheme, ThemeProvider} from "@mui/material";
 import {CopyBlock, obsidian} from "react-code-blocks";
 import React, {useMemo} from "react";
-import {SitClass} from "../types/sit_types";
+import {SitClass} from "../types/sitTypes";
 
 
 const codeTheme = createTheme({

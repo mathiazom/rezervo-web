@@ -1,8 +1,8 @@
 import React from "react";
 import {Box, Stack, Typography, useTheme} from "@mui/material";
-import ClassCard from "./ClassCard";
-import {SitSchedule} from "../types/sit_types";
-import {weekdayNameToNumber} from "../utils/time_utils";
+import ClassCard from "./ClassCard/ClassCard";
+import {SitSchedule} from "../types/sitTypes";
+import {weekdayNameToNumber} from "../utils/timeUtils";
 
 const Schedule = (
     {

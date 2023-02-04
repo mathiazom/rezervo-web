@@ -1,0 +1,16 @@
+.class-card {
+    --radius: -5%;
+    background-image: radial-gradient(
+            circle,
+            #fff calc(var(--radius) - 5%),
+            transparent calc(var(--radius) + 5%)
+    );
+}
+
+@keyframes scene-transition {
+    to { --radius: 105%; }
+}
+
+.checked {
+    animation: scene-transition 2s linear forwards;
+}

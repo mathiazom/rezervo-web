@@ -4,7 +4,7 @@ import {Box, CircularProgress, Container, Divider, Stack, Typography, useTheme} 
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import Config from "../components/Config";
-import {SitSchedule} from "../types/sit_types";
+import {SitSchedule} from "../types/sitTypes";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
