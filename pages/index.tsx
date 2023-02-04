@@ -52,13 +52,13 @@ const Index: NextPage = () => {
                     </Box>
                     <Divider/>
                     <Stack
-                        direction={"row"}
+                        direction={{ xs: 'column', md: 'row' }}
                         divider={<Divider orientation="vertical" flexItem/>}
                     >
-                        <Container maxWidth={false} sx={{height: '91vh', overflow: 'auto'}}>
+                        <Container maxWidth={false} sx={{height: { xs: '70vh', md: '91vh' }, overflow: 'auto'}}>
                             <ScheduleMemo schedule={schedule} onSelectedChanged={onSelectedChanged}/>
                         </Container>
-                        <Container sx={{paddingY: 2, height: '91vh', overflow: 'auto'}} maxWidth={"xs"}>
+                        <Container sx={{paddingY: 2, height: { xs: 'auto', md: '91vh' }, overflow: 'auto', maxWidth: {xs: "100%", md: 444}}}>
                             <Config classes={classes} selectClassIds={selectedClassIds}/>
                         </Container>
                     </Stack>
