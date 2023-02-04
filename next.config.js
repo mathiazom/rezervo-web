@@ -3,7 +3,16 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
   images: {
-    domains: ['ibooking.no'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'ibooking.no'
+      },
+      {
+        protocol: 'https',
+        hostname: 'ibooking-public-files.s3.*.amazonaws.com'
+      }
+    ]
   },
 }
 
