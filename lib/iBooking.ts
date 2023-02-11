@@ -1,6 +1,4 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {GROUP_BOOKING_URL} from "../../config/config";
-import {SitSchedule} from "../../types/sitTypes";
+import {GROUP_BOOKING_URL} from "../config/config";
 
 function scheduleUrl(token: string, from: Date | null = null) {
     return 'https://ibooking.sit.no/webapp/api/Schedule/getSchedule' +
@@ -19,10 +17,7 @@ function fetchPublicToken() {
         })
 }
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<SitSchedule>
-) {
+export async function fetchSchedule()  {
     const token = await fetchPublicToken()
     // Use two fetches to retrieve schedule for the next 8 days
     const extraFromDate = new Date()
@@ -32,5 +27,4 @@ export default async function handler(
         .then(json => fetch(scheduleUrl(token, extraFromDate)).then(res => res.json())
             .then(jsonExtra => ({days: [...json.days, ...jsonExtra.days]}))
         )
-        .then(totalJson => res.status(200).json(totalJson))
 }
