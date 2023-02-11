@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardActions, CardContent, Modal, Typography, useTheme} from "@mui/material";
+import {Box, Button, Card, CardActions, CardContent, Modal, Typography, useMediaQuery, useTheme} from "@mui/material";
 import React, {useState} from "react";
 import Image from "next/image";
 import {SitClass} from "../../types/sitTypes";
@@ -75,6 +75,15 @@ const ClassCard = (
                 }}
                         onClick={handleOpen}>Info</Button>
             </CardActions>
+            <Box sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                height: "100%",
+                width: "100%",
+                backgroundColor: theme.palette.mode === "dark" ? "#212121" : "white",
+                zIndex: -1
+            }}/>
             {selectAnimation && (
                 <Box
                     className={selectAnimation ? (selected ? selectAnimation.enter : selectAnimation.leave) : ""}
@@ -98,10 +107,10 @@ const ClassCard = (
                     left: '50%',
                     width: "95%",
                     maxHeight: "80%",
-                    overflow: "scroll",
+                    overflowY: "scroll",
                     maxWidth: 600,
                     transform: 'translate(-50%, -50%)',
-                    bgcolor: 'background.paper',
+                    backgroundColor: theme.palette.mode === "dark" ? "#212121" : "white",
                     borderRadius: "0.25em",
                     boxShadow: 24,
                     p: 4,

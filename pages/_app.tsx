@@ -25,6 +25,9 @@ function MyApp({Component, pageProps}: AppProps) {
                         main: '#f44336',
                         dark: '#ba000d',
                         contrastText: '#000',
+                    },
+                    background: {
+                        default:  prefersDarkMode ? "#000" : "#fff"
                     }
                 },
             }),
@@ -33,7 +36,7 @@ function MyApp({Component, pageProps}: AppProps) {
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline/>
+            <CssBaseline enableColorScheme/>
             <Component {...pageProps} />
         </ThemeProvider>
     )
