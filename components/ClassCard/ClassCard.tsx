@@ -48,7 +48,9 @@ const ClassCard = (
     return (
         <Card
             sx={{
-                background: "none", position: "relative"
+                background: "none",
+                position: "relative",
+                borderLeft: `0.4rem solid ${classColorRGB}`
             }}>
             <CardContent className={"unselectable"} onClick={handleClick} sx={{paddingBottom: 1}}>
                 <Typography
