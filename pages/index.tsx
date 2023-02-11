@@ -1,19 +1,14 @@
 import type {NextPage} from 'next'
-import React, {memo, useCallback, useEffect, useMemo, useState} from "react";
-import {Box, CircularProgress, Container, Divider, Stack, Typography, useTheme} from "@mui/material";
+import React, {memo, useCallback, useMemo, useState} from "react";
+import {Box, Container, Divider, Stack, Typography, useTheme} from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import Config from "../components/Config";
-import {apiUrl} from "../config/config";
 import {SitSchedule} from "../types/sitTypes";
+import {fetchSchedule} from "../lib/iBooking";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
-
-async function fetchSchedule(): Promise<SitSchedule> {
-    return await fetch(`${apiUrl}/api/schedule`, {method: 'POST'})
-        .then(res => res.json())
-}
 
 export async function getStaticProps() {
     const schedule = await fetchSchedule();
