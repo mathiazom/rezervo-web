@@ -17,14 +17,20 @@ function fetchPublicToken() {
         })
 }
 
-export async function fetchSchedule()  {
+export async function fetchSchedule() {
     const token = await fetchPublicToken()
     // Use two fetches to retrieve schedule for the next 8 days
-    const extraFromDate = new Date()
-    extraFromDate.setDate(extraFromDate.getDate() + 4)
-    return fetch(scheduleUrl(token))
-        .then(res => res.json())
-        .then(json => fetch(scheduleUrl(token, extraFromDate)).then(res => res.json())
-            .then(jsonExtra => ({days: [...json.days, ...jsonExtra.days]}))
-        )
+    const firstBatchResponse = await fetch(scheduleUrl(token))
+    if (!firstBatchResponse.ok) {
+        throw new Error(`Failed to fetch first schedule batch, received status ${firstBatchResponse.status}`)
+    }
+    const firstBatch = await firstBatchResponse.json()
+    const secondBatchStartDate = new Date()
+    secondBatchStartDate.setDate(secondBatchStartDate.getDate() + 4)
+    const secondBatchResponse = await fetch(scheduleUrl(token, secondBatchStartDate))
+    if (!secondBatchResponse.ok) {
+        throw new Error(`Failed to fetch second schedule batch, received status ${secondBatchResponse.status}`)
+    }
+    const secondBatch = await secondBatchResponse.json()
+    return {days: [...firstBatch.days, ...secondBatch.days]}
 }
