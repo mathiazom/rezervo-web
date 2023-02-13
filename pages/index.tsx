@@ -12,7 +12,7 @@ const ScheduleMemo = memo(Schedule);
 
 export async function getStaticProps() {
     const schedule = await fetchSchedule();
-    const invalidationTimeInSeconds = 60*60;
+    const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
@@ -22,7 +22,7 @@ export async function getStaticProps() {
     }
 }
 
-const Index: NextPage<{schedule: SitSchedule}> = ({schedule}) => {
+const Index: NextPage<{ schedule: SitSchedule }> = ({schedule}) => {
     const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
 
     const classes = useMemo(() => {
@@ -43,7 +43,13 @@ const Index: NextPage<{schedule: SitSchedule}> = ({schedule}) => {
         <div>
             <Head>
                 <title>sit-rezervo/config.yaml</title>
-                <link rel="icon" href="/favicon.svg" />
+                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+                <link rel="manifest" href="/site.webmanifest"/>
+                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"/>
+                <meta name="msapplication-TileColor" content="#da532c"/>
+                <meta name="theme-color" content="#ffffff"/>
             </Head>
             <div>
                 <Box height={"8vh"} display="flex" alignItems={"center"}>
@@ -54,13 +60,18 @@ const Index: NextPage<{schedule: SitSchedule}> = ({schedule}) => {
                 </Box>
                 <Divider/>
                 <Stack
-                    direction={{ xs: 'column', md: 'row' }}
+                    direction={{xs: 'column', md: 'row'}}
                     divider={<Divider orientation="vertical" flexItem/>}
                 >
-                    <Container maxWidth={false} sx={{height: { xs: '70vh', md: '91vh' }, overflow: 'auto'}}>
+                    <Container maxWidth={false} sx={{height: {xs: '70vh', md: '91vh'}, overflow: 'auto'}}>
                         <ScheduleMemo schedule={schedule} onSelectedChanged={onSelectedChanged}/>
                     </Container>
-                    <Container sx={{paddingY: 2, height: { xs: 'auto', md: '91vh' }, overflow: 'auto', maxWidth: {xs: "100%", md: 444}}}>
+                    <Container sx={{
+                        paddingY: 2,
+                        height: {xs: 'auto', md: '91vh'},
+                        overflow: 'auto',
+                        maxWidth: {xs: "100%", md: 444}
+                    }}>
                         <Config classes={classes} selectClassIds={selectedClassIds}/>
                     </Container>
                 </Stack>
