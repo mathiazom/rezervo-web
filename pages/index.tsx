@@ -40,7 +40,7 @@ const Index: NextPage<{ schedule: SitSchedule }> = ({schedule}) => {
     const theme = useTheme()
 
     return (
-        <div>
+        <>
             <Head>
                 <title>sit-rezervo/config.yaml</title>
                 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
@@ -51,32 +51,31 @@ const Index: NextPage<{ schedule: SitSchedule }> = ({schedule}) => {
                 <meta name="msapplication-TileColor" content="#da532c"/>
                 <meta name="theme-color" content="#ffffff"/>
             </Head>
-            <div>
+            <Stack divider={<Divider orientation="horizontal" flexItem/>}>
                 <Box height={"8vh"} display="flex" alignItems={"center"}>
                     <Typography variant="h5" component="div" py={2} pl={3}>
                         <strong
                             style={{color: theme.palette.primary.main}}>sit-rezervo</strong> / <code>config.yaml</code>
                     </Typography>
                 </Box>
-                <Divider/>
                 <Stack
                     direction={{xs: 'column', md: 'row'}}
                     divider={<Divider orientation="vertical" flexItem/>}
                 >
-                    <Container maxWidth={false} sx={{height: {xs: '70vh', md: '91vh'}, overflow: 'auto'}}>
+                    <Container maxWidth={false} sx={{height: {xs: '70vh', md: '92vh'}, overflow: 'auto'}}>
                         <ScheduleMemo schedule={schedule} onSelectedChanged={onSelectedChanged}/>
                     </Container>
                     <Container sx={{
                         paddingY: 2,
-                        height: {xs: 'auto', md: '91vh'},
+                        height: {xs: 'auto', md: '92vh'},
                         overflow: 'auto',
                         maxWidth: {xs: "100%", md: 444}
                     }}>
                         <Config classes={classes} selectClassIds={selectedClassIds}/>
                     </Container>
                 </Stack>
-            </div>
-        </div>
+            </Stack>
+        </>
     )
 }
 

@@ -54,15 +54,21 @@ const ClassCard = (
             }}>
             <CardContent className={"unselectable"} onClick={handleClick} sx={{paddingBottom: 1}}>
                 <Typography
-                    sx={selected ? {fontWeight: "bold"} : {}}
+                    sx={{
+                        fontSize: "1.05rem",
+                        ...(selected ? {fontWeight: "bold"} : {})
+                    }}
                 >
                     {_class.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography sx={{fontSize: "0.85rem"}} variant="body2" color="text.secondary">
                     {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography sx={{fontSize: "0.85rem"}} variant="body2" color="text.secondary">
                     {_class.studio.name}
+                </Typography>
+                <Typography sx={{fontSize: "0.85rem"}} variant="body2" color="text.secondary">
+                    {_class.instructors.map((i) => i.name).join(", ")}
                 </Typography>
             </CardContent>
             <CardActions sx={{padding: 0}}>

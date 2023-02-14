@@ -20,7 +20,7 @@ const Schedule = (
         <Stack direction={"row"}>
             {schedule.days.map((day) =>
                 (
-                    <Box key={day.date} px={1} width={200}>
+                    <Box key={day.date} width={200} pr={2}>
                         <Box py={2} width={200}>
                             <Typography variant="h6" component="div">
                                 {day.dayName}
