@@ -1,42 +1,42 @@
 export type SitSchedule = {
-  days: SitScheduleDay[];
+    days: SitScheduleDay[];
 };
 
 export type SitScheduleDay = {
-  date: string;
-  dayName: string;
-  classes: SitClass[];
+    date: string;
+    dayName: string;
+    classes: SitClass[];
 };
 
 export type SitClass = {
-  id: number;
-  activityId: string;
-  available: number;
-  capacity: number;
-  studio: SitStudio;
-  from: string;
-  to: string;
-  name: string;
-  description: string;
-  category: SitCategory;
-  image: string;
-  color: string;
-  instructors: SitInstructor[];
-  weekday?: number;
+    id: number;
+    activityId: number;
+    available: number;
+    capacity: number;
+    studio: SitStudio;
+    from: string;
+    to: string;
+    name: string;
+    description: string;
+    category: SitCategory;
+    image: string;
+    color: string;
+    instructors: SitInstructor[];
+    weekday?: number;
 };
 
 export type SitStudio = {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 };
 
 export type SitInstructor = {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
 };
 
 export type SitCategory = {
-  id: string;
-  name: string;
-  excelineId: number;
+    id: string;
+    name: string;
+    excelineId: number;
 };
