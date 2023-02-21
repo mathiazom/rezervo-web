@@ -5,24 +5,27 @@ import Head from "next/head";
 import Schedule from "../components/Schedule";
 import Config from "../components/Config";
 import {SitSchedule} from "../types/sitTypes";
-import {fetchSchedule} from "../lib/iBooking";
+import {fetchActivityDemands, fetchSchedule} from "../lib/iBooking";
+import {ActivityDemand} from "../types/derivedTypes";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
 
 export async function getStaticProps() {
     const schedule = await fetchSchedule();
+    const activityDemands = await fetchActivityDemands();
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
             schedule,
+            activityDemands
         },
         revalidate: invalidationTimeInSeconds
     }
 }
 
-const Index: NextPage<{ schedule: SitSchedule }> = ({schedule}) => {
+const Index: NextPage<{ schedule: SitSchedule, activityDemands: ActivityDemand[] }> = ({schedule, activityDemands}) => {
     const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
 
     const classes = useMemo(() => {
@@ -63,7 +66,7 @@ const Index: NextPage<{ schedule: SitSchedule }> = ({schedule}) => {
                     divider={<Divider orientation="vertical" flexItem/>}
                 >
                     <Container maxWidth={false} sx={{height: {xs: '70vh', md: '92vh'}, overflow: 'auto'}}>
-                        <ScheduleMemo schedule={schedule} onSelectedChanged={onSelectedChanged}/>
+                        <ScheduleMemo schedule={schedule} activityDemands={activityDemands} onSelectedChanged={onSelectedChanged}/>
                     </Container>
                     <Container sx={{
                         paddingY: 2,

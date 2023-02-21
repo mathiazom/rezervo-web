@@ -1,4 +1,13 @@
-import {Box, Button, Card, CardActions, CardContent, Modal, Typography, useMediaQuery, useTheme} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Modal, Tooltip,
+    Typography,
+    useTheme
+} from "@mui/material";
 import React, {useState} from "react";
 import Image from "next/image";
 import {SitClass} from "../../types/sitTypes";
@@ -9,13 +18,17 @@ import {randomElementFromArray} from "../../utils/arrayUtils";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import {ActivityDemand} from "../../types/derivedTypes";
+import ClassDemandMeter from "./ClassDemandMeter";
 
 const ClassCard = (
     {
         _class,
+        activityDemand,
         onSelectedChanged
     }: {
         _class: SitClass,
+        activityDemand: ActivityDemand,
         onSelectedChanged: (selected: boolean) => void
     }
 ) => {
@@ -53,6 +66,9 @@ const ClassCard = (
                 borderLeft: `0.4rem solid ${classColorRGB}`
             }}>
             <CardContent className={"unselectable"} onClick={handleClick} sx={{paddingBottom: 1}}>
+                <Box style={{position: "absolute", right: 15}}>
+                    <ClassDemandMeter demandLevel={activityDemand.demandLevel}/>
+                </Box>
                 <Typography
                     sx={{
                         fontSize: "1.05rem",
@@ -140,6 +156,12 @@ const ClassCard = (
                         <PersonIcon/>
                         <Typography variant="body2" color="text.secondary">
                             {_class.instructors.map((i) => i.name).join(", ")}
+                        </Typography>
+                    </Box>
+                    <Box sx={{display: "flex", paddingTop: 1, gap: 1, alignItems: "center"}}>
+                        <ClassDemandMeter demandLevel={activityDemand.demandLevel} />
+                        <Typography variant="body2" color="text.secondary">
+                            {activityDemand.demandLevel}
                         </Typography>
                     </Box>
                     {_class.image && <Box pt={2}>

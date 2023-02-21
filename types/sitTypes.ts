@@ -11,6 +11,8 @@ export type SitScheduleDay = {
 export type SitClass = {
     id: number,
     activityId: string,
+    available: number,
+    capacity: number,
     studio: SitStudio,
     from: string,
     to: string,

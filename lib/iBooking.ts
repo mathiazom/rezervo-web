@@ -1,5 +1,7 @@
 import {GROUP_BOOKING_URL} from "../config/config";
-import {SitSchedule} from "../types/sitTypes";
+import {SitClass, SitSchedule} from "../types/sitTypes";
+import {ActivityDemand} from "../types/derivedTypes";
+import {determineClassDemandLevel} from "./demand";
 
 function scheduleUrl(token: string, from: Date | null = null) {
     return 'https://ibooking.sit.no/webapp/api/Schedule/getSchedule' +
@@ -34,4 +36,15 @@ export async function fetchSchedule() {
     const firstBatch = await fetchScheduleWithDayOffset(token, 0)
     const secondBatch = await fetchScheduleWithDayOffset(token, 4)
     return {days: [...firstBatch.days, ...secondBatch.days]}
+}
+
+export async function fetchActivityDemands(): Promise<ActivityDemand[]> {
+    const token = await fetchPublicToken()
+    const firstBatch = await fetchScheduleWithDayOffset(token, -7)
+    const secondBatch = await fetchScheduleWithDayOffset(token, -4)
+    const previousSchedule = {days: [...firstBatch.days, ...secondBatch.days]}
+    return previousSchedule.days.flatMap((day) => day.classes.map((sitClass) => ({
+        activityId: sitClass.activityId,
+        demandLevel: determineClassDemandLevel(sitClass),
+    })));
 }
