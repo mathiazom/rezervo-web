@@ -5,27 +5,27 @@ import Head from "next/head";
 import Schedule from "../components/Schedule";
 import Config from "../components/Config";
 import {SitSchedule} from "../types/sitTypes";
-import {fetchActivityDemands, fetchSchedule} from "../lib/iBooking";
-import {ActivityDemand} from "../types/derivedTypes";
+import {fetchPreviousActivities, fetchSchedule} from "../lib/iBooking";
+import {ActivityPopularity} from "../types/derivedTypes";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
 
 export async function getStaticProps() {
     const schedule = await fetchSchedule();
-    const activityDemands = await fetchActivityDemands();
+    const previousActivities = await fetchPreviousActivities();
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
             schedule,
-            activityDemands
+            previousActivities
         },
         revalidate: invalidationTimeInSeconds
     }
 }
 
-const Index: NextPage<{ schedule: SitSchedule, activityDemands: ActivityDemand[] }> = ({schedule, activityDemands}) => {
+const Index: NextPage<{ schedule: SitSchedule, previousActivities: ActivityPopularity[] }> = ({schedule, previousActivities}) => {
     const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
 
     const classes = useMemo(() => {
@@ -66,7 +66,7 @@ const Index: NextPage<{ schedule: SitSchedule, activityDemands: ActivityDemand[]
                     divider={<Divider orientation="vertical" flexItem/>}
                 >
                     <Container maxWidth={false} sx={{height: {xs: '70vh', md: '92vh'}, overflow: 'auto'}}>
-                        <ScheduleMemo schedule={schedule} activityDemands={activityDemands} onSelectedChanged={onSelectedChanged}/>
+                        <ScheduleMemo schedule={schedule} previousActivities={previousActivities} onSelectedChanged={onSelectedChanged}/>
                     </Container>
                     <Container sx={{
                         paddingY: 2,

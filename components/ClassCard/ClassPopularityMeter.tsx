@@ -1,19 +1,19 @@
 import SpeedIcon from '@mui/icons-material/Speed';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import {ClassDemandLevel} from "../../types/derivedTypes";
+import {ClassPopularity} from "../../types/derivedTypes";
 
 
-const ClassDemandMeter = ({demandLevel}: {demandLevel: ClassDemandLevel}) => {
-    switch (demandLevel) {
-        case ClassDemandLevel.High:
+const ClassPopularityMeter = ({popularity}: {popularity: ClassPopularity}) => {
+    switch (popularity) {
+        case ClassPopularity.High:
             return <SpeedIcon style={{color: "red"}}/>;
-        case ClassDemandLevel.Medium:
+        case ClassPopularity.Medium:
             return <SpeedIcon style={{color: "orange"}}/>;
-        case ClassDemandLevel.Low:
+        case ClassPopularity.Low:
             return <SpeedIcon style={{color: "green"}}/>;
         default:
             return <QuestionMarkIcon/>
     }
 }
 
-export default ClassDemandMeter;
+export default ClassPopularityMeter;

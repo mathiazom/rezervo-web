@@ -18,17 +18,17 @@ import {randomElementFromArray} from "../../utils/arrayUtils";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import {ActivityDemand} from "../../types/derivedTypes";
-import ClassDemandMeter from "./ClassDemandMeter";
+import {ActivityPopularity} from "../../types/derivedTypes";
+import ClassPopularityMeter from "./ClassPopularityMeter";
 
 const ClassCard = (
     {
         _class,
-        activityDemand,
+        activityPopularity,
         onSelectedChanged
     }: {
         _class: SitClass,
-        activityDemand: ActivityDemand,
+        activityPopularity: ActivityPopularity,
         onSelectedChanged: (selected: boolean) => void
     }
 ) => {
@@ -67,7 +67,7 @@ const ClassCard = (
             }}>
             <CardContent className={"unselectable"} onClick={handleClick} sx={{paddingBottom: 1}}>
                 <Box style={{position: "absolute", right: 15}}>
-                    <ClassDemandMeter demandLevel={activityDemand.demandLevel}/>
+                    <ClassPopularityMeter popularity={activityPopularity.popularity}/>
                 </Box>
                 <Typography
                     sx={{
@@ -159,9 +159,9 @@ const ClassCard = (
                         </Typography>
                     </Box>
                     <Box sx={{display: "flex", paddingTop: 1, gap: 1, alignItems: "center"}}>
-                        <ClassDemandMeter demandLevel={activityDemand.demandLevel} />
+                        <ClassPopularityMeter popularity={activityPopularity.popularity} />
                         <Typography variant="body2" color="text.secondary">
-                            {activityDemand.demandLevel}
+                            {activityPopularity.popularity}
                         </Typography>
                     </Box>
                     {_class.image && <Box pt={2}>
