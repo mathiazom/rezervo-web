@@ -66,17 +66,17 @@ const ClassCard = (
                 borderLeft: `0.4rem solid ${classColorRGB}`
             }}>
             <CardContent className={"unselectable"} onClick={handleClick} sx={{paddingBottom: 1}}>
-                <Box style={{position: "absolute", right: 15}}>
-                    <ClassPopularityMeter popularity={activityPopularity.popularity}/>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography
+                        sx={{
+                            fontSize: "1.05rem",
+                            ...(selected ? { fontWeight: "bold" } : {}),
+                        }}
+                    >
+                        {_class.name}
+                    </Typography>
+                    <ClassPopularityMeter popularity={activityPopularity.popularity} />
                 </Box>
-                <Typography
-                    sx={{
-                        fontSize: "1.05rem",
-                        ...(selected ? {fontWeight: "bold"} : {})
-                    }}
-                >
-                    {_class.name}
-                </Typography>
                 <Typography sx={{fontSize: "0.85rem"}} variant="body2" color="text.secondary">
                     {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
                 </Typography>
