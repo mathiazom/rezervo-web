@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Modal, Stack, Typography, useTheme} from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import {ActivityPopularity, ClassPopularity} from "../types/derivedTypes";
@@ -9,6 +9,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PersonIcon from "@mui/icons-material/Person";
 import Image from "next/image";
 import {hexWithOpacityToRgb} from "../utils/colorUtils";
+import {useRouter} from "next/router";
 import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
 
 const Schedule = (
@@ -22,10 +23,23 @@ const Schedule = (
         onSelectedChanged: (classId: string, selected: boolean) => void
     }
 ) => {
+    const router = useRouter()
 
     const theme = useTheme()
 
     const [modalClass, setModalClass] = useState<SitClass | null>(null)
+
+    useEffect(() => {
+        const { activityId } = router.query
+        if (activityId !== undefined) {
+            const linkedClass = schedule.days
+                .flatMap((day) => day.classes)
+                .find((_class) => _class.activityId === Number(activityId))
+            if (linkedClass) {
+                setModalClass(linkedClass);
+            }
+        }
+    }, [router.query, schedule.days])
 
     function colorForClass(_class: SitClass) {
         return `rgb(${hexWithOpacityToRgb(
@@ -34,7 +48,7 @@ const Schedule = (
             theme.palette.mode === "dark" ? 0 : 255
         ).join(",")})`
     }
-    
+
     const lookupActivityPopularity = (_class: SitClass): ActivityPopularity => previousActivities.find(
             (activityPopularity) => activityPopularity.activityId ===  _class.activityId)
         ?? {popularity: ClassPopularity.Unknown} as ActivityPopularity
