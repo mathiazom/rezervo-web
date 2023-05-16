@@ -30,11 +30,11 @@ const Schedule = (
     const [modalClass, setModalClass] = useState<SitClass | null>(null)
 
     useEffect(() => {
-        const { activityId } = router.query
-        if (activityId !== undefined) {
+        const { classId } = router.query
+        if (classId !== undefined) {
             const linkedClass = schedule.days
                 .flatMap((day) => day.classes)
-                .find((_class) => _class.activityId === Number(activityId))
+                .find((_class) => _class.id === Number(classId))
             if (linkedClass) {
                 setModalClass(linkedClass);
             }
