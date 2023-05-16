@@ -15,9 +15,5 @@ module.exports = {
     browser: true,
     es2022: true,
   },
-  extends: [
-    "eslint:recommended",
-    "next/core-web-vitals",
-    "prettier",
-  ],
+  extends: ["eslint:recommended", "next/core-web-vitals", "prettier"],
 };
