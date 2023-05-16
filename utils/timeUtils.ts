@@ -1,5 +1,5 @@
 export function simpleTimeStringFromISO(isoString: string) {
-    return isoString.split(' ')[1].slice(0, 5)
+    return isoString.split(' ')[1]?.slice(0, 5)
 }
 
 const WEEKDAY_NAME_TO_NUMBER = new Map([
@@ -12,6 +12,12 @@ const WEEKDAY_NAME_TO_NUMBER = new Map([
     ["Søndag", 6]
 ])
 
-export function weekdayNameToNumber(weekdayName: string) {
-    return WEEKDAY_NAME_TO_NUMBER.get(weekdayName)
+export function weekdayNameToNumber(weekdayName: string): number {
+    const weekdayNumber = WEEKDAY_NAME_TO_NUMBER.get(weekdayName)
+
+    if (weekdayNumber === undefined) {
+        throw new Error("weekdayName not found")
+    }
+
+    return weekdayNumber
 }

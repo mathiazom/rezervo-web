@@ -5,9 +5,6 @@ import {simpleTimeStringFromISO} from "../../utils/timeUtils";
 import {hexWithOpacityToRgb} from "../../utils/colorUtils";
 import {EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS} from "../../types/animationTypes";
 import {randomElementFromArray} from "../../utils/arrayUtils";
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import PersonIcon from '@mui/icons-material/Person';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import {ActivityPopularity} from "../../types/derivedTypes";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 
@@ -34,7 +31,7 @@ const ClassCard = (
     function handleClick() {
         const newSelected = !selected
         if (newSelected) {
-            setSelectAnimation(randomElementFromArray(OVER_THE_TOP_ANIMATIONS))
+            setSelectAnimation(randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null)
         }
         setSelected(newSelected)
         onSelectedChanged(newSelected)

@@ -1,5 +1,5 @@
 import {GROUP_BOOKING_URL} from "../config/config";
-import {SitClass, SitSchedule} from "../types/sitTypes";
+import {SitSchedule} from "../types/sitTypes";
 import {ActivityPopularity} from "../types/derivedTypes";
 import {determineClassPopularity} from "./popularity";
 
@@ -16,7 +16,7 @@ function fetchPublicToken() {
         .then(text => text.replace(/[\n\r]/g, '').replace(/\s+/g, " "))
         .then(soup => {
             const matches = soup.match(/<!\[CDATA\[.*?iBookingPreload\(.*?token:.*?"(.+?)".*?]]>/)
-            return (matches && matches.length > 1) ? matches[1] : '';
+            return (matches && matches.length > 1) ? String(matches[1]) : '';
         })
 }
 

@@ -14,6 +14,7 @@ export function useCopyToClipboard(text: string, options?: { successDuration?: n
                 clearTimeout(id);
             };
         }
+        return;
     }, [isCopied, successDuration]);
 
     useEffect(() => {

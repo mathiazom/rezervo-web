@@ -43,7 +43,7 @@ const Config = ({classes, selectClassIds}: { classes: SitClass[], selectClassIds
     }, [classes])
 
     const selectedClassesConfig = selectClassIds.length > 0 ?
-        `classes:\n  ${allClassesConfigs.filter(([classId]) => selectClassIds.includes(classId)).map(([, config]) => config).join("\n  ")}` : '';
+        `classes:\n  ${allClassesConfigs.filter(([classId]) => selectClassIds.includes(String(classId))).map(([, config]) => config).join("\n  ")}` : '';
 
     const [isCopiedToClipboard, copyToClipboard] = useCopyToClipboard(selectedClassesConfig, {successDuration: 2000});
 
