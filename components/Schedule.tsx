@@ -20,6 +20,7 @@ const Schedule = (
     }: {
         schedule: SitSchedule,
         previousActivities: ActivityPopularity[],
+        // eslint-disable-next-line no-unused-vars
         onSelectedChanged: (classId: string, selected: boolean) => void
     }
 ) => {

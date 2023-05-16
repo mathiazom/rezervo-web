@@ -17,6 +17,7 @@ const ClassCard = (
     }: {
         _class: SitClass,
         activityPopularity: ActivityPopularity,
+        // eslint-disable-next-line no-unused-vars
         onSelectedChanged: (selected: boolean) => void,
         onInfo: () => void
     }
