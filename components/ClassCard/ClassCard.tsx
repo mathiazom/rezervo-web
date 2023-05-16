@@ -1,4 +1,13 @@
-import {Box, Button, Card, CardActions, CardContent, Modal, Typography, useMediaQuery, useTheme} from "@mui/material";
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Modal, Tooltip,
+    Typography,
+    useTheme
+} from "@mui/material";
 import React, {useState} from "react";
 import Image from "next/image";
 import {SitClass} from "../../types/sitTypes";
@@ -9,13 +18,17 @@ import {randomElementFromArray} from "../../utils/arrayUtils";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import PersonIcon from '@mui/icons-material/Person';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import {ActivityPopularity} from "../../types/derivedTypes";
+import ClassPopularityMeter from "./ClassPopularityMeter";
 
 const ClassCard = (
     {
         _class,
+        activityPopularity,
         onSelectedChanged
     }: {
         _class: SitClass,
+        activityPopularity: ActivityPopularity,
         onSelectedChanged: (selected: boolean) => void
     }
 ) => {
@@ -53,14 +66,17 @@ const ClassCard = (
                 borderLeft: `0.4rem solid ${classColorRGB}`
             }}>
             <CardContent className={"unselectable"} onClick={handleClick} sx={{paddingBottom: 1}}>
-                <Typography
-                    sx={{
-                        fontSize: "1.05rem",
-                        ...(selected ? {fontWeight: "bold"} : {})
-                    }}
-                >
-                    {_class.name}
-                </Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Typography
+                        sx={{
+                            fontSize: "1.05rem",
+                            ...(selected ? { fontWeight: "bold" } : {}),
+                        }}
+                    >
+                        {_class.name}
+                    </Typography>
+                    <ClassPopularityMeter popularity={activityPopularity.popularity} />
+                </Box>
                 <Typography sx={{fontSize: "0.85rem"}} variant="body2" color="text.secondary">
                     {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
                 </Typography>
@@ -140,6 +156,12 @@ const ClassCard = (
                         <PersonIcon/>
                         <Typography variant="body2" color="text.secondary">
                             {_class.instructors.map((i) => i.name).join(", ")}
+                        </Typography>
+                    </Box>
+                    <Box sx={{display: "flex", paddingTop: 1, gap: 1, alignItems: "center"}}>
+                        <ClassPopularityMeter popularity={activityPopularity.popularity} />
+                        <Typography variant="body2" color="text.secondary">
+                            {activityPopularity.popularity}
                         </Typography>
                     </Box>
                     {_class.image && <Box pt={2}>

@@ -3,13 +3,16 @@ import {Box, Stack, Typography, useTheme} from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import {SitSchedule} from "../types/sitTypes";
 import {weekdayNameToNumber} from "../utils/timeUtils";
+import {ActivityPopularity, ClassPopularity} from "../types/derivedTypes";
 
 const Schedule = (
     {
         schedule,
+        previousActivities,
         onSelectedChanged
     }: {
         schedule: SitSchedule,
+        previousActivities: ActivityPopularity[],
         onSelectedChanged: (classId: string, selected: boolean) => void
     }
 ) => {
@@ -37,6 +40,10 @@ const Schedule = (
                                     <Box key={_class.id} mb={1}>
                                         <ClassCard
                                             _class={_class}
+                                            activityPopularity={previousActivities.find(
+                                                (activityPopularity) => activityPopularity.activityId ===  _class.activityId)
+                                                ?? {popularity: ClassPopularity.Unknown} as ActivityPopularity
+                                        }
                                             onSelectedChanged={(s) => onSelectedChanged(_class.id.toString(), s)}
                                         />
                                     </Box>

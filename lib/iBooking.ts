@@ -1,4 +1,7 @@
 import {GROUP_BOOKING_URL} from "../config/config";
+import {SitClass, SitSchedule} from "../types/sitTypes";
+import {ActivityPopularity} from "../types/derivedTypes";
+import {determineClassPopularity} from "./popularity";
 
 function scheduleUrl(token: string, from: Date | null = null) {
     return 'https://ibooking.sit.no/webapp/api/Schedule/getSchedule' +
@@ -17,20 +20,31 @@ function fetchPublicToken() {
         })
 }
 
+async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitSchedule> {
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() + dayOffset)
+    const scheduleResponse = await fetch(scheduleUrl(token, dayOffset === 0 ? null : startDate))
+    if (!scheduleResponse.ok) {
+        throw new Error(`Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`)
+    }
+    return await scheduleResponse.json();
+}
+
 export async function fetchSchedule() {
     const token = await fetchPublicToken()
     // Use two fetches to retrieve schedule for the next 8 days
-    const firstBatchResponse = await fetch(scheduleUrl(token))
-    if (!firstBatchResponse.ok) {
-        throw new Error(`Failed to fetch first schedule batch, received status ${firstBatchResponse.status}`)
-    }
-    const firstBatch = await firstBatchResponse.json()
-    const secondBatchStartDate = new Date()
-    secondBatchStartDate.setDate(secondBatchStartDate.getDate() + 4)
-    const secondBatchResponse = await fetch(scheduleUrl(token, secondBatchStartDate))
-    if (!secondBatchResponse.ok) {
-        throw new Error(`Failed to fetch second schedule batch, received status ${secondBatchResponse.status}`)
-    }
-    const secondBatch = await secondBatchResponse.json()
+    const firstBatch = await fetchScheduleWithDayOffset(token, 0)
+    const secondBatch = await fetchScheduleWithDayOffset(token, 4)
     return {days: [...firstBatch.days, ...secondBatch.days]}
+}
+
+export async function fetchPreviousActivities(): Promise<ActivityPopularity[]> {
+    const token = await fetchPublicToken()
+    const firstBatch = await fetchScheduleWithDayOffset(token, -7)
+    const secondBatch = await fetchScheduleWithDayOffset(token, -4)
+    const previousSchedule = {days: [...firstBatch.days, ...secondBatch.days]}
+    return previousSchedule.days.flatMap((day) => day.classes.map((sitClass) => ({
+        activityId: sitClass.activityId,
+        popularity: determineClassPopularity(sitClass),
+    })));
 }
