@@ -42,9 +42,14 @@ async function fetchScheduleWithDayOffset(
 
 export async function fetchSchedule() {
     const token = await fetchPublicToken();
-    // Use two fetches to retrieve schedule for the next 8 days
-    const firstBatch = await fetchScheduleWithDayOffset(token, 0);
-    const secondBatch = await fetchScheduleWithDayOffset(token, 4);
+    // Use two fetches to retrieve schedule for the next 7 days
+    // Use offset -1 to fetch all today's events, not just the ones in the future
+    const firstBatch = await fetchScheduleWithDayOffset(token, -1);
+    const secondBatch = await fetchScheduleWithDayOffset(token, 3);
+
+    // Remove yesterday
+    firstBatch.days.shift();
+
     return { days: [...firstBatch.days, ...secondBatch.days] };
 }
 
