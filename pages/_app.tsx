@@ -2,12 +2,7 @@ import "../styles/globals.css";
 import "../styles/animations.css";
 import "../components/ClassCard/ClassCard.css";
 import type { AppProps } from "next/app";
-import {
-    createTheme,
-    CssBaseline,
-    ThemeProvider,
-    useMediaQuery,
-} from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import React from "react";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 
@@ -33,6 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     },
                     background: {
                         default: prefersDarkMode ? "#000" : "#fff",
+                        paper: prefersDarkMode ? "#111" : "#eee",
                     },
                 },
             }),

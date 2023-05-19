@@ -26,9 +26,7 @@ export default withApiAuthRequired(async function handler(req, res) {
     // `getAccessToken` will fetch you a new one using the `refresh_token` grant
     const { accessToken } = await getAccessToken(req, res);
     if (accessToken == null) {
-        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(
-            "Not authenticated"
-        );
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send("Not authenticated");
         return;
     }
     const response = await (() => {
@@ -42,9 +40,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         }
     })();
     if (response == null) {
-        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send(
-            "Request failed"
-        );
+        res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send("Request failed");
         return;
     }
     if (!response.ok) {

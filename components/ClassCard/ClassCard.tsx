@@ -1,28 +1,18 @@
-import {
-    Box,
-    Card,
-    CardActions,
-    CardContent,
-    Typography,
-    useTheme,
-} from "@mui/material";
+import { Box, Card, CardActions, CardContent, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SitClass } from "../../types/sitTypes";
 import { simpleTimeStringFromISO } from "../../utils/timeUtils";
 import { hexWithOpacityToRgb } from "../../utils/colorUtils";
-import {
-    EnterLeaveAnimation,
-    OVER_THE_TOP_ANIMATIONS,
-} from "../../types/animationTypes";
+import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../types/animationTypes";
 import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { ActivityPopularity } from "../../types/derivedTypes";
+import { ClassPopularity } from "../../types/derivedTypes";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 
 const ClassCard = ({
     _class,
-    activityPopularity,
+    popularity,
     selectable,
     selected,
     onSelectedChanged,
@@ -30,7 +20,7 @@ const ClassCard = ({
 }: // onSettings,
 {
     _class: SitClass;
-    activityPopularity: ActivityPopularity;
+    popularity: ClassPopularity;
     selectable: boolean;
     selected: boolean;
     // eslint-disable-next-line no-unused-vars
@@ -40,18 +30,13 @@ const ClassCard = ({
 }) => {
     const theme = useTheme();
 
-    const [selectAnimation, setSelectAnimation] =
-        useState<EnterLeaveAnimation | null>(
-            selected
-                ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null
-                : null
-        );
+    const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
+        selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null
+    );
 
     useEffect(() => {
         if (selected) {
-            setSelectAnimation(
-                randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null
-            );
+            setSelectAnimation(randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null);
         }
     }, [selected]);
 
@@ -59,11 +44,9 @@ const ClassCard = ({
         onSelectedChanged(!selected);
     }
 
-    const classColorRGB = `rgb(${hexWithOpacityToRgb(
-        _class.color,
-        0.6,
-        theme.palette.mode === "dark" ? 0 : 255
-    ).join(",")})`;
+    const classColorRGB = `rgb(${hexWithOpacityToRgb(_class.color, 0.6, theme.palette.mode === "dark" ? 0 : 255).join(
+        ","
+    )})`;
 
     return (
         <Card
@@ -87,30 +70,15 @@ const ClassCard = ({
                     >
                         {_class.name}
                     </Typography>
-                    <ClassPopularityMeter
-                        popularity={activityPopularity.popularity}
-                    />
+                    <ClassPopularityMeter popularity={popularity} />
                 </Box>
-                <Typography
-                    sx={{ fontSize: "0.85rem" }}
-                    variant="body2"
-                    color="text.secondary"
-                >
-                    {simpleTimeStringFromISO(_class.from)} -{" "}
-                    {simpleTimeStringFromISO(_class.to)}
+                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                    {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
                 </Typography>
-                <Typography
-                    sx={{ fontSize: "0.85rem" }}
-                    variant="body2"
-                    color="text.secondary"
-                >
+                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {_class.studio.name}
                 </Typography>
-                <Typography
-                    sx={{ fontSize: "0.85rem" }}
-                    variant="body2"
-                    color="text.secondary"
-                >
+                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {_class.instructors.map((i) => i.name).join(", ")}
                 </Typography>
             </CardContent>
@@ -133,20 +101,13 @@ const ClassCard = ({
                     left: 0,
                     height: "100%",
                     width: "100%",
-                    backgroundColor:
-                        theme.palette.mode === "dark" ? "#212121" : "white",
+                    backgroundColor: theme.palette.mode === "dark" ? "#111" : "white",
                     zIndex: -1,
                 }}
             />
             {selectAnimation && (
                 <Box
-                    className={
-                        selectAnimation
-                            ? selected
-                                ? selectAnimation.enter
-                                : selectAnimation.leave
-                            : ""
-                    }
+                    className={selectAnimation ? (selected ? selectAnimation.enter : selectAnimation.leave) : ""}
                     sx={{
                         position: "absolute",
                         top: 0,

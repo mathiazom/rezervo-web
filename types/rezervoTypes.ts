@@ -20,3 +20,6 @@ export type UserConfig = {
     classes: ClassConfig[];
     notifications: NotificationsConfig | null;
 };
+export type ConfigPayload = {
+    classes: ClassConfig[];
+};
