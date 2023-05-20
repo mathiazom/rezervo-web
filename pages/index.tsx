@@ -73,11 +73,14 @@ const Index: NextPage<{
     }, []);
 
     useEffect(() => {
+        if (user == null) {
+            return;
+        }
         setIsLoadingConfig(true);
         getConfig().then((c) => {
             setUserConfig(c);
         });
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         setUserConfigActive(userConfig?.active ?? false);
