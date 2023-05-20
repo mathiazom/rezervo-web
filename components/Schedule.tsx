@@ -30,48 +30,50 @@ const Schedule = ({
             ?.popularity ?? ClassPopularity.Unknown;
 
     return (
-        <Stack direction={"row"}>
-            {schedule.days.map((day) => (
-                <Box key={day.date} width={200} pr={2}>
-                    <Box py={2} width={200}>
-                        <Typography variant="h6" component="div">
-                            {day.dayName}
-                        </Typography>
-                        <Typography
-                            variant="h6"
-                            component="div"
-                            style={{
-                                color: theme.palette.grey[600],
-                                fontSize: 15,
-                            }}
-                        >
-                            {day.date}
-                        </Typography>
+        <Stack>
+            <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
+                {schedule.days.map((day) => (
+                    <Box key={day.date} width={180}>
+                        <Box py={2}>
+                            <Typography variant="h6" component="div">
+                                {day.dayName}
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                component="div"
+                                style={{
+                                    color: theme.palette.grey[600],
+                                    fontSize: 15,
+                                }}
+                            >
+                                {day.date}
+                            </Typography>
+                        </Box>
+                        {day.classes.length > 0 ? (
+                            day.classes.map((_class) => {
+                                _class.weekday = weekdayNameToNumber(day.dayName);
+                                return (
+                                    <Box key={_class.id} mb={1}>
+                                        <ClassCard
+                                            _class={_class}
+                                            popularity={lookupClassPopularity(_class)}
+                                            selectable={selectable}
+                                            selected={selectedClassIds.includes(sitClassRecurrentId(_class))}
+                                            onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
+                                            onInfo={() => onInfo(_class)}
+                                            // onSettings={() =>
+                                            //     setSettingsClass(_class)
+                                            // }
+                                        />
+                                    </Box>
+                                );
+                            })
+                        ) : (
+                            <p>Ingen gruppetimer</p>
+                        )}
                     </Box>
-                    {day.classes.length > 0 ? (
-                        day.classes.map((_class) => {
-                            _class.weekday = weekdayNameToNumber(day.dayName);
-                            return (
-                                <Box key={_class.id} mb={1}>
-                                    <ClassCard
-                                        _class={_class}
-                                        popularity={lookupClassPopularity(_class)}
-                                        selectable={selectable}
-                                        selected={selectedClassIds.includes(sitClassRecurrentId(_class))}
-                                        onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
-                                        onInfo={() => onInfo(_class)}
-                                        // onSettings={() =>
-                                        //     setSettingsClass(_class)
-                                        // }
-                                    />
-                                </Box>
-                            );
-                        })
-                    ) : (
-                        <p>Ingen gruppetimer</p>
-                    )}
-                </Box>
-            ))}
+                ))}
+            </Stack>
         </Stack>
     );
 };
