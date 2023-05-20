@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import { simpleTimeStringFromISO } from "../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
@@ -11,9 +11,7 @@ import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { ClassPopularity } from "../types/derivedTypes";
 
 export default function ClassInfo({ _class, popularity }: { _class: SitClass; popularity: ClassPopularity }) {
-    const theme = useTheme();
-
-    const color = `rgb(${hexWithOpacityToRgb(_class.color, 0.6, theme.palette.mode === "dark" ? 0 : 255).join(",")})`;
+    const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     return (
         <Box
@@ -26,10 +24,13 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
                 overflowY: "scroll",
                 maxWidth: 600,
                 transform: "translate(-50%, -50%)",
-                backgroundColor: theme.palette.mode === "dark" ? "#111" : "white",
                 borderRadius: "0.25em",
                 boxShadow: 24,
                 p: 4,
+                backgroundColor: "white",
+                '[data-mui-color-scheme="dark"] &': {
+                    backgroundColor: "#111",
+                },
             }}
         >
             <Box
@@ -42,10 +43,13 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
             >
                 <Box
                     sx={{
-                        backgroundColor: color,
                         borderRadius: "50%",
                         height: "1.5rem",
                         width: "1.5rem",
+                        backgroundColor: color(false),
+                        '[data-mui-color-scheme="dark"] &': {
+                            backgroundColor: color(true),
+                        },
                     }}
                 />
                 <Typography variant="h6" component="h2">

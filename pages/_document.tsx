@@ -1,5 +1,6 @@
-import Document, { Html, Head, Main, NextScript } from "next/document";
+import Document, { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
+import { getInitColorSchemeScript } from "@mui/material";
 
 class MyDocument extends Document {
     override render() {
@@ -12,6 +13,7 @@ class MyDocument extends Document {
                     />
                 </Head>
                 <body>
+                    {getInitColorSchemeScript()}
                     <Main />
                     <NextScript />
                 </body>

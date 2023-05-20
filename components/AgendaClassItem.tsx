@@ -27,15 +27,16 @@ export default function AgendaClassItem({
 }) {
     const theme = useTheme();
 
-    const classColorRGB = agendaClass.sitClass
-        ? `rgb(${hexWithOpacityToRgb(
-              agendaClass.sitClass.color,
-              agendaClass.markedForDeletion ? 0.3 : 0.6,
-              theme.palette.mode === "dark" ? 0 : 255
-          ).join(",")})`
-        : agendaClass.markedForDeletion
-        ? "#696969"
-        : "#111";
+    const classColorRGB = (dark: boolean) =>
+        agendaClass.sitClass
+            ? `rgb(${hexWithOpacityToRgb(
+                  agendaClass.sitClass.color,
+                  agendaClass.markedForDeletion ? 0.3 : 0.6,
+                  dark ? 0 : 255
+              ).join(",")})`
+            : agendaClass.markedForDeletion
+            ? "#696969"
+            : "#111";
 
     const displayName = agendaClass.sitClass?.name ?? agendaClass.config.display_name;
 
@@ -52,8 +53,12 @@ export default function AgendaClassItem({
         <Card
             sx={{
                 position: "relative",
-                borderLeft: `0.4rem solid ${classColorRGB}`,
-                backgroundColor: theme.palette.mode === "dark" ? "#111" : "white",
+                borderLeft: `0.4rem solid ${classColorRGB(false)}`,
+                backgroundColor: "white",
+                '[data-mui-color-scheme="dark"] &': {
+                    borderLeft: `0.4rem solid ${classColorRGB(true)}`,
+                    backgroundColor: "#111",
+                },
             }}
         >
             <Box
@@ -143,8 +148,11 @@ export default function AgendaClassItem({
                     left: 0,
                     height: "100%",
                     width: "100%",
-                    backgroundColor: theme.palette.mode === "dark" ? "#111" : "white",
                     zIndex: -1,
+                    backgroundColor: "white",
+                    '[data-mui-color-scheme="dark"] &': {
+                        backgroundColor: "#111",
+                    },
                 }}
             />
         </Card>

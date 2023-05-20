@@ -1,4 +1,4 @@
-import { Box, CircularProgress, FormControlLabel, FormGroup, Switch, Typography, useTheme } from "@mui/material";
+import { Box, CircularProgress, FormControlLabel, FormGroup, Switch, Typography } from "@mui/material";
 import React from "react";
 
 export default function Settings({
@@ -11,8 +11,6 @@ export default function Settings({
     // eslint-disable-next-line no-unused-vars
     onUserConfigActive: (active: boolean) => void;
 }) {
-    const theme = useTheme();
-
     return (
         <Box
             sx={{
@@ -24,10 +22,13 @@ export default function Settings({
                 overflowY: "scroll",
                 maxWidth: 520,
                 transform: "translate(-50%, -50%)",
-                backgroundColor: theme.palette.background.paper,
                 borderRadius: "0.25em",
                 boxShadow: 24,
                 p: 4,
+                backgroundColor: "white",
+                '[data-mui-color-scheme="dark"] &': {
+                    backgroundColor: "#111",
+                },
             }}
         >
             <Box

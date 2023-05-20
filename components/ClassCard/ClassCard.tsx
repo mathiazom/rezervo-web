@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, Typography, useTheme } from "@mui/material";
+import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SitClass } from "../../types/sitTypes";
 import { simpleTimeStringFromISO } from "../../utils/timeUtils";
@@ -28,8 +28,6 @@ const ClassCard = ({
     onInfo: () => void;
     // onSettings: () => void;
 }) => {
-    const theme = useTheme();
-
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null
     );
@@ -44,16 +42,17 @@ const ClassCard = ({
         onSelectedChanged(!selected);
     }
 
-    const classColorRGB = `rgb(${hexWithOpacityToRgb(_class.color, 0.6, theme.palette.mode === "dark" ? 0 : 255).join(
-        ","
-    )})`;
+    const classColorRGB = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     return (
         <Card
             sx={{
                 background: "none",
                 position: "relative",
-                borderLeft: `0.4rem solid ${classColorRGB}`,
+                borderLeft: `0.4rem solid ${classColorRGB(false)}`,
+                '[data-mui-color-scheme="dark"] &': {
+                    borderLeft: `0.4rem solid ${classColorRGB(true)}`,
+                },
             }}
         >
             <CardContent
@@ -101,8 +100,11 @@ const ClassCard = ({
                     left: 0,
                     height: "100%",
                     width: "100%",
-                    backgroundColor: theme.palette.mode === "dark" ? "#111" : "white",
                     zIndex: -1,
+                    backgroundColor: "white",
+                    '[data-mui-color-scheme="dark"] &': {
+                        backgroundColor: "#111",
+                    },
                 }}
             />
             {selectAnimation && (
@@ -114,8 +116,11 @@ const ClassCard = ({
                         left: 0,
                         height: "100%",
                         width: "100%",
-                        backgroundColor: classColorRGB,
                         zIndex: -1,
+                        backgroundColor: classColorRGB(false),
+                        '[data-mui-color-scheme="dark"] &': {
+                            backgroundColor: classColorRGB(true),
+                        },
                     }}
                 />
             )}

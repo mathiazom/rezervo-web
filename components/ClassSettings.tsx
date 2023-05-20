@@ -18,7 +18,7 @@ export default function ClassSettings() {
             {/*                    maxWidth: 600,*/}
             {/*                    transform: "translate(-50%, -50%)",*/}
             {/*                    backgroundColor:*/}
-            {/*                        theme.palette.mode === "dark"*/}
+            {/*                        theme.palette.mode === "dark" // TODO: don't use palette.mode*/}
             {/*                            ? "#111"*/}
             {/*                            : "white",*/}
             {/*                    borderRadius: "0.25em",*/}

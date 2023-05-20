@@ -58,7 +58,7 @@ export default function Agenda({
                     return (
                         <>
                             {dayClasses && dayClasses.length > 0 && (
-                                <Box pb={2}>
+                                <Box pb={2} key={dayNumber}>
                                     <Typography
                                         variant="h6"
                                         style={{
