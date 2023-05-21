@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Container, Divider, Modal, Stack } from "@mui/material";
+import { Button, Box, Container, Divider, Modal, Stack } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchActivityPopularity, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
@@ -15,6 +15,8 @@ import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import ClassInfo from "../components/ClassInfo";
 import Agenda from "../components/Agenda";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { DateTime } from "luxon";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -263,7 +265,7 @@ const Index: NextPage<{
                 <meta name="msapplication-TileColor" content="#da532c" />
                 <meta name="theme-color" content="#ffffff" />
             </Head>
-            <Stack divider={<Divider orientation="horizontal" flexItem />}>
+            <Stack>
                 <Box display={"flex"} justifyContent={"center"}>
                     <Box width={1388}>
                         <AppBar
@@ -277,6 +279,20 @@ const Index: NextPage<{
                         />
                     </Box>
                 </Box>
+                <Stack>
+                    <Stack direction={"row"} justifyContent={"center"}>
+                        <Button onClick={() => handleUpdateWeekOffset(-1)} startIcon={<ArrowBack />}>{`W${
+                            DateTime.fromISO(currentSchedule.days[0]!.date).minus({ weeks: 1 }).weekNumber
+                        }`}</Button>
+                        <Button disabled={weekOffset === 0} onClick={() => handleUpdateWeekOffset(0)}>
+                            I dag
+                        </Button>
+                        <Button onClick={() => handleUpdateWeekOffset(1)} endIcon={<ArrowForward />}>{`W${
+                            DateTime.fromISO(currentSchedule.days[0]!.date).plus({ weeks: 1 }).weekNumber
+                        }`}</Button>
+                    </Stack>
+                </Stack>
+                <Divider orientation="horizontal" flexItem />
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
                     <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
@@ -286,7 +302,6 @@ const Index: NextPage<{
                             selectedClassIds={selectedClassIds}
                             onSelectedChanged={onSelectedChanged}
                             onInfo={setModalClass}
-                            handleUpdateWeekOffset={handleUpdateWeekOffset}
                         />
                     </Container>
                 </Stack>

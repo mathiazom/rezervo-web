@@ -1,12 +1,10 @@
 import React from "react";
-import { Box, Button, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { getWeekNumber, weekdayNameToNumber } from "../utils/timeUtils";
+import { weekdayNameToNumber } from "../utils/timeUtils";
 import { ActivityPopularity, ClassPopularity } from "../types/derivedTypes";
 import { sitClassRecurrentId } from "../lib/iBooking";
-import IconButton from "@mui/material/IconButton";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
 
 const Schedule = ({
     schedule,
@@ -15,7 +13,6 @@ const Schedule = ({
     selectedClassIds,
     onSelectedChanged,
     onInfo,
-    handleUpdateWeekOffset,
 }: {
     schedule: SitSchedule;
     activitiesPopularity: ActivityPopularity[];
@@ -25,8 +22,6 @@ const Schedule = ({
     onSelectedChanged: (classId: string, selected: boolean) => void;
     // eslint-disable-next-line no-unused-vars
     onInfo: (c: SitClass) => void;
-    // eslint-disable-next-line no-unused-vars
-    handleUpdateWeekOffset: (modifier: number) => void;
 }) => {
     const theme = useTheme();
 
@@ -36,19 +31,7 @@ const Schedule = ({
 
     return (
         <Stack direction={"column"}>
-            <Typography mt={2} align={"center"} variant={"caption"}>
-                Uke {getWeekNumber(new Date(schedule.days[0]?.date ?? ""))}
-            </Typography>
-            <Stack direction={"row"} justifyContent={"center"}>
-                <IconButton onClick={() => handleUpdateWeekOffset(-1)}>
-                    <ArrowBack />
-                </IconButton>
-                <Button onClick={() => handleUpdateWeekOffset(0)}>I dag</Button>
-                <IconButton onClick={() => handleUpdateWeekOffset(1)}>
-                    <ArrowForward />
-                </IconButton>
-            </Stack>
-            <Stack direction={"row"} margin={"auto"} spacing={2} px={2}>
+            <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
                 {schedule.days.map((day) => (
                     <Box key={day.date} width={180}>
                         <Box py={2}>
