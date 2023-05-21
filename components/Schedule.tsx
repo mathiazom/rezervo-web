@@ -31,7 +31,7 @@ const Schedule = ({
 
     return (
         <Stack>
-            <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
+            <Stack direction={"row"} margin={"auto"} spacing={2} px={2}>
                 {schedule.days.map((day) => (
                     <Box key={day.date} width={180}>
                         <Box py={2}>

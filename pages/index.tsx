@@ -207,7 +207,7 @@ const Index: NextPage<{
                     onAgendaOpen={() => setAgendaOpen(true)}
                 />
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
-                    <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto" }}>
+                    <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
                             schedule={schedule}
                             activitiesPopularity={activitiesPopularity}
