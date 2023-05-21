@@ -13,6 +13,7 @@ import { ClassPopularity } from "../types/derivedTypes";
 export default function ClassInfo({ _class, popularity }: { _class: SitClass; popularity: ClassPopularity }) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
+    const isInThePast = new Date(_class.from).getTime() < new Date().getTime();
     return (
         <Box
             sx={{
@@ -108,7 +109,7 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
                     {_class.instructors.map((i) => i.name).join(", ")}
                 </Typography>
             </Box>
-            {popularity && (
+            {popularity && !isInThePast && (
                 <Box
                     sx={{
                         display: "flex",
