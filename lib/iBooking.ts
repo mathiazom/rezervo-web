@@ -34,15 +34,18 @@ async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Pro
     return await scheduleResponse.json();
 }
 
-export async function fetchSchedule() {
+export async function fetchSchedule(weekOffset: number) {
     const token = await fetchPublicToken();
+
+    const dayNumber = new Date().getDay();
+    const mondayOffset = dayNumber === 0 ? 6 : dayNumber - 1;
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
         days: [
             // Use offset -1 to fetch all today's events, not just the ones in the future
-            ...(await fetchScheduleWithDayOffset(token, -1)).days.slice(1),
-            ...(await fetchScheduleWithDayOffset(token, 3)).days,
+            ...(await fetchScheduleWithDayOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
+            ...(await fetchScheduleWithDayOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
         ],
     };
 }

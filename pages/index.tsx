@@ -20,13 +20,19 @@ import Agenda from "../components/Agenda";
 const ScheduleMemo = memo(Schedule);
 
 export async function getStaticProps() {
-    const schedule = await fetchSchedule();
+    const initialCachedSchedules = {
+        [-1]: await fetchSchedule(-1),
+        [0]: await fetchSchedule(0),
+        [1]: await fetchSchedule(1),
+        [2]: await fetchSchedule(2),
+        [3]: await fetchSchedule(3),
+    };
     const activitiesPopularity = await fetchActivityPopularity();
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
-            schedule,
+            initialCachedSchedules,
             activitiesPopularity,
         },
         revalidate: invalidationTimeInSeconds,
@@ -34,9 +40,9 @@ export async function getStaticProps() {
 }
 
 const Index: NextPage<{
-    schedule: SitSchedule;
+    initialCachedSchedules: { [weekOffset: number]: SitSchedule };
     activitiesPopularity: ActivityPopularity[];
-}> = ({ schedule, activitiesPopularity }) => {
+}> = ({ initialCachedSchedules, activitiesPopularity }) => {
     const router = useRouter();
 
     const { user } = useUser();
@@ -59,14 +65,41 @@ const Index: NextPage<{
 
     const [modalClass, setModalClass] = useState<SitClass | null>(null);
 
+    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
+        initialCachedSchedules
+    );
+    const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
+    const [weekOffset, setWeekOffset] = useState(0);
+    const handleUpdateWeekOffset = async (modifier: number) => {
+        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
+        let cachedSchedule = cachedSchedules[currentWeekOffset];
+
+        if (cachedSchedule === undefined) {
+            cachedSchedule = await (
+                await fetch("api/schedule", {
+                    method: "POST",
+                    body: JSON.stringify({ weekOffset: currentWeekOffset }),
+                })
+            ).json();
+            if (cachedSchedule === undefined) {
+                throw new Error("Failed to fetch schedule");
+            }
+
+            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
+        }
+
+        setWeekOffset(currentWeekOffset);
+        setCurrentSchedule(cachedSchedule);
+    };
+
     const selectionChanged = useMemo(
         () => !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
         [originalSelectedClassIds, selectedClassIds]
     );
 
     const classes = useMemo(() => {
-        return schedule?.days.flatMap((d) => d.classes) ?? [];
-    }, [schedule?.days]);
+        return currentSchedule.days.flatMap((d) => d.classes) ?? [];
+    }, [currentSchedule.days]);
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         if (selected) {
@@ -99,11 +132,13 @@ const Index: NextPage<{
         if (classId === undefined) {
             return;
         }
-        const linkedClass = schedule.days.flatMap((day) => day.classes).find((_class) => _class.id === Number(classId));
+        const linkedClass = currentSchedule.days
+            .flatMap((day) => day.classes)
+            .find((_class) => _class.id === Number(classId));
         if (linkedClass) {
             setModalClass(linkedClass);
         }
-    }, [router.query, schedule.days]);
+    }, [router.query, currentSchedule.days]);
 
     useEffect(() => {
         setOriginalSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);
@@ -245,12 +280,13 @@ const Index: NextPage<{
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
                     <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
-                            schedule={schedule}
+                            schedule={currentSchedule}
                             activitiesPopularity={activitiesPopularity}
                             selectable={user != null && !isLoadingConfig}
                             selectedClassIds={selectedClassIds}
                             onSelectedChanged={onSelectedChanged}
                             onInfo={setModalClass}
+                            handleUpdateWeekOffset={handleUpdateWeekOffset}
                         />
                     </Container>
                 </Stack>
