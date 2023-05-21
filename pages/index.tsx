@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Container, Divider, Modal, Stack } from "@mui/material";
+import { Box, Container, Divider, Modal, Stack } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchActivityPopularity, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
 import { ActivityPopularity, ClassPopularity } from "../types/derivedTypes";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { ClassConfig, ConfigPayload, UserConfig } from "../types/rezervoTypes";
+import { ClassConfig, ConfigPayload, NotificationsConfig, UserConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
 import Settings from "../components/Settings";
 import { useRouter } from "next/router";
@@ -45,8 +45,12 @@ const Index: NextPage<{
     const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[]>([]);
 
     const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
+
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
+
+    const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
+    const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     const [isLoadingConfig, setIsLoadingConfig] = useState(false);
 
@@ -84,6 +88,10 @@ const Index: NextPage<{
 
     useEffect(() => {
         setUserConfigActive(userConfig?.active ?? false);
+    }, [userConfig]);
+
+    useEffect(() => {
+        setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
 
     useEffect(() => {
@@ -173,10 +181,34 @@ const Index: NextPage<{
             });
     }
 
+    async function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
+        setNotificationsConfig(notificationsConfig);
+        setNotificationsConfigLoading(true);
+        return await fetch("/api/config", {
+            method: "PUT",
+            body: JSON.stringify(
+                {
+                    active: userConfigActive,
+                    classes: originalSelectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
+                    notifications: notificationsConfig,
+                } as ConfigPayload,
+                null,
+                2
+            ),
+        })
+            .then((r) => r.json())
+            .then((c: UserConfig) => {
+                setNotificationsConfig(c.notifications);
+                setNotificationsConfigLoading(false);
+            });
+    }
+
     async function updateConfigFromSelection() {
         setIsLoadingConfig(true);
         putConfig({
+            active: userConfigActive,
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
+            notifications: notificationsConfig,
         }).then(() => {
             getConfig().then((c) => {
                 setUserConfig(c);
@@ -197,15 +229,19 @@ const Index: NextPage<{
                 <meta name="theme-color" content="#ffffff" />
             </Head>
             <Stack divider={<Divider orientation="horizontal" flexItem />}>
-                <AppBar
-                    changed={selectionChanged}
-                    agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                    isLoadingConfig={isLoadingConfig}
-                    onUpdateConfig={() => updateConfigFromSelection()}
-                    onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                    onSettingsOpen={() => setSettingsOpen(true)}
-                    onAgendaOpen={() => setAgendaOpen(true)}
-                />
+                <Box display={"flex"} justifyContent={"center"}>
+                    <Box width={1388}>
+                        <AppBar
+                            changed={selectionChanged}
+                            agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
+                            isLoadingConfig={isLoadingConfig}
+                            onUpdateConfig={() => updateConfigFromSelection()}
+                            onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                            onSettingsOpen={() => setSettingsOpen(true)}
+                            onAgendaOpen={() => setAgendaOpen(true)}
+                        />
+                    </Box>
+                </Box>
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
                     <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
@@ -257,9 +293,12 @@ const Index: NextPage<{
             </Modal>
             <Modal open={settingsOpen} onClose={() => setSettingsOpen(false)}>
                 <Settings
-                    userConfigActive={userConfigActive}
-                    userConfigActiveLoading={userConfigActiveLoading}
-                    onUserConfigActive={putConfigActive}
+                    bookingActive={userConfigActive}
+                    bookingActiveLoading={userConfigActiveLoading}
+                    onBookingActiveChanged={putConfigActive}
+                    notificationsConfig={notificationsConfig}
+                    notificationsConfigLoading={notificationsConfigLoading}
+                    onNotificationsConfigChanged={putNotificationsConfig}
                 />
             </Modal>
         </>

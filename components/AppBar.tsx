@@ -36,7 +36,7 @@ export default function AppBar({
             <Typography
                 component="div"
                 py={2}
-                pl={3}
+                pl={2}
                 sx={{
                     fontSize: { xs: "1.2rem", sm: "1.8rem" },
                     display: { xs: "none", md: "block" },
@@ -44,7 +44,7 @@ export default function AppBar({
             >
                 <strong style={{ color: theme.palette.primary.main }}>sit-rezervo</strong>
             </Typography>
-            <Box sx={{ marginLeft: "auto", marginRight: 4 }}>
+            <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>
                 {isLoading ? (
                     <CircularProgress size={26} thickness={6} />
                 ) : user ? (
@@ -52,7 +52,7 @@ export default function AppBar({
                         sx={{
                             display: "flex",
                             alignItems: "center",
-                            gap: 2,
+                            gap: { xs: 1, md: 1.5 },
                         }}
                     >
                         {isLoadingConfig ? (
@@ -99,7 +99,6 @@ export default function AppBar({
                             sx={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: 0.5,
                             }}
                         >
                             <Tooltip title={"Agenda"}>
@@ -117,6 +116,9 @@ export default function AppBar({
                             <Tooltip title={user.name}>
                                 <Avatar
                                     sx={{
+                                        width: 32,
+                                        height: 32,
+                                        fontSize: 18,
                                         backgroundColor: theme.palette.primary.main,
                                     }}
                                 >

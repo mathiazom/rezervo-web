@@ -32,7 +32,14 @@ export default function MobileConfigUpdateBar({
             ) : (
                 <>
                     <Fab size="small" onClick={() => onUndoSelectionChanges()}>
-                        <UndoIcon sx={{ fontSize: 18 }} />
+                        <UndoIcon
+                            sx={{
+                                fontSize: 18,
+                                '[data-mui-color-scheme="dark"] &': {
+                                    color: "#111",
+                                },
+                            }}
+                        />
                     </Fab>
                     <Fab color={"primary"} variant="extended" onClick={() => onUpdateConfig()}>
                         <CloudUploadIcon sx={{ mr: 1 }} />
