@@ -49,7 +49,7 @@ const ClassCard = ({
     return (
         <Card
             sx={{
-                opacity: isInThePast ? 0.5 : 1,
+                opacity: isInThePast ? 0.6 : 1,
                 background: "none",
                 position: "relative",
                 borderLeft: `0.4rem solid ${classColorRGB(false)}`,
@@ -107,7 +107,7 @@ const ClassCard = ({
                     zIndex: -1,
                     backgroundColor: "white",
                     '[data-mui-color-scheme="dark"] &': {
-                        backgroundColor: "#111",
+                        backgroundColor: "#191919",
                     },
                 }}
             />

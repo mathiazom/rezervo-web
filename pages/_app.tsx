@@ -14,7 +14,7 @@ const theme = experimental_extendTheme({
                     light: "#6fbf73",
                     main: "#4caf50",
                     dark: "#357a38",
-                    contrastText: "#fff",
+                    contrastText: "#000",
                 },
                 secondary: {
                     light: "#ff7961",
@@ -40,7 +40,7 @@ const theme = experimental_extendTheme({
                     light: "#ff7961",
                     main: "#f44336",
                     dark: "#ba000d",
-                    contrastText: "#000",
+                    contrastText: "#fff",
                 },
                 background: {
                     default: "#000",

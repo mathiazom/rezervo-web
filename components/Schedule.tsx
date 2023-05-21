@@ -1,10 +1,11 @@
 import React from "react";
-import { Box, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Chip, Stack, Typography, useTheme } from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
 import { ActivityPopularity, ClassPopularity } from "../types/derivedTypes";
 import { sitClassRecurrentId } from "../lib/iBooking";
+import { DateTime } from "luxon";
 
 const Schedule = ({
     schedule,
@@ -29,14 +30,26 @@ const Schedule = ({
         activitiesPopularity.find((activityPopularity) => activityPopularity.activityId === _class.activityId)
             ?.popularity ?? ClassPopularity.Unknown;
 
+    const isToday = (dateStr: string) => DateTime.fromISO(dateStr).startOf("day").equals(DateTime.now().startOf("day"));
+
     return (
         <Stack direction={"column"}>
             <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
                 {schedule.days.map((day) => (
                     <Box key={day.date} width={180}>
-                        <Box py={2}>
+                        <Box
+                            py={2}
+                            sx={{ opacity: DateTime.fromISO(day.date).endOf("day") > DateTime.now() ? 1 : 0.5 }}
+                        >
                             <Typography variant="h6" component="div">
-                                {day.dayName}
+                                {day.dayName}{" "}
+                                {isToday(day.date) && (
+                                    <Chip
+                                        size={"small"}
+                                        sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
+                                        label="I dag"
+                                    />
+                                )}
                             </Typography>
                             <Typography
                                 variant="h6"

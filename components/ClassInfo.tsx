@@ -30,7 +30,7 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
                 p: 4,
                 backgroundColor: "white",
                 '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#111",
+                    backgroundColor: "#181818",
                 },
             }}
         >

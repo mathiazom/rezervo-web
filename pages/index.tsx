@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Box, Container, Divider, Modal, Stack } from "@mui/material";
+import { Button, Box, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchActivityPopularity, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
@@ -46,6 +46,7 @@ const Index: NextPage<{
     activitiesPopularity: ActivityPopularity[];
 }> = ({ initialCachedSchedules, activitiesPopularity }) => {
     const router = useRouter();
+    const theme = useTheme();
 
     const { user } = useUser();
 
@@ -280,16 +281,38 @@ const Index: NextPage<{
                     </Box>
                 </Box>
                 <Stack>
-                    <Stack direction={"row"} justifyContent={"center"}>
-                        <Button onClick={() => handleUpdateWeekOffset(-1)} startIcon={<ArrowBack />}>{`W${
-                            DateTime.fromISO(currentSchedule.days[0]!.date).minus({ weeks: 1 }).weekNumber
-                        }`}</Button>
-                        <Button disabled={weekOffset === 0} onClick={() => handleUpdateWeekOffset(0)}>
+                    <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        mb={1}
+                        sx={{ position: "relative" }}
+                    >
+                        <Button variant={"outlined"} size={"small"} onClick={() => handleUpdateWeekOffset(-1)}>
+                            <ArrowBack />
+                        </Button>
+                        <Typography
+                            sx={{ opacity: 0.7 }}
+                            mx={2}
+                            variant={"subtitle2"}
+                            color={theme.palette.primary.contrastText}
+                        >{`UKE ${DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}`}</Typography>
+                        <Button variant={"outlined"} size={"small"} onClick={() => handleUpdateWeekOffset(1)}>
+                            <ArrowForward />
+                        </Button>
+                        <Button
+                            sx={{
+                                ml: 1,
+                                position: { xs: "absolute", md: "inherit" },
+                                right: { xs: 10, md: "inherit" },
+                            }}
+                            variant={"outlined"}
+                            size={"small"}
+                            disabled={weekOffset === 0}
+                            onClick={() => handleUpdateWeekOffset(0)}
+                        >
                             I dag
                         </Button>
-                        <Button onClick={() => handleUpdateWeekOffset(1)} endIcon={<ArrowForward />}>{`W${
-                            DateTime.fromISO(currentSchedule.days[0]!.date).plus({ weeks: 1 }).weekNumber
-                        }`}</Button>
                     </Stack>
                 </Stack>
                 <Divider orientation="horizontal" flexItem />
