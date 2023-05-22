@@ -44,9 +44,12 @@ const ClassCard = ({
 
     const classColorRGB = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
+    const isInThePast = new Date(_class.from).getTime() < new Date().getTime();
+
     return (
         <Card
             sx={{
+                opacity: isInThePast ? 0.6 : 1,
                 background: "none",
                 position: "relative",
                 borderLeft: `0.4rem solid ${classColorRGB(false)}`,
@@ -57,19 +60,20 @@ const ClassCard = ({
         >
             <CardContent
                 className={"unselectable"}
-                onClick={selectable ? handleClick : undefined}
+                onClick={selectable && !isInThePast ? handleClick : undefined}
                 sx={{ paddingBottom: 1 }}
             >
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                     <Typography
                         sx={{
+                            textDecoration: isInThePast ? "line-through" : "none",
                             fontSize: "1.05rem",
                             ...(selected ? { fontWeight: "bold" } : {}),
                         }}
                     >
                         {_class.name}
                     </Typography>
-                    <ClassPopularityMeter popularity={popularity} />
+                    {!isInThePast && <ClassPopularityMeter popularity={popularity} />}
                 </Box>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
@@ -103,7 +107,7 @@ const ClassCard = ({
                     zIndex: -1,
                     backgroundColor: "white",
                     '[data-mui-color-scheme="dark"] &': {
-                        backgroundColor: "#111",
+                        backgroundColor: "#191919",
                     },
                 }}
             />

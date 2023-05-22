@@ -5,7 +5,6 @@ export enum ClassPopularity {
     High = "Denne timen er vanligvis full.",
 }
 
-export type ActivityPopularity = {
-    activityId: number;
-    popularity: ClassPopularity;
+export type ClassPopularityIndex = {
+    [recurrentId: string]: ClassPopularity;
 };

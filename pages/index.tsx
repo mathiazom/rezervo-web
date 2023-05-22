@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Container, Divider, Modal, Stack } from "@mui/material";
+import { Box, Button, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
-import { classConfigRecurrentId, fetchActivityPopularity, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
-import { ActivityPopularity, ClassPopularity } from "../types/derivedTypes";
+import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
+import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { ClassConfig, ConfigPayload, NotificationsConfig, UserConfig } from "../types/rezervoTypes";
@@ -15,29 +15,33 @@ import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import ClassInfo from "../components/ClassInfo";
 import Agenda from "../components/Agenda";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import { DateTime } from "luxon";
+import { createClassPopularityIndex } from "../lib/popularity";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
 
 export async function getStaticProps() {
-    const schedule = await fetchSchedule();
-    const activitiesPopularity = await fetchActivityPopularity();
+    const initialCachedSchedules = await fetchSchedules([-1, 0, 1, 2, 3]);
+    const classPopularityIndex = await createClassPopularityIndex(initialCachedSchedules[-1]!);
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
-            schedule,
-            activitiesPopularity,
+            initialCachedSchedules,
+            classPopularityIndex,
         },
         revalidate: invalidationTimeInSeconds,
     };
 }
 
 const Index: NextPage<{
-    schedule: SitSchedule;
-    activitiesPopularity: ActivityPopularity[];
-}> = ({ schedule, activitiesPopularity }) => {
+    initialCachedSchedules: { [weekOffset: number]: SitSchedule };
+    classPopularityIndex: ClassPopularityIndex;
+}> = ({ initialCachedSchedules, classPopularityIndex }) => {
     const router = useRouter();
+    const theme = useTheme();
 
     const { user } = useUser();
 
@@ -59,14 +63,41 @@ const Index: NextPage<{
 
     const [modalClass, setModalClass] = useState<SitClass | null>(null);
 
+    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
+        initialCachedSchedules
+    );
+    const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
+    const [weekOffset, setWeekOffset] = useState(0);
+    const handleUpdateWeekOffset = async (modifier: number) => {
+        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
+        let cachedSchedule = cachedSchedules[currentWeekOffset];
+
+        if (cachedSchedule === undefined) {
+            cachedSchedule = await (
+                await fetch("api/schedule", {
+                    method: "POST",
+                    body: JSON.stringify({ weekOffset: currentWeekOffset }),
+                })
+            ).json();
+            if (cachedSchedule === undefined) {
+                throw new Error("Failed to fetch schedule");
+            }
+
+            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
+        }
+
+        setWeekOffset(currentWeekOffset);
+        setCurrentSchedule(cachedSchedule);
+    };
+
     const selectionChanged = useMemo(
         () => !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
         [originalSelectedClassIds, selectedClassIds]
     );
 
     const classes = useMemo(() => {
-        return schedule?.days.flatMap((d) => d.classes) ?? [];
-    }, [schedule?.days]);
+        return currentSchedule.days.flatMap((d) => d.classes) ?? [];
+    }, [currentSchedule.days]);
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         if (selected) {
@@ -99,11 +130,13 @@ const Index: NextPage<{
         if (classId === undefined) {
             return;
         }
-        const linkedClass = schedule.days.flatMap((day) => day.classes).find((_class) => _class.id === Number(classId));
+        const linkedClass = currentSchedule.days
+            .flatMap((day) => day.classes)
+            .find((_class) => _class.id === Number(classId));
         if (linkedClass) {
             setModalClass(linkedClass);
         }
-    }, [router.query, schedule.days]);
+    }, [router.query, currentSchedule.days]);
 
     useEffect(() => {
         setOriginalSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);
@@ -228,7 +261,7 @@ const Index: NextPage<{
                 <meta name="msapplication-TileColor" content="#da532c" />
                 <meta name="theme-color" content="#ffffff" />
             </Head>
-            <Stack divider={<Divider orientation="horizontal" flexItem />}>
+            <Stack>
                 <Box display={"flex"} justifyContent={"center"}>
                     <Box width={1388}>
                         <AppBar
@@ -242,11 +275,47 @@ const Index: NextPage<{
                         />
                     </Box>
                 </Box>
+                <Stack>
+                    <Stack
+                        direction={"row"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        mb={1}
+                        sx={{ position: "relative" }}
+                    >
+                        <Button variant={"outlined"} size={"small"} onClick={() => handleUpdateWeekOffset(-1)}>
+                            <ArrowBack />
+                        </Button>
+                        <Typography
+                            sx={{ opacity: 0.7 }}
+                            mx={2}
+                            variant={"subtitle2"}
+                            color={theme.palette.primary.contrastText}
+                        >{`UKE ${DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}`}</Typography>
+                        <Button variant={"outlined"} size={"small"} onClick={() => handleUpdateWeekOffset(1)}>
+                            <ArrowForward />
+                        </Button>
+                        <Button
+                            sx={{
+                                ml: 1,
+                                position: { xs: "absolute", md: "inherit" },
+                                right: { xs: 10, md: "inherit" },
+                            }}
+                            variant={"outlined"}
+                            size={"small"}
+                            disabled={weekOffset === 0}
+                            onClick={() => handleUpdateWeekOffset(0)}
+                        >
+                            I dag
+                        </Button>
+                    </Stack>
+                </Stack>
+                <Divider orientation="horizontal" flexItem />
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
                     <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
-                            schedule={schedule}
-                            activitiesPopularity={activitiesPopularity}
+                            schedule={currentSchedule}
+                            classPopularityIndex={classPopularityIndex}
                             selectable={user != null && !isLoadingConfig}
                             selectedClassIds={selectedClassIds}
                             onSelectedChanged={onSelectedChanged}
@@ -267,10 +336,8 @@ const Index: NextPage<{
                     {modalClass && (
                         <ClassInfo
                             _class={modalClass}
-                            popularity={
-                                activitiesPopularity.find(
-                                    (activityPopularity) => activityPopularity.activityId === modalClass.activityId
-                                )?.popularity ?? ClassPopularity.Unknown
+                            classPopularity={
+                                classPopularityIndex[sitClassRecurrentId(modalClass)] ?? ClassPopularity.Unknown
                             }
                         />
                     )}

@@ -84,10 +84,10 @@ export default function AppBar({
                                 </Tooltip>
                                 <Button
                                     variant={"contained"}
-                                    startIcon={<CloudUploadIcon />}
+                                    startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
                                     onClick={() => onUpdateConfig()}
                                 >
-                                    Oppdater
+                                    <Typography color={"#fff"}>Oppdater</Typography>
                                 </Button>
                             </Box>
                         ) : (

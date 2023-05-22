@@ -1,8 +1,7 @@
 import { GROUP_BOOKING_URL } from "../config/config";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { ActivityPopularity } from "../types/derivedTypes";
-import { determineClassPopularity } from "./popularity";
 import { ClassConfig } from "../types/rezervoTypes";
+import { weekdayNameToNumber } from "../utils/timeUtils";
 
 function scheduleUrl(token: string, from: Date | null = null) {
     return (
@@ -34,32 +33,30 @@ async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Pro
     return await scheduleResponse.json();
 }
 
-export async function fetchSchedule() {
+export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitSchedule }> {
+    const weekOffsetToSchedule = (o: number) => fetchSchedule(o).then((s) => ({ [o]: s }));
+    return (await Promise.all(weekOffsets.map(weekOffsetToSchedule))).reduce((acc, o) => ({ ...acc, ...o }), {});
+}
+
+export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
     const token = await fetchPublicToken();
+
+    const dayNumber = new Date().getDay();
+    const mondayOffset = dayNumber === 0 ? 6 : dayNumber - 1;
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
         days: [
             // Use offset -1 to fetch all today's events, not just the ones in the future
-            ...(await fetchScheduleWithDayOffset(token, -1)).days.slice(1),
-            ...(await fetchScheduleWithDayOffset(token, 3)).days,
-        ],
+            ...(await fetchScheduleWithDayOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
+            ...(await fetchScheduleWithDayOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
+        ].map((day) => {
+            for (const _class of day.classes) {
+                _class.weekday = weekdayNameToNumber(day.dayName);
+            }
+            return day;
+        }),
     };
-}
-
-export async function fetchActivityPopularity(): Promise<ActivityPopularity[]> {
-    const token = await fetchPublicToken();
-    const firstBatch = await fetchScheduleWithDayOffset(token, -7);
-    const secondBatch = await fetchScheduleWithDayOffset(token, -4);
-    const previousSchedule = {
-        days: [...firstBatch.days, ...secondBatch.days],
-    };
-    return previousSchedule.days.flatMap((day) =>
-        day.classes.map((sitClass) => ({
-            activityId: sitClass.activityId,
-            popularity: determineClassPopularity(sitClass),
-        }))
-    );
 }
 
 export function classConfigRecurrentId(classConfig: ClassConfig) {

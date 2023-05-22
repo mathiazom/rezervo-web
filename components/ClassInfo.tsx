@@ -10,9 +10,10 @@ import { SitClass } from "../types/sitTypes";
 import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { ClassPopularity } from "../types/derivedTypes";
 
-export default function ClassInfo({ _class, popularity }: { _class: SitClass; popularity: ClassPopularity }) {
+export default function ClassInfo({ _class, classPopularity }: { _class: SitClass; classPopularity: ClassPopularity }) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
+    const isInThePast = new Date(_class.from).getTime() < new Date().getTime();
     return (
         <Box
             sx={{
@@ -29,7 +30,7 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
                 p: 4,
                 backgroundColor: "white",
                 '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#111",
+                    backgroundColor: "#181818",
                 },
             }}
         >
@@ -108,7 +109,7 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
                     {_class.instructors.map((i) => i.name).join(", ")}
                 </Typography>
             </Box>
-            {popularity && (
+            {!isInThePast && (
                 <Box
                     sx={{
                         display: "flex",
@@ -117,9 +118,9 @@ export default function ClassInfo({ _class, popularity }: { _class: SitClass; po
                         alignItems: "center",
                     }}
                 >
-                    <ClassPopularityMeter popularity={popularity} />
+                    <ClassPopularityMeter popularity={classPopularity} />
                     <Typography variant="body2" color="text.secondary">
-                        {popularity}
+                        {classPopularity}
                     </Typography>
                 </Box>
             )}
