@@ -40,12 +40,13 @@ export default function AgendaClassItem({
 
     const displayName = agendaClass.sitClass?.name ?? agendaClass.config.display_name;
 
-    const configTime = new Date();
-    configTime.setHours(agendaClass.config.time.hour);
-    configTime.setMinutes(agendaClass.config.time.minute);
-    const timeFrom = simpleTimeStringFromISO(
-        agendaClass.sitClass?.from ? agendaClass.sitClass?.from : configTime.toISOString()
-    );
+    function hoursAndMinutesToClockString(hours: number, minutes: number) {
+        return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+    }
+
+    const timeFrom = agendaClass.sitClass?.from
+        ? simpleTimeStringFromISO(agendaClass.sitClass?.from)
+        : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
 
     const timeTo = agendaClass.sitClass?.to ? simpleTimeStringFromISO(agendaClass.sitClass?.to) : null;
 
