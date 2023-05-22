@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Fab } from "@mui/material";
+import { Box, CircularProgress, Fab, Typography } from "@mui/material";
 import UndoIcon from "@mui/icons-material/Undo";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import React from "react";
@@ -42,8 +42,8 @@ export default function MobileConfigUpdateBar({
                         />
                     </Fab>
                     <Fab color={"primary"} variant="extended" onClick={() => onUpdateConfig()}>
-                        <CloudUploadIcon sx={{ mr: 1 }} />
-                        Oppdater
+                        <CloudUploadIcon sx={{ mr: 1, color: "#fff" }} />
+                        <Typography color={"#fff"}>Oppdater</Typography>
                     </Fab>
                 </>
             )}
