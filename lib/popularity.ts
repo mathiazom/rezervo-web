@@ -10,10 +10,13 @@ export function determineClassPopularity(sitClass: SitClass) {
 }
 
 export async function createClassPopularityIndex(previousWeekSchedule: SitSchedule): Promise<ClassPopularityIndex> {
-    return previousWeekSchedule.days.reduce((popularityIndex, nextDay) => {
-        for (const _class of nextDay.classes) {
-            popularityIndex[sitClassRecurrentId(_class)] = determineClassPopularity(_class);
-        }
-        return popularityIndex;
-    }, {} as ClassPopularityIndex);
+    return previousWeekSchedule.days
+        .flatMap((d) => d.classes)
+        .reduce(
+            (popularityIndex, _class) => ({
+                ...popularityIndex,
+                [sitClassRecurrentId(_class)]: determineClassPopularity(_class),
+            }),
+            {} as ClassPopularityIndex
+        );
 }
