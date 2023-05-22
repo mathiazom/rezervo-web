@@ -1,5 +1,5 @@
 import { GROUP_BOOKING_URL } from "../config/config";
-import { SitClass, SitSchedule, SitScheduleDay } from "../types/sitTypes";
+import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
 
@@ -33,7 +33,12 @@ async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Pro
     return await scheduleResponse.json();
 }
 
-export async function fetchSchedule(weekOffset: number): Promise<{ days: SitScheduleDay[] }> {
+export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitSchedule }> {
+    const weekOffsetToSchedule = (o: number) => fetchSchedule(o).then((s) => ({ [o]: s }));
+    return (await Promise.all(weekOffsets.map(weekOffsetToSchedule))).reduce((acc, o) => ({ ...acc, ...o }), {});
+}
+
+export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
     const token = await fetchPublicToken();
 
     const dayNumber = new Date().getDay();

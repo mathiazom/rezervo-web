@@ -3,7 +3,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
-import { classConfigRecurrentId, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
+import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -23,14 +23,8 @@ import { createClassPopularityIndex } from "../lib/popularity";
 const ScheduleMemo = memo(Schedule);
 
 export async function getStaticProps() {
-    const initialCachedSchedules = {
-        [-1]: await fetchSchedule(-1),
-        [0]: await fetchSchedule(0),
-        [1]: await fetchSchedule(1),
-        [2]: await fetchSchedule(2),
-        [3]: await fetchSchedule(3),
-    };
-    const classPopularityIndex = await createClassPopularityIndex(initialCachedSchedules[-1]);
+    const initialCachedSchedules = await fetchSchedules([-1, 0, 1, 2, 3]);
+    const classPopularityIndex = await createClassPopularityIndex(initialCachedSchedules[-1]!);
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
