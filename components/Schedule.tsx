@@ -2,21 +2,20 @@ import React from "react";
 import { Box, Chip, Stack, Typography, useTheme } from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { weekdayNameToNumber } from "../utils/timeUtils";
-import { ActivityPopularity, ClassPopularity } from "../types/derivedTypes";
+import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { sitClassRecurrentId } from "../lib/iBooking";
 import { DateTime } from "luxon";
 
 const Schedule = ({
     schedule,
-    activitiesPopularity,
+    classPopularityIndex,
     selectable,
     selectedClassIds,
     onSelectedChanged,
     onInfo,
 }: {
     schedule: SitSchedule;
-    activitiesPopularity: ActivityPopularity[];
+    classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[];
     // eslint-disable-next-line no-unused-vars
@@ -25,10 +24,6 @@ const Schedule = ({
     onInfo: (c: SitClass) => void;
 }) => {
     const theme = useTheme();
-
-    const lookupClassPopularity = (_class: SitClass) =>
-        activitiesPopularity.find((activityPopularity) => activityPopularity.activityId === _class.activityId)
-            ?.popularity ?? ClassPopularity.Unknown;
 
     const isToday = (dateStr: string) => DateTime.fromISO(dateStr).startOf("day").equals(DateTime.now().startOf("day"));
 
@@ -63,24 +58,23 @@ const Schedule = ({
                             </Typography>
                         </Box>
                         {day.classes.length > 0 ? (
-                            day.classes.map((_class) => {
-                                _class.weekday = weekdayNameToNumber(day.dayName);
-                                return (
-                                    <Box key={_class.id} mb={1}>
-                                        <ClassCard
-                                            _class={_class}
-                                            popularity={lookupClassPopularity(_class)}
-                                            selectable={selectable}
-                                            selected={selectedClassIds.includes(sitClassRecurrentId(_class))}
-                                            onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
-                                            onInfo={() => onInfo(_class)}
-                                            // onSettings={() =>
-                                            //     setSettingsClass(_class)
-                                            // }
-                                        />
-                                    </Box>
-                                );
-                            })
+                            day.classes.map((_class) => (
+                                <Box key={_class.id} mb={1}>
+                                    <ClassCard
+                                        _class={_class}
+                                        popularity={
+                                            classPopularityIndex[sitClassRecurrentId(_class)] ?? ClassPopularity.Unknown
+                                        }
+                                        selectable={selectable}
+                                        selected={selectedClassIds.includes(sitClassRecurrentId(_class))}
+                                        onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
+                                        onInfo={() => onInfo(_class)}
+                                        // onSettings={() =>
+                                        //     setSettingsClass(_class)
+                                        // }
+                                    />
+                                </Box>
+                            ))
                         ) : (
                             <p>Ingen gruppetimer</p>
                         )}

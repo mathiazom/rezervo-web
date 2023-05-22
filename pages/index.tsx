@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Box, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
+import { Box, Button, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
-import { classConfigRecurrentId, fetchActivityPopularity, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
-import { ActivityPopularity, ClassPopularity } from "../types/derivedTypes";
+import { classConfigRecurrentId, fetchSchedule, sitClassRecurrentId } from "../lib/iBooking";
+import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { ClassConfig, ConfigPayload, NotificationsConfig, UserConfig } from "../types/rezervoTypes";
@@ -17,6 +17,7 @@ import ClassInfo from "../components/ClassInfo";
 import Agenda from "../components/Agenda";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { DateTime } from "luxon";
+import { createClassPopularityIndex } from "../lib/popularity";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -29,13 +30,13 @@ export async function getStaticProps() {
         [2]: await fetchSchedule(2),
         [3]: await fetchSchedule(3),
     };
-    const activitiesPopularity = await fetchActivityPopularity();
+    const classPopularityIndex = await createClassPopularityIndex(initialCachedSchedules[-1]);
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
             initialCachedSchedules,
-            activitiesPopularity,
+            classPopularityIndex,
         },
         revalidate: invalidationTimeInSeconds,
     };
@@ -43,8 +44,8 @@ export async function getStaticProps() {
 
 const Index: NextPage<{
     initialCachedSchedules: { [weekOffset: number]: SitSchedule };
-    activitiesPopularity: ActivityPopularity[];
-}> = ({ initialCachedSchedules, activitiesPopularity }) => {
+    classPopularityIndex: ClassPopularityIndex;
+}> = ({ initialCachedSchedules, classPopularityIndex }) => {
     const router = useRouter();
     const theme = useTheme();
 
@@ -320,7 +321,7 @@ const Index: NextPage<{
                     <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
                             schedule={currentSchedule}
-                            activitiesPopularity={activitiesPopularity}
+                            classPopularityIndex={classPopularityIndex}
                             selectable={user != null && !isLoadingConfig}
                             selectedClassIds={selectedClassIds}
                             onSelectedChanged={onSelectedChanged}
@@ -341,10 +342,8 @@ const Index: NextPage<{
                     {modalClass && (
                         <ClassInfo
                             _class={modalClass}
-                            popularity={
-                                activitiesPopularity.find(
-                                    (activityPopularity) => activityPopularity.activityId === modalClass.activityId
-                                )?.popularity ?? ClassPopularity.Unknown
+                            classPopularity={
+                                classPopularityIndex[sitClassRecurrentId(modalClass)] ?? ClassPopularity.Unknown
                             }
                         />
                     )}
