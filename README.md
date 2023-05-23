@@ -1,6 +1,6 @@
 # 🤸 sit-rezervo-confgen
 
-GUI for quickly generating a `config.yaml` for [`sit-rezervo`](https://github.com/mathiazom/sit-rezervo)
+Web client for [`sit-rezervo`](https://github.com/mathiazom/sit-rezervo), including booking schedules and user preferences.
 
 ### Setup
 
