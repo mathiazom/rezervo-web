@@ -57,6 +57,7 @@ const Index: NextPage<{
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     const [isLoadingConfig, setIsLoadingConfig] = useState(false);
+    const [isConfigError, setIsConfigError] = useState(false);
 
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [agendaOpen, setAgendaOpen] = useState(false);
@@ -112,9 +113,7 @@ const Index: NextPage<{
             return;
         }
         setIsLoadingConfig(true);
-        getConfig().then((c) => {
-            setUserConfig(c);
-        });
+        getConfig();
     }, [user]);
 
     useEffect(() => {
@@ -146,9 +145,16 @@ const Index: NextPage<{
     }, [userConfig]);
 
     async function getConfig() {
-        return fetch("/api/config", {
+        fetch("/api/config", {
             method: "GET",
-        }).then((r) => r.json());
+        }).then((r) => {
+            if (!r.ok) {
+                setIsConfigError(true);
+                return;
+            }
+            setIsConfigError(false);
+            r.json().then(setUserConfig);
+        });
     }
 
     // Pre-generate all class config strings
@@ -243,11 +249,7 @@ const Index: NextPage<{
             active: userConfigActive,
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
             notifications: notificationsConfig,
-        }).then(() => {
-            getConfig().then((c) => {
-                setUserConfig(c);
-            });
-        });
+        }).then(() => getConfig());
     }
 
     return (
@@ -268,7 +270,8 @@ const Index: NextPage<{
                         <AppBar
                             changed={selectionChanged}
                             agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                            isLoadingConfig={isLoadingConfig}
+                            isLoadingConfig={userConfig == null || isLoadingConfig}
+                            isConfigError={isConfigError}
                             onUpdateConfig={() => updateConfigFromSelection()}
                             onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                             onSettingsOpen={() => setSettingsOpen(true)}
@@ -317,7 +320,7 @@ const Index: NextPage<{
                         <ScheduleMemo
                             schedule={currentSchedule}
                             classPopularityIndex={classPopularityIndex}
-                            selectable={user != null && !isLoadingConfig}
+                            selectable={user != null && !isLoadingConfig && !isConfigError}
                             selectedClassIds={selectedClassIds}
                             onSelectedChanged={onSelectedChanged}
                             onInfo={setModalClass}

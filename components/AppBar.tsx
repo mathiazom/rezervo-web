@@ -1,9 +1,11 @@
-import { Avatar, Box, Button, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
+import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import UndoIcon from "@mui/icons-material/Undo";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
+import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import LoginIcon from "@mui/icons-material/Login";
@@ -12,6 +14,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function AppBar({
     isLoadingConfig,
+    isConfigError,
     changed,
     agendaEnabled,
     onUpdateConfig,
@@ -20,6 +23,7 @@ export default function AppBar({
     onAgendaOpen,
 }: {
     isLoadingConfig: boolean;
+    isConfigError: boolean;
     changed: boolean;
     agendaEnabled: boolean;
     onUpdateConfig: () => void;
@@ -55,9 +59,21 @@ export default function AppBar({
                             gap: { xs: 1, md: 1.5 },
                         }}
                     >
-                        {isLoadingConfig ? (
+                        {isConfigError ? (
+                            <Box mr={1.5}>
+                                <Tooltip title={"Feilet"}>
+                                    <Badge
+                                        overlap={"circular"}
+                                        badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"error"} />}
+                                    >
+                                        <CloudOffRoundedIcon color={"disabled"} />
+                                    </Badge>
+                                </Tooltip>
+                            </Box>
+                        ) : isLoadingConfig ? (
                             <CircularProgress
                                 sx={{
+                                    mr: 1,
                                     display: {
                                         xs: "none",
                                         sm: "flex",
@@ -66,52 +82,56 @@ export default function AppBar({
                                 size={26}
                                 thickness={6}
                             />
-                        ) : changed ? (
-                            <Box
-                                sx={{
-                                    display: {
-                                        xs: "none",
-                                        sm: "flex",
-                                    },
-                                    alignItems: "center",
-                                    gap: 1,
-                                }}
-                            >
-                                <Tooltip title={"Angre"}>
-                                    <IconButton onClick={() => onUndoSelectionChanges()}>
-                                        <UndoIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Button
-                                    variant={"contained"}
-                                    startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
-                                    onClick={() => onUpdateConfig()}
-                                >
-                                    <Typography color={"#fff"}>Oppdater</Typography>
-                                </Button>
-                            </Box>
                         ) : (
-                            <Tooltip title={"Lagret"}>
-                                <CloudDoneIcon color={"disabled"} />
-                            </Tooltip>
+                            <>
+                                {changed ? (
+                                    <Box
+                                        sx={{
+                                            display: {
+                                                xs: "none",
+                                                sm: "flex",
+                                            },
+                                            alignItems: "center",
+                                            gap: 1,
+                                        }}
+                                    >
+                                        <Tooltip title={"Angre"}>
+                                            <IconButton onClick={() => onUndoSelectionChanges()}>
+                                                <UndoIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Button
+                                            variant={"contained"}
+                                            startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
+                                            onClick={() => onUpdateConfig()}
+                                        >
+                                            <Typography color={"#fff"}>Oppdater</Typography>
+                                        </Button>
+                                    </Box>
+                                ) : (
+                                    <Tooltip title={"Lagret"}>
+                                        <CloudDoneIcon color={"disabled"} />
+                                    </Tooltip>
+                                )}
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Tooltip title={"Agenda"}>
+                                        <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
+                                            <FormatListBulletedRoundedIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title={"Innstillinger"}>
+                                        <IconButton onClick={() => onSettingsOpen()}>
+                                            <SettingsRoundedIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            </>
                         )}
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Tooltip title={"Agenda"}>
-                                <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
-                                    <FormatListBulletedRoundedIcon />
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title={"Innstillinger"}>
-                                <IconButton onClick={() => onSettingsOpen()}>
-                                    <SettingsRoundedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
                         {user.name && (
                             <Tooltip title={user.name}>
                                 <Avatar
