@@ -74,13 +74,3 @@ export function sitClassRecurrentId(sitClass: SitClass) {
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {
     return `${activityId}_${weekday}_${hour}_${minute}`;
 }
-
-export function destructRecurrentClassId(id: string): {
-    activityId: number | undefined;
-    weekday: number | undefined;
-    hour: number | undefined;
-    minute: number | undefined;
-} {
-    const [activityId, weekday, hour, minute] = id.split("_").map((s) => Number(s));
-    return { activityId, weekday, hour, minute };
-}

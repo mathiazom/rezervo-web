@@ -44,139 +44,46 @@ const Index: NextPage<{
 
     const { user } = useUser();
 
-    const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
-    const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[]>([]);
-
     const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
-
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
-
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
+
+    const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
+    const originalSelectedClassIds = useMemo(
+        () => userConfig?.classes?.map(classConfigRecurrentId) ?? [],
+        [userConfig?.classes]
+    );
 
     const [isLoadingConfig, setIsLoadingConfig] = useState(false);
     const [isConfigError, setIsConfigError] = useState(false);
 
-    const [settingsOpen, setSettingsOpen] = useState(false);
-    const [agendaOpen, setAgendaOpen] = useState(false);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isAgendaOpen, setIsAgendaOpen] = useState(false);
 
-    const [modalClass, setModalClass] = useState<SitClass | null>(null);
+    const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
 
     const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
         initialCachedSchedules
     );
-    const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
     const [weekOffset, setWeekOffset] = useState(0);
+    const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
-    const handleUpdateWeekOffset = async (modifier: number) => {
-        switch (modifier) {
-            case -1:
-                setLoadingPreviousWeek(true);
-                break;
-            case 1:
-                setLoadingNextWeek(true);
-                break;
-        }
-        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
-        let cachedSchedule = cachedSchedules[currentWeekOffset];
-
-        if (cachedSchedule === undefined) {
-            cachedSchedule = await (
-                await fetch("api/schedule", {
-                    method: "POST",
-                    body: JSON.stringify({ weekOffset: currentWeekOffset }),
-                })
-            ).json();
-            if (cachedSchedule === undefined) {
-                setLoadingPreviousWeek(false);
-                setLoadingNextWeek(false);
-                throw new Error("Failed to fetch schedule");
-            }
-            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
-        }
-
-        setWeekOffset(currentWeekOffset);
-        setCurrentSchedule(cachedSchedule);
-        setLoadingPreviousWeek(false);
-        setLoadingNextWeek(false);
-    };
 
     const selectionChanged = useMemo(
         () => !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
         [originalSelectedClassIds, selectedClassIds]
     );
 
-    const classes = useMemo(() => {
-        return currentSchedule.days.flatMap((d) => d.classes) ?? [];
-    }, [currentSchedule.days]);
-
-    const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
-        if (selected) {
-            setSelectedClassIds((s) => (s.includes(classId) ? s : [...s, classId]));
-        } else {
-            setSelectedClassIds((s) => s.filter((c) => c != classId));
-        }
-    }, []);
-
-    useEffect(() => {
-        if (user == null) {
-            return;
-        }
-        setIsLoadingConfig(true);
-        getConfig();
-    }, [user]);
-
-    useEffect(() => {
-        setUserConfigActive(userConfig?.active ?? false);
-    }, [userConfig]);
-
-    useEffect(() => {
-        setNotificationsConfig(userConfig?.notifications ?? null);
-    }, [userConfig]);
-
-    useEffect(() => {
-        const { classId, ...queryWithoutParam } = router.query;
-        if (classId === undefined) {
-            return;
-        }
-        const linkedClass = currentSchedule.days
-            .flatMap((day) => day.classes)
-            .find((_class) => _class.id === Number(classId));
-        if (linkedClass) {
-            setModalClass(linkedClass);
-        }
-        router.replace({ query: queryWithoutParam });
-    }, [router, currentSchedule.days]);
-
-    useEffect(() => {
-        setOriginalSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);
-        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);
-        setIsLoadingConfig(false);
-    }, [userConfig]);
-
-    async function getConfig() {
-        fetch("/api/config", {
-            method: "GET",
-        }).then((r) => {
-            if (!r.ok) {
-                setIsConfigError(true);
-                return;
-            }
-            setIsConfigError(false);
-            r.json().then(setUserConfig);
-        });
-    }
+    const classes = useMemo(() => currentSchedule.days.flatMap((d) => d.classes) ?? [], [currentSchedule.days]);
 
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
         function timeForClass(_class: SitClass) {
-            const date = new Date(_class.from);
-            return {
-                hour: date.getHours(),
-                minute: date.getMinutes(),
-            };
+            const { hour, minute } = DateTime.fromISO(_class.from);
+            return { hour, minute };
         }
         const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(
             (o, c) => ({
@@ -205,17 +112,71 @@ const Index: NextPage<{
         return { ...classesConfigMap, ...ghostClassesConfigs };
     }, [classes, userConfig?.classes]);
 
-    async function putConfig(config: ConfigPayload) {
-        return await fetch("/api/config", {
-            method: "PUT",
-            body: JSON.stringify(config, null, 2),
+    const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
+        setSelectedClassIds((s) =>
+            selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId)
+        );
+    }, []);
+
+    useEffect(() => {
+        if (user != null) {
+            getConfig();
+        }
+    }, [user]);
+
+    useEffect(() => {
+        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);
+    }, [userConfig]);
+
+    useEffect(() => {
+        setUserConfigActive(userConfig?.active ?? false);
+    }, [userConfig]);
+
+    useEffect(() => {
+        setNotificationsConfig(userConfig?.notifications ?? null);
+    }, [userConfig]);
+
+    useEffect(() => {
+        const { classId, ...queryWithoutParam } = router.query;
+        if (classId === undefined) {
+            return;
+        }
+        const linkedClass = currentSchedule.days
+            .flatMap((day) => day.classes)
+            .find((_class) => _class.id === Number(classId));
+        if (linkedClass) {
+            setClassInfoClass(linkedClass);
+        }
+        router.replace({ query: queryWithoutParam });
+    }, [router, currentSchedule.days]);
+
+    function getConfig() {
+        setIsLoadingConfig(true);
+        fetch("/api/config", {
+            method: "GET",
+        }).then((r) => {
+            if (!r.ok) {
+                setIsConfigError(true);
+                return;
+            }
+            setIsConfigError(false);
+            setIsLoadingConfig(false);
+            r.json().then(setUserConfig);
         });
     }
 
-    async function putConfigActive(active: boolean) {
+    function putConfig(config: ConfigPayload) {
+        setIsLoadingConfig(true);
+        return fetch("/api/config", {
+            method: "PUT",
+            body: JSON.stringify(config, null, 2),
+        }).then(() => getConfig());
+    }
+
+    function putConfigActive(active: boolean) {
         setUserConfigActive(active);
         setUserConfigActiveLoading(true);
-        return await fetch("/api/config", {
+        return fetch("/api/config", {
             method: "PUT",
             body: JSON.stringify(
                 {
@@ -233,10 +194,10 @@ const Index: NextPage<{
             });
     }
 
-    async function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
+    function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
         setNotificationsConfig(notificationsConfig);
         setNotificationsConfigLoading(true);
-        return await fetch("/api/config", {
+        return fetch("/api/config", {
             method: "PUT",
             body: JSON.stringify(
                 {
@@ -255,13 +216,41 @@ const Index: NextPage<{
             });
     }
 
-    async function updateConfigFromSelection() {
-        setIsLoadingConfig(true);
-        putConfig({
+    function updateConfigFromSelection() {
+        return putConfig({
             active: userConfigActive,
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
             notifications: notificationsConfig,
-        }).then(() => getConfig());
+        });
+    }
+
+    async function handleUpdateWeekOffset(modifier: number) {
+        switch (modifier) {
+            case -1:
+                setLoadingPreviousWeek(true);
+                break;
+            case 1:
+                setLoadingNextWeek(true);
+                break;
+        }
+        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
+        let cachedSchedule = cachedSchedules[currentWeekOffset];
+        if (cachedSchedule === undefined) {
+            cachedSchedule = await fetch("api/schedule", {
+                method: "POST",
+                body: JSON.stringify({ weekOffset: currentWeekOffset }),
+            }).then((r) => r.json());
+            if (cachedSchedule === undefined) {
+                setLoadingPreviousWeek(false);
+                setLoadingNextWeek(false);
+                throw new Error("Failed to fetch schedule");
+            }
+            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
+        }
+        setWeekOffset(currentWeekOffset);
+        setCurrentSchedule(cachedSchedule);
+        setLoadingPreviousWeek(false);
+        setLoadingNextWeek(false);
     }
 
     return (
@@ -287,8 +276,8 @@ const Index: NextPage<{
                                 isConfigError={isConfigError}
                                 onUpdateConfig={() => updateConfigFromSelection()}
                                 onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                                onSettingsOpen={() => setSettingsOpen(true)}
-                                onAgendaOpen={() => setAgendaOpen(true)}
+                                onSettingsOpen={() => setIsSettingsOpen(true)}
+                                onAgendaOpen={() => setIsAgendaOpen(true)}
                             />
                         </Box>
                     </Box>
@@ -308,7 +297,7 @@ const Index: NextPage<{
                         selectable={user != null && !isLoadingConfig && !isConfigError}
                         selectedClassIds={selectedClassIds}
                         onSelectedChanged={onSelectedChanged}
-                        onInfo={setModalClass}
+                        onInfo={setClassInfoClass}
                     />
                 </Box>
                 {selectionChanged && (
@@ -328,19 +317,19 @@ const Index: NextPage<{
                     </Box>
                 )}
             </Stack>
-            <Modal open={modalClass != null} onClose={() => setModalClass(null)}>
+            <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
                 <>
-                    {modalClass && (
+                    {classInfoClass && (
                         <ClassInfo
-                            _class={modalClass}
+                            _class={classInfoClass}
                             classPopularity={
-                                classPopularityIndex[sitClassRecurrentId(modalClass)] ?? ClassPopularity.Unknown
+                                classPopularityIndex[sitClassRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
                             }
                         />
                     )}
                 </>
             </Modal>
-            <Modal open={agendaOpen} onClose={() => setAgendaOpen(false)}>
+            <Modal open={isAgendaOpen} onClose={() => setIsAgendaOpen(false)}>
                 <>
                     {userConfig?.classes && (
                         <Agenda
@@ -349,13 +338,13 @@ const Index: NextPage<{
                                 sitClass: classes.find((sc) => sitClassRecurrentId(sc) === classConfigRecurrentId(c)),
                                 markedForDeletion: !selectedClassIds.includes(classConfigRecurrentId(c)),
                             }))}
-                            onInfo={setModalClass}
+                            onInfo={setClassInfoClass}
                             onSetToDelete={(c, toDelete) => onSelectedChanged(classConfigRecurrentId(c), !toDelete)}
                         />
                     )}
                 </>
             </Modal>
-            <Modal open={settingsOpen} onClose={() => setSettingsOpen(false)}>
+            <Modal open={isSettingsOpen} onClose={() => setIsSettingsOpen(false)}>
                 <Settings
                     bookingActive={userConfigActive}
                     bookingActiveLoading={userConfigActiveLoading}
