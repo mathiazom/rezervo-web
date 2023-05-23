@@ -1,12 +1,13 @@
-import { GROUP_BOOKING_URL } from "../config/config";
+import { GROUP_BOOKING_URL, SIT_TIMEZONE } from "../config/config";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
+import { DateTime } from "luxon";
 
-function scheduleUrl(token: string, from: Date | null = null) {
+function scheduleUrl(token: string, fromISO: string | null = null) {
     return (
         "https://ibooking.sit.no/webapp/api/Schedule/getSchedule" +
-        `?token=${token}${from ? "&from=" + from.toISOString() : ""}` +
+        `?token=${token}${fromISO ? "&from=" + fromISO : ""}` +
         "&studios=306,307,308,402,540,1132&lang=no&categories=5,6,7,8,9,10,11,12,14"
     );
 }
@@ -22,9 +23,10 @@ function fetchPublicToken() {
 }
 
 async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitSchedule> {
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() + dayOffset);
-    const scheduleResponse = await fetch(scheduleUrl(token, dayOffset === 0 ? null : startDate));
+    const startDate = DateTime.now().setZone(SIT_TIMEZONE).plus({ day: dayOffset });
+    const scheduleResponse = await fetch(
+        scheduleUrl(token, dayOffset === 0 ? null : startDate.toISO({ includeOffset: false }))
+    );
     if (!scheduleResponse.ok) {
         throw new Error(
             `Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`
@@ -40,9 +42,7 @@ export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffs
 
 export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
     const token = await fetchPublicToken();
-
-    const dayNumber = new Date().getDay();
-    const mondayOffset = dayNumber === 0 ? 6 : dayNumber - 1;
+    const mondayOffset = DateTime.now().setZone(SIT_TIMEZONE).weekday - 1;
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
@@ -50,12 +50,15 @@ export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
             // Use offset -1 to fetch all today's events, not just the ones in the future
             ...(await fetchScheduleWithDayOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
             ...(await fetchScheduleWithDayOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
-        ].map((day) => {
-            for (const _class of day.classes) {
-                _class.weekday = weekdayNameToNumber(day.dayName);
-            }
-            return day;
-        }),
+        ].map((day) => ({
+            ...day,
+            classes: day.classes.map((_class) => ({
+                ..._class,
+                from: _class.from.replace(" ", "T"), // convert to proper ISO8601
+                to: _class.to.replace(" ", "T"), // convert to proper ISO8601
+                weekday: weekdayNameToNumber(day.dayName),
+            })),
+        })),
     };
 }
 
@@ -64,8 +67,8 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 }
 
 export function sitClassRecurrentId(sitClass: SitClass) {
-    const d = new Date(sitClass.from);
-    return recurrentClassId(sitClass.activityId, sitClass.weekday ?? -1, d.getHours(), d.getMinutes());
+    const { hour, minute } = DateTime.fromISO(sitClass.from);
+    return recurrentClassId(sitClass.activityId, sitClass.weekday ?? -1, hour, minute);
 }
 
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {

@@ -1,5 +1,5 @@
 export function simpleTimeStringFromISO(isoString: string) {
-    return isoString.split(/[\s,T]/)[1]?.slice(0, 5);
+    return isoString.split("T")[1]?.slice(0, 5);
 }
 
 const WEEKDAY_NAME_NUMBER_ENTRIES: [string, number][] = [

@@ -9,11 +9,14 @@ import React from "react";
 import { SitClass } from "../types/sitTypes";
 import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { ClassPopularity } from "../types/derivedTypes";
+import { DateTime } from "luxon";
+import { SIT_TIMEZONE } from "../config/config";
 
 export default function ClassInfo({ _class, classPopularity }: { _class: SitClass; classPopularity: ClassPopularity }) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
-    const isInThePast = new Date(_class.from).getTime() < new Date().getTime();
+    const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
+
     return (
         <Box
             sx={{

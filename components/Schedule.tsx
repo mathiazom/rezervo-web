@@ -5,6 +5,7 @@ import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { sitClassRecurrentId } from "../lib/iBooking";
 import { DateTime } from "luxon";
+import { SIT_TIMEZONE } from "../config/config";
 
 const Schedule = ({
     schedule,
@@ -25,17 +26,24 @@ const Schedule = ({
 }) => {
     const theme = useTheme();
 
-    const isToday = (dateStr: string) => DateTime.fromISO(dateStr).startOf("day").equals(DateTime.now().startOf("day"));
+    function sameDay(a: DateTime, b: DateTime): boolean {
+        return a.startOf("day") <= b && b <= a.endOf("day");
+    }
+
+    function isToday(dateStr: string) {
+        return sameDay(DateTime.fromISO(dateStr, { zone: SIT_TIMEZONE }), DateTime.now());
+    }
+
+    function isDayPassed(dateStr: string) {
+        return DateTime.fromISO(dateStr, { zone: SIT_TIMEZONE }).endOf("day") > DateTime.now();
+    }
 
     return (
         <Stack direction={"column"}>
             <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
                 {schedule.days.map((day) => (
                     <Box key={day.date} width={180}>
-                        <Box
-                            py={2}
-                            sx={{ opacity: DateTime.fromISO(day.date).endOf("day") > DateTime.now() ? 1 : 0.5 }}
-                        >
+                        <Box py={2} sx={{ opacity: isDayPassed(day.date) ? 1 : 0.5 }}>
                             <Typography variant="h6" component="div">
                                 {day.dayName}{" "}
                                 {isToday(day.date) && (
