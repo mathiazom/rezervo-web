@@ -36,10 +36,9 @@ export default function AppBar({
     const { user, isLoading } = useUser();
 
     return (
-        <Box height={"8vh"} display="flex" alignItems={"center"}>
+        <Box display="flex" py={2} alignItems={"center"}>
             <Typography
                 component="div"
-                py={2}
                 pl={2}
                 sx={{
                     fontSize: { xs: "1.2rem", sm: "1.8rem" },
