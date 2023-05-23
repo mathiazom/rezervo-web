@@ -313,7 +313,7 @@ const Index: NextPage<{
                 </Stack>
                 <Divider orientation="horizontal" flexItem />
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
-                    <Container maxWidth={false} sx={{ height: "92vh", overflow: "auto", padding: "0 !important" }}>
+                    <Container maxWidth={false} sx={{ height: "85vh", overflow: "auto", padding: "0 !important" }}>
                         <ScheduleMemo
                             schedule={currentSchedule}
                             classPopularityIndex={classPopularityIndex}
