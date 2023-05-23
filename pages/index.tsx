@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
@@ -69,7 +70,17 @@ const Index: NextPage<{
     );
     const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
     const [weekOffset, setWeekOffset] = useState(0);
+    const [loadingNextWeek, setLoadingNextWeek] = useState(false);
+    const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
     const handleUpdateWeekOffset = async (modifier: number) => {
+        switch (modifier) {
+            case -1:
+                setLoadingPreviousWeek(true);
+                break;
+            case 1:
+                setLoadingNextWeek(true);
+                break;
+        }
         const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
         let cachedSchedule = cachedSchedules[currentWeekOffset];
 
@@ -81,14 +92,17 @@ const Index: NextPage<{
                 })
             ).json();
             if (cachedSchedule === undefined) {
+                setLoadingPreviousWeek(false);
+                setLoadingNextWeek(false);
                 throw new Error("Failed to fetch schedule");
             }
-
             setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
         }
 
         setWeekOffset(currentWeekOffset);
         setCurrentSchedule(cachedSchedule);
+        setLoadingPreviousWeek(false);
+        setLoadingNextWeek(false);
     };
 
     const selectionChanged = useMemo(
@@ -287,18 +301,30 @@ const Index: NextPage<{
                         mb={1}
                         sx={{ position: "relative" }}
                     >
-                        <Button variant={"outlined"} size={"small"} onClick={() => handleUpdateWeekOffset(-1)}>
+                        <LoadingButton
+                            loading={loadingPreviousWeek}
+                            variant={"outlined"}
+                            sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
+                            size={"small"}
+                            onClick={() => handleUpdateWeekOffset(-1)}
+                        >
                             <ArrowBack />
-                        </Button>
+                        </LoadingButton>
                         <Typography
                             sx={{ opacity: 0.7 }}
                             mx={2}
                             variant={"subtitle2"}
                             color={theme.palette.primary.contrastText}
                         >{`UKE ${DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}`}</Typography>
-                        <Button variant={"outlined"} size={"small"} onClick={() => handleUpdateWeekOffset(1)}>
+                        <LoadingButton
+                            loading={loadingNextWeek}
+                            variant={"outlined"}
+                            sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
+                            size={"small"}
+                            onClick={() => handleUpdateWeekOffset(1)}
+                        >
                             <ArrowForward />
-                        </Button>
+                        </LoadingButton>
                         <Button
                             sx={{
                                 ml: 1,
@@ -328,11 +354,20 @@ const Index: NextPage<{
                     </Container>
                 </Stack>
                 {selectionChanged && (
-                    <MobileConfigUpdateBar
-                        isLoadingConfig={isLoadingConfig}
-                        onUpdateConfig={() => updateConfigFromSelection()}
-                        onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                    />
+                    <Box
+                        sx={{
+                            position: "fixed",
+                            padding: "1.5rem",
+                            bottom: 0,
+                            right: 0,
+                        }}
+                    >
+                        <MobileConfigUpdateBar
+                            isLoadingConfig={isLoadingConfig}
+                            onUpdateConfig={() => updateConfigFromSelection()}
+                            onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                        />
+                    </Box>
                 )}
             </Stack>
             <Modal open={modalClass != null} onClose={() => setModalClass(null)}>

@@ -15,10 +15,6 @@ export default function MobileConfigUpdateBar({
     return (
         <Box
             sx={{
-                position: "fixed",
-                padding: "1.5rem",
-                bottom: 0,
-                right: 0,
                 gap: 1,
                 display: { xs: "flex", sm: "none" },
                 alignItems: "center",
