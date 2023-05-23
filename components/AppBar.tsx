@@ -133,7 +133,7 @@ export default function AppBar({
                         </Tooltip>
                     </Box>
                 ) : (
-                    <Box sx={{ backgroundColor: "grey" }}>
+                    <Box>
                         <Tooltip title={"Logg inn"}>
                             <IconButton color={"primary"} href={"/api/auth/login"}>
                                 <LoginIcon />
