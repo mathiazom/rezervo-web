@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Button, Container, Divider, Modal, Stack, Typography, useTheme } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Box, Container, Divider, Modal, Stack } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
@@ -16,9 +15,9 @@ import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import ClassInfo from "../components/ClassInfo";
 import Agenda from "../components/Agenda";
-import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import { DateTime } from "luxon";
 import { createClassPopularityIndex } from "../lib/popularity";
+import WeekNavigator from "../components/WeekNavigator";
+import { DateTime } from "luxon";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -42,7 +41,6 @@ const Index: NextPage<{
     classPopularityIndex: ClassPopularityIndex;
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
     const router = useRouter();
-    const theme = useTheme();
 
     const { user } = useUser();
 
@@ -294,51 +292,13 @@ const Index: NextPage<{
                     </Box>
                 </Box>
                 <Stack>
-                    <Stack
-                        direction={"row"}
-                        justifyContent={"center"}
-                        alignItems={"center"}
-                        mb={1}
-                        sx={{ position: "relative" }}
-                    >
-                        <LoadingButton
-                            loading={loadingPreviousWeek}
-                            variant={"outlined"}
-                            sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
-                            size={"small"}
-                            onClick={() => handleUpdateWeekOffset(-1)}
-                        >
-                            <ArrowBack />
-                        </LoadingButton>
-                        <Typography
-                            sx={{ opacity: 0.7 }}
-                            mx={2}
-                            variant={"subtitle2"}
-                            color={theme.palette.primary.contrastText}
-                        >{`UKE ${DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}`}</Typography>
-                        <LoadingButton
-                            loading={loadingNextWeek}
-                            variant={"outlined"}
-                            sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
-                            size={"small"}
-                            onClick={() => handleUpdateWeekOffset(1)}
-                        >
-                            <ArrowForward />
-                        </LoadingButton>
-                        <Button
-                            sx={{
-                                ml: 1,
-                                position: { xs: "absolute", md: "inherit" },
-                                right: { xs: 10, md: "inherit" },
-                            }}
-                            variant={"outlined"}
-                            size={"small"}
-                            disabled={weekOffset === 0}
-                            onClick={() => handleUpdateWeekOffset(0)}
-                        >
-                            I dag
-                        </Button>
-                    </Stack>
+                    <WeekNavigator
+                        weekNumber={DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}
+                        weekOffset={weekOffset}
+                        loadingPreviousWeek={loadingPreviousWeek}
+                        loadingNextWeek={loadingNextWeek}
+                        onUpdateWeekOffset={handleUpdateWeekOffset}
+                    />
                 </Stack>
                 <Divider orientation="horizontal" flexItem />
                 <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
