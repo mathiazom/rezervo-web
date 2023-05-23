@@ -1,6 +1,6 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import { Button, Stack, Typography, useTheme } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import React from "react";
 
 export default function WeekNavigator({
@@ -17,8 +17,6 @@ export default function WeekNavigator({
     // eslint-disable-next-line no-unused-vars
     onUpdateWeekOffset: (modifier: number) => void;
 }) {
-    const theme = useTheme();
-
     return (
         <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
             <LoadingButton
@@ -30,12 +28,7 @@ export default function WeekNavigator({
             >
                 <ArrowBack />
             </LoadingButton>
-            <Typography
-                sx={{ opacity: 0.7 }}
-                mx={2}
-                variant={"subtitle2"}
-                color={theme.palette.primary.contrastText}
-            >{`UKE ${weekNumber}`}</Typography>
+            <Typography sx={{ opacity: 0.7 }} mx={2} variant={"subtitle2"}>{`UKE ${weekNumber}`}</Typography>
             <LoadingButton
                 loading={loadingNextWeek}
                 variant={"outlined"}
