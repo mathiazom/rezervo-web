@@ -126,7 +126,7 @@ const Index: NextPage<{
     }, [userConfig]);
 
     useEffect(() => {
-        const { classId } = router.query;
+        const { classId, ...queryWithoutParam } = router.query;
         if (classId === undefined) {
             return;
         }
@@ -136,7 +136,8 @@ const Index: NextPage<{
         if (linkedClass) {
             setModalClass(linkedClass);
         }
-    }, [router.query, currentSchedule.days]);
+        router.replace({ query: queryWithoutParam });
+    }, [router, currentSchedule.days]);
 
     useEffect(() => {
         setOriginalSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);

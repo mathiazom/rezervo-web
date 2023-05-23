@@ -12,31 +12,32 @@
     },
     "dependencies": {
         "@auth0/nextjs-auth0": "^2.2.1",
-        "@emotion/react": "^11.9.3",
-        "@emotion/styled": "^11.9.3",
-        "@mui/icons-material": "^5.8.4",
-        "@mui/material": "^5.8.4",
+        "@emotion/react": "^11.11.0",
+        "@emotion/styled": "^11.11.0",
+        "@mui/icons-material": "^5.11.16",
+        "@mui/material": "^5.13.2",
         "@types/json-diff": "^0.9.1",
-        "axios": "^0.27.2",
+        "axios": "^1.4.0",
         "json-diff": "^1.0.3",
         "luxon": "^3.3.0",
-        "next": "^12.3.0",
-        "react": "18.2.0",
+        "next": "^12.3.4",
+        "react": "^18.2.0",
         "react-diff-viewer": "^3.1.1",
-        "react-dom": "18.2.0",
+        "react-dom": "^18.2.0",
         "react-syntax-highlighter": "^15.5.0",
-        "react-use-clipboard": "^1.0.9"
+        "react-use-clipboard": "^1.0.9",
+        "sharp": "^0.32.1"
     },
     "devDependencies": {
         "@types/luxon": "^3.3.0",
-        "@types/node": "18.0.0",
-        "@types/react": "18.0.14",
-        "@types/react-dom": "18.0.5",
+        "@types/node": "^20.2.3",
+        "@types/react": "^18.2.6",
+        "@types/react-dom": "^18.2.4",
         "@types/react-syntax-highlighter": "^15.5.6",
-        "eslint": "^8.40.0",
-        "eslint-config-next": "^13.4.2",
+        "eslint": "^8.41.0",
+        "eslint-config-next": "^13.4.3",
         "eslint-config-prettier": "^8.8.0",
         "prettier": "^2.8.8",
-        "typescript": "4.7.4"
+        "typescript": "^5.0.4"
     }
 }
