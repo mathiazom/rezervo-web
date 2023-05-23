@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Container, Divider, Modal, Stack } from "@mui/material";
+import { Box, Divider, Modal, Stack } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
@@ -276,22 +276,22 @@ const Index: NextPage<{
                 <meta name="msapplication-TileColor" content="#da532c" />
                 <meta name="theme-color" content="#ffffff" />
             </Head>
-            <Stack>
-                <Box display={"flex"} justifyContent={"center"}>
-                    <Box width={1388}>
-                        <AppBar
-                            changed={selectionChanged}
-                            agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                            isLoadingConfig={userConfig == null || isLoadingConfig}
-                            isConfigError={isConfigError}
-                            onUpdateConfig={() => updateConfigFromSelection()}
-                            onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                            onSettingsOpen={() => setSettingsOpen(true)}
-                            onAgendaOpen={() => setAgendaOpen(true)}
-                        />
+            <Stack sx={{ height: "100%", overflow: "hidden" }}>
+                <Box sx={{ flexShrink: 0 }}>
+                    <Box display={"flex"} justifyContent={"center"}>
+                        <Box width={1388}>
+                            <AppBar
+                                changed={selectionChanged}
+                                agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
+                                isLoadingConfig={userConfig == null || isLoadingConfig}
+                                isConfigError={isConfigError}
+                                onUpdateConfig={() => updateConfigFromSelection()}
+                                onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                                onSettingsOpen={() => setSettingsOpen(true)}
+                                onAgendaOpen={() => setAgendaOpen(true)}
+                            />
+                        </Box>
                     </Box>
-                </Box>
-                <Stack>
                     <WeekNavigator
                         weekNumber={DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}
                         weekOffset={weekOffset}
@@ -299,20 +299,18 @@ const Index: NextPage<{
                         loadingNextWeek={loadingNextWeek}
                         onUpdateWeekOffset={handleUpdateWeekOffset}
                     />
-                </Stack>
-                <Divider orientation="horizontal" flexItem />
-                <Stack direction={{ xs: "column", md: "row" }} divider={<Divider orientation="vertical" flexItem />}>
-                    <Container maxWidth={false} sx={{ height: "85vh", overflow: "auto", padding: "0 !important" }}>
-                        <ScheduleMemo
-                            schedule={currentSchedule}
-                            classPopularityIndex={classPopularityIndex}
-                            selectable={user != null && !isLoadingConfig && !isConfigError}
-                            selectedClassIds={selectedClassIds}
-                            onSelectedChanged={onSelectedChanged}
-                            onInfo={setModalClass}
-                        />
-                    </Container>
-                </Stack>
+                    <Divider orientation="horizontal" />
+                </Box>
+                <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+                    <ScheduleMemo
+                        schedule={currentSchedule}
+                        classPopularityIndex={classPopularityIndex}
+                        selectable={user != null && !isLoadingConfig && !isConfigError}
+                        selectedClassIds={selectedClassIds}
+                        onSelectedChanged={onSelectedChanged}
+                        onInfo={setModalClass}
+                    />
+                </Box>
                 {selectionChanged && (
                     <Box
                         sx={{
