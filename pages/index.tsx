@@ -50,9 +50,9 @@ const Index: NextPage<{
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
-    const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
+    const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const originalSelectedClassIds = useMemo(
-        () => userConfig?.classes?.map(classConfigRecurrentId) ?? [],
+        () => userConfig?.classes?.map(classConfigRecurrentId) ?? null,
         [userConfig?.classes]
     );
 
@@ -73,7 +73,10 @@ const Index: NextPage<{
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
 
     const selectionChanged = useMemo(
-        () => !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
+        () =>
+            selectedClassIds != null &&
+            originalSelectedClassIds != null &&
+            !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
         [originalSelectedClassIds, selectedClassIds]
     );
 
@@ -114,7 +117,7 @@ const Index: NextPage<{
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         setSelectedClassIds((s) =>
-            selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId)
+            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId)
         );
     }, []);
 
@@ -125,14 +128,8 @@ const Index: NextPage<{
     }, [user]);
 
     useEffect(() => {
-        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? []);
-    }, [userConfig]);
-
-    useEffect(() => {
+        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? null);
         setUserConfigActive(userConfig?.active ?? false);
-    }, [userConfig]);
-
-    useEffect(() => {
         setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
 
@@ -174,6 +171,9 @@ const Index: NextPage<{
     }
 
     function putConfigActive(active: boolean) {
+        if (originalSelectedClassIds == null) {
+            return;
+        }
         setUserConfigActive(active);
         setUserConfigActiveLoading(true);
         return fetch("/api/config", {
@@ -182,6 +182,7 @@ const Index: NextPage<{
                 {
                     classes: originalSelectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
                     active,
+                    notifications: notificationsConfig,
                 } as ConfigPayload,
                 null,
                 2
@@ -195,6 +196,9 @@ const Index: NextPage<{
     }
 
     function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
+        if (originalSelectedClassIds == null) {
+            return;
+        }
         setNotificationsConfig(notificationsConfig);
         setNotificationsConfigLoading(true);
         return fetch("/api/config", {
@@ -217,6 +221,9 @@ const Index: NextPage<{
     }
 
     function updateConfigFromSelection() {
+        if (selectedClassIds == null) {
+            return;
+        }
         return putConfig({
             active: userConfigActive,
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
@@ -336,7 +343,8 @@ const Index: NextPage<{
                             agendaClasses={userConfig.classes.map((c) => ({
                                 config: c,
                                 sitClass: classes.find((sc) => sitClassRecurrentId(sc) === classConfigRecurrentId(c)),
-                                markedForDeletion: !selectedClassIds.includes(classConfigRecurrentId(c)),
+                                markedForDeletion:
+                                    selectedClassIds != null && !selectedClassIds.includes(classConfigRecurrentId(c)),
                             }))}
                             onInfo={setClassInfoClass}
                             onSetToDelete={(c, toDelete) => onSelectedChanged(classConfigRecurrentId(c), !toDelete)}

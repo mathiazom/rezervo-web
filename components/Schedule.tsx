@@ -18,7 +18,7 @@ const Schedule = ({
     schedule: SitSchedule;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
-    selectedClassIds: string[];
+    selectedClassIds: string[] | null;
     // eslint-disable-next-line no-unused-vars
     onSelectedChanged: (classId: string, selected: boolean) => void;
     // eslint-disable-next-line no-unused-vars
@@ -74,7 +74,10 @@ const Schedule = ({
                                             classPopularityIndex[sitClassRecurrentId(_class)] ?? ClassPopularity.Unknown
                                         }
                                         selectable={selectable}
-                                        selected={selectedClassIds.includes(sitClassRecurrentId(_class))}
+                                        selected={
+                                            selectedClassIds != null &&
+                                            selectedClassIds.includes(sitClassRecurrentId(_class))
+                                        }
                                         onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
                                         onInfo={() => onInfo(_class)}
                                         // onSettings={() =>
