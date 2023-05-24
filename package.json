@@ -27,7 +27,8 @@
         "react-dom": "^18.2.0",
         "react-syntax-highlighter": "^15.5.0",
         "react-use-clipboard": "^1.0.9",
-        "sharp": "^0.32.1"
+        "sharp": "^0.32.1",
+        "swr": "^2.1.5"
     },
     "devDependencies": {
         "@types/luxon": "^3.3.0",

@@ -10,10 +10,11 @@ import {
     Switch as MaterialUISwitch,
     Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NotificationsConfig } from "../types/rezervoTypes";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
+import { DEFAULT_REMINDER_HOURS } from "../config/config";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({
@@ -55,11 +56,20 @@ export default function Settings({
         notificationsConfig?.reminder_hours_before ?? null
     );
 
+    useEffect(() => {
+        const newReminderHours = notificationsConfig?.reminder_hours_before;
+        const newReminderActive = newReminderHours != null;
+        setReminderActive(newReminderActive);
+        if (newReminderActive) {
+            setReminderHours(newReminderHours);
+        }
+    }, [notificationsConfig?.reminder_hours_before, reminderHours]);
+
     function handleReminderActiveChanged(active: boolean) {
         setReminderActive(active);
         onNotificationsConfigChanged({
             ...notificationsConfig,
-            reminder_hours_before: active ? reminderHours : null,
+            reminder_hours_before: active ? reminderHours ?? DEFAULT_REMINDER_HOURS : null,
         });
     }
 

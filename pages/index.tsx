@@ -6,8 +6,7 @@ import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { useUser } from "@auth0/nextjs-auth0/client";
-import { ClassConfig, ConfigPayload, NotificationsConfig, UserConfig } from "../types/rezervoTypes";
+import { ClassConfig, ConfigPayload, NotificationsConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
 import Settings from "../components/Settings";
 import { useRouter } from "next/router";
@@ -18,6 +17,7 @@ import Agenda from "../components/Agenda";
 import { createClassPopularityIndex } from "../lib/popularity";
 import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
+import { useUserConfig } from "../hooks/useUserConfig";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -42,22 +42,15 @@ const Index: NextPage<{
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
     const router = useRouter();
 
-    const { user } = useUser();
+    const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig();
 
-    const [userConfig, setUserConfig] = useState<UserConfig | null>(null);
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
-    const originalSelectedClassIds = useMemo(
-        () => userConfig?.classes?.map(classConfigRecurrentId) ?? null,
-        [userConfig?.classes]
-    );
-
-    const [isLoadingConfig, setIsLoadingConfig] = useState(false);
-    const [isConfigError, setIsConfigError] = useState(false);
+    const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
@@ -122,13 +115,9 @@ const Index: NextPage<{
     }, []);
 
     useEffect(() => {
-        if (user != null) {
-            getConfig();
-        }
-    }, [user]);
-
-    useEffect(() => {
-        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? null);
+        const classIds = userConfig?.classes?.map(classConfigRecurrentId) ?? null;
+        setSelectedClassIds(classIds);
+        setOriginalSelectedClassIds(classIds);
         setUserConfigActive(userConfig?.active ?? false);
         setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
@@ -147,84 +136,29 @@ const Index: NextPage<{
         router.replace({ query: queryWithoutParam });
     }, [router, currentSchedule.days]);
 
-    function getConfig() {
-        setIsLoadingConfig(true);
-        fetch("/api/config", {
-            method: "GET",
-        }).then((r) => {
-            if (!r.ok) {
-                setIsConfigError(true);
-                return;
-            }
-            setIsConfigError(false);
-            setIsLoadingConfig(false);
-            r.json().then(setUserConfig);
-        });
-    }
-
-    function putConfig(config: ConfigPayload) {
-        setIsLoadingConfig(true);
-        return fetch("/api/config", {
-            method: "PUT",
-            body: JSON.stringify(config, null, 2),
-        }).then(() => getConfig());
-    }
-
     function putConfigActive(active: boolean) {
-        if (originalSelectedClassIds == null) {
-            return;
-        }
         setUserConfigActive(active);
         setUserConfigActiveLoading(true);
-        return fetch("/api/config", {
-            method: "PUT",
-            body: JSON.stringify(
-                {
-                    classes: originalSelectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
-                    active,
-                    notifications: notificationsConfig,
-                } as ConfigPayload,
-                null,
-                2
-            ),
-        })
-            .then((r) => r.json())
-            .then((c: UserConfig) => {
-                setUserConfigActive(c.active);
-                setUserConfigActiveLoading(false);
-            });
+        return putUserConfig({
+            ...userConfig,
+            active,
+        } as ConfigPayload).then(() => setUserConfigActiveLoading(false));
     }
 
     function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
-        if (originalSelectedClassIds == null) {
-            return;
-        }
         setNotificationsConfig(notificationsConfig);
         setNotificationsConfigLoading(true);
-        return fetch("/api/config", {
-            method: "PUT",
-            body: JSON.stringify(
-                {
-                    active: userConfigActive,
-                    classes: originalSelectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
-                    notifications: notificationsConfig,
-                } as ConfigPayload,
-                null,
-                2
-            ),
-        })
-            .then((r) => r.json())
-            .then((c: UserConfig) => {
-                setNotificationsConfig(c.notifications);
-                setNotificationsConfigLoading(false);
-            });
+        return putUserConfig({
+            ...userConfig,
+            notifications: notificationsConfig,
+        } as ConfigPayload).then(() => setNotificationsConfigLoading(false));
     }
 
     function updateConfigFromSelection() {
         if (selectedClassIds == null) {
             return;
         }
-        return putConfig({
+        return putUserConfig({
             active: userConfigActive,
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
             notifications: notificationsConfig,
@@ -258,6 +192,18 @@ const Index: NextPage<{
         setCurrentSchedule(cachedSchedule);
         setLoadingPreviousWeek(false);
         setLoadingNextWeek(false);
+        // Pre-fetch next schedule (in same direction) if not in cache
+        const nextWeekOffset = currentWeekOffset + modifier;
+        if (nextWeekOffset in cachedSchedules) {
+            return;
+        }
+        const nextSchedule = await fetch("api/schedule", {
+            method: "POST",
+            body: JSON.stringify({ weekOffset: nextWeekOffset }),
+        }).then((r) => r.json());
+        if (nextSchedule != undefined) {
+            setCachedSchedules({ ...cachedSchedules, [nextWeekOffset]: nextSchedule });
+        }
     }
 
     return (
@@ -279,8 +225,8 @@ const Index: NextPage<{
                             <AppBar
                                 changed={selectionChanged}
                                 agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                                isLoadingConfig={userConfig == null || isLoadingConfig}
-                                isConfigError={isConfigError}
+                                isLoadingConfig={userConfig == null || userConfigLoading}
+                                isConfigError={userConfigError}
                                 onUpdateConfig={() => updateConfigFromSelection()}
                                 onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
@@ -301,7 +247,7 @@ const Index: NextPage<{
                     <ScheduleMemo
                         schedule={currentSchedule}
                         classPopularityIndex={classPopularityIndex}
-                        selectable={user != null && !isLoadingConfig && !isConfigError}
+                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         onSelectedChanged={onSelectedChanged}
                         onInfo={setClassInfoClass}
@@ -317,7 +263,7 @@ const Index: NextPage<{
                         }}
                     >
                         <MobileConfigUpdateBar
-                            isLoadingConfig={isLoadingConfig}
+                            isLoadingConfig={userConfigLoading}
                             onUpdateConfig={() => updateConfigFromSelection()}
                             onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                         />
