@@ -1,8 +1,8 @@
-import { Box, Card, CardActions, CardContent, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { SitClass } from "../../types/sitTypes";
 import { simpleTimeStringFromISO } from "../../utils/timeUtils";
-import { hexWithOpacityToRgb } from "../../utils/colorUtils";
+import { hexColorHash, hexWithOpacityToRgb } from "../../utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../types/animationTypes";
 import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
@@ -15,6 +15,7 @@ import { SIT_TIMEZONE } from "../../config/config";
 const ClassCard = ({
     _class,
     popularity,
+    peers,
     selectable,
     selected,
     onSelectedChanged,
@@ -23,6 +24,7 @@ const ClassCard = ({
 {
     _class: SitClass;
     popularity: ClassPopularity;
+    peers: string[];
     selectable: boolean;
     selected: boolean;
     // eslint-disable-next-line no-unused-vars
@@ -88,15 +90,33 @@ const ClassCard = ({
                 </Typography>
             </CardContent>
             <CardActions sx={{ padding: 0 }} disableSpacing>
-                <Box sx={{ padding: "0 8px 8px 8px" }}>
-                    <IconButton onClick={onInfo} size={"small"}>
-                        <InfoOutlinedIcon />
-                    </IconButton>
-                    {/*{selected && (*/}
-                    {/*    <IconButton onClick={onSettings} size={"small"}>*/}
-                    {/*        <SettingsOutlinedIcon />*/}
-                    {/*    </IconButton>*/}
-                    {/*)}*/}
+                <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
+                    <Box sx={{ display: "flex" }}>
+                        <IconButton onClick={onInfo} size={"small"} sx={{ padding: 0 }}>
+                            <InfoOutlinedIcon />
+                        </IconButton>
+                        {/*{selected && (*/}
+                        {/*    <IconButton onClick={onSettings} size={"small"}>*/}
+                        {/*        <SettingsOutlinedIcon />*/}
+                        {/*    </IconButton>*/}
+                        {/*)}*/}
+                        {peers.length > 0 && (
+                            <AvatarGroup
+                                max={4}
+                                sx={{
+                                    justifyContent: "start",
+                                    marginLeft: "auto",
+                                    "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12, border: "none" },
+                                }}
+                            >
+                                {peers.map((p) => (
+                                    <Avatar key={p} alt={p} sx={{ backgroundColor: hexColorHash(p) }}>
+                                        {p[0]}
+                                    </Avatar>
+                                ))}
+                            </AvatarGroup>
+                        )}
+                    </Box>
                 </Box>
             </CardActions>
             <Box

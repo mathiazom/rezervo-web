@@ -1,19 +1,8 @@
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
 
-function put(accessToken: string, body: any): Promise<Response> {
-    return fetch(`${process.env["CONFIG_HOST"]}/config`, {
-        method: "PUT",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-        },
-        body: body,
-    });
-}
-
 function get(accessToken: string): Promise<Response> {
-    return fetch(`${process.env["CONFIG_HOST"]}/config`, {
+    return fetch(`${process.env["CONFIG_HOST"]}/peer_configs`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -31,8 +20,6 @@ export default withApiAuthRequired(async function handler(req, res) {
     }
     const response = await (() => {
         switch (req.method) {
-            case "PUT":
-                return put(accessToken, req.body);
             case "GET":
                 return get(accessToken);
             default:

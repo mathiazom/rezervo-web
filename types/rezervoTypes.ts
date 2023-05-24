@@ -21,3 +21,12 @@ export type UserConfig = {
     notifications: NotificationsConfig | null;
 };
 export type ConfigPayload = UserConfig;
+
+export type PeerConfig = {
+    peer_name: string;
+    classes: ClassConfig[];
+};
+
+export type PeerClassesIndex = {
+    [recurrentClassId: string]: string[];
+};

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Box, Typography } from "@mui/material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import { simpleTimeStringFromISO } from "../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
@@ -7,12 +7,21 @@ import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
 import Image from "next/image";
 import React from "react";
 import { SitClass } from "../types/sitTypes";
-import { hexWithOpacityToRgb } from "../utils/colorUtils";
+import { hexColorHash, hexWithOpacityToRgb } from "../utils/colorUtils";
 import { ClassPopularity } from "../types/derivedTypes";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
+import { formatNameArray } from "../utils/arrayUtils";
 
-export default function ClassInfo({ _class, classPopularity }: { _class: SitClass; classPopularity: ClassPopularity }) {
+export default function ClassInfo({
+    _class,
+    classPopularity,
+    peers,
+}: {
+    _class: SitClass;
+    classPopularity: ClassPopularity;
+    peers: string[];
+}) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
@@ -124,6 +133,27 @@ export default function ClassInfo({ _class, classPopularity }: { _class: SitClas
                     <ClassPopularityMeter popularity={classPopularity} />
                     <Typography variant="body2" color="text.secondary">
                         {classPopularity}
+                    </Typography>
+                </Box>
+            )}
+            {peers.length > 0 && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
+                    <AvatarGroup
+                        max={4}
+                        sx={{
+                            justifyContent: "start",
+                            "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12, border: "none" },
+                        }}
+                    >
+                        {peers.map((p) => (
+                            <Avatar key={p} alt={p} sx={{ backgroundColor: hexColorHash(p) }}>
+                                {p[0]}
+                            </Avatar>
+                        ))}
+                    </AvatarGroup>
+                    <Typography variant="body2" color="text.secondary">
+                        {formatNameArray(peers, 4)}
+                        {` ${isInThePast ? "booket denne timen" : "skal på denne timen"}`}
                     </Typography>
                 </Box>
             )}
