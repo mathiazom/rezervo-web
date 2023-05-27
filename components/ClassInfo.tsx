@@ -12,6 +12,7 @@ import { ClassPopularity } from "../types/derivedTypes";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
+import AddClassToCalendarButton from "./AddToCalendar";
 
 export default function ClassInfo({
     _class,
@@ -157,6 +158,7 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
+            <AddClassToCalendarButton _class={_class} />
             {_class.image && (
                 <Box pt={2}>
                     <Image
