@@ -12,19 +12,82 @@ import { ClassPopularity } from "../types/derivedTypes";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
+import { SessionStatus, UserNameSessionStatus } from "../types/rezervoTypes";
+import RippleBadge from "./RippleBadge";
+
+const UsersAvatarGroup = ({
+    users,
+    badgeColor,
+    invisibleBadges,
+}: {
+    users: string[];
+    badgeColor: string;
+    invisibleBadges: boolean;
+}) => {
+    return (
+        <AvatarGroup
+            max={4}
+            sx={{
+                justifyContent: "start",
+                "& .MuiAvatar-root": {
+                    width: 24,
+                    height: 24,
+                    fontSize: 12,
+                    borderColor: "white",
+                    '[data-mui-color-scheme="dark"] &': {
+                        borderColor: "#191919",
+                    },
+                },
+            }}
+        >
+            {users.map((user_name) => (
+                <RippleBadge
+                    key={user_name}
+                    invisible={invisibleBadges}
+                    overlap="circular"
+                    anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                    }}
+                    variant={"dot"}
+                    rippleColor={badgeColor}
+                >
+                    <Avatar
+                        alt={user_name}
+                        sx={{
+                            backgroundColor: hexColorHash(user_name),
+                        }}
+                    >
+                        {user_name[0]}
+                    </Avatar>
+                </RippleBadge>
+            ))}
+        </AvatarGroup>
+    );
+};
 
 export default function ClassInfo({
     _class,
     classPopularity,
     peers,
+    userSessions,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
     peers: string[];
+    userSessions: UserNameSessionStatus[];
 }) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
+
+    const usersBooked = userSessions.filter(
+        ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED
+    );
+
+    const usersOnWaitlist = userSessions.filter(({ status }) => status === SessionStatus.WAITLIST);
+
+    const usersPlanned = peers.filter((p) => !userSessions.map((u) => u.user_name).includes(p));
 
     return (
         <Box
@@ -136,24 +199,43 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {peers.length > 0 && (
+            {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <AvatarGroup
-                        max={4}
-                        sx={{
-                            justifyContent: "start",
-                            "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12, border: "none" },
-                        }}
-                    >
-                        {peers.map((p) => (
-                            <Avatar key={p} alt={p} sx={{ backgroundColor: hexColorHash(p) }}>
-                                {p[0]}
-                            </Avatar>
-                        ))}
-                    </AvatarGroup>
+                    <UsersAvatarGroup users={usersPlanned} badgeColor={""} invisibleBadges={true} />
                     <Typography variant="body2" color="text.secondary">
-                        {formatNameArray(peers, 4)}
-                        {` ${isInThePast ? "booket denne timen" : "skal på denne timen"}`}
+                        {`${formatNameArray(usersPlanned, 4)} skal på denne timen`}
+                    </Typography>
+                </Box>
+            )}
+            {!isInThePast && usersOnWaitlist.length > 0 && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5, ml: 1 }}>
+                    <UsersAvatarGroup
+                        users={usersOnWaitlist.map((u) => u.user_name)}
+                        badgeColor={"#b75f00"}
+                        invisibleBadges={isInThePast}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                        {`${formatNameArray(
+                            usersOnWaitlist.filter((u) => !u.is_self).map((u) => u.user_name),
+                            4,
+                            usersOnWaitlist.some((u) => u.is_self)
+                        )} er på venteliste for denne timen`}
+                    </Typography>
+                </Box>
+            )}
+            {usersBooked.length > 0 && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5, ml: 1 }}>
+                    <UsersAvatarGroup
+                        users={usersBooked.map((u) => u.user_name)}
+                        badgeColor={"#44b700"}
+                        invisibleBadges={isInThePast}
+                    />
+                    <Typography variant="body2" color="text.secondary">
+                        {`${formatNameArray(
+                            usersBooked.filter((u) => !u.is_self).map((u) => u.user_name),
+                            4,
+                            usersBooked.some((u) => u.is_self)
+                        )} ${isInThePast ? "var på denne timen" : "har booket denne timen"}`}
                     </Typography>
                 </Box>
             )}

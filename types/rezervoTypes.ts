@@ -30,3 +30,20 @@ export type PeerConfig = {
 export type PeerClassesIndex = {
     [recurrentClassId: string]: string[];
 };
+
+export enum SessionStatus {
+    BOOKED = "BOOKED",
+    CONFIRMED = "CONFIRMED",
+    WAITLIST = "WAITLIST",
+    UNKNOWN = "UNKNOWN",
+}
+
+export type UserNameSessionStatus = {
+    is_self: boolean;
+    user_name: string;
+    status: SessionStatus;
+};
+
+export type UserSessionsIndex = {
+    [classId: string]: UserNameSessionStatus[];
+};

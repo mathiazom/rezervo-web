@@ -11,11 +11,14 @@ import { ClassPopularity } from "../../types/derivedTypes";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../../config/config";
+import { SessionStatus, UserNameSessionStatus } from "../../types/rezervoTypes";
+import RippleBadge from "../RippleBadge";
 
 const ClassCard = ({
     _class,
     popularity,
     peers,
+    userSessions,
     selectable,
     selected,
     onSelectedChanged,
@@ -25,6 +28,7 @@ const ClassCard = ({
     _class: SitClass;
     popularity: ClassPopularity;
     peers: string[];
+    userSessions: UserNameSessionStatus[];
     selectable: boolean;
     selected: boolean;
     // eslint-disable-next-line no-unused-vars
@@ -50,6 +54,10 @@ const ClassCard = ({
 
     const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
 
+    const showSelected = !isInThePast && selected;
+
+    const usersPlanned = peers.filter((p) => !userSessions.map((u) => u.user_name).includes(p));
+
     return (
         <Card
             sx={{
@@ -72,7 +80,7 @@ const ClassCard = ({
                         sx={{
                             textDecoration: isInThePast ? "line-through" : "none",
                             fontSize: "1.05rem",
-                            ...(selected ? { fontWeight: "bold" } : {}),
+                            ...(showSelected ? { fontWeight: "bold" } : {}),
                         }}
                     >
                         {_class.name}
@@ -100,20 +108,59 @@ const ClassCard = ({
                         {/*        <SettingsOutlinedIcon />*/}
                         {/*    </IconButton>*/}
                         {/*)}*/}
-                        {peers.length > 0 && (
+                        {(userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0)) && (
                             <AvatarGroup
                                 max={4}
                                 sx={{
                                     justifyContent: "start",
                                     marginLeft: "auto",
-                                    "& .MuiAvatar-root": { width: 24, height: 24, fontSize: 12, border: "none" },
+                                    "& .MuiAvatar-root": {
+                                        width: 24,
+                                        height: 24,
+                                        fontSize: 12,
+                                        borderColor: "white",
+                                        '[data-mui-color-scheme="dark"] &': {
+                                            borderColor: "#191919",
+                                        },
+                                    },
                                 }}
                             >
-                                {peers.map((p) => (
-                                    <Avatar key={p} alt={p} sx={{ backgroundColor: hexColorHash(p) }}>
-                                        {p[0]}
-                                    </Avatar>
-                                ))}
+                                {!isInThePast &&
+                                    usersPlanned.length > 0 &&
+                                    usersPlanned.map((p) => (
+                                        <Avatar key={p} alt={p} sx={{ backgroundColor: hexColorHash(p) }}>
+                                            {p[0]}
+                                        </Avatar>
+                                    ))}
+                                {userSessions.length > 0 &&
+                                    userSessions.map(({ user_name, status }) => {
+                                        const rippleColor =
+                                            status === SessionStatus.BOOKED || status === SessionStatus.CONFIRMED
+                                                ? "#44b700"
+                                                : "#b75f00";
+                                        return (
+                                            <RippleBadge
+                                                key={user_name}
+                                                invisible={isInThePast}
+                                                overlap="circular"
+                                                anchorOrigin={{
+                                                    vertical: "bottom",
+                                                    horizontal: "right",
+                                                }}
+                                                variant={"dot"}
+                                                rippleColor={rippleColor}
+                                            >
+                                                <Avatar
+                                                    alt={user_name}
+                                                    sx={{
+                                                        backgroundColor: hexColorHash(user_name),
+                                                    }}
+                                                >
+                                                    {user_name[0]}
+                                                </Avatar>
+                                            </RippleBadge>
+                                        );
+                                    })}
                             </AvatarGroup>
                         )}
                     </Box>
@@ -135,7 +182,7 @@ const ClassCard = ({
             />
             {selectAnimation && (
                 <Box
-                    className={selectAnimation ? (selected ? selectAnimation.enter : selectAnimation.leave) : ""}
+                    className={selectAnimation ? (showSelected ? selectAnimation.enter : selectAnimation.leave) : ""}
                     sx={{
                         position: "absolute",
                         top: 0,

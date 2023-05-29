@@ -6,7 +6,7 @@ import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { sitClassRecurrentId } from "../lib/iBooking";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
-import { PeerClassesIndex } from "../types/rezervoTypes";
+import { PeerClassesIndex, UserSessionsIndex } from "../types/rezervoTypes";
 
 const Schedule = ({
     schedule,
@@ -14,6 +14,7 @@ const Schedule = ({
     selectable,
     selectedClassIds,
     peerClassesIndex,
+    userSessionsIndex,
     onSelectedChanged,
     onInfo,
 }: {
@@ -22,6 +23,7 @@ const Schedule = ({
     selectable: boolean;
     selectedClassIds: string[] | null;
     peerClassesIndex: PeerClassesIndex | null;
+    userSessionsIndex: UserSessionsIndex | null;
     // eslint-disable-next-line no-unused-vars
     onSelectedChanged: (classId: string, selected: boolean) => void;
     // eslint-disable-next-line no-unused-vars
@@ -79,6 +81,7 @@ const Schedule = ({
                                         peers={
                                             peerClassesIndex ? peerClassesIndex[sitClassRecurrentId(_class)] ?? [] : []
                                         }
+                                        userSessions={userSessionsIndex ? userSessionsIndex[_class.id] ?? [] : []}
                                         selectable={selectable}
                                         selected={
                                             selectedClassIds != null &&

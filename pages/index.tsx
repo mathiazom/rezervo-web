@@ -19,6 +19,7 @@ import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
 import { usePeerConfigs } from "../hooks/usePeerConfigs";
+import { useUserSessions } from "../hooks/useUserSessions";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -46,6 +47,8 @@ const Index: NextPage<{
     const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig();
 
     const { peerConfigs } = usePeerConfigs();
+
+    const { userSessionsIndex } = useUserSessions();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
@@ -271,6 +274,7 @@ const Index: NextPage<{
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         peerClassesIndex={peerClassesIndex}
+                        userSessionsIndex={userSessionsIndex ?? null}
                         onSelectedChanged={onSelectedChanged}
                         onInfo={setClassInfoClass}
                     />
@@ -301,6 +305,7 @@ const Index: NextPage<{
                                 classPopularityIndex[sitClassRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
                             }
                             peers={peerClassesIndex ? peerClassesIndex[sitClassRecurrentId(classInfoClass)] ?? [] : []}
+                            userSessions={userSessionsIndex ? userSessionsIndex[classInfoClass.id] ?? [] : []}
                         />
                     )}
                 </>
