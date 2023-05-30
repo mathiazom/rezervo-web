@@ -74,3 +74,7 @@ export function sitClassRecurrentId(sitClass: SitClass) {
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {
     return `${activityId}_${weekday}_${hour}_${minute}`;
 }
+
+export function isClassInThePast(_class: SitClass): boolean {
+    return DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
+}

@@ -8,10 +8,9 @@ import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
-import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../../config/config";
 import { ClassPopularity, SessionStatus, UserNameSessionStatus } from "../../types/rezervoTypes";
 import RippleBadge from "../RippleBadge";
+import { isClassInThePast } from "../../lib/iBooking";
 
 const ClassCard = ({
     _class,
@@ -51,7 +50,7 @@ const ClassCard = ({
 
     const classColorRGB = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
-    const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
+    const isInThePast = isClassInThePast(_class);
 
     const showSelected = !isInThePast && selected;
 
