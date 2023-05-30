@@ -8,7 +8,7 @@ import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
-import { ClassPopularity, SessionStatus, UserNameSessionStatus } from "../../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameSessionStatus } from "../../types/rezervoTypes";
 import RippleBadge from "../RippleBadge";
 import { isClassInThePast } from "../../lib/iBooking";
 
@@ -83,7 +83,7 @@ const ClassCard = ({
                     >
                         {_class.name}
                     </Typography>
-                    {!isInThePast && <ClassPopularityMeter popularity={popularity} />}
+                    <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                 </Box>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
@@ -134,8 +134,8 @@ const ClassCard = ({
                                     userSessions.map(({ user_name, status }) => {
                                         const rippleColor =
                                             status === SessionStatus.BOOKED || status === SessionStatus.CONFIRMED
-                                                ? "#44b700"
-                                                : "#b75f00";
+                                                ? StatusColors.ACTIVE
+                                                : StatusColors.WAITLIST;
                                         return (
                                             <RippleBadge
                                                 key={user_name}

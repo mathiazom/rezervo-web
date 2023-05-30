@@ -1,5 +1,5 @@
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { sitClassRecurrentId } from "./iBooking";
+import { isClassInThePast, sitClassRecurrentId } from "./iBooking";
 import { ClassPopularity, ClassPopularityIndex } from "../types/rezervoTypes";
 
 export function determineClassPopularity(sitClass: SitClass) {
@@ -19,4 +19,23 @@ export async function createClassPopularityIndex(previousWeekSchedule: SitSchedu
             }),
             {} as ClassPopularityIndex
         );
+}
+
+export function stringifyClassPopularity(_class: SitClass, historicPopularity: ClassPopularity): string {
+    let classPopularityInfo: string;
+    const isInThePast = isClassInThePast(_class);
+    const numberOfAttendees = _class.capacity - Math.max(_class.available, 0);
+
+    if (isInThePast) {
+        classPopularityInfo = `${numberOfAttendees} av ${_class.capacity} deltok`;
+    } else if (_class.bookable) {
+        classPopularityInfo = `${numberOfAttendees} av ${_class.capacity} er påmeldt`;
+    } else {
+        classPopularityInfo = historicPopularity;
+    }
+
+    if (_class.waitlist.count > 0) {
+        classPopularityInfo += ` | ${_class.waitlist.count} ${isInThePast ? "fikk ikke plass" : "er på venteliste"}`;
+    }
+    return classPopularityInfo;
 }

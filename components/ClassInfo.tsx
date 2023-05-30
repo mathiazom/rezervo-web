@@ -11,7 +11,8 @@ import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
-import { ClassPopularity, SessionStatus, UserNameSessionStatus } from "../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameSessionStatus } from "../types/rezervoTypes";
+import { stringifyClassPopularity } from "../lib/popularity";
 import { UsersAvatarGroup } from "./UsersAvatarGroup";
 
 export default function ClassInfo({
@@ -132,21 +133,19 @@ export default function ClassInfo({
                     {_class.instructors.map((i) => i.name).join(", ")}
                 </Typography>
             </Box>
-            {!isInThePast && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        paddingTop: 1,
-                        gap: 1,
-                        alignItems: "center",
-                    }}
-                >
-                    <ClassPopularityMeter popularity={classPopularity} />
-                    <Typography variant="body2" color="text.secondary">
-                        {classPopularity}
-                    </Typography>
-                </Box>
-            )}
+            <Box
+                sx={{
+                    display: "flex",
+                    paddingTop: 1,
+                    gap: 1,
+                    alignItems: "center",
+                }}
+            >
+                <ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />
+                <Typography variant="body2" color="text.secondary">
+                    {stringifyClassPopularity(_class, classPopularity)}
+                </Typography>
+            </Box>
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
                     <UsersAvatarGroup users={usersPlanned} />
@@ -175,7 +174,7 @@ export default function ClassInfo({
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
                     <UsersAvatarGroup
                         users={usersBooked.map((u) => u.user_name)}
-                        badgeColor={"#44b700"}
+                        badgeColor={StatusColors.ACTIVE}
                         invisibleBadges={isInThePast}
                     />
                     <Typography variant="body2" color="text.secondary">
