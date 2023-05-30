@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import { simpleTimeStringFromISO } from "../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
@@ -7,64 +7,13 @@ import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
 import Image from "next/image";
 import React from "react";
 import { SitClass } from "../types/sitTypes";
-import { hexColorHash, hexWithOpacityToRgb } from "../utils/colorUtils";
+import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { ClassPopularity } from "../types/derivedTypes";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
 import { SessionStatus, UserNameSessionStatus } from "../types/rezervoTypes";
-import RippleBadge from "./RippleBadge";
-
-const UsersAvatarGroup = ({
-    users,
-    badgeColor,
-    invisibleBadges,
-}: {
-    users: string[];
-    badgeColor: string;
-    invisibleBadges: boolean;
-}) => {
-    return (
-        <AvatarGroup
-            max={4}
-            sx={{
-                justifyContent: "start",
-                "& .MuiAvatar-root": {
-                    width: 24,
-                    height: 24,
-                    fontSize: 12,
-                    borderColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
-                        borderColor: "#191919",
-                    },
-                },
-            }}
-        >
-            {users.map((user_name) => (
-                <RippleBadge
-                    key={user_name}
-                    invisible={invisibleBadges}
-                    overlap="circular"
-                    anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "right",
-                    }}
-                    variant={"dot"}
-                    rippleColor={badgeColor}
-                >
-                    <Avatar
-                        alt={user_name}
-                        sx={{
-                            backgroundColor: hexColorHash(user_name),
-                        }}
-                    >
-                        {user_name[0]}
-                    </Avatar>
-                </RippleBadge>
-            ))}
-        </AvatarGroup>
-    );
-};
+import { UsersAvatarGroup } from "./UsersAvatarGroup";
 
 export default function ClassInfo({
     _class,
@@ -201,14 +150,14 @@ export default function ClassInfo({
             )}
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <UsersAvatarGroup users={usersPlanned} badgeColor={""} invisibleBadges={true} />
+                    <UsersAvatarGroup users={usersPlanned} />
                     <Typography variant="body2" color="text.secondary">
                         {`${formatNameArray(usersPlanned, 4)} skal på denne timen`}
                     </Typography>
                 </Box>
             )}
             {!isInThePast && usersOnWaitlist.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5, ml: 1 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
                     <UsersAvatarGroup
                         users={usersOnWaitlist.map((u) => u.user_name)}
                         badgeColor={"#b75f00"}
@@ -224,7 +173,7 @@ export default function ClassInfo({
                 </Box>
             )}
             {usersBooked.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5, ml: 1 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
                     <UsersAvatarGroup
                         users={usersBooked.map((u) => u.user_name)}
                         badgeColor={"#44b700"}
