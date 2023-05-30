@@ -123,14 +123,18 @@ export default function Settings({
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                 <PlayCircleOutlineRoundedIcon />
                                 <Typography>Booking aktiv</Typography>
-                                <Switch
-                                    checked={bookingActive}
-                                    onChange={(_, checked) => onBookingActiveChanged(checked)}
-                                    inputProps={{
-                                        "aria-label": "booking-aktiv",
-                                    }}
-                                />
-                                {bookingActiveLoading && <CircularProgress size="1rem" />}
+                                <Box
+                                    sx={{ display: "flex", alignItems: "center", justifyContent: "right", flexGrow: 1 }}
+                                >
+                                    {bookingActiveLoading && <CircularProgress size="1rem" />}
+                                    <Switch
+                                        checked={bookingActive}
+                                        onChange={(_, checked) => onBookingActiveChanged(checked)}
+                                        inputProps={{
+                                            "aria-label": "booking-aktiv",
+                                        }}
+                                    />
+                                </Box>
                             </Box>
                         </FormLabel>
                     </FormGroup>
@@ -140,17 +144,21 @@ export default function Settings({
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                 <NotificationsActiveRoundedIcon />
                                 <Typography>Påminnelse om time</Typography>
-                                <Switch
-                                    checked={reminderActive}
-                                    onChange={(_, checked) => handleReminderActiveChanged(checked)}
-                                    inputProps={{
-                                        "aria-label": "påminnelse-aktiv",
-                                    }}
-                                />
-                                {notificationsConfigLoading && <CircularProgress size="1rem" />}
+                                <Box
+                                    sx={{ display: "flex", alignItems: "center", justifyContent: "right", flexGrow: 1 }}
+                                >
+                                    {notificationsConfigLoading && <CircularProgress size="1rem" />}
+                                    <Switch
+                                        checked={reminderActive}
+                                        onChange={(_, checked) => handleReminderActiveChanged(checked)}
+                                        inputProps={{
+                                            "aria-label": "påminnelse-aktiv",
+                                        }}
+                                    />
+                                </Box>
                             </Box>
                         </FormLabel>
-                        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                        <Box sx={{ display: "flex", gap: 2, alignItems: "center", ml: "33px" }}>
                             <FormControl>
                                 <Input
                                     value={reminderHours}
