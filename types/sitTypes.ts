@@ -12,6 +12,7 @@ export type SitClass = {
     id: number;
     activityId: number;
     available: number;
+    bookable: boolean;
     capacity: number;
     studio: SitStudio;
     from: string;
@@ -22,6 +23,11 @@ export type SitClass = {
     image: string;
     color: string;
     instructors: SitInstructor[];
+    waitlist: {
+        active: boolean;
+        count: number;
+        userPosition: number | null;
+    };
     weekday?: number;
 };
 
