@@ -1,6 +1,6 @@
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
-import { ClassPopularity } from "../../types/derivedTypes";
+import { ClassPopularity } from "../../types/rezervoTypes";
 
 const ClassPopularityMeter = ({ popularity }: { popularity: ClassPopularity }) => {
     switch (popularity) {

@@ -2,11 +2,10 @@ import React from "react";
 import { Box, Chip, Stack, Typography, useTheme } from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { sitClassRecurrentId } from "../lib/iBooking";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
-import { PeerClassesIndex, UserSessionsIndex } from "../types/rezervoTypes";
+import { ClassPopularity, ClassPopularityIndex, PeerClassesIndex, UserSessionsIndex } from "../types/rezervoTypes";
 
 const Schedule = ({
     schedule,

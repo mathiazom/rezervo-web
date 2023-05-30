@@ -7,11 +7,10 @@ import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../types/animat
 import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { ClassPopularity } from "../../types/derivedTypes";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../../config/config";
-import { SessionStatus, UserNameSessionStatus } from "../../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, UserNameSessionStatus } from "../../types/rezervoTypes";
 import RippleBadge from "../RippleBadge";
 
 const ClassCard = ({

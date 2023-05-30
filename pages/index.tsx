@@ -4,9 +4,15 @@ import { Box, Divider, Modal, Stack } from "@mui/material";
 import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
-import { ClassPopularityIndex, ClassPopularity } from "../types/derivedTypes";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { ClassConfig, ConfigPayload, NotificationsConfig, PeerClassesIndex } from "../types/rezervoTypes";
+import {
+    ClassConfig,
+    ClassPopularity,
+    ClassPopularityIndex,
+    ConfigPayload,
+    NotificationsConfig,
+    PeerClassesIndex,
+} from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
 import Settings from "../components/Settings";
 import { useRouter } from "next/router";

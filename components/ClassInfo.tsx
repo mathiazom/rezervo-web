@@ -8,11 +8,10 @@ import Image from "next/image";
 import React from "react";
 import { SitClass } from "../types/sitTypes";
 import { hexWithOpacityToRgb } from "../utils/colorUtils";
-import { ClassPopularity } from "../types/derivedTypes";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
-import { SessionStatus, UserNameSessionStatus } from "../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, UserNameSessionStatus } from "../types/rezervoTypes";
 import { UsersAvatarGroup } from "./UsersAvatarGroup";
 
 export default function ClassInfo({
