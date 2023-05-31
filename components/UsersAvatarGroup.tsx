@@ -2,6 +2,7 @@ import { Avatar, AvatarGroup } from "@mui/material";
 import RippleBadge from "./RippleBadge";
 import { hexColorHash } from "../utils/colorUtils";
 import React from "react";
+import { StatusColors } from "../types/rezervoTypes";
 
 export const UsersAvatarGroup = ({
     users,
@@ -39,7 +40,7 @@ export const UsersAvatarGroup = ({
                         horizontal: "right",
                     }}
                     variant={"dot"}
-                    rippleColor={badgeColor ?? "unset"}
+                    rippleColor={badgeColor ?? StatusColors.UNKNOWN}
                 >
                     <Avatar
                         alt={user_name}

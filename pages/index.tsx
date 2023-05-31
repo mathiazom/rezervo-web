@@ -11,7 +11,6 @@ import {
     ClassPopularityIndex,
     ConfigPayload,
     NotificationsConfig,
-    PeerClassesIndex,
 } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
 import Settings from "../components/Settings";
@@ -24,7 +23,6 @@ import { createClassPopularityIndex } from "../lib/popularity";
 import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
-import { usePeerConfigs } from "../hooks/usePeerConfigs";
 import { useUserSessions } from "../hooks/useUserSessions";
 
 // Memoize to avoid redundant schedule re-render on class selection change
@@ -50,9 +48,7 @@ const Index: NextPage<{
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
     const router = useRouter();
 
-    const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig();
-
-    const { peerConfigs } = usePeerConfigs();
+    const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
 
     const { userSessionsIndex } = useUserSessions();
 
@@ -86,24 +82,6 @@ const Index: NextPage<{
     );
 
     const classes = useMemo(() => currentSchedule.days.flatMap((d) => d.classes) ?? [], [currentSchedule.days]);
-
-    const peerClassesIndex = useMemo(
-        () =>
-            classes == undefined || peerConfigs == undefined
-                ? null
-                : classes.reduce<PeerClassesIndex>((cs, pc) => {
-                      const cid = sitClassRecurrentId(pc);
-                      const peers = peerConfigs.reduce<string[]>(
-                          (acc, cur) =>
-                              cur.classes.find((c) => classConfigRecurrentId(c) === cid)
-                                  ? [...acc, cur.peer_name]
-                                  : acc,
-                          []
-                      );
-                      return peers.length > 0 ? { ...cs, [cid]: peers } : cs;
-                  }, {}),
-        [classes, peerConfigs]
-    );
 
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
@@ -279,7 +257,7 @@ const Index: NextPage<{
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
-                        peerClassesIndex={peerClassesIndex}
+                        allConfigsIndex={allConfigsIndex ?? null}
                         userSessionsIndex={userSessionsIndex ?? null}
                         onSelectedChanged={onSelectedChanged}
                         onInfo={setClassInfoClass}
@@ -310,7 +288,9 @@ const Index: NextPage<{
                             classPopularity={
                                 classPopularityIndex[sitClassRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
                             }
-                            peers={peerClassesIndex ? peerClassesIndex[sitClassRecurrentId(classInfoClass)] ?? [] : []}
+                            configUsers={
+                                allConfigsIndex ? allConfigsIndex[sitClassRecurrentId(classInfoClass)] ?? [] : []
+                            }
                             userSessions={userSessionsIndex ? userSessionsIndex[classInfoClass.id] ?? [] : []}
                         />
                     )}

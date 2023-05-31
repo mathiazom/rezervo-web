@@ -8,14 +8,20 @@ import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameSessionStatus } from "../../types/rezervoTypes";
+import {
+    ClassPopularity,
+    SessionStatus,
+    StatusColors,
+    UserNameSessionStatus,
+    UserNameWithIsSelf,
+} from "../../types/rezervoTypes";
 import RippleBadge from "../RippleBadge";
 import { isClassInThePast } from "../../lib/iBooking";
 
 const ClassCard = ({
     _class,
     popularity,
-    peers,
+    configUsers,
     userSessions,
     selectable,
     selected,
@@ -25,7 +31,7 @@ const ClassCard = ({
 {
     _class: SitClass;
     popularity: ClassPopularity;
-    peers: string[];
+    configUsers: UserNameWithIsSelf[];
     userSessions: UserNameSessionStatus[];
     selectable: boolean;
     selected: boolean;
@@ -54,7 +60,9 @@ const ClassCard = ({
 
     const showSelected = !isInThePast && selected;
 
-    const usersPlanned = peers.filter((p) => !userSessions.map((u) => u.user_name).includes(p));
+    const usersPlanned = configUsers.filter(
+        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name)
+    );
 
     return (
         <Card
@@ -125,9 +133,13 @@ const ClassCard = ({
                             >
                                 {!isInThePast &&
                                     usersPlanned.length > 0 &&
-                                    usersPlanned.map((p) => (
-                                        <Avatar key={p} alt={p} sx={{ backgroundColor: hexColorHash(p) }}>
-                                            {p[0]}
+                                    usersPlanned.map(({ user_name }) => (
+                                        <Avatar
+                                            key={user_name}
+                                            alt={user_name}
+                                            sx={{ backgroundColor: hexColorHash(user_name) }}
+                                        >
+                                            {user_name[0]}
                                         </Avatar>
                                     ))}
                                 {userSessions.length > 0 &&

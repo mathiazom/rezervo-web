@@ -1,6 +1,8 @@
 import { Badge, styled } from "@mui/material";
 
-const RippleBadge = styled(Badge)(({ rippleColor }: { rippleColor: string }) => ({
+const RippleBadge = styled(Badge, {
+    shouldForwardProp: (prop) => prop !== "rippleColor",
+})(({ rippleColor }: { rippleColor: string }) => ({
     "& .MuiBadge-badge": {
         backgroundColor: rippleColor,
         color: rippleColor,

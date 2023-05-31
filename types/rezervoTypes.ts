@@ -22,13 +22,13 @@ export type UserConfig = {
 };
 export type ConfigPayload = UserConfig;
 
-export type PeerConfig = {
-    peer_name: string;
-    classes: ClassConfig[];
+export type UserNameWithIsSelf = {
+    is_self: boolean;
+    user_name: string;
 };
 
-export type PeerClassesIndex = {
-    [recurrentClassId: string]: string[];
+export type AllConfigsIndex = {
+    [recurrentClassId: string]: UserNameWithIsSelf[];
 };
 
 export enum SessionStatus {

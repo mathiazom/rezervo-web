@@ -2,7 +2,7 @@ import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
 
 function get(accessToken: string): Promise<Response> {
-    return fetch(`${process.env["CONFIG_HOST"]}/peer_configs`, {
+    return fetch(`${process.env["CONFIG_HOST"]}/all_configs`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${accessToken}`,

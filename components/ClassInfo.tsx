@@ -11,19 +11,25 @@ import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameSessionStatus } from "../types/rezervoTypes";
+import {
+    ClassPopularity,
+    SessionStatus,
+    StatusColors,
+    UserNameSessionStatus,
+    UserNameWithIsSelf,
+} from "../types/rezervoTypes";
 import { stringifyClassPopularity } from "../lib/popularity";
 import { UsersAvatarGroup } from "./UsersAvatarGroup";
 
 export default function ClassInfo({
     _class,
     classPopularity,
-    peers,
+    configUsers,
     userSessions,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
-    peers: string[];
+    configUsers: UserNameWithIsSelf[];
     userSessions: UserNameSessionStatus[];
 }) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -36,7 +42,9 @@ export default function ClassInfo({
 
     const usersOnWaitlist = userSessions.filter(({ status }) => status === SessionStatus.WAITLIST);
 
-    const usersPlanned = peers.filter((p) => !userSessions.map((u) => u.user_name).includes(p));
+    const usersPlanned = configUsers.filter(
+        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name)
+    );
 
     return (
         <Box
@@ -148,9 +156,13 @@ export default function ClassInfo({
             </Box>
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <UsersAvatarGroup users={usersPlanned} />
+                    <UsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} />
                     <Typography variant="body2" color="text.secondary">
-                        {`${formatNameArray(usersPlanned, 4)} skal på denne timen`}
+                        {`${formatNameArray(
+                            usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
+                            4,
+                            usersPlanned.some((u) => u.is_self)
+                        )} skal på denne timen`}
                     </Typography>
                 </Box>
             )}
