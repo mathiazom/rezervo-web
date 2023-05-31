@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import { simpleTimeStringFromISO } from "../utils/timeUtils";
+import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
@@ -21,6 +21,7 @@ import {
 import { stringifyClassPopularity } from "../lib/popularity";
 import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
+import ConfirmationDialog from "./ConfirmationDialog";
 
 export default function ClassInfo({
     _class,
@@ -56,6 +57,8 @@ export default function ClassInfo({
     );
 
     const [bookingLoading, setBookingLoading] = useState(false);
+
+    const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
     function book() {
         setBookingLoading(true);
@@ -237,28 +240,48 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.description}</Typography>
-            {selfBooked || selfOnWaitlist ? (
-                <LoadingButton
-                    sx={{ mt: 2 }}
-                    variant={"outlined"}
-                    color={"error"}
-                    disabled={isInThePast || !_class.bookable}
-                    onClick={() => cancelBooking()}
-                    loading={bookingLoading}
-                >
-                    Avbestill
-                </LoadingButton>
-            ) : (
-                <LoadingButton
-                    sx={{ mt: 2 }}
-                    variant={"outlined"}
-                    disabled={isInThePast || !_class.bookable}
-                    onClick={() => book()}
-                    loading={bookingLoading}
-                >
-                    Book nå
-                </LoadingButton>
-            )}
+            {!isInThePast &&
+                _class.bookable &&
+                (selfBooked || selfOnWaitlist ? (
+                    <LoadingButton
+                        sx={{ mt: 2 }}
+                        variant={"outlined"}
+                        color={"error"}
+                        disabled={isInThePast || !_class.bookable}
+                        onClick={() => setCancelBookingConfirmationOpen(true)}
+                        loading={bookingLoading}
+                    >
+                        Avbestill
+                    </LoadingButton>
+                ) : (
+                    <LoadingButton
+                        sx={{ mt: 2 }}
+                        variant={"outlined"}
+                        disabled={isInThePast || !_class.bookable}
+                        onClick={() => book()}
+                        loading={bookingLoading}
+                    >
+                        Book nå
+                    </LoadingButton>
+                ))}
+            <ConfirmationDialog
+                open={cancelBookingConfirmationOpen}
+                title={`Avbestille time?`}
+                description={
+                    <>
+                        <Typography>{`Du er i ferd med å avbestille ${_class.name} (${
+                            _class.weekday ? `${WEEKDAY_NUMBER_TO_NAME.get(_class.weekday)}, ` : ""
+                        }${simpleTimeStringFromISO(_class.from)}).`}</Typography>
+                        <Typography>Dette kan ikke angres!</Typography>
+                    </>
+                }
+                confirmText={"Avbestill"}
+                onCancel={() => setCancelBookingConfirmationOpen(false)}
+                onConfirm={() => {
+                    setCancelBookingConfirmationOpen(false);
+                    cancelBooking();
+                }}
+            />
         </Box>
     );
 }
