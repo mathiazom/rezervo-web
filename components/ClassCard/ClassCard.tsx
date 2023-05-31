@@ -17,6 +17,7 @@ import {
 } from "../../types/rezervoTypes";
 import RippleBadge from "../RippleBadge";
 import { isClassInThePast } from "../../lib/iBooking";
+import ClassUserAvatar from "../ClassUserAvatar";
 
 const ClassCard = ({
     _class,
@@ -134,13 +135,7 @@ const ClassCard = ({
                                 {!isInThePast &&
                                     usersPlanned.length > 0 &&
                                     usersPlanned.map(({ user_name }) => (
-                                        <Avatar
-                                            key={user_name}
-                                            alt={user_name}
-                                            sx={{ backgroundColor: hexColorHash(user_name) }}
-                                        >
-                                            {user_name[0]}
-                                        </Avatar>
+                                        <ClassUserAvatar key={user_name} username={user_name} alert={_class.bookable} />
                                     ))}
                                 {userSessions.length > 0 &&
                                     userSessions.map(({ user_name, status }) => {

@@ -19,7 +19,7 @@ import {
     UserNameWithIsSelf,
 } from "../types/rezervoTypes";
 import { stringifyClassPopularity } from "../lib/popularity";
-import { UsersAvatarGroup } from "./UsersAvatarGroup";
+import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
 
 export default function ClassInfo({
     _class,
@@ -156,21 +156,23 @@ export default function ClassInfo({
             </Box>
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <UsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} />
+                    <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.bookable} />
                     <Typography variant="body2" color="text.secondary">
                         {`${formatNameArray(
                             usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
                             usersPlanned.some((u) => u.is_self)
-                        )} skal på denne timen`}
+                        )} ${
+                            _class.bookable ? "har planlagt denne timen, men ikke booket plass!" : "skal på denne timen"
+                        }`}
                     </Typography>
                 </Box>
             )}
             {!isInThePast && usersOnWaitlist.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <UsersAvatarGroup
+                    <ClassUsersAvatarGroup
                         users={usersOnWaitlist.map((u) => u.user_name)}
-                        badgeColor={"#b75f00"}
+                        rippleColor={StatusColors.WAITLIST}
                         invisibleBadges={isInThePast}
                     />
                     <Typography variant="body2" color="text.secondary">
@@ -184,9 +186,9 @@ export default function ClassInfo({
             )}
             {usersBooked.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <UsersAvatarGroup
+                    <ClassUsersAvatarGroup
                         users={usersBooked.map((u) => u.user_name)}
-                        badgeColor={StatusColors.ACTIVE}
+                        rippleColor={StatusColors.ACTIVE}
                         invisibleBadges={isInThePast}
                     />
                     <Typography variant="body2" color="text.secondary">
