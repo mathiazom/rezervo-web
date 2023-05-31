@@ -11,6 +11,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import React from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { hexColorHash } from "../utils/colorUtils";
 
 export default function AppBar({
     isLoadingConfig,
@@ -138,7 +139,7 @@ export default function AppBar({
                                         width: 32,
                                         height: 32,
                                         fontSize: 18,
-                                        backgroundColor: theme.palette.primary.main,
+                                        backgroundColor: hexColorHash(user.name),
                                     }}
                                 >
                                     {user.name[0]}
