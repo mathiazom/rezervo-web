@@ -50,7 +50,7 @@ const Index: NextPage<{
 
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
 
-    const { userSessionsIndex } = useUserSessions();
+    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
@@ -214,6 +214,20 @@ const Index: NextPage<{
         }
     }
 
+    function bookClass(classId: number) {
+        return fetch("/api/book", {
+            method: "POST",
+            body: JSON.stringify({ class_id: classId.toString() }, null, 2),
+        }).then(() => mutateSessionsIndex());
+    }
+
+    function cancelBooking(classId: number) {
+        return fetch("/api/cancelBooking", {
+            method: "POST",
+            body: JSON.stringify({ class_id: classId.toString() }, null, 2),
+        }).then(() => mutateSessionsIndex());
+    }
+
     return (
         <>
             <Head>
@@ -292,6 +306,8 @@ const Index: NextPage<{
                                 allConfigsIndex ? allConfigsIndex[sitClassRecurrentId(classInfoClass)] ?? [] : []
                             }
                             userSessions={userSessionsIndex ? userSessionsIndex[classInfoClass.id] ?? [] : []}
+                            onBook={() => bookClass(classInfoClass.id)}
+                            onCancelBooking={() => cancelBooking(classInfoClass.id)}
                         />
                     )}
                 </>

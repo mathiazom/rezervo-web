@@ -8,11 +8,12 @@ export function useUserSessions() {
 
     const userSessionsApiUrl = "/api/sessions";
 
-    const { data, error, isLoading } = useSWR<UserSessionsIndex>(user ? userSessionsApiUrl : null, fetcher);
+    const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(user ? userSessionsApiUrl : null, fetcher);
 
     return {
         userSessionsIndex: data,
         userSessionsIndexError: error,
         userSessionsIndexLoading: isLoading,
+        mutateSessionsIndex: mutate,
     };
 }

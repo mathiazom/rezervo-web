@@ -5,7 +5,7 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { SitClass } from "../types/sitTypes";
 import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { DateTime } from "luxon";
@@ -20,17 +20,22 @@ import {
 } from "../types/rezervoTypes";
 import { stringifyClassPopularity } from "../lib/popularity";
 import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export default function ClassInfo({
     _class,
     classPopularity,
     configUsers,
     userSessions,
+    onBook,
+    onCancelBooking,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
     userSessions: UserNameSessionStatus[];
+    onBook: () => Promise<any>;
+    onCancelBooking: () => Promise<any>;
 }) {
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
@@ -40,11 +45,27 @@ export default function ClassInfo({
         ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED
     );
 
+    const selfBooked = usersBooked.some((u) => u.is_self);
+
     const usersOnWaitlist = userSessions.filter(({ status }) => status === SessionStatus.WAITLIST);
+
+    const selfOnWaitlist = usersOnWaitlist.some((u) => u.is_self);
 
     const usersPlanned = configUsers.filter(
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name)
     );
+
+    const [bookingLoading, setBookingLoading] = useState(false);
+
+    function book() {
+        setBookingLoading(true);
+        onBook().then(() => setBookingLoading(false));
+    }
+
+    function cancelBooking() {
+        setBookingLoading(true);
+        onCancelBooking().then(() => setBookingLoading(false));
+    }
 
     return (
         <Box
@@ -195,7 +216,7 @@ export default function ClassInfo({
                         {`${formatNameArray(
                             usersBooked.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
-                            usersBooked.some((u) => u.is_self)
+                            selfBooked
                         )} ${isInThePast ? "var på denne timen" : "har booket denne timen"}`}
                     </Typography>
                 </Box>
@@ -216,6 +237,28 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.description}</Typography>
+            {selfBooked || selfOnWaitlist ? (
+                <LoadingButton
+                    sx={{ mt: 2 }}
+                    variant={"outlined"}
+                    color={"error"}
+                    disabled={isInThePast || !_class.bookable}
+                    onClick={() => cancelBooking()}
+                    loading={bookingLoading}
+                >
+                    Avbestill
+                </LoadingButton>
+            ) : (
+                <LoadingButton
+                    sx={{ mt: 2 }}
+                    variant={"outlined"}
+                    disabled={isInThePast || !_class.bookable}
+                    onClick={() => book()}
+                    loading={bookingLoading}
+                >
+                    Book nå
+                </LoadingButton>
+            )}
         </Box>
     );
 }
