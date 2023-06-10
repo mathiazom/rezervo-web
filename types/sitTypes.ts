@@ -15,6 +15,7 @@ export type SitClass = {
     bookable: boolean;
     capacity: number;
     studio: SitStudio;
+    room: string;
     from: string;
     to: string;
     name: string;
