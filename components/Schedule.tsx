@@ -43,64 +43,69 @@ const Schedule = ({
     }
 
     return (
-        <Stack direction={"column"}>
-            <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
-                {schedule.days.map((day) => (
-                    <Box key={day.date} width={180}>
-                        <Box py={2} sx={{ opacity: isDayPassed(day.date) ? 1 : 0.5 }}>
-                            <Typography variant="h6" component="div">
-                                {day.dayName}{" "}
-                                {isToday(day.date) && (
-                                    <Chip
-                                        size={"small"}
-                                        sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
-                                        label="I dag"
-                                    />
-                                )}
-                            </Typography>
-                            <Typography
-                                variant="h6"
-                                component="div"
-                                style={{
-                                    color: theme.palette.grey[600],
-                                    fontSize: 15,
-                                }}
-                            >
-                                {day.date}
-                            </Typography>
+        <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+            <Stack direction={"column"}>
+                <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
+                    {schedule.days.map((day) => (
+                        <Box key={day.date} width={180}>
+                            <Box py={2} sx={{ opacity: isDayPassed(day.date) ? 1 : 0.5 }}>
+                                <Typography variant="h6" component="div">
+                                    {day.dayName}{" "}
+                                    {isToday(day.date) && (
+                                        <Chip
+                                            size={"small"}
+                                            sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
+                                            label="I dag"
+                                        />
+                                    )}
+                                </Typography>
+                                <Typography
+                                    variant="h6"
+                                    component="div"
+                                    style={{
+                                        color: theme.palette.grey[600],
+                                        fontSize: 15,
+                                    }}
+                                >
+                                    {day.date}
+                                </Typography>
+                            </Box>
+                            {day.classes.length > 0 ? (
+                                day.classes.map((_class) => (
+                                    <Box key={_class.id} mb={1}>
+                                        <ClassCard
+                                            _class={_class}
+                                            popularity={
+                                                classPopularityIndex[sitClassRecurrentId(_class)] ??
+                                                ClassPopularity.Unknown
+                                            }
+                                            configUsers={
+                                                allConfigsIndex
+                                                    ? allConfigsIndex[sitClassRecurrentId(_class)] ?? []
+                                                    : []
+                                            }
+                                            userSessions={userSessionsIndex ? userSessionsIndex[_class.id] ?? [] : []}
+                                            selectable={selectable}
+                                            selected={
+                                                selectedClassIds != null &&
+                                                selectedClassIds.includes(sitClassRecurrentId(_class))
+                                            }
+                                            onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
+                                            onInfo={() => onInfo(_class)}
+                                            // onSettings={() =>
+                                            //     setSettingsClass(_class)
+                                            // }
+                                        />
+                                    </Box>
+                                ))
+                            ) : (
+                                <p>Ingen gruppetimer</p>
+                            )}
                         </Box>
-                        {day.classes.length > 0 ? (
-                            day.classes.map((_class) => (
-                                <Box key={_class.id} mb={1}>
-                                    <ClassCard
-                                        _class={_class}
-                                        popularity={
-                                            classPopularityIndex[sitClassRecurrentId(_class)] ?? ClassPopularity.Unknown
-                                        }
-                                        configUsers={
-                                            allConfigsIndex ? allConfigsIndex[sitClassRecurrentId(_class)] ?? [] : []
-                                        }
-                                        userSessions={userSessionsIndex ? userSessionsIndex[_class.id] ?? [] : []}
-                                        selectable={selectable}
-                                        selected={
-                                            selectedClassIds != null &&
-                                            selectedClassIds.includes(sitClassRecurrentId(_class))
-                                        }
-                                        onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
-                                        onInfo={() => onInfo(_class)}
-                                        // onSettings={() =>
-                                        //     setSettingsClass(_class)
-                                        // }
-                                    />
-                                </Box>
-                            ))
-                        ) : (
-                            <p>Ingen gruppetimer</p>
-                        )}
-                    </Box>
-                ))}
+                    ))}
+                </Stack>
             </Stack>
-        </Stack>
+        </Box>
     );
 };
 

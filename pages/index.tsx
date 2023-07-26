@@ -261,18 +261,16 @@ const Index: NextPage<{
                     />
                     <Divider orientation="horizontal" />
                 </Box>
-                <Box sx={{ flexGrow: 1, overflow: "auto" }}>
-                    <ScheduleMemo
-                        schedule={currentSchedule}
-                        classPopularityIndex={classPopularityIndex}
-                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
-                        selectedClassIds={selectedClassIds}
-                        allConfigsIndex={allConfigsIndex ?? null}
-                        userSessionsIndex={userSessionsIndex ?? null}
-                        onSelectedChanged={onSelectedChanged}
-                        onInfo={setClassInfoClass}
-                    />
-                </Box>
+                <ScheduleMemo
+                    schedule={currentSchedule}
+                    classPopularityIndex={classPopularityIndex}
+                    selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                    selectedClassIds={selectedClassIds}
+                    allConfigsIndex={allConfigsIndex ?? null}
+                    userSessionsIndex={userSessionsIndex ?? null}
+                    onSelectedChanged={onSelectedChanged}
+                    onInfo={setClassInfoClass}
+                />
                 {selectionChanged && (
                     <Box
                         sx={{
