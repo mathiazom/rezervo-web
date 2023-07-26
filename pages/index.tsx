@@ -271,22 +271,12 @@ const Index: NextPage<{
                     onSelectedChanged={onSelectedChanged}
                     onInfo={setClassInfoClass}
                 />
-                {selectionChanged && (
-                    <Box
-                        sx={{
-                            position: "fixed",
-                            padding: "1.5rem",
-                            bottom: 0,
-                            right: 0,
-                        }}
-                    >
-                        <MobileConfigUpdateBar
-                            isLoadingConfig={userConfigLoading}
-                            onUpdateConfig={() => updateConfigFromSelection()}
-                            onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                        />
-                    </Box>
-                )}
+                <MobileConfigUpdateBar
+                    visible={selectionChanged}
+                    isLoadingConfig={userConfigLoading}
+                    onUpdateConfig={() => updateConfigFromSelection()}
+                    onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                />
             </Stack>
             <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
                 <>
