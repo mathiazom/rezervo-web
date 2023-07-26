@@ -242,20 +242,16 @@ const Index: NextPage<{
             </Head>
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
-                    <Box display={"flex"} justifyContent={"center"}>
-                        <Box width={1388}>
-                            <AppBar
-                                changed={selectionChanged}
-                                agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                                isLoadingConfig={userConfig == null || userConfigLoading}
-                                isConfigError={userConfigError}
-                                onUpdateConfig={() => updateConfigFromSelection()}
-                                onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                                onSettingsOpen={() => setIsSettingsOpen(true)}
-                                onAgendaOpen={() => setIsAgendaOpen(true)}
-                            />
-                        </Box>
-                    </Box>
+                    <AppBar
+                        changed={selectionChanged}
+                        agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
+                        isLoadingConfig={userConfig == null || userConfigLoading}
+                        isConfigError={userConfigError}
+                        onUpdateConfig={() => updateConfigFromSelection()}
+                        onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                        onSettingsOpen={() => setIsSettingsOpen(true)}
+                        onAgendaOpen={() => setIsAgendaOpen(true)}
+                    />
                     <WeekNavigator
                         weekNumber={DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}
                         weekOffset={weekOffset}
