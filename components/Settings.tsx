@@ -39,15 +39,12 @@ export default function Settings({
     bookingActive,
     setBookingActive,
     notificationsConfig,
-    notificationsConfigLoading,
-    onNotificationsConfigChanged,
+    setNotificationsConfig,
 }: {
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
     notificationsConfig: NotificationsConfig | null;
-    notificationsConfigLoading: boolean;
-    // eslint-disable-next-line no-unused-vars
-    onNotificationsConfigChanged: (notificationsConfig: NotificationsConfig) => void;
+    setNotificationsConfig: Dispatch<NotificationsConfig>;
 }) {
     const { userConfig, putUserConfig } = useUserConfig();
     const [reminderActive, setReminderActive] = useState(notificationsConfig?.reminder_hours_before != null);
@@ -55,6 +52,7 @@ export default function Settings({
         notificationsConfig?.reminder_hours_before ?? null
     );
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
+    const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const newReminderHours = notificationsConfig?.reminder_hours_before;
@@ -92,6 +90,15 @@ export default function Settings({
             ...notificationsConfig,
             reminder_hours_before: reminderActive ? reminderHours : null,
         });
+    }
+
+    function onNotificationsConfigChanged(notificationsConfig: NotificationsConfig) {
+        setNotificationsConfig(notificationsConfig);
+        setNotificationsConfigLoading(true);
+        return putUserConfig({
+            ...userConfig,
+            notifications: notificationsConfig,
+        } as ConfigPayload).then(() => setNotificationsConfigLoading(false));
     }
 
     return (

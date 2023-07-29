@@ -9,17 +9,14 @@ const SettingsModal = ({
     bookingActive,
     setBookingActive,
     notificationsConfig,
-    notificationsConfigLoading,
-    onNotificationsConfigChanged,
+    setNotificationsConfig,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
     notificationsConfig: NotificationsConfig | null;
-    notificationsConfigLoading: boolean;
-    // eslint-disable-next-line no-unused-vars
-    onNotificationsConfigChanged: (notificationsConfig: NotificationsConfig) => void;
+    setNotificationsConfig: Dispatch<NotificationsConfig>;
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
@@ -27,8 +24,7 @@ const SettingsModal = ({
                 bookingActive={bookingActive}
                 setBookingActive={setBookingActive}
                 notificationsConfig={notificationsConfig}
-                notificationsConfigLoading={notificationsConfigLoading}
-                onNotificationsConfigChanged={onNotificationsConfigChanged}
+                setNotificationsConfig={setNotificationsConfig}
             />
         </Modal>
     );

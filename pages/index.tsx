@@ -4,7 +4,7 @@ import { Box, Stack } from "@mui/material";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { ClassConfig, ClassPopularityIndex, ConfigPayload, NotificationsConfig } from "../types/rezervoTypes";
+import { ClassConfig, ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
 import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
@@ -44,7 +44,6 @@ const Index: NextPage<{
 
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
-    const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
@@ -112,15 +111,6 @@ const Index: NextPage<{
         setUserConfigActive(userConfig?.active ?? false);
         setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
-
-    function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
-        setNotificationsConfig(notificationsConfig);
-        setNotificationsConfigLoading(true);
-        return putUserConfig({
-            ...userConfig,
-            notifications: notificationsConfig,
-        } as ConfigPayload).then(() => setNotificationsConfigLoading(false));
-    }
 
     function updateConfigFromSelection() {
         if (selectedClassIds == null) {
@@ -190,8 +180,7 @@ const Index: NextPage<{
                 bookingActive={userConfigActive}
                 setBookingActive={setUserConfigActive}
                 notificationsConfig={notificationsConfig}
-                notificationsConfigLoading={notificationsConfigLoading}
-                onNotificationsConfigChanged={putNotificationsConfig}
+                setNotificationsConfig={setNotificationsConfig}
             />
         </>
     );
