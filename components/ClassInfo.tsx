@@ -11,13 +11,7 @@ import { hexWithOpacityToRgb } from "../utils/colorUtils";
 import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { formatNameArray } from "../utils/arrayUtils";
-import {
-    ClassPopularity,
-    SessionStatus,
-    StatusColors,
-    UserNameSessionStatus,
-    UserNameWithIsSelf,
-} from "../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../types/rezervoTypes";
 import { stringifyClassPopularity } from "../lib/popularity";
 import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -28,14 +22,13 @@ export default function ClassInfo({
     _class,
     classPopularity,
     configUsers,
-    userSessions,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
-    userSessions: UserNameSessionStatus[];
 }) {
-    const { mutateSessionsIndex } = useUserSessions();
+    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
+    const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();

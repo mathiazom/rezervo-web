@@ -8,22 +8,16 @@ import { randomElementFromArray } from "../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
-import {
-    ClassPopularity,
-    SessionStatus,
-    StatusColors,
-    UserNameSessionStatus,
-    UserNameWithIsSelf,
-} from "../../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../types/rezervoTypes";
 import RippleBadge from "../RippleBadge";
 import { isClassInThePast } from "../../lib/iBooking";
 import ClassUserAvatar from "../ClassUserAvatar";
+import { useUserSessions } from "../../hooks/useUserSessions";
 
 const ClassCard = ({
     _class,
     popularity,
     configUsers,
-    userSessions,
     selectable,
     selected,
     onSelectedChanged,
@@ -33,7 +27,6 @@ const ClassCard = ({
     _class: SitClass;
     popularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
-    userSessions: UserNameSessionStatus[];
     selectable: boolean;
     selected: boolean;
     // eslint-disable-next-line no-unused-vars
@@ -41,6 +34,8 @@ const ClassCard = ({
     onInfo: () => void;
     // onSettings: () => void;
 }) => {
+    const { userSessionsIndex } = useUserSessions();
+    const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null
     );

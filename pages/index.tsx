@@ -11,7 +11,6 @@ import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import { createClassPopularityIndex } from "../lib/popularity";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
-import { useUserSessions } from "../hooks/useUserSessions";
 import PageHead from "../components/PageHead";
 import ClassInfoModal from "../components/modals/ClassInfoModal";
 import AgendaModal from "../components/modals/AgendaModal";
@@ -39,8 +38,6 @@ const Index: NextPage<{
     classPopularityIndex: ClassPopularityIndex;
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
-
-    const { userSessionsIndex } = useUserSessions();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
@@ -146,7 +143,6 @@ const Index: NextPage<{
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         allConfigsIndex={allConfigsIndex ?? null}
-                        userSessionsIndex={userSessionsIndex ?? null}
                         onSelectedChanged={onSelectedChanged}
                         onInfo={setClassInfoClass}
                     />
@@ -163,7 +159,6 @@ const Index: NextPage<{
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
                 allConfigsIndex={allConfigsIndex}
-                userSessionsIndex={userSessionsIndex}
             />
             <AgendaModal
                 open={isAgendaOpen}
