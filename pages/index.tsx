@@ -43,7 +43,7 @@ const Index: NextPage<{
 
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
 
-    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
+    const { userSessionsIndex } = useUserSessions();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
@@ -160,13 +160,6 @@ const Index: NextPage<{
         });
     }
 
-    function bookClass(classId: number) {
-        return fetch("/api/book", {
-            method: "POST",
-            body: JSON.stringify({ class_id: classId.toString() }, null, 2),
-        }).then(() => mutateSessionsIndex());
-    }
-
     return (
         <>
             <PageHead title={"sit-rezervo"} />
@@ -208,7 +201,6 @@ const Index: NextPage<{
                 classPopularityIndex={classPopularityIndex}
                 allConfigsIndex={allConfigsIndex}
                 userSessionsIndex={userSessionsIndex}
-                bookClass={bookClass}
             />
             <AgendaModal
                 open={isAgendaOpen}

@@ -29,13 +29,11 @@ export default function ClassInfo({
     classPopularity,
     configUsers,
     userSessions,
-    onBook,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
     userSessions: UserNameSessionStatus[];
-    onBook: () => Promise<any>;
 }) {
     const { mutateSessionsIndex } = useUserSessions();
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -60,9 +58,14 @@ export default function ClassInfo({
 
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
-    function book() {
+    async function book() {
         setBookingLoading(true);
-        onBook().then(() => setBookingLoading(false));
+        await fetch("/api/book", {
+            method: "POST",
+            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
+        });
+        await mutateSessionsIndex();
+        setBookingLoading(false);
     }
 
     async function cancelBooking() {
