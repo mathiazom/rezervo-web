@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Box, Chip, Divider, Stack, Typography, useTheme } from "@mui/material";
 import ClassCard from "./ClassCard/ClassCard";
 import { SitClass, SitSchedule } from "../types/sitTypes";
@@ -7,6 +7,7 @@ import { DateTime } from "luxon";
 import { SIT_TIMEZONE } from "../config/config";
 import { ClassPopularity, ClassPopularityIndex, AllConfigsIndex, UserSessionsIndex } from "../types/rezervoTypes";
 import WeekNavigator from "./WeekNavigator";
+import { useRouter } from "next/router";
 
 const Schedule = ({
     initialCachedSchedules,
@@ -33,6 +34,7 @@ const Schedule = ({
     // eslint-disable-next-line no-unused-vars
     onInfo: (c: SitClass) => void;
 }) => {
+    const router = useRouter();
     const theme = useTheme();
 
     const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
@@ -41,6 +43,18 @@ const Schedule = ({
     const [weekOffset, setWeekOffset] = useState(0);
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
+
+    useEffect(() => {
+        const { classId, ...queryWithoutParam } = router.query;
+        if (classId === undefined) {
+            return;
+        }
+        const linkedClass = schedule.days.flatMap((day) => day.classes).find((_class) => _class.id === Number(classId));
+        if (linkedClass) {
+            onInfo(linkedClass);
+        }
+        router.replace({ query: queryWithoutParam });
+    }, [onInfo, router, schedule.days]);
 
     function sameDay(a: DateTime, b: DateTime): boolean {
         return a.startOf("day") <= b && b <= a.endOf("day");

@@ -6,7 +6,6 @@ import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig, ClassPopularityIndex, ConfigPayload, NotificationsConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
-import { useRouter } from "next/router";
 import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import { createClassPopularityIndex } from "../lib/popularity";
@@ -39,8 +38,6 @@ const Index: NextPage<{
     initialCachedSchedules: { [weekOffset: number]: SitSchedule };
     classPopularityIndex: ClassPopularityIndex;
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
-    const router = useRouter();
-
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
 
     const { userSessionsIndex } = useUserSessions();
@@ -115,20 +112,6 @@ const Index: NextPage<{
         setUserConfigActive(userConfig?.active ?? false);
         setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
-
-    useEffect(() => {
-        const { classId, ...queryWithoutParam } = router.query;
-        if (classId === undefined) {
-            return;
-        }
-        const linkedClass = currentSchedule.days
-            .flatMap((day) => day.classes)
-            .find((_class) => _class.id === Number(classId));
-        if (linkedClass) {
-            setClassInfoClass(linkedClass);
-        }
-        router.replace({ query: queryWithoutParam });
-    }, [router, currentSchedule.days]);
 
     function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
         setNotificationsConfig(notificationsConfig);
