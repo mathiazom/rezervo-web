@@ -1,29 +1,23 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Divider, Modal, Stack } from "@mui/material";
+import { Box, Divider, Stack } from "@mui/material";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import {
-    ClassConfig,
-    ClassPopularity,
-    ClassPopularityIndex,
-    ConfigPayload,
-    NotificationsConfig,
-} from "../types/rezervoTypes";
+import { ClassConfig, ClassPopularityIndex, ConfigPayload, NotificationsConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
-import Settings from "../components/Settings";
 import { useRouter } from "next/router";
 import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
-import ClassInfo from "../components/ClassInfo";
-import Agenda from "../components/Agenda";
 import { createClassPopularityIndex } from "../lib/popularity";
 import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
 import { useUserSessions } from "../hooks/useUserSessions";
 import PageHead from "../components/PageHead";
+import ClassInfoModal from "../components/modals/ClassInfoModal";
+import AgendaModal from "../components/modals/AgendaModal";
+import SettingsModal from "../components/modals/SettingsModal";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -269,50 +263,34 @@ const Index: NextPage<{
                     onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                 />
             </Stack>
-            <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
-                <>
-                    {classInfoClass && (
-                        <ClassInfo
-                            _class={classInfoClass}
-                            classPopularity={
-                                classPopularityIndex[sitClassRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
-                            }
-                            configUsers={
-                                allConfigsIndex ? allConfigsIndex[sitClassRecurrentId(classInfoClass)] ?? [] : []
-                            }
-                            userSessions={userSessionsIndex ? userSessionsIndex[classInfoClass.id] ?? [] : []}
-                            onBook={() => bookClass(classInfoClass.id)}
-                            onCancelBooking={() => cancelBooking(classInfoClass.id)}
-                        />
-                    )}
-                </>
-            </Modal>
-            <Modal open={isAgendaOpen} onClose={() => setIsAgendaOpen(false)}>
-                <>
-                    {userConfig?.classes && (
-                        <Agenda
-                            agendaClasses={userConfig.classes.map((c) => ({
-                                config: c,
-                                sitClass: classes.find((sc) => sitClassRecurrentId(sc) === classConfigRecurrentId(c)),
-                                markedForDeletion:
-                                    selectedClassIds != null && !selectedClassIds.includes(classConfigRecurrentId(c)),
-                            }))}
-                            onInfo={setClassInfoClass}
-                            onSetToDelete={(c, toDelete) => onSelectedChanged(classConfigRecurrentId(c), !toDelete)}
-                        />
-                    )}
-                </>
-            </Modal>
-            <Modal open={isSettingsOpen} onClose={() => setIsSettingsOpen(false)}>
-                <Settings
-                    bookingActive={userConfigActive}
-                    bookingActiveLoading={userConfigActiveLoading}
-                    onBookingActiveChanged={putConfigActive}
-                    notificationsConfig={notificationsConfig}
-                    notificationsConfigLoading={notificationsConfigLoading}
-                    onNotificationsConfigChanged={putNotificationsConfig}
-                />
-            </Modal>
+            <ClassInfoModal
+                classInfoClass={classInfoClass}
+                setClassInfoClass={setClassInfoClass}
+                classPopularityIndex={classPopularityIndex}
+                allConfigsIndex={allConfigsIndex}
+                userSessionsIndex={userSessionsIndex}
+                bookClass={bookClass}
+                cancelBooking={cancelBooking}
+            />
+            <AgendaModal
+                open={isAgendaOpen}
+                setOpen={setIsAgendaOpen}
+                userConfig={userConfig}
+                classes={classes}
+                selectedClassIds={selectedClassIds}
+                onInfo={setClassInfoClass}
+                onSelectedChanged={onSelectedChanged}
+            />
+            <SettingsModal
+                open={isSettingsOpen}
+                setOpen={setIsSettingsOpen}
+                bookingActive={userConfigActive}
+                bookingActiveLoading={userConfigActiveLoading}
+                onBookingActiveChanged={putConfigActive}
+                notificationsConfig={notificationsConfig}
+                notificationsConfigLoading={notificationsConfigLoading}
+                onNotificationsConfigChanged={putNotificationsConfig}
+            />
         </>
     );
 };
