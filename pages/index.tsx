@@ -167,13 +167,6 @@ const Index: NextPage<{
         }).then(() => mutateSessionsIndex());
     }
 
-    function cancelBooking(classId: number) {
-        return fetch("/api/cancelBooking", {
-            method: "POST",
-            body: JSON.stringify({ class_id: classId.toString() }, null, 2),
-        }).then(() => mutateSessionsIndex());
-    }
-
     return (
         <>
             <PageHead title={"sit-rezervo"} />
@@ -216,7 +209,6 @@ const Index: NextPage<{
                 allConfigsIndex={allConfigsIndex}
                 userSessionsIndex={userSessionsIndex}
                 bookClass={bookClass}
-                cancelBooking={cancelBooking}
             />
             <AgendaModal
                 open={isAgendaOpen}

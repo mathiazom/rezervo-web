@@ -22,6 +22,7 @@ import { stringifyClassPopularity } from "../lib/popularity";
 import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ConfirmationDialog from "./ConfirmationDialog";
+import { useUserSessions } from "../hooks/useUserSessions";
 
 export default function ClassInfo({
     _class,
@@ -29,15 +30,14 @@ export default function ClassInfo({
     configUsers,
     userSessions,
     onBook,
-    onCancelBooking,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
     userSessions: UserNameSessionStatus[];
     onBook: () => Promise<any>;
-    onCancelBooking: () => Promise<any>;
 }) {
+    const { mutateSessionsIndex } = useUserSessions();
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
@@ -65,9 +65,14 @@ export default function ClassInfo({
         onBook().then(() => setBookingLoading(false));
     }
 
-    function cancelBooking() {
+    async function cancelBooking() {
         setBookingLoading(true);
-        onCancelBooking().then(() => setBookingLoading(false));
+        await fetch("/api/cancelBooking", {
+            method: "POST",
+            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
+        });
+        await mutateSessionsIndex();
+        setBookingLoading(false);
     }
 
     return (

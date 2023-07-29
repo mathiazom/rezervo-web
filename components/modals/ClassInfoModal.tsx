@@ -12,7 +12,6 @@ const ClassInfoModal = ({
     allConfigsIndex,
     userSessionsIndex,
     bookClass,
-    cancelBooking,
 }: {
     classInfoClass: SitClass | null;
     setClassInfoClass: Dispatch<SetStateAction<SitClass | null>>;
@@ -21,8 +20,6 @@ const ClassInfoModal = ({
     userSessionsIndex: UserSessionsIndex | undefined;
     // eslint-disable-next-line no-unused-vars
     bookClass: (classId: number) => Promise<UserSessionsIndex | undefined>;
-    // eslint-disable-next-line no-unused-vars
-    cancelBooking: (classId: number) => Promise<UserSessionsIndex | undefined>;
 }) => {
     return (
         <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
@@ -36,7 +33,6 @@ const ClassInfoModal = ({
                         configUsers={allConfigsIndex ? allConfigsIndex[sitClassRecurrentId(classInfoClass)] ?? [] : []}
                         userSessions={userSessionsIndex ? userSessionsIndex[classInfoClass.id] ?? [] : []}
                         onBook={() => bookClass(classInfoClass.id)}
-                        onCancelBooking={() => cancelBooking(classInfoClass.id)}
                     />
                 )}
             </>
