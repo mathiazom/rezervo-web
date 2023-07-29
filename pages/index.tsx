@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Divider, Modal, Stack } from "@mui/material";
-import Head from "next/head";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
@@ -24,6 +23,7 @@ import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
 import { useUserSessions } from "../hooks/useUserSessions";
+import PageHead from "../components/PageHead";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);
@@ -230,16 +230,7 @@ const Index: NextPage<{
 
     return (
         <>
-            <Head>
-                <title>sit-rezervo</title>
-                <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-                <link rel="manifest" href="/site.webmanifest" />
-                <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
-                <meta name="msapplication-TileColor" content="#da532c" />
-                <meta name="theme-color" content="#ffffff" />
-            </Head>
+            <PageHead title={"sit-rezervo"} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <Box display={"flex"} justifyContent={"center"}>
