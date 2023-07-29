@@ -7,8 +7,7 @@ const SettingsModal = ({
     open,
     setOpen,
     bookingActive,
-    bookingActiveLoading,
-    onBookingActiveChanged,
+    setBookingActive,
     notificationsConfig,
     notificationsConfigLoading,
     onNotificationsConfigChanged,
@@ -16,9 +15,7 @@ const SettingsModal = ({
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     bookingActive: boolean;
-    bookingActiveLoading: boolean;
-    // eslint-disable-next-line no-unused-vars
-    onBookingActiveChanged: (active: boolean) => void;
+    setBookingActive: Dispatch<SetStateAction<boolean>>;
     notificationsConfig: NotificationsConfig | null;
     notificationsConfigLoading: boolean;
     // eslint-disable-next-line no-unused-vars
@@ -28,8 +25,7 @@ const SettingsModal = ({
         <Modal open={open} onClose={() => setOpen(false)}>
             <Settings
                 bookingActive={bookingActive}
-                bookingActiveLoading={bookingActiveLoading}
-                onBookingActiveChanged={onBookingActiveChanged}
+                setBookingActive={setBookingActive}
                 notificationsConfig={notificationsConfig}
                 notificationsConfigLoading={notificationsConfigLoading}
                 onNotificationsConfigChanged={onNotificationsConfigChanged}

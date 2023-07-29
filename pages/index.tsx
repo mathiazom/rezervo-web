@@ -46,7 +46,6 @@ const Index: NextPage<{
     const { userSessionsIndex } = useUserSessions();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
-    const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
@@ -131,15 +130,6 @@ const Index: NextPage<{
         router.replace({ query: queryWithoutParam });
     }, [router, currentSchedule.days]);
 
-    function putConfigActive(active: boolean) {
-        setUserConfigActive(active);
-        setUserConfigActiveLoading(true);
-        return putUserConfig({
-            ...userConfig,
-            active,
-        } as ConfigPayload).then(() => setUserConfigActiveLoading(false));
-    }
-
     function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
         setNotificationsConfig(notificationsConfig);
         setNotificationsConfigLoading(true);
@@ -215,8 +205,7 @@ const Index: NextPage<{
                 open={isSettingsOpen}
                 setOpen={setIsSettingsOpen}
                 bookingActive={userConfigActive}
-                bookingActiveLoading={userConfigActiveLoading}
-                onBookingActiveChanged={putConfigActive}
+                setBookingActive={setUserConfigActive}
                 notificationsConfig={notificationsConfig}
                 notificationsConfigLoading={notificationsConfigLoading}
                 onNotificationsConfigChanged={putNotificationsConfig}

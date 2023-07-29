@@ -10,11 +10,12 @@ import {
     Switch as MaterialUISwitch,
     Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { NotificationsConfig } from "../types/rezervoTypes";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ConfigPayload, NotificationsConfig } from "../types/rezervoTypes";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
 import { DEFAULT_REMINDER_HOURS } from "../config/config";
+import { useUserConfig } from "../hooks/useUserConfig";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({
@@ -36,25 +37,24 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
 
 export default function Settings({
     bookingActive,
-    bookingActiveLoading,
-    onBookingActiveChanged,
+    setBookingActive,
     notificationsConfig,
     notificationsConfigLoading,
     onNotificationsConfigChanged,
 }: {
     bookingActive: boolean;
-    bookingActiveLoading: boolean;
-    // eslint-disable-next-line no-unused-vars
-    onBookingActiveChanged: (active: boolean) => void;
+    setBookingActive: Dispatch<SetStateAction<boolean>>;
     notificationsConfig: NotificationsConfig | null;
     notificationsConfigLoading: boolean;
     // eslint-disable-next-line no-unused-vars
     onNotificationsConfigChanged: (notificationsConfig: NotificationsConfig) => void;
 }) {
+    const { userConfig, putUserConfig } = useUserConfig();
     const [reminderActive, setReminderActive] = useState(notificationsConfig?.reminder_hours_before != null);
     const [reminderHours, setReminderHours] = useState<number | null>(
         notificationsConfig?.reminder_hours_before ?? null
     );
+    const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
 
     useEffect(() => {
         const newReminderHours = notificationsConfig?.reminder_hours_before;
@@ -64,6 +64,16 @@ export default function Settings({
             setReminderHours(newReminderHours);
         }
     }, [notificationsConfig?.reminder_hours_before, reminderHours]);
+
+    async function onBookingActiveChanged(active: boolean) {
+        setBookingActive(active);
+        setBookingActiveLoading(true);
+        await putUserConfig({
+            ...userConfig,
+            active: active,
+        } as ConfigPayload);
+        setBookingActiveLoading(false);
+    }
 
     function handleReminderActiveChanged(active: boolean) {
         setReminderActive(active);
