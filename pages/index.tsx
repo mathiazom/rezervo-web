@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Divider, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import { createClassPopularityIndex } from "../lib/popularity";
-import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
 import { useUserSessions } from "../hooks/useUserSessions";
@@ -59,13 +58,7 @@ const Index: NextPage<{
 
     const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
 
-    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
-        initialCachedSchedules
-    );
-    const [weekOffset, setWeekOffset] = useState(0);
     const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
-    const [loadingNextWeek, setLoadingNextWeek] = useState(false);
-    const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
 
     const selectionChanged = useMemo(
         () =>
@@ -167,47 +160,6 @@ const Index: NextPage<{
         });
     }
 
-    async function handleUpdateWeekOffset(modifier: number) {
-        switch (modifier) {
-            case -1:
-                setLoadingPreviousWeek(true);
-                break;
-            case 1:
-                setLoadingNextWeek(true);
-                break;
-        }
-        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
-        let cachedSchedule = cachedSchedules[currentWeekOffset];
-        if (cachedSchedule === undefined) {
-            cachedSchedule = await fetch("api/schedule", {
-                method: "POST",
-                body: JSON.stringify({ weekOffset: currentWeekOffset }),
-            }).then((r) => r.json());
-            if (cachedSchedule === undefined) {
-                setLoadingPreviousWeek(false);
-                setLoadingNextWeek(false);
-                throw new Error("Failed to fetch schedule");
-            }
-            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
-        }
-        setWeekOffset(currentWeekOffset);
-        setCurrentSchedule(cachedSchedule);
-        setLoadingPreviousWeek(false);
-        setLoadingNextWeek(false);
-        // Pre-fetch next schedule (in same direction) if not in cache
-        const nextWeekOffset = currentWeekOffset + modifier;
-        if (nextWeekOffset in cachedSchedules) {
-            return;
-        }
-        const nextSchedule = await fetch("api/schedule", {
-            method: "POST",
-            body: JSON.stringify({ weekOffset: nextWeekOffset }),
-        }).then((r) => r.json());
-        if (nextSchedule != undefined) {
-            setCachedSchedules({ ...cachedSchedules, [nextWeekOffset]: nextSchedule });
-        }
-    }
-
     function bookClass(classId: number) {
         return fetch("/api/book", {
             method: "POST",
@@ -237,31 +189,25 @@ const Index: NextPage<{
                         onSettingsOpen={() => setIsSettingsOpen(true)}
                         onAgendaOpen={() => setIsAgendaOpen(true)}
                     />
-                    <WeekNavigator
-                        weekNumber={DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}
-                        weekOffset={weekOffset}
-                        loadingPreviousWeek={loadingPreviousWeek}
-                        loadingNextWeek={loadingNextWeek}
-                        onUpdateWeekOffset={handleUpdateWeekOffset}
+                    <ScheduleMemo
+                        initialCachedSchedules={initialCachedSchedules}
+                        schedule={currentSchedule}
+                        setCurrentSchedule={setCurrentSchedule}
+                        classPopularityIndex={classPopularityIndex}
+                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                        selectedClassIds={selectedClassIds}
+                        allConfigsIndex={allConfigsIndex ?? null}
+                        userSessionsIndex={userSessionsIndex ?? null}
+                        onSelectedChanged={onSelectedChanged}
+                        onInfo={setClassInfoClass}
                     />
-                    <Divider orientation="horizontal" />
+                    <MobileConfigUpdateBar
+                        visible={selectionChanged}
+                        isLoadingConfig={userConfigLoading}
+                        onUpdateConfig={() => updateConfigFromSelection()}
+                        onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                    />
                 </Box>
-                <ScheduleMemo
-                    schedule={currentSchedule}
-                    classPopularityIndex={classPopularityIndex}
-                    selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
-                    selectedClassIds={selectedClassIds}
-                    allConfigsIndex={allConfigsIndex ?? null}
-                    userSessionsIndex={userSessionsIndex ?? null}
-                    onSelectedChanged={onSelectedChanged}
-                    onInfo={setClassInfoClass}
-                />
-                <MobileConfigUpdateBar
-                    visible={selectionChanged}
-                    isLoadingConfig={userConfigLoading}
-                    onUpdateConfig={() => updateConfigFromSelection()}
-                    onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                />
             </Stack>
             <ClassInfoModal
                 classInfoClass={classInfoClass}
