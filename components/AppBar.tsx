@@ -37,130 +37,134 @@ export default function AppBar({
     const { user, isLoading } = useUser();
 
     return (
-        <Box display="flex" py={2} alignItems={"center"}>
-            <Typography
-                component="div"
-                pl={2}
-                sx={{
-                    fontSize: { xs: "1.2rem", sm: "1.8rem" },
-                    display: { xs: "none", md: "block" },
-                }}
-            >
-                <strong style={{ color: theme.palette.primary.main }}>sit-rezervo</strong>
-            </Typography>
-            <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>
-                {isLoading ? (
-                    <CircularProgress size={26} thickness={6} />
-                ) : user ? (
-                    <Box
+        <Box display={"flex"} justifyContent={"center"}>
+            <Box width={1388}>
+                <Box display="flex" py={2} alignItems={"center"}>
+                    <Typography
+                        component="div"
+                        pl={2}
                         sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: { xs: 1, md: 1.5 },
+                            fontSize: { xs: "1.2rem", sm: "1.8rem" },
+                            display: { xs: "none", md: "block" },
                         }}
                     >
-                        {isConfigError ? (
-                            <Box mr={1.5}>
-                                <Tooltip title={"Feilet"}>
-                                    <Badge
-                                        overlap={"circular"}
-                                        badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"error"} />}
-                                    >
-                                        <CloudOffRoundedIcon color={"disabled"} />
-                                    </Badge>
-                                </Tooltip>
-                            </Box>
-                        ) : isLoadingConfig ? (
-                            <CircularProgress
+                        <strong style={{ color: theme.palette.primary.main }}>sit-rezervo</strong>
+                    </Typography>
+                    <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>
+                        {isLoading ? (
+                            <CircularProgress size={26} thickness={6} />
+                        ) : user ? (
+                            <Box
                                 sx={{
-                                    mr: 1,
-                                    display: {
-                                        xs: "none",
-                                        sm: "flex",
-                                    },
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: { xs: 1, md: 1.5 },
                                 }}
-                                size={26}
-                                thickness={6}
-                            />
-                        ) : (
-                            <>
-                                {changed ? (
-                                    <Box
+                            >
+                                {isConfigError ? (
+                                    <Box mr={1.5}>
+                                        <Tooltip title={"Feilet"}>
+                                            <Badge
+                                                overlap={"circular"}
+                                                badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"error"} />}
+                                            >
+                                                <CloudOffRoundedIcon color={"disabled"} />
+                                            </Badge>
+                                        </Tooltip>
+                                    </Box>
+                                ) : isLoadingConfig ? (
+                                    <CircularProgress
                                         sx={{
+                                            mr: 1,
                                             display: {
                                                 xs: "none",
                                                 sm: "flex",
                                             },
-                                            alignItems: "center",
-                                            gap: 1,
                                         }}
-                                    >
-                                        <Tooltip title={"Angre"}>
-                                            <IconButton onClick={() => onUndoSelectionChanges()}>
-                                                <UndoIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Button
-                                            variant={"contained"}
-                                            startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
-                                            onClick={() => onUpdateConfig()}
-                                        >
-                                            <Typography color={"#fff"}>Oppdater</Typography>
-                                        </Button>
-                                    </Box>
+                                        size={26}
+                                        thickness={6}
+                                    />
                                 ) : (
-                                    <Tooltip title={"Lagret"}>
-                                        <CloudDoneIcon color={"disabled"} />
+                                    <>
+                                        {changed ? (
+                                            <Box
+                                                sx={{
+                                                    display: {
+                                                        xs: "none",
+                                                        sm: "flex",
+                                                    },
+                                                    alignItems: "center",
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                <Tooltip title={"Angre"}>
+                                                    <IconButton onClick={() => onUndoSelectionChanges()}>
+                                                        <UndoIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Button
+                                                    variant={"contained"}
+                                                    startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
+                                                    onClick={() => onUpdateConfig()}
+                                                >
+                                                    <Typography color={"#fff"}>Oppdater</Typography>
+                                                </Button>
+                                            </Box>
+                                        ) : (
+                                            <Tooltip title={"Lagret"}>
+                                                <CloudDoneIcon color={"disabled"} />
+                                            </Tooltip>
+                                        )}
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Tooltip title={"Agenda"}>
+                                                <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
+                                                    <FormatListBulletedRoundedIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                            <Tooltip title={"Innstillinger"}>
+                                                <IconButton onClick={() => onSettingsOpen()}>
+                                                    <SettingsRoundedIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Box>
+                                    </>
+                                )}
+                                {user.name && (
+                                    <Tooltip title={user.name}>
+                                        <Avatar
+                                            sx={{
+                                                width: 32,
+                                                height: 32,
+                                                fontSize: 18,
+                                                backgroundColor: hexColorHash(user.name),
+                                            }}
+                                        >
+                                            {user.name[0]}
+                                        </Avatar>
                                     </Tooltip>
                                 )}
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <Tooltip title={"Agenda"}>
-                                        <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
-                                            <FormatListBulletedRoundedIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title={"Innstillinger"}>
-                                        <IconButton onClick={() => onSettingsOpen()}>
-                                            <SettingsRoundedIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Box>
-                            </>
+                                <Tooltip title={"Logg ut"}>
+                                    <IconButton href={"/api/auth/logout"}>
+                                        <LogoutRoundedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        ) : (
+                            <Box>
+                                <Tooltip title={"Logg inn"}>
+                                    <IconButton color={"primary"} href={"/api/auth/login"}>
+                                        <LoginIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
                         )}
-                        {user.name && (
-                            <Tooltip title={user.name}>
-                                <Avatar
-                                    sx={{
-                                        width: 32,
-                                        height: 32,
-                                        fontSize: 18,
-                                        backgroundColor: hexColorHash(user.name),
-                                    }}
-                                >
-                                    {user.name[0]}
-                                </Avatar>
-                            </Tooltip>
-                        )}
-                        <Tooltip title={"Logg ut"}>
-                            <IconButton href={"/api/auth/logout"}>
-                                <LogoutRoundedIcon />
-                            </IconButton>
-                        </Tooltip>
                     </Box>
-                ) : (
-                    <Box>
-                        <Tooltip title={"Logg inn"}>
-                            <IconButton color={"primary"} href={"/api/auth/login"}>
-                                <LoginIcon />
-                            </IconButton>
-                        </Tooltip>
-                    </Box>
-                )}
+                </Box>
             </Box>
         </Box>
     );

@@ -233,20 +233,16 @@ const Index: NextPage<{
             <PageHead title={"sit-rezervo"} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
-                    <Box display={"flex"} justifyContent={"center"}>
-                        <Box width={1388}>
-                            <AppBar
-                                changed={selectionChanged}
-                                agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                                isLoadingConfig={userConfig == null || userConfigLoading}
-                                isConfigError={userConfigError}
-                                onUpdateConfig={() => updateConfigFromSelection()}
-                                onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                                onSettingsOpen={() => setIsSettingsOpen(true)}
-                                onAgendaOpen={() => setIsAgendaOpen(true)}
-                            />
-                        </Box>
-                    </Box>
+                    <AppBar
+                        changed={selectionChanged}
+                        agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
+                        isLoadingConfig={userConfig == null || userConfigLoading}
+                        isConfigError={userConfigError}
+                        onUpdateConfig={() => updateConfigFromSelection()}
+                        onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                        onSettingsOpen={() => setIsSettingsOpen(true)}
+                        onAgendaOpen={() => setIsAgendaOpen(true)}
+                    />
                     <WeekNavigator
                         weekNumber={DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}
                         weekOffset={weekOffset}
@@ -256,34 +252,22 @@ const Index: NextPage<{
                     />
                     <Divider orientation="horizontal" />
                 </Box>
-                <Box sx={{ flexGrow: 1, overflow: "auto" }}>
-                    <ScheduleMemo
-                        schedule={currentSchedule}
-                        classPopularityIndex={classPopularityIndex}
-                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
-                        selectedClassIds={selectedClassIds}
-                        allConfigsIndex={allConfigsIndex ?? null}
-                        userSessionsIndex={userSessionsIndex ?? null}
-                        onSelectedChanged={onSelectedChanged}
-                        onInfo={setClassInfoClass}
-                    />
-                </Box>
-                {selectionChanged && (
-                    <Box
-                        sx={{
-                            position: "fixed",
-                            padding: "1.5rem",
-                            bottom: 0,
-                            right: 0,
-                        }}
-                    >
-                        <MobileConfigUpdateBar
-                            isLoadingConfig={userConfigLoading}
-                            onUpdateConfig={() => updateConfigFromSelection()}
-                            onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                        />
-                    </Box>
-                )}
+                <ScheduleMemo
+                    schedule={currentSchedule}
+                    classPopularityIndex={classPopularityIndex}
+                    selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                    selectedClassIds={selectedClassIds}
+                    allConfigsIndex={allConfigsIndex ?? null}
+                    userSessionsIndex={userSessionsIndex ?? null}
+                    onSelectedChanged={onSelectedChanged}
+                    onInfo={setClassInfoClass}
+                />
+                <MobileConfigUpdateBar
+                    visible={selectionChanged}
+                    isLoadingConfig={userConfigLoading}
+                    onUpdateConfig={() => updateConfigFromSelection()}
+                    onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                />
             </Stack>
             <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
                 <>
