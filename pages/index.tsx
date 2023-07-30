@@ -141,22 +141,22 @@ const Index: NextPage<{
                         setCurrentSchedule={setCurrentSchedule}
                     />
                     <Divider orientation="horizontal" />
-                    <WeekScheduleMemo
-                        currentSchedule={currentSchedule}
-                        classPopularityIndex={classPopularityIndex}
-                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
-                        selectedClassIds={selectedClassIds}
-                        allConfigsIndex={allConfigsIndex ?? null}
-                        onSelectedChanged={onSelectedChanged}
-                        onInfo={setClassInfoClass}
-                    />
-                    <MobileConfigUpdateBar
-                        visible={selectionChanged}
-                        isLoadingConfig={userConfigLoading}
-                        onUpdateConfig={() => updateConfigFromSelection()}
-                        onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                    />
                 </Box>
+                <WeekScheduleMemo
+                    currentSchedule={currentSchedule}
+                    classPopularityIndex={classPopularityIndex}
+                    selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                    selectedClassIds={selectedClassIds}
+                    allConfigsIndex={allConfigsIndex ?? null}
+                    onSelectedChanged={onSelectedChanged}
+                    onInfo={setClassInfoClass}
+                />
+                <MobileConfigUpdateBar
+                    visible={selectionChanged}
+                    isLoadingConfig={userConfigLoading}
+                    onUpdateConfig={() => updateConfigFromSelection()}
+                    onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                />
             </Stack>
             <ClassInfoModal
                 classInfoClass={classInfoClass}
