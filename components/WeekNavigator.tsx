@@ -1,22 +1,66 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
-import React from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { SitSchedule } from "../types/sitTypes";
+import { DateTime } from "luxon";
 
 export default function WeekNavigator({
-    weekNumber,
-    weekOffset,
-    loadingPreviousWeek,
-    loadingNextWeek,
-    onUpdateWeekOffset,
+    initialCachedSchedules,
+    setCurrentSchedule,
 }: {
-    weekNumber: number;
-    weekOffset: number;
-    loadingPreviousWeek: boolean;
-    loadingNextWeek: boolean;
-    // eslint-disable-next-line no-unused-vars
-    onUpdateWeekOffset: (modifier: number) => void;
+    initialCachedSchedules: { [weekOffset: number]: SitSchedule };
+    setCurrentSchedule: Dispatch<SetStateAction<SitSchedule>>;
 }) {
+    const [weekOffset, setWeekOffset] = useState(0);
+    const [loadingNextWeek, setLoadingNextWeek] = useState(false);
+    const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
+    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
+        initialCachedSchedules
+    );
+    async function updateWeekOffset(modifier: number) {
+        switch (modifier) {
+            case -1:
+                setLoadingPreviousWeek(true);
+                break;
+            case 1:
+                setLoadingNextWeek(true);
+                break;
+        }
+        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
+        let cachedSchedule = cachedSchedules[currentWeekOffset];
+        if (cachedSchedule === undefined) {
+            cachedSchedule = await fetch("api/schedule", {
+                method: "POST",
+                body: JSON.stringify({ weekOffset: currentWeekOffset }),
+            }).then((r) => r.json());
+            if (cachedSchedule === undefined) {
+                setLoadingPreviousWeek(false);
+                setLoadingNextWeek(false);
+                throw new Error("Failed to fetch schedule");
+            }
+            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
+        }
+        setWeekOffset(currentWeekOffset);
+        setCurrentSchedule(cachedSchedule);
+        setLoadingPreviousWeek(false);
+        setLoadingNextWeek(false);
+        // Pre-fetch next schedule (in same direction) if not in cache
+        const nextWeekOffset = currentWeekOffset + modifier;
+        if (nextWeekOffset in cachedSchedules) {
+            return;
+        }
+        const nextSchedule = await fetch("api/schedule", {
+            method: "POST",
+            body: JSON.stringify({ weekOffset: nextWeekOffset }),
+        }).then((r) => r.json());
+        if (nextSchedule != undefined) {
+            setCachedSchedules({ ...cachedSchedules, [nextWeekOffset]: nextSchedule });
+        }
+    }
+
+    const weekNumber = DateTime.fromISO(initialCachedSchedules[weekOffset]!.days[0]!.date).weekNumber;
+
     return (
         <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
             <LoadingButton
@@ -24,7 +68,7 @@ export default function WeekNavigator({
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
                 size={"small"}
-                onClick={() => onUpdateWeekOffset(-1)}
+                onClick={() => updateWeekOffset(-1)}
             >
                 <ArrowBack />
             </LoadingButton>
@@ -34,7 +78,7 @@ export default function WeekNavigator({
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
                 size={"small"}
-                onClick={() => onUpdateWeekOffset(1)}
+                onClick={() => updateWeekOffset(1)}
             >
                 <ArrowForward />
             </LoadingButton>
@@ -47,7 +91,7 @@ export default function WeekNavigator({
                 variant={"outlined"}
                 size={"small"}
                 disabled={weekOffset === 0}
-                onClick={() => onUpdateWeekOffset(0)}
+                onClick={() => updateWeekOffset(0)}
             >
                 I dag
             </Button>

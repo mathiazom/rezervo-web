@@ -137,7 +137,7 @@ const Index: NextPage<{
                     />
                     <ScheduleMemo
                         initialCachedSchedules={initialCachedSchedules}
-                        schedule={currentSchedule}
+                        currentSchedule={currentSchedule}
                         setCurrentSchedule={setCurrentSchedule}
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
