@@ -13,11 +13,17 @@ export default function WeekNavigator({
     setCurrentSchedule: Dispatch<SetStateAction<SitSchedule>>;
 }) {
     const [weekOffset, setWeekOffset] = useState(0);
+    const [weekNumber, setWeekNumber] = useState(weekNumberFromSchedule(initialCachedSchedules[0]!));
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
     const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
         initialCachedSchedules
     );
+
+    function weekNumberFromSchedule(schedule: SitSchedule): number {
+        return DateTime.fromISO(schedule.days[0]!.date).weekNumber;
+    }
+
     async function updateWeekOffset(modifier: number) {
         switch (modifier) {
             case -1:
@@ -43,6 +49,7 @@ export default function WeekNavigator({
         }
         setWeekOffset(currentWeekOffset);
         setCurrentSchedule(cachedSchedule);
+        setWeekNumber(weekNumberFromSchedule(cachedSchedule));
         setLoadingPreviousWeek(false);
         setLoadingNextWeek(false);
         // Pre-fetch next schedule (in same direction) if not in cache
@@ -58,8 +65,6 @@ export default function WeekNavigator({
             setCachedSchedules({ ...cachedSchedules, [nextWeekOffset]: nextSchedule });
         }
     }
-
-    const weekNumber = DateTime.fromISO(initialCachedSchedules[weekOffset]!.days[0]!.date).weekNumber;
 
     return (
         <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
