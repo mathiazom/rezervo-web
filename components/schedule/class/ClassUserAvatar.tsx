@@ -1,7 +1,7 @@
 import { Avatar, Badge } from "@mui/material";
 import { hexColorHash } from "../../../utils/colorUtils";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import RippleBadge from "../../RippleBadge";
+import RippleBadge from "../../utils/RippleBadge";
 import { StatusColors } from "../../../types/rezervoTypes";
 import React from "react";
 

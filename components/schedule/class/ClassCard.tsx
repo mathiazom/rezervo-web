@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
-import RippleBadge from "../../RippleBadge";
+import RippleBadge from "../../utils/RippleBadge";
 import { isClassInThePast } from "../../../lib/iBooking";
 import ClassUserAvatar from "./ClassUserAvatar";
 import { useUserSessions } from "../../../hooks/useUserSessions";

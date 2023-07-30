@@ -15,7 +15,7 @@ import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from
 import { stringifyClassPopularity } from "../../../lib/popularity";
 import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
-import ConfirmationDialog from "../../ConfirmationDialog";
+import ConfirmationDialog from "../../utils/ConfirmationDialog";
 import { useUserSessions } from "../../../hooks/useUserSessions";
 
 export default function ClassInfo({
