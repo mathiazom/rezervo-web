@@ -1,4 +1,4 @@
-import { GROUP_BOOKING_URL, SIT_TIMEZONE } from "../config/config";
+import { GROUP_BOOKING_URL, TIME_ZONE } from "../config/config";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
@@ -23,7 +23,7 @@ function fetchPublicToken() {
 }
 
 async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitSchedule> {
-    const startDate = DateTime.now().setZone(SIT_TIMEZONE).plus({ day: dayOffset });
+    const startDate = DateTime.now().setZone(TIME_ZONE).plus({ day: dayOffset });
     const scheduleResponse = await fetch(scheduleUrl(token, startDate.toISODate()));
     if (!scheduleResponse.ok) {
         throw new Error(
@@ -40,7 +40,7 @@ export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffs
 
 export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
     const token = await fetchPublicToken();
-    const mondayOffset = DateTime.now().setZone(SIT_TIMEZONE).weekday - 1;
+    const mondayOffset = DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
@@ -74,5 +74,5 @@ export function recurrentClassId(activityId: number, weekday: number, hour: numb
 }
 
 export function isClassInThePast(_class: SitClass): boolean {
-    return DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
+    return DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
 }
