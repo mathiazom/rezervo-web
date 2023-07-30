@@ -3,6 +3,7 @@ import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
 import { DateTime } from "luxon";
+import { calculateMondayOffset } from "./companies/common";
 
 function scheduleUrl(token: string, fromISO: string | null = null) {
     return (
@@ -40,7 +41,7 @@ export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffs
 
 export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
     const token = await fetchPublicToken();
-    const mondayOffset = DateTime.now().setZone(TIME_ZONE).weekday - 1;
+    const mondayOffset = calculateMondayOffset();
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
