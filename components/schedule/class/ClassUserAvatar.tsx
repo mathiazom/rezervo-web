@@ -1,8 +1,8 @@
 import { Avatar, Badge } from "@mui/material";
-import { hexColorHash } from "../utils/colorUtils";
+import { hexColorHash } from "../../../utils/colorUtils";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import RippleBadge from "./RippleBadge";
-import { StatusColors } from "../types/rezervoTypes";
+import RippleBadge from "../../RippleBadge";
+import { StatusColors } from "../../../types/rezervoTypes";
 import React from "react";
 
 export default function ClassUserAvatar({

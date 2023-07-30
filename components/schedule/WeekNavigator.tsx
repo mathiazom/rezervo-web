@@ -2,7 +2,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { SitSchedule } from "../types/sitTypes";
+import { SitSchedule } from "../../types/sitTypes";
 import { DateTime } from "luxon";
 
 export default function WeekNavigator({

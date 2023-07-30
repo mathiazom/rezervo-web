@@ -14,8 +14,8 @@ import PageHead from "../components/PageHead";
 import ClassInfoModal from "../components/modals/ClassInfo/ClassInfoModal";
 import AgendaModal from "../components/modals/Agenda/AgendaModal";
 import SettingsModal from "../components/modals/Settings/SettingsModal";
-import WeekNavigator from "../components/WeekNavigator";
-import WeekSchedule from "../components/WeekSchedule";
+import WeekNavigator from "../components/schedule/WeekNavigator";
+import WeekSchedule from "../components/schedule/WeekSchedule";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);

@@ -1,11 +1,11 @@
 import { Box, Chip, Typography, useTheme } from "@mui/material";
-import ClassCard from "./ClassCard/ClassCard";
-import { sitClassRecurrentId } from "../lib/iBooking";
-import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../types/rezervoTypes";
+import ClassCard from "./class/ClassCard";
+import { sitClassRecurrentId } from "../../lib/iBooking";
+import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../types/rezervoTypes";
 import React from "react";
-import { SitClass, SitScheduleDay } from "../types/sitTypes";
+import { SitClass, SitScheduleDay } from "../../types/sitTypes";
 import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../config/config";
+import { SIT_TIMEZONE } from "../../config/config";
 
 function DaySchedule({
     day,
