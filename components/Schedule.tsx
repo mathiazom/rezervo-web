@@ -1,13 +1,11 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Box, Chip, Divider, Stack, Typography, useTheme } from "@mui/material";
-import ClassCard from "./ClassCard/ClassCard";
+import { Box, Divider, Stack } from "@mui/material";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { sitClassRecurrentId } from "../lib/iBooking";
 import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../config/config";
-import { ClassPopularity, ClassPopularityIndex, AllConfigsIndex } from "../types/rezervoTypes";
+import { ClassPopularityIndex, AllConfigsIndex } from "../types/rezervoTypes";
 import WeekNavigator from "./WeekNavigator";
 import { useRouter } from "next/router";
+import DaySchedule from "./DaySchedule";
 
 const Schedule = ({
     initialCachedSchedules,
@@ -33,7 +31,6 @@ const Schedule = ({
     onInfo: (c: SitClass) => void;
 }) => {
     const router = useRouter();
-    const theme = useTheme();
 
     const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
         initialCachedSchedules
@@ -53,18 +50,6 @@ const Schedule = ({
         }
         router.replace({ query: queryWithoutParam });
     }, [onInfo, router, schedule.days]);
-
-    function sameDay(a: DateTime, b: DateTime): boolean {
-        return a.startOf("day") <= b && b <= a.endOf("day");
-    }
-
-    function isToday(dateStr: string) {
-        return sameDay(DateTime.fromISO(dateStr, { zone: SIT_TIMEZONE }), DateTime.now());
-    }
-
-    function isDayPassed(dateStr: string) {
-        return DateTime.fromISO(dateStr, { zone: SIT_TIMEZONE }).endOf("day") > DateTime.now();
-    }
 
     async function handleUpdateWeekOffset(modifier: number) {
         switch (modifier) {
@@ -121,62 +106,16 @@ const Schedule = ({
                 <Stack direction={"column"}>
                     <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
                         {schedule.days.map((day) => (
-                            <Box key={day.date} width={180}>
-                                <Box py={2} sx={{ opacity: isDayPassed(day.date) ? 1 : 0.5 }}>
-                                    <Typography variant="h6" component="div">
-                                        {day.dayName}{" "}
-                                        {isToday(day.date) && (
-                                            <Chip
-                                                size={"small"}
-                                                sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
-                                                label="I dag"
-                                            />
-                                        )}
-                                    </Typography>
-                                    <Typography
-                                        variant="h6"
-                                        component="div"
-                                        style={{
-                                            color: theme.palette.grey[600],
-                                            fontSize: 15,
-                                        }}
-                                    >
-                                        {day.date}
-                                    </Typography>
-                                </Box>
-                                {day.classes.length > 0 ? (
-                                    day.classes.map((_class) => (
-                                        <Box key={_class.id} mb={1}>
-                                            <ClassCard
-                                                _class={_class}
-                                                popularity={
-                                                    classPopularityIndex[sitClassRecurrentId(_class)] ??
-                                                    ClassPopularity.Unknown
-                                                }
-                                                configUsers={
-                                                    allConfigsIndex
-                                                        ? allConfigsIndex[sitClassRecurrentId(_class)] ?? []
-                                                        : []
-                                                }
-                                                selectable={selectable}
-                                                selected={
-                                                    selectedClassIds != null &&
-                                                    selectedClassIds.includes(sitClassRecurrentId(_class))
-                                                }
-                                                onSelectedChanged={(s) =>
-                                                    onSelectedChanged(sitClassRecurrentId(_class), s)
-                                                }
-                                                onInfo={() => onInfo(_class)}
-                                                // onSettings={() =>
-                                                //     setSettingsClass(_class)
-                                                // }
-                                            />
-                                        </Box>
-                                    ))
-                                ) : (
-                                    <p>Ingen gruppetimer</p>
-                                )}
-                            </Box>
+                            <DaySchedule
+                                key={day.date}
+                                day={day}
+                                classPopularityIndex={classPopularityIndex}
+                                selectable={selectable}
+                                selectedClassIds={selectedClassIds}
+                                allConfigsIndex={allConfigsIndex}
+                                onSelectedChanged={onSelectedChanged}
+                                onInfo={onInfo}
+                            />
                         ))}
                     </Stack>
                 </Stack>
