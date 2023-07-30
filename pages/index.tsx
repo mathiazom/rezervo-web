@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Stack } from "@mui/material";
-import Schedule from "../components/Schedule";
+import { Box, Divider, Stack } from "@mui/material";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig, ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
@@ -15,9 +14,11 @@ import PageHead from "../components/PageHead";
 import ClassInfoModal from "../components/modals/ClassInfo/ClassInfoModal";
 import AgendaModal from "../components/modals/Agenda/AgendaModal";
 import SettingsModal from "../components/modals/Settings/SettingsModal";
+import WeekNavigator from "../components/WeekNavigator";
+import WeekSchedule from "../components/WeekSchedule";
 
 // Memoize to avoid redundant schedule re-render on class selection change
-const ScheduleMemo = memo(Schedule);
+const WeekScheduleMemo = memo(WeekSchedule);
 
 export async function getStaticProps() {
     const initialCachedSchedules = await fetchSchedules([-1, 0, 1, 2, 3]);
@@ -135,10 +136,13 @@ const Index: NextPage<{
                         onSettingsOpen={() => setIsSettingsOpen(true)}
                         onAgendaOpen={() => setIsAgendaOpen(true)}
                     />
-                    <ScheduleMemo
+                    <WeekNavigator
                         initialCachedSchedules={initialCachedSchedules}
-                        currentSchedule={currentSchedule}
                         setCurrentSchedule={setCurrentSchedule}
+                    />
+                    <Divider orientation="horizontal" />
+                    <WeekScheduleMemo
+                        currentSchedule={currentSchedule}
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
