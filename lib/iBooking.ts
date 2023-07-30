@@ -3,7 +3,7 @@ import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
 import { DateTime } from "luxon";
-import { calculateMondayOffset } from "./companies/common";
+import { calculateMondayOffset } from "./integration/common";
 
 function scheduleUrl(token: string, fromISO: string | null = null) {
     return (
