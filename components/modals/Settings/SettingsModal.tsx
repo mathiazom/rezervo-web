@@ -1,7 +1,7 @@
 import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
-import { NotificationsConfig } from "../../types/rezervoTypes";
-import Settings from "../Settings";
+import { NotificationsConfig } from "../../../types/rezervoTypes";
+import Settings from "./Settings";
 
 const SettingsModal = ({
     open,

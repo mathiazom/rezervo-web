@@ -1,10 +1,10 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import AgendaClassItem, { AgendaClass } from "./AgendaClassItem";
 import React from "react";
-import { classConfigRecurrentId } from "../lib/iBooking";
-import { SitClass } from "../types/sitTypes";
-import { ClassConfig } from "../types/rezervoTypes";
-import { WEEKDAY_NUMBER_TO_NAME } from "../utils/timeUtils";
+import { classConfigRecurrentId } from "../../../lib/iBooking";
+import { SitClass } from "../../../types/sitTypes";
+import { ClassConfig } from "../../../types/rezervoTypes";
+import { WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
 
 export default function Agenda({
     agendaClasses,

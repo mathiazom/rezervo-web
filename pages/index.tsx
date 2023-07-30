@@ -12,9 +12,9 @@ import { createClassPopularityIndex } from "../lib/popularity";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
 import PageHead from "../components/PageHead";
-import ClassInfoModal from "../components/modals/ClassInfoModal";
-import AgendaModal from "../components/modals/AgendaModal";
-import SettingsModal from "../components/modals/SettingsModal";
+import ClassInfoModal from "../components/modals/ClassInfo/ClassInfoModal";
+import AgendaModal from "../components/modals/Agenda/AgendaModal";
+import SettingsModal from "../components/modals/Settings/SettingsModal";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const ScheduleMemo = memo(Schedule);

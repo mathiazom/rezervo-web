@@ -1,9 +1,9 @@
 import { Modal } from "@mui/material";
-import ClassInfo from "../ClassInfo";
-import { sitClassRecurrentId } from "../../lib/iBooking";
-import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../types/rezervoTypes";
+import ClassInfo from "./ClassInfo";
+import { sitClassRecurrentId } from "../../../lib/iBooking";
+import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../../types/rezervoTypes";
 import React, { Dispatch, SetStateAction } from "react";
-import { SitClass } from "../../types/sitTypes";
+import { SitClass } from "../../../types/sitTypes";
 
 const ClassInfoModal = ({
     classInfoClass,

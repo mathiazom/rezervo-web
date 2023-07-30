@@ -1,22 +1,22 @@
 import { Box, Typography } from "@mui/material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../utils/timeUtils";
+import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
+import ClassPopularityMeter from "../../ClassCard/ClassPopularityMeter";
 import Image from "next/image";
 import React, { useState } from "react";
-import { SitClass } from "../types/sitTypes";
-import { hexWithOpacityToRgb } from "../utils/colorUtils";
+import { SitClass } from "../../../types/sitTypes";
+import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../config/config";
-import { formatNameArray } from "../utils/arrayUtils";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../types/rezervoTypes";
-import { stringifyClassPopularity } from "../lib/popularity";
-import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
+import { SIT_TIMEZONE } from "../../../config/config";
+import { formatNameArray } from "../../../utils/arrayUtils";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
+import { stringifyClassPopularity } from "../../../lib/popularity";
+import ClassUsersAvatarGroup from "../../ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
-import ConfirmationDialog from "./ConfirmationDialog";
-import { useUserSessions } from "../hooks/useUserSessions";
+import ConfirmationDialog from "../../ConfirmationDialog";
+import { useUserSessions } from "../../../hooks/useUserSessions";
 
 export default function ClassInfo({
     _class,
