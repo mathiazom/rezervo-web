@@ -24,9 +24,7 @@ function fetchPublicToken() {
 
 async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitSchedule> {
     const startDate = DateTime.now().setZone(SIT_TIMEZONE).plus({ day: dayOffset });
-    const scheduleResponse = await fetch(
-        scheduleUrl(token, dayOffset === 0 ? null : startDate.toISO({ includeOffset: false }))
-    );
+    const scheduleResponse = await fetch(scheduleUrl(token, startDate.toISODate()));
     if (!scheduleResponse.ok) {
         throw new Error(
             `Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`
