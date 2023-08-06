@@ -10,30 +10,98 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { hexColorHash } from "../../utils/colorUtils";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import LoginIcon from "@mui/icons-material/Login";
-import React from "react";
+import React, { useMemo } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
+import { arraysAreEqual } from "../../utils/arrayUtils";
+import { SitClass } from "../../types/sitTypes";
+import { DateTime } from "luxon";
+import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervoTypes";
+import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/iBooking";
+import { useUserConfig } from "../../hooks/useUserConfig";
 
 function ConfigBar({
+    classes,
+    selectedClassIds,
+    originalSelectedClassIds,
+    userConfig,
+    userConfigActive,
+    notificationsConfig,
     isLoadingConfig,
     isConfigError,
-    changed,
-    agendaEnabled,
-    onUpdateConfig,
     onUndoSelectionChanges,
     onSettingsOpen,
     onAgendaOpen,
 }: {
+    classes: SitClass[];
+    selectedClassIds: string[] | null;
+    originalSelectedClassIds: string[] | null;
+    userConfig: UserConfig | undefined;
+    userConfigActive: boolean;
+    notificationsConfig: NotificationsConfig | null;
     isLoadingConfig: boolean;
     isConfigError: boolean;
-    changed: boolean;
-    agendaEnabled: boolean;
-    onUpdateConfig: () => void;
     onUndoSelectionChanges: () => void;
     onSettingsOpen: () => void;
     onAgendaOpen: () => void;
 }) {
     const { user, isLoading } = useUser();
+    const { putUserConfig } = useUserConfig();
+
+    const selectionChanged = useMemo(
+        () =>
+            selectedClassIds != null &&
+            originalSelectedClassIds != null &&
+            !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
+        [originalSelectedClassIds, selectedClassIds]
+    );
+
+    // Pre-generate all class config strings
+    const allClassesConfigMap = useMemo(() => {
+        function timeForClass(_class: SitClass) {
+            const { hour, minute } = DateTime.fromISO(_class.from);
+            return { hour, minute };
+        }
+        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(
+            (o, c) => ({
+                ...o,
+                [sitClassRecurrentId(c)]: {
+                    activity: c.activityId,
+                    display_name: c.name,
+                    weekday: c.weekday ?? -1,
+                    studio: c.studio.id,
+                    time: timeForClass(c),
+                },
+            }),
+            {}
+        );
+        // Locate any class configs from the user config that do not exist in the current schedule
+        const ghostClassesConfigs =
+            userConfig?.classes
+                ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
+                .reduce<{ [id: string]: ClassConfig }>(
+                    (o, c) => ({
+                        ...o,
+                        [classConfigRecurrentId(c)]: c,
+                    }),
+                    {}
+                ) ?? {};
+        return { ...classesConfigMap, ...ghostClassesConfigs };
+    }, [classes, userConfig?.classes]);
+
+    function onUpdateConfig() {
+        if (selectedClassIds == null) {
+            return;
+        }
+        return putUserConfig({
+            active: userConfigActive,
+            classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
+            notifications: notificationsConfig,
+        });
+    }
+
+    const agendaEnabled = userConfig?.classes != undefined && userConfig.classes.length > 0;
+
     return (
         <>
             {isLoading ? (
@@ -71,7 +139,7 @@ function ConfigBar({
                         />
                     ) : (
                         <>
-                            {changed ? (
+                            {selectionChanged ? (
                                 <Box
                                     sx={{
                                         display: {
@@ -149,7 +217,7 @@ function ConfigBar({
                 </Box>
             )}
             <MobileConfigUpdateBar
-                visible={changed}
+                visible={selectionChanged}
                 isLoadingConfig={isLoadingConfig}
                 onUpdateConfig={onUpdateConfig}
                 onUndoSelectionChanges={onUndoSelectionChanges}

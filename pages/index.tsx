@@ -1,13 +1,11 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Divider, Stack } from "@mui/material";
-import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
+import { classConfigRecurrentId, fetchSchedules } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { ClassConfig, ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
-import { arraysAreEqual } from "../utils/arrayUtils";
+import { ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
 import AppBar from "../components/utils/AppBar";
 import { createClassPopularityIndex } from "../lib/popularity";
-import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
 import PageHead from "../components/utils/PageHead";
 import ClassInfoModal from "../components/modals/ClassInfo/ClassInfoModal";
@@ -39,7 +37,7 @@ const Index: NextPage<{
     initialCachedSchedules: { [weekOffset: number]: SitSchedule };
     classPopularityIndex: ClassPopularityIndex;
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
-    const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
+    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
@@ -54,48 +52,7 @@ const Index: NextPage<{
 
     const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
 
-    const selectionChanged = useMemo(
-        () =>
-            selectedClassIds != null &&
-            originalSelectedClassIds != null &&
-            !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
-        [originalSelectedClassIds, selectedClassIds]
-    );
-
     const classes = useMemo(() => currentSchedule.days.flatMap((d) => d.classes) ?? [], [currentSchedule.days]);
-
-    // Pre-generate all class config strings
-    const allClassesConfigMap = useMemo(() => {
-        function timeForClass(_class: SitClass) {
-            const { hour, minute } = DateTime.fromISO(_class.from);
-            return { hour, minute };
-        }
-        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(
-            (o, c) => ({
-                ...o,
-                [sitClassRecurrentId(c)]: {
-                    activity: c.activityId,
-                    display_name: c.name,
-                    weekday: c.weekday ?? -1,
-                    studio: c.studio.id,
-                    time: timeForClass(c),
-                },
-            }),
-            {}
-        );
-        // Locate any class configs from the user config that do not exist in the current schedule
-        const ghostClassesConfigs =
-            userConfig?.classes
-                ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
-                .reduce<{ [id: string]: ClassConfig }>(
-                    (o, c) => ({
-                        ...o,
-                        [classConfigRecurrentId(c)]: c,
-                    }),
-                    {}
-                ) ?? {};
-        return { ...classesConfigMap, ...ghostClassesConfigs };
-    }, [classes, userConfig?.classes]);
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         setSelectedClassIds((s) =>
@@ -111,17 +68,6 @@ const Index: NextPage<{
         setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
 
-    function updateConfigFromSelection() {
-        if (selectedClassIds == null) {
-            return;
-        }
-        return putUserConfig({
-            active: userConfigActive,
-            classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
-            notifications: notificationsConfig,
-        });
-    }
-
     return (
         <>
             <PageHead title={"sit-rezervo"} />
@@ -131,11 +77,14 @@ const Index: NextPage<{
                         leftComponent={<Logo integrationAcronym={"sit"} />}
                         rightComponent={
                             <ConfigBar
-                                changed={selectionChanged}
-                                agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
+                                classes={classes}
+                                selectedClassIds={selectedClassIds}
+                                originalSelectedClassIds={originalSelectedClassIds}
+                                userConfig={userConfig}
+                                userConfigActive={userConfigActive}
+                                notificationsConfig={notificationsConfig}
                                 isLoadingConfig={userConfig == null || userConfigLoading}
                                 isConfigError={userConfigError}
-                                onUpdateConfig={() => updateConfigFromSelection()}
                                 onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
