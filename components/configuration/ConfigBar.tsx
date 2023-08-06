@@ -12,6 +12,7 @@ import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import React from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
 
 function ConfigBar({
     isLoadingConfig,
@@ -147,6 +148,12 @@ function ConfigBar({
                     </Tooltip>
                 </Box>
             )}
+            <MobileConfigUpdateBar
+                visible={changed}
+                isLoadingConfig={isLoadingConfig}
+                onUpdateConfig={onUpdateConfig}
+                onUndoSelectionChanges={onUndoSelectionChanges}
+            />
         </>
     );
 }
