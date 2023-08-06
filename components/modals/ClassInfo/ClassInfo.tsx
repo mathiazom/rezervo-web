@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { SitClass } from "../../../types/sitTypes";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../../../config/config";
+import { TIME_ZONE } from "../../../config/config";
 import { formatNameArray } from "../../../utils/arrayUtils";
 import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
 import { stringifyClassPopularity } from "../../../lib/popularity";
@@ -31,7 +31,7 @@ export default function ClassInfo({
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
-    const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
+    const isInThePast = DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
 
     const usersBooked = userSessions.filter(
         ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED

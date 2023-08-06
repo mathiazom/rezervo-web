@@ -5,7 +5,7 @@ import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../ty
 import React from "react";
 import { SitClass, SitScheduleDay } from "../../types/sitTypes";
 import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../../config/config";
+import { TIME_ZONE } from "../../config/config";
 
 function DaySchedule({
     day,
@@ -32,10 +32,10 @@ function DaySchedule({
         return a.startOf("day") <= b && b <= a.endOf("day");
     }
     function isToday(dateStr: string) {
-        return sameDay(DateTime.fromISO(dateStr, { zone: SIT_TIMEZONE }), DateTime.now());
+        return sameDay(DateTime.fromISO(dateStr, { zone: TIME_ZONE }), DateTime.now());
     }
     function isDayPassed(dateStr: string) {
-        return DateTime.fromISO(dateStr, { zone: SIT_TIMEZONE }).endOf("day") > DateTime.now();
+        return DateTime.fromISO(dateStr, { zone: TIME_ZONE }).endOf("day") > DateTime.now();
     }
 
     return (
