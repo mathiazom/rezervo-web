@@ -1,4 +1,4 @@
-import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
+import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import UndoIcon from "@mui/icons-material/Undo";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -12,6 +12,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import React from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { hexColorHash } from "../utils/colorUtils";
+import Logo from "./utils/Logo";
 
 export default function AppBar({
     isLoadingConfig,
@@ -32,24 +33,13 @@ export default function AppBar({
     onSettingsOpen: () => void;
     onAgendaOpen: () => void;
 }) {
-    const theme = useTheme();
-
     const { user, isLoading } = useUser();
 
     return (
         <Box display={"flex"} justifyContent={"center"}>
             <Box width={1388}>
                 <Box display="flex" py={2} alignItems={"center"}>
-                    <Typography
-                        component="div"
-                        pl={2}
-                        sx={{
-                            fontSize: { xs: "1.2rem", sm: "1.8rem" },
-                            display: { xs: "none", md: "block" },
-                        }}
-                    >
-                        <strong style={{ color: theme.palette.primary.main }}>sit-rezervo</strong>
-                    </Typography>
+                    <Logo integrationAcronym={"fsc"} />
                     <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>
                         {isLoading ? (
                             <CircularProgress size={26} thickness={6} />
