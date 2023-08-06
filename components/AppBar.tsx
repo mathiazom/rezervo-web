@@ -1,44 +1,19 @@
 import { Box } from "@mui/material";
-import React from "react";
-import Logo from "./utils/Logo";
-import ConfigBar from "./configuration/ConfigBar";
+import React, { ReactNode } from "react";
 
 export default function AppBar({
-    isLoadingConfig,
-    isConfigError,
-    changed,
-    agendaEnabled,
-    onUpdateConfig,
-    onUndoSelectionChanges,
-    onSettingsOpen,
-    onAgendaOpen,
+    leftComponent,
+    rightComponent,
 }: {
-    isLoadingConfig: boolean;
-    isConfigError: boolean;
-    changed: boolean;
-    agendaEnabled: boolean;
-    onUpdateConfig: () => void;
-    onUndoSelectionChanges: () => void;
-    onSettingsOpen: () => void;
-    onAgendaOpen: () => void;
+    leftComponent: ReactNode;
+    rightComponent: ReactNode;
 }) {
     return (
         <Box display={"flex"} justifyContent={"center"}>
             <Box width={1388}>
                 <Box display="flex" py={2} alignItems={"center"}>
-                    <Logo integrationAcronym={"fsc"} />
-                    <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>
-                        <ConfigBar
-                            isLoadingConfig={isLoadingConfig}
-                            isConfigError={isConfigError}
-                            changed={changed}
-                            agendaEnabled={agendaEnabled}
-                            onUpdateConfig={onUpdateConfig}
-                            onUndoSelectionChanges={onUndoSelectionChanges}
-                            onSettingsOpen={onSettingsOpen}
-                            onAgendaOpen={onAgendaOpen}
-                        />
-                    </Box>
+                    {leftComponent}
+                    <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>{rightComponent}</Box>
                 </Box>
             </Box>
         </Box>

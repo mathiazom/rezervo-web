@@ -16,6 +16,8 @@ import AgendaModal from "../components/modals/Agenda/AgendaModal";
 import SettingsModal from "../components/modals/Settings/SettingsModal";
 import WeekNavigator from "../components/schedule/WeekNavigator";
 import WeekSchedule from "../components/schedule/WeekSchedule";
+import Logo from "../components/utils/Logo";
+import ConfigBar from "../components/configuration/ConfigBar";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
@@ -127,14 +129,19 @@ const Index: NextPage<{
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        changed={selectionChanged}
-                        agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
-                        isLoadingConfig={userConfig == null || userConfigLoading}
-                        isConfigError={userConfigError}
-                        onUpdateConfig={() => updateConfigFromSelection()}
-                        onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
-                        onSettingsOpen={() => setIsSettingsOpen(true)}
-                        onAgendaOpen={() => setIsAgendaOpen(true)}
+                        leftComponent={<Logo integrationAcronym={"sit"} />}
+                        rightComponent={
+                            <ConfigBar
+                                changed={selectionChanged}
+                                agendaEnabled={userConfig?.classes != undefined && userConfig.classes.length > 0}
+                                isLoadingConfig={userConfig == null || userConfigLoading}
+                                isConfigError={userConfigError}
+                                onUpdateConfig={() => updateConfigFromSelection()}
+                                onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
+                                onSettingsOpen={() => setIsSettingsOpen(true)}
+                                onAgendaOpen={() => setIsAgendaOpen(true)}
+                            />
+                        }
                     />
                     <WeekNavigator
                         initialCachedSchedules={initialCachedSchedules}
