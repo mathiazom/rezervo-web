@@ -5,7 +5,7 @@ import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../
 import { SitClass, SitSchedule } from "../types/sitTypes";
 import { ClassConfig, ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
-import AppBar from "../components/AppBar";
+import AppBar from "../components/utils/AppBar";
 import MobileConfigUpdateBar from "../components/configuration/MobileConfigUpdateBar";
 import { createClassPopularityIndex } from "../lib/popularity";
 import { DateTime } from "luxon";
