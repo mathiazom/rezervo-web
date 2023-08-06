@@ -1,12 +1,12 @@
 import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
-import { SitClass } from "../types/sitTypes";
-import { simpleTimeStringFromISO } from "../utils/timeUtils";
-import { hexWithOpacityToRgb } from "../utils/colorUtils";
+import { SitClass } from "../../../types/sitTypes";
+import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
+import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { ClassConfig } from "../types/rezervoTypes";
+import { ClassConfig } from "../../../types/rezervoTypes";
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 
 export type AgendaClass = {

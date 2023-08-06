@@ -1,43 +1,34 @@
 import { Box, Typography } from "@mui/material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../utils/timeUtils";
+import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import ClassPopularityMeter from "./ClassCard/ClassPopularityMeter";
+import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
 import Image from "next/image";
 import React, { useState } from "react";
-import { SitClass } from "../types/sitTypes";
-import { hexWithOpacityToRgb } from "../utils/colorUtils";
+import { SitClass } from "../../../types/sitTypes";
+import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { DateTime } from "luxon";
-import { SIT_TIMEZONE } from "../config/config";
-import { formatNameArray } from "../utils/arrayUtils";
-import {
-    ClassPopularity,
-    SessionStatus,
-    StatusColors,
-    UserNameSessionStatus,
-    UserNameWithIsSelf,
-} from "../types/rezervoTypes";
-import { stringifyClassPopularity } from "../lib/popularity";
-import ClassUsersAvatarGroup from "./ClassUsersAvatarGroup";
+import { SIT_TIMEZONE } from "../../../config/config";
+import { formatNameArray } from "../../../utils/arrayUtils";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
+import { stringifyClassPopularity } from "../../../lib/popularity";
+import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
-import ConfirmationDialog from "./ConfirmationDialog";
+import ConfirmationDialog from "../../utils/ConfirmationDialog";
+import { useUserSessions } from "../../../hooks/useUserSessions";
 
 export default function ClassInfo({
     _class,
     classPopularity,
     configUsers,
-    userSessions,
-    onBook,
-    onCancelBooking,
 }: {
     _class: SitClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
-    userSessions: UserNameSessionStatus[];
-    onBook: () => Promise<any>;
-    onCancelBooking: () => Promise<any>;
 }) {
+    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
+    const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = DateTime.fromISO(_class.from, { zone: SIT_TIMEZONE }) < DateTime.now();
@@ -60,14 +51,24 @@ export default function ClassInfo({
 
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
-    function book() {
+    async function book() {
         setBookingLoading(true);
-        onBook().then(() => setBookingLoading(false));
+        await fetch("/api/book", {
+            method: "POST",
+            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
+        });
+        await mutateSessionsIndex();
+        setBookingLoading(false);
     }
 
-    function cancelBooking() {
+    async function cancelBooking() {
         setBookingLoading(true);
-        onCancelBooking().then(() => setBookingLoading(false));
+        await fetch("/api/cancelBooking", {
+            method: "POST",
+            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
+        });
+        await mutateSessionsIndex();
+        setBookingLoading(false);
     }
 
     return (

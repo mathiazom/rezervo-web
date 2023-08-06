@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import "../styles/animations.css";
-import "../components/ClassCard/ClassCard.css";
+import "../components/schedule/class/ClassCard.css";
 import type { AppProps } from "next/app";
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, experimental_extendTheme } from "@mui/material";
 import React from "react";

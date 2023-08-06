@@ -1,26 +1,24 @@
 import type { NextPage } from "next";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Divider, Stack } from "@mui/material";
-import Schedule from "../components/Schedule";
 import { classConfigRecurrentId, fetchSchedules, sitClassRecurrentId } from "../lib/iBooking";
 import { SitClass, SitSchedule } from "../types/sitTypes";
-import { ClassConfig, ClassPopularityIndex, ConfigPayload, NotificationsConfig } from "../types/rezervoTypes";
+import { ClassConfig, ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
 import { arraysAreEqual } from "../utils/arrayUtils";
-import { useRouter } from "next/router";
 import AppBar from "../components/AppBar";
 import MobileConfigUpdateBar from "../components/MobileConfigUpdateBar";
 import { createClassPopularityIndex } from "../lib/popularity";
-import WeekNavigator from "../components/WeekNavigator";
 import { DateTime } from "luxon";
 import { useUserConfig } from "../hooks/useUserConfig";
-import { useUserSessions } from "../hooks/useUserSessions";
-import PageHead from "../components/PageHead";
-import ClassInfoModal from "../components/modals/ClassInfoModal";
-import AgendaModal from "../components/modals/AgendaModal";
-import SettingsModal from "../components/modals/SettingsModal";
+import PageHead from "../components/utils/PageHead";
+import ClassInfoModal from "../components/modals/ClassInfo/ClassInfoModal";
+import AgendaModal from "../components/modals/Agenda/AgendaModal";
+import SettingsModal from "../components/modals/Settings/SettingsModal";
+import WeekNavigator from "../components/schedule/WeekNavigator";
+import WeekSchedule from "../components/schedule/WeekSchedule";
 
 // Memoize to avoid redundant schedule re-render on class selection change
-const ScheduleMemo = memo(Schedule);
+const WeekScheduleMemo = memo(WeekSchedule);
 
 export async function getStaticProps() {
     const initialCachedSchedules = await fetchSchedules([-1, 0, 1, 2, 3]);
@@ -40,16 +38,10 @@ const Index: NextPage<{
     initialCachedSchedules: { [weekOffset: number]: SitSchedule };
     classPopularityIndex: ClassPopularityIndex;
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
-    const router = useRouter();
-
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, allConfigsIndex } = useUserConfig();
 
-    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
-
     const [userConfigActive, setUserConfigActive] = useState(true);
-    const [userConfigActiveLoading, setUserConfigActiveLoading] = useState(false);
     const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
-    const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
@@ -59,13 +51,7 @@ const Index: NextPage<{
 
     const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
 
-    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
-        initialCachedSchedules
-    );
-    const [weekOffset, setWeekOffset] = useState(0);
     const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
-    const [loadingNextWeek, setLoadingNextWeek] = useState(false);
-    const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
 
     const selectionChanged = useMemo(
         () =>
@@ -124,38 +110,6 @@ const Index: NextPage<{
         setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
 
-    useEffect(() => {
-        const { classId, ...queryWithoutParam } = router.query;
-        if (classId === undefined) {
-            return;
-        }
-        const linkedClass = currentSchedule.days
-            .flatMap((day) => day.classes)
-            .find((_class) => _class.id === Number(classId));
-        if (linkedClass) {
-            setClassInfoClass(linkedClass);
-        }
-        router.replace({ query: queryWithoutParam });
-    }, [router, currentSchedule.days]);
-
-    function putConfigActive(active: boolean) {
-        setUserConfigActive(active);
-        setUserConfigActiveLoading(true);
-        return putUserConfig({
-            ...userConfig,
-            active,
-        } as ConfigPayload).then(() => setUserConfigActiveLoading(false));
-    }
-
-    function putNotificationsConfig(notificationsConfig: NotificationsConfig) {
-        setNotificationsConfig(notificationsConfig);
-        setNotificationsConfigLoading(true);
-        return putUserConfig({
-            ...userConfig,
-            notifications: notificationsConfig,
-        } as ConfigPayload).then(() => setNotificationsConfigLoading(false));
-    }
-
     function updateConfigFromSelection() {
         if (selectedClassIds == null) {
             return;
@@ -165,61 +119,6 @@ const Index: NextPage<{
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
             notifications: notificationsConfig,
         });
-    }
-
-    async function handleUpdateWeekOffset(modifier: number) {
-        switch (modifier) {
-            case -1:
-                setLoadingPreviousWeek(true);
-                break;
-            case 1:
-                setLoadingNextWeek(true);
-                break;
-        }
-        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
-        let cachedSchedule = cachedSchedules[currentWeekOffset];
-        if (cachedSchedule === undefined) {
-            cachedSchedule = await fetch("api/schedule", {
-                method: "POST",
-                body: JSON.stringify({ weekOffset: currentWeekOffset }),
-            }).then((r) => r.json());
-            if (cachedSchedule === undefined) {
-                setLoadingPreviousWeek(false);
-                setLoadingNextWeek(false);
-                throw new Error("Failed to fetch schedule");
-            }
-            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
-        }
-        setWeekOffset(currentWeekOffset);
-        setCurrentSchedule(cachedSchedule);
-        setLoadingPreviousWeek(false);
-        setLoadingNextWeek(false);
-        // Pre-fetch next schedule (in same direction) if not in cache
-        const nextWeekOffset = currentWeekOffset + modifier;
-        if (nextWeekOffset in cachedSchedules) {
-            return;
-        }
-        const nextSchedule = await fetch("api/schedule", {
-            method: "POST",
-            body: JSON.stringify({ weekOffset: nextWeekOffset }),
-        }).then((r) => r.json());
-        if (nextSchedule != undefined) {
-            setCachedSchedules({ ...cachedSchedules, [nextWeekOffset]: nextSchedule });
-        }
-    }
-
-    function bookClass(classId: number) {
-        return fetch("/api/book", {
-            method: "POST",
-            body: JSON.stringify({ class_id: classId.toString() }, null, 2),
-        }).then(() => mutateSessionsIndex());
-    }
-
-    function cancelBooking(classId: number) {
-        return fetch("/api/cancelBooking", {
-            method: "POST",
-            body: JSON.stringify({ class_id: classId.toString() }, null, 2),
-        }).then(() => mutateSessionsIndex());
     }
 
     return (
@@ -238,21 +137,17 @@ const Index: NextPage<{
                         onAgendaOpen={() => setIsAgendaOpen(true)}
                     />
                     <WeekNavigator
-                        weekNumber={DateTime.fromISO(currentSchedule.days[0]!.date).weekNumber}
-                        weekOffset={weekOffset}
-                        loadingPreviousWeek={loadingPreviousWeek}
-                        loadingNextWeek={loadingNextWeek}
-                        onUpdateWeekOffset={handleUpdateWeekOffset}
+                        initialCachedSchedules={initialCachedSchedules}
+                        setCurrentSchedule={setCurrentSchedule}
                     />
                     <Divider orientation="horizontal" />
                 </Box>
-                <ScheduleMemo
-                    schedule={currentSchedule}
+                <WeekScheduleMemo
+                    currentSchedule={currentSchedule}
                     classPopularityIndex={classPopularityIndex}
                     selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                     selectedClassIds={selectedClassIds}
                     allConfigsIndex={allConfigsIndex ?? null}
-                    userSessionsIndex={userSessionsIndex ?? null}
                     onSelectedChanged={onSelectedChanged}
                     onInfo={setClassInfoClass}
                 />
@@ -268,9 +163,6 @@ const Index: NextPage<{
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
                 allConfigsIndex={allConfigsIndex}
-                userSessionsIndex={userSessionsIndex}
-                bookClass={bookClass}
-                cancelBooking={cancelBooking}
             />
             <AgendaModal
                 open={isAgendaOpen}
@@ -285,11 +177,9 @@ const Index: NextPage<{
                 open={isSettingsOpen}
                 setOpen={setIsSettingsOpen}
                 bookingActive={userConfigActive}
-                bookingActiveLoading={userConfigActiveLoading}
-                onBookingActiveChanged={putConfigActive}
+                setBookingActive={setUserConfigActive}
                 notificationsConfig={notificationsConfig}
-                notificationsConfigLoading={notificationsConfigLoading}
-                onNotificationsConfigChanged={putNotificationsConfig}
+                setNotificationsConfig={setNotificationsConfig}
             />
         </>
     );

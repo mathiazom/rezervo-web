@@ -1,4 +1,4 @@
-export default function ClassSettings() {
+export default function ClassSettingsModal() {
     return (
         <>
             {/*<Modal*/}

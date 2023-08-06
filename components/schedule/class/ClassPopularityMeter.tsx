@@ -1,10 +1,10 @@
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
-import { ClassPopularity, StatusColors } from "../../types/rezervoTypes";
-import { SitClass } from "../../types/sitTypes";
-import { isClassInThePast } from "../../lib/iBooking";
-import { stringifyClassPopularity, determineClassPopularity } from "../../lib/popularity";
-import RippleBadge from "../RippleBadge";
+import { ClassPopularity, StatusColors } from "../../../types/rezervoTypes";
+import { SitClass } from "../../../types/sitTypes";
+import { isClassInThePast } from "../../../lib/iBooking";
+import { stringifyClassPopularity, determineClassPopularity } from "../../../lib/popularity";
+import RippleBadge from "../../utils/RippleBadge";
 import { Tooltip } from "@mui/material";
 
 const ClassPopularityIcon = ({ popularity }: { popularity: ClassPopularity }) => {
