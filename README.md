@@ -1,4 +1,4 @@
-# 🤸 sit-rezervo-confgen
+# 🤸 sit-rezervo-web
 
 Web client for [`sit-rezervo`](https://github.com/mathiazom/sit-rezervo), including booking schedules and user preferences.
 
