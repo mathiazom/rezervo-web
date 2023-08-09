@@ -1,5 +1,5 @@
 import { SitClass, SitWeekSchedule } from "../types/integration/sit";
-import { isClassInThePast, sitClassRecurrentId } from "./iBooking";
+import { isClassInThePast, sitClassRecurrentId } from "./integration/sit";
 import { ClassPopularity, ClassPopularityIndex } from "../types/rezervo";
 
 export function determineClassPopularity(sitClass: SitClass) {

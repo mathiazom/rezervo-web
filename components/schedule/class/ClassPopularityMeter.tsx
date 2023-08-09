@@ -2,7 +2,7 @@ import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
 import { ClassPopularity, StatusColors } from "../../../types/rezervo";
 import { SitClass } from "../../../types/integration/sit";
-import { isClassInThePast } from "../../../lib/iBooking";
+import { isClassInThePast } from "../../../lib/integration/sit";
 import { stringifyClassPopularity, determineClassPopularity } from "../../../lib/popularity";
 import RippleBadge from "../../utils/RippleBadge";
 import { Tooltip } from "@mui/material";

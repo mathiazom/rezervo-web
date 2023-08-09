@@ -10,7 +10,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import RippleBadge from "../../utils/RippleBadge";
-import { isClassInThePast } from "../../../lib/iBooking";
+import { isClassInThePast } from "../../../lib/integration/sit";
 import ClassUserAvatar from "./ClassUserAvatar";
 import { useUserSessions } from "../../../hooks/useUserSessions";
 

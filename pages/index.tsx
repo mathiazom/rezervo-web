@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import React from "react";
-import { fetchSchedules } from "../lib/iBooking";
+import { fetchSchedules } from "../lib/integration/sit";
 import { SitWeekSchedule } from "../types/integration/sit";
 import { ClassPopularityIndex } from "../types/rezervo";
 import { createClassPopularityIndex } from "../lib/popularity";

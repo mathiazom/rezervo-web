@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchSchedule } from "../../lib/iBooking";
+import { fetchSchedule } from "../../lib/integration/sit";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const weekOffset = JSON.parse(req.body)["weekOffset"];

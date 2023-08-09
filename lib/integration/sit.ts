@@ -1,9 +1,9 @@
-import { GROUP_BOOKING_URL, TIME_ZONE } from "../config/config";
-import { SitClass, SitWeekSchedule } from "../types/integration/sit";
-import { ClassConfig } from "../types/rezervo";
-import { weekdayNameToNumber } from "../utils/timeUtils";
+import { GROUP_BOOKING_URL, TIME_ZONE } from "../../config/config";
+import { SitClass, SitWeekSchedule } from "../../types/integration/sit";
+import { ClassConfig } from "../../types/rezervo";
+import { weekdayNameToNumber } from "../../utils/timeUtils";
 import { DateTime } from "luxon";
-import { calculateMondayOffset } from "./integration/common";
+import { calculateMondayOffset } from "./common";
 
 function scheduleUrl(token: string, fromISO: string | null = null) {
     return (

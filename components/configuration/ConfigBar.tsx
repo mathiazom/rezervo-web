@@ -17,7 +17,7 @@ import { arraysAreEqual } from "../../utils/arrayUtils";
 import { SitClass } from "../../types/integration/sit";
 import { DateTime } from "luxon";
 import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervo";
-import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/iBooking";
+import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/integration/sit";
 import { useUserConfig } from "../../hooks/useUserConfig";
 
 function ConfigBar({
