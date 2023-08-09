@@ -11,7 +11,7 @@ import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { DateTime } from "luxon";
 import { TIME_ZONE } from "../../../config/config";
 import { formatNameArray } from "../../../utils/arrayUtils";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import { stringifyClassPopularity } from "../../../lib/popularity";
 import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";

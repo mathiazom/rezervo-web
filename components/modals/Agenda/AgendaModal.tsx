@@ -2,7 +2,7 @@ import { Modal } from "@mui/material";
 import { classConfigRecurrentId, sitClassRecurrentId } from "../../../lib/iBooking";
 import React, { Dispatch, SetStateAction } from "react";
 import Agenda from "./Agenda";
-import { UserConfig } from "../../../types/rezervoTypes";
+import { UserConfig } from "../../../types/rezervo";
 import { SitClass } from "../../../types/integration/sit";
 
 const AgendaModal = ({

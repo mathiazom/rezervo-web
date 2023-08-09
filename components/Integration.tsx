@@ -1,6 +1,6 @@
 import { useUserConfig } from "../hooks/useUserConfig";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
+import { ClassPopularityIndex, NotificationsConfig } from "../types/rezervo";
 import { SitClass, SitWeekSchedule } from "../types/integration/sit";
 import { classConfigRecurrentId } from "../lib/iBooking";
 import PageHead from "./utils/PageHead";

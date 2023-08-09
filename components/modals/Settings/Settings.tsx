@@ -11,7 +11,7 @@ import {
     Typography,
 } from "@mui/material";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { ConfigPayload, NotificationsConfig } from "../../../types/rezervoTypes";
+import { ConfigPayload, NotificationsConfig } from "../../../types/rezervo";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
 import { DEFAULT_REMINDER_HOURS } from "../../../config/config";

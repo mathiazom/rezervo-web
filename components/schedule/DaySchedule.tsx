@@ -1,7 +1,7 @@
 import { Box, Chip, Typography, useTheme } from "@mui/material";
 import ClassCard from "./class/ClassCard";
 import { sitClassRecurrentId } from "../../lib/iBooking";
-import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../types/rezervoTypes";
+import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../types/rezervo";
 import React from "react";
 import { SitClass, SitDaySchedule } from "../../types/integration/sit";
 import { DateTime } from "luxon";

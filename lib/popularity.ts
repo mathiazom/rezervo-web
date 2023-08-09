@@ -1,6 +1,6 @@
 import { SitClass, SitWeekSchedule } from "../types/integration/sit";
 import { isClassInThePast, sitClassRecurrentId } from "./iBooking";
-import { ClassPopularity, ClassPopularityIndex } from "../types/rezervoTypes";
+import { ClassPopularity, ClassPopularityIndex } from "../types/rezervo";
 
 export function determineClassPopularity(sitClass: SitClass) {
     if (!sitClass || sitClass.available === undefined) return ClassPopularity.Unknown;

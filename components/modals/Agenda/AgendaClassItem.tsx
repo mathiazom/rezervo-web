@@ -6,7 +6,7 @@ import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { ClassConfig } from "../../../types/rezervoTypes";
+import { ClassConfig } from "../../../types/rezervo";
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 
 export type AgendaClass = {

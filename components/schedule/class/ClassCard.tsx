@@ -8,7 +8,7 @@ import { randomElementFromArray } from "../../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import RippleBadge from "../../utils/RippleBadge";
 import { isClassInThePast } from "../../../lib/iBooking";
 import ClassUserAvatar from "./ClassUserAvatar";

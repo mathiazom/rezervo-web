@@ -16,7 +16,7 @@ import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
 import { arraysAreEqual } from "../../utils/arrayUtils";
 import { SitClass } from "../../types/integration/sit";
 import { DateTime } from "luxon";
-import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervoTypes";
+import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervo";
 import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/iBooking";
 import { useUserConfig } from "../../hooks/useUserConfig";
 

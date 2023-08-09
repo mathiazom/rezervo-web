@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import React from "react";
 import { fetchSchedules } from "../lib/iBooking";
 import { SitWeekSchedule } from "../types/integration/sit";
-import { ClassPopularityIndex } from "../types/rezervoTypes";
+import { ClassPopularityIndex } from "../types/rezervo";
 import { createClassPopularityIndex } from "../lib/popularity";
 import Integration from "../components/Integration";
 
