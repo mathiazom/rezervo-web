@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { SitClass } from "../../../types/integration/sit";
 import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/animationTypes";
+import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/animation";
 import { randomElementFromArray } from "../../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
