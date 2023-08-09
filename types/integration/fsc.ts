@@ -1,14 +1,14 @@
-export type GroupActivitiesResponse = {
+export type FscGroupActivitiesResponse = {
     success: boolean;
     errors?: {
         [errorType: string]: string[];
     };
-    data: WeekSchedule;
+    data: FscWeekSchedule;
 };
 
-export type WeekSchedule = Class[];
+export type FscWeekSchedule = FscClass[];
 
-export type Class = {
+export type FscClass = {
     id: number;
     name: string;
     duration: {
