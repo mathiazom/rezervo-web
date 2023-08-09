@@ -1,5 +1,5 @@
 import { GROUP_BOOKING_URL, TIME_ZONE } from "../config/config";
-import { SitClass, SitSchedule } from "../types/integration/sit";
+import { SitClass, SitWeekSchedule } from "../types/integration/sit";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
 import { DateTime } from "luxon";
@@ -23,7 +23,7 @@ function fetchPublicToken() {
         });
 }
 
-async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitSchedule> {
+async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitWeekSchedule> {
     const startDate = DateTime.now().setZone(TIME_ZONE).plus({ day: dayOffset });
     const scheduleResponse = await fetch(scheduleUrl(token, startDate.toISODate()));
     if (!scheduleResponse.ok) {
@@ -34,12 +34,12 @@ async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Pro
     return await scheduleResponse.json();
 }
 
-export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitSchedule }> {
+export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitWeekSchedule }> {
     const weekOffsetToSchedule = (o: number) => fetchSchedule(o).then((s) => ({ [o]: s }));
     return (await Promise.all(weekOffsets.map(weekOffsetToSchedule))).reduce((acc, o) => ({ ...acc, ...o }), {});
 }
 
-export async function fetchSchedule(weekOffset: number): Promise<SitSchedule> {
+export async function fetchSchedule(weekOffset: number): Promise<SitWeekSchedule> {
     const token = await fetchPublicToken();
     const mondayOffset = calculateMondayOffset();
 

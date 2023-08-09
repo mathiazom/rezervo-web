@@ -1,7 +1,7 @@
 import { useUserConfig } from "../hooks/useUserConfig";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
-import { SitClass, SitSchedule } from "../types/integration/sit";
+import { SitClass, SitWeekSchedule } from "../types/integration/sit";
 import { classConfigRecurrentId } from "../lib/iBooking";
 import PageHead from "./utils/PageHead";
 import { Box, Divider, Stack } from "@mui/material";
@@ -21,7 +21,7 @@ function Integration({
     classPopularityIndex,
     acronym,
 }: {
-    initialCachedSchedules: { [weekOffset: number]: SitSchedule };
+    initialCachedSchedules: { [weekOffset: number]: SitWeekSchedule };
     classPopularityIndex: ClassPopularityIndex;
     acronym: string;
 }) {
@@ -38,7 +38,7 @@ function Integration({
 
     const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
 
-    const [currentSchedule, setCurrentSchedule] = useState<SitSchedule>(initialCachedSchedules[0]!);
+    const [currentSchedule, setCurrentSchedule] = useState<SitWeekSchedule>(initialCachedSchedules[0]!);
 
     const classes = useMemo(() => currentSchedule.days.flatMap((d) => d.classes) ?? [], [currentSchedule.days]);
 

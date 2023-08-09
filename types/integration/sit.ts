@@ -1,8 +1,8 @@
-export type SitSchedule = {
-    days: SitScheduleDay[];
+export type SitWeekSchedule = {
+    days: SitDaySchedule[];
 };
 
-export type SitScheduleDay = {
+export type SitDaySchedule = {
     date: string;
     dayName: string;
     classes: SitClass[];

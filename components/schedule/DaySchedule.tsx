@@ -3,7 +3,7 @@ import ClassCard from "./class/ClassCard";
 import { sitClassRecurrentId } from "../../lib/iBooking";
 import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../types/rezervoTypes";
 import React from "react";
-import { SitClass, SitScheduleDay } from "../../types/integration/sit";
+import { SitClass, SitDaySchedule } from "../../types/integration/sit";
 import { DateTime } from "luxon";
 import { TIME_ZONE } from "../../config/config";
 
@@ -16,7 +16,7 @@ function DaySchedule({
     onSelectedChanged,
     onInfo,
 }: {
-    day: SitScheduleDay;
+    day: SitDaySchedule;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
