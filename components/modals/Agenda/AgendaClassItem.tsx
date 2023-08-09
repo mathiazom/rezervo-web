@@ -1,6 +1,6 @@
 import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
-import { SitClass } from "../../../types/sitTypes";
+import { SitClass } from "../../../types/integration/sit";
 import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import IconButton from "@mui/material/IconButton";

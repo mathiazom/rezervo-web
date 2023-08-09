@@ -3,7 +3,7 @@ import ClassCard from "./class/ClassCard";
 import { sitClassRecurrentId } from "../../lib/iBooking";
 import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex } from "../../types/rezervoTypes";
 import React from "react";
-import { SitClass, SitScheduleDay } from "../../types/sitTypes";
+import { SitClass, SitScheduleDay } from "../../types/integration/sit";
 import { DateTime } from "luxon";
 import { TIME_ZONE } from "../../config/config";
 

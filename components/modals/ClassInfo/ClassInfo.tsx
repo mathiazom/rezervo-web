@@ -6,7 +6,7 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
 import Image from "next/image";
 import React, { useState } from "react";
-import { SitClass } from "../../../types/sitTypes";
+import { SitClass } from "../../../types/integration/sit";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { DateTime } from "luxon";
 import { TIME_ZONE } from "../../../config/config";

@@ -1,6 +1,6 @@
 import { Avatar, AvatarGroup, Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { SitClass } from "../../../types/sitTypes";
+import { SitClass } from "../../../types/integration/sit";
 import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/animationTypes";

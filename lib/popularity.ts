@@ -1,4 +1,4 @@
-import { SitClass, SitSchedule } from "../types/sitTypes";
+import { SitClass, SitSchedule } from "../types/integration/sit";
 import { isClassInThePast, sitClassRecurrentId } from "./iBooking";
 import { ClassPopularity, ClassPopularityIndex } from "../types/rezervoTypes";
 

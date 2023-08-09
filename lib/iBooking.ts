@@ -1,5 +1,5 @@
 import { GROUP_BOOKING_URL, TIME_ZONE } from "../config/config";
-import { SitClass, SitSchedule } from "../types/sitTypes";
+import { SitClass, SitSchedule } from "../types/integration/sit";
 import { ClassConfig } from "../types/rezervoTypes";
 import { weekdayNameToNumber } from "../utils/timeUtils";
 import { DateTime } from "luxon";

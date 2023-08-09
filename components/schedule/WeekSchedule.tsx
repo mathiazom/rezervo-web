@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import DaySchedule from "./DaySchedule";
 import React, { useEffect } from "react";
 import { AllConfigsIndex, ClassPopularityIndex } from "../../types/rezervoTypes";
-import { SitClass, SitSchedule } from "../../types/sitTypes";
+import { SitClass, SitSchedule } from "../../types/integration/sit";
 import { useRouter } from "next/router";
 
 function WeekSchedule({

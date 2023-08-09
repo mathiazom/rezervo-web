@@ -1,7 +1,7 @@
 import { useUserConfig } from "../hooks/useUserConfig";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { ClassPopularityIndex, NotificationsConfig } from "../types/rezervoTypes";
-import { SitClass, SitSchedule } from "../types/sitTypes";
+import { SitClass, SitSchedule } from "../types/integration/sit";
 import { classConfigRecurrentId } from "../lib/iBooking";
 import PageHead from "./utils/PageHead";
 import { Box, Divider, Stack } from "@mui/material";

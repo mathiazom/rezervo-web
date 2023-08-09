@@ -3,7 +3,7 @@ import { classConfigRecurrentId, sitClassRecurrentId } from "../../../lib/iBooki
 import React, { Dispatch, SetStateAction } from "react";
 import Agenda from "./Agenda";
 import { UserConfig } from "../../../types/rezervoTypes";
-import { SitClass } from "../../../types/sitTypes";
+import { SitClass } from "../../../types/integration/sit";
 
 const AgendaModal = ({
     open,
