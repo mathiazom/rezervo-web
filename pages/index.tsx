@@ -24,7 +24,13 @@ const Index: NextPage<{
     initialCachedSchedules: { [weekOffset: number]: SitSchedule };
     classPopularityIndex: ClassPopularityIndex;
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
-    return <Integration initialCachedSchedules={initialCachedSchedules} classPopularityIndex={classPopularityIndex} />;
+    return (
+        <Integration
+            initialCachedSchedules={initialCachedSchedules}
+            classPopularityIndex={classPopularityIndex}
+            acronym={"sit"}
+        />
+    );
 };
 
 export default Index;

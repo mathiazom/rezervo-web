@@ -19,9 +19,11 @@ const WeekScheduleMemo = memo(WeekSchedule);
 function Integration({
     initialCachedSchedules,
     classPopularityIndex,
+    acronym,
 }: {
     initialCachedSchedules: { [weekOffset: number]: SitSchedule };
     classPopularityIndex: ClassPopularityIndex;
+    acronym: string;
 }) {
     const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig();
 
@@ -56,11 +58,11 @@ function Integration({
 
     return (
         <>
-            <PageHead title={"sit-rezervo"} />
+            <PageHead title={`${acronym}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={<Logo integrationAcronym={"sit"} />}
+                        leftComponent={<Logo integrationAcronym={acronym} />}
                         rightComponent={
                             <ConfigBar
                                 classes={classes}
