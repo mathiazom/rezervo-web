@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { AllConfigsIndex } from "../types/rezervoTypes";
+import { AllConfigsIndex } from "../types/rezervo";
 import { fetcher } from "../utils/fetchUtils";
 import { useUser } from "@auth0/nextjs-auth0/client";
 

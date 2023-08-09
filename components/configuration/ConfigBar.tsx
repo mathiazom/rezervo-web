@@ -14,10 +14,10 @@ import React, { useMemo } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
 import { arraysAreEqual } from "../../utils/arrayUtils";
-import { SitClass } from "../../types/sitTypes";
+import { SitClass } from "../../types/integration/sit";
 import { DateTime } from "luxon";
-import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervoTypes";
-import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/iBooking";
+import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervo";
+import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/integration/sit";
 import { useUserConfig } from "../../hooks/useUserConfig";
 
 function ConfigBar({

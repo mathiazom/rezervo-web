@@ -1,16 +1,16 @@
 import { Avatar, AvatarGroup, Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { SitClass } from "../../../types/sitTypes";
+import { SitClass } from "../../../types/integration/sit";
 import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/animationTypes";
+import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/animation";
 import { randomElementFromArray } from "../../../utils/arrayUtils";
 import IconButton from "@mui/material/IconButton";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ClassPopularityMeter from "./ClassPopularityMeter";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervoTypes";
+import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import RippleBadge from "../../utils/RippleBadge";
-import { isClassInThePast } from "../../../lib/iBooking";
+import { isClassInThePast } from "../../../lib/integration/sit";
 import ClassUserAvatar from "./ClassUserAvatar";
 import { useUserSessions } from "../../../hooks/useUserSessions";
 

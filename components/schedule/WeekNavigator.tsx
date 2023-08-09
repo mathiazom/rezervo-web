@@ -2,25 +2,25 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { SitSchedule } from "../../types/sitTypes";
+import { SitWeekSchedule } from "../../types/integration/sit";
 import { DateTime } from "luxon";
 
 export default function WeekNavigator({
     initialCachedSchedules,
     setCurrentSchedule,
 }: {
-    initialCachedSchedules: { [weekOffset: number]: SitSchedule };
-    setCurrentSchedule: Dispatch<SetStateAction<SitSchedule>>;
+    initialCachedSchedules: { [weekOffset: number]: SitWeekSchedule };
+    setCurrentSchedule: Dispatch<SetStateAction<SitWeekSchedule>>;
 }) {
     const [weekOffset, setWeekOffset] = useState(0);
     const [weekNumber, setWeekNumber] = useState(weekNumberFromSchedule(initialCachedSchedules[0]!));
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
-    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitSchedule }>(
+    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitWeekSchedule }>(
         initialCachedSchedules
     );
 
-    function weekNumberFromSchedule(schedule: SitSchedule): number {
+    function weekNumberFromSchedule(schedule: SitWeekSchedule): number {
         return DateTime.fromISO(schedule.days[0]!.date).weekNumber;
     }
 
