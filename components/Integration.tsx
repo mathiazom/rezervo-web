@@ -1,6 +1,6 @@
 import { useUserConfig } from "../hooks/useUserConfig";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { ClassPopularityIndex, NotificationsConfig } from "../types/rezervo";
+import { ClassPopularityIndex, NotificationsConfig, RezervoSchedule } from "../types/rezervo";
 import { SitClass, SitWeekSchedule } from "../types/integration/sit";
 import { classConfigRecurrentId } from "../lib/integration/sit";
 import PageHead from "./utils/PageHead";
@@ -17,11 +17,11 @@ import WeekSchedule from "./schedule/WeekSchedule";
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
 function Integration({
-    initialCachedSchedules,
+    initialSchedule,
     classPopularityIndex,
     acronym,
 }: {
-    initialCachedSchedules: { [weekOffset: number]: SitWeekSchedule };
+    initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
     acronym: string;
 }) {
@@ -38,9 +38,9 @@ function Integration({
 
     const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
 
-    const [currentSchedule, setCurrentSchedule] = useState<SitWeekSchedule>(initialCachedSchedules[0]!);
+    const [currentWeekSchedule, setCurrentWeekSchedule] = useState<SitWeekSchedule>(initialSchedule[0]!);
 
-    const classes = useMemo(() => currentSchedule.days.flatMap((d) => d.classes) ?? [], [currentSchedule.days]);
+    const classes = useMemo(() => currentWeekSchedule.days.flatMap((d) => d.classes) ?? [], [currentWeekSchedule.days]);
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         setSelectedClassIds((s) =>
@@ -79,14 +79,11 @@ function Integration({
                             />
                         }
                     />
-                    <WeekNavigator
-                        initialCachedSchedules={initialCachedSchedules}
-                        setCurrentSchedule={setCurrentSchedule}
-                    />
+                    <WeekNavigator initialSchedule={initialSchedule} setCurrentWeekSchedule={setCurrentWeekSchedule} />
                     <Divider orientation="horizontal" />
                 </Box>
                 <WeekScheduleMemo
-                    currentSchedule={currentSchedule}
+                    weekSchedule={currentWeekSchedule}
                     classPopularityIndex={classPopularityIndex}
                     selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                     selectedClassIds={selectedClassIds}

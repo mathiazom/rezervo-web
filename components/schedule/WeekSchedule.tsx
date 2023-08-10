@@ -6,7 +6,7 @@ import { SitClass, SitWeekSchedule } from "../../types/integration/sit";
 import { useRouter } from "next/router";
 
 function WeekSchedule({
-    currentSchedule,
+    weekSchedule,
     classPopularityIndex,
     selectable,
     selectedClassIds,
@@ -14,7 +14,7 @@ function WeekSchedule({
     onSelectedChanged,
     onInfo,
 }: {
-    currentSchedule: SitWeekSchedule;
+    weekSchedule: SitWeekSchedule;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -31,20 +31,20 @@ function WeekSchedule({
         if (classId === undefined) {
             return;
         }
-        const linkedClass = currentSchedule.days
+        const linkedClass = weekSchedule.days
             .flatMap((day) => day.classes)
             .find((_class) => _class.id === Number(classId));
         if (linkedClass) {
             onInfo(linkedClass);
         }
         router.replace({ query: queryWithoutParam });
-    }, [onInfo, router, currentSchedule.days]);
+    }, [onInfo, router, weekSchedule.days]);
 
     return (
         <Box sx={{ flexGrow: 1, overflow: "auto" }}>
             <Stack direction={"column"}>
                 <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
-                    {currentSchedule.days.map((day) => (
+                    {weekSchedule.days.map((day) => (
                         <DaySchedule
                             key={day.date}
                             day={day}

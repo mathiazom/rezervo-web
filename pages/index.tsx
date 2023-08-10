@@ -26,7 +26,7 @@ const Index: NextPage<{
 }> = ({ initialCachedSchedules, classPopularityIndex }) => {
     return (
         <Integration
-            initialCachedSchedules={initialCachedSchedules}
+            initialSchedule={initialCachedSchedules}
             classPopularityIndex={classPopularityIndex}
             acronym={"sit"}
         />
