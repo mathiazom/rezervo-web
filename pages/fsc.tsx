@@ -1,8 +1,8 @@
-import { fetchWeekSchedule } from "../lib/integration/fsc";
+import { fetchFscWeekSchedule } from "../lib/integration/fsc";
 
 function FamilySportsClubPage() {
     const demo = async () => {
-        console.log(await fetchWeekSchedule(0));
+        console.log(await fetchFscWeekSchedule(0));
     };
     demo();
     return <p>Coming Soon 🚀</p>;

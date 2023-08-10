@@ -1,4 +1,4 @@
-export type FscGroupActivitiesResponse = {
+export type FscWeekScheduleResponse = {
     success: boolean;
     errors?: {
         [errorType: string]: string[];
