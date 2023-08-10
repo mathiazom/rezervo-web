@@ -1,11 +1,11 @@
 import { GROUP_BOOKING_URL, TIME_ZONE } from "../../config/config";
-import { SitClass, SitWeekSchedule } from "../../types/integration/sit";
+import { SitClass, SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
 import { ClassConfig } from "../../types/rezervo";
 import { weekdayNameToNumber } from "../../utils/timeUtils";
 import { DateTime } from "luxon";
 import { calculateMondayOffset } from "./common";
 
-function scheduleUrl(token: string, fromISO: string | null = null) {
+function sitScheduleUrl(token: string, fromISO: string | null = null) {
     return (
         "https://ibooking.sit.no/webapp/api/Schedule/getSchedule" +
         `?token=${token}${fromISO ? "&from=" + fromISO : ""}` +
@@ -13,7 +13,7 @@ function scheduleUrl(token: string, fromISO: string | null = null) {
     );
 }
 
-function fetchPublicToken() {
+function fetchSitPublicToken() {
     return fetch(GROUP_BOOKING_URL)
         .then((res) => res.text())
         .then((text) => text.replace(/[\n\r]/g, "").replace(/\s+/g, " "))
@@ -23,9 +23,9 @@ function fetchPublicToken() {
         });
 }
 
-async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Promise<SitWeekSchedule> {
+async function fetchSitDaySchedulesWithOffset(token: string, dayOffset: number): Promise<{ days: SitDaySchedule[] }> {
     const startDate = DateTime.now().setZone(TIME_ZONE).plus({ day: dayOffset });
-    const scheduleResponse = await fetch(scheduleUrl(token, startDate.toISODate()));
+    const scheduleResponse = await fetch(sitScheduleUrl(token, startDate.toISODate()));
     if (!scheduleResponse.ok) {
         throw new Error(
             `Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`
@@ -34,21 +34,21 @@ async function fetchScheduleWithDayOffset(token: string, dayOffset: number): Pro
     return await scheduleResponse.json();
 }
 
-export async function fetchSchedules(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitWeekSchedule }> {
-    const weekOffsetToSchedule = (o: number) => fetchSchedule(o).then((s) => ({ [o]: s }));
+export async function fetchSitSchedule(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitWeekSchedule }> {
+    const weekOffsetToSchedule = (o: number) => fetchSitWeekSchedule(o).then((s) => ({ [o]: s }));
     return (await Promise.all(weekOffsets.map(weekOffsetToSchedule))).reduce((acc, o) => ({ ...acc, ...o }), {});
 }
 
-export async function fetchSchedule(weekOffset: number): Promise<SitWeekSchedule> {
-    const token = await fetchPublicToken();
+export async function fetchSitWeekSchedule(weekOffset: number): Promise<SitWeekSchedule> {
+    const token = await fetchSitPublicToken();
     const mondayOffset = calculateMondayOffset();
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
         days: [
             // Use offset -1 to fetch all today's events, not just the ones in the future
-            ...(await fetchScheduleWithDayOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
-            ...(await fetchScheduleWithDayOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
+            ...(await fetchSitDaySchedulesWithOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
+            ...(await fetchSitDaySchedulesWithOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
         ].map((day) => ({
             ...day,
             classes: day.classes.map((_class) => ({

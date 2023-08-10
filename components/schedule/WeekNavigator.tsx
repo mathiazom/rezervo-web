@@ -4,23 +4,22 @@ import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { SitWeekSchedule } from "../../types/integration/sit";
 import { DateTime } from "luxon";
+import { RezervoSchedule } from "../../types/rezervo";
 
 export default function WeekNavigator({
-    initialCachedSchedules,
-    setCurrentSchedule,
+    initialSchedule,
+    setCurrentWeekSchedule,
 }: {
-    initialCachedSchedules: { [weekOffset: number]: SitWeekSchedule };
-    setCurrentSchedule: Dispatch<SetStateAction<SitWeekSchedule>>;
+    initialSchedule: RezervoSchedule;
+    setCurrentWeekSchedule: Dispatch<SetStateAction<SitWeekSchedule>>;
 }) {
     const [weekOffset, setWeekOffset] = useState(0);
-    const [weekNumber, setWeekNumber] = useState(weekNumberFromSchedule(initialCachedSchedules[0]!));
+    const [weekNumber, setWeekNumber] = useState(weekNumberFromWeekSchedule(initialSchedule[0]!));
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
-    const [cachedSchedules, setCachedSchedules] = useState<{ [weekOffset: number]: SitWeekSchedule }>(
-        initialCachedSchedules
-    );
+    const [schedule, setSchedule] = useState<RezervoSchedule>(initialSchedule);
 
-    function weekNumberFromSchedule(schedule: SitWeekSchedule): number {
+    function weekNumberFromWeekSchedule(schedule: SitWeekSchedule): number {
         return DateTime.fromISO(schedule.days[0]!.date).weekNumber;
     }
 
@@ -34,35 +33,35 @@ export default function WeekNavigator({
                 break;
         }
         const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
-        let cachedSchedule = cachedSchedules[currentWeekOffset];
-        if (cachedSchedule === undefined) {
-            cachedSchedule = await fetch("api/schedule", {
+        let currentWeekSchedule = schedule[currentWeekOffset];
+        if (currentWeekSchedule === undefined) {
+            currentWeekSchedule = await fetch("api/schedule", {
                 method: "POST",
                 body: JSON.stringify({ weekOffset: currentWeekOffset }),
             }).then((r) => r.json());
-            if (cachedSchedule === undefined) {
+            if (currentWeekSchedule === undefined) {
                 setLoadingPreviousWeek(false);
                 setLoadingNextWeek(false);
                 throw new Error("Failed to fetch schedule");
             }
-            setCachedSchedules({ ...cachedSchedules, [currentWeekOffset]: cachedSchedule });
+            setSchedule({ ...schedule, [currentWeekOffset]: currentWeekSchedule });
         }
         setWeekOffset(currentWeekOffset);
-        setCurrentSchedule(cachedSchedule);
-        setWeekNumber(weekNumberFromSchedule(cachedSchedule));
+        setCurrentWeekSchedule(currentWeekSchedule);
+        setWeekNumber(weekNumberFromWeekSchedule(currentWeekSchedule));
         setLoadingPreviousWeek(false);
         setLoadingNextWeek(false);
         // Pre-fetch next schedule (in same direction) if not in cache
         const nextWeekOffset = currentWeekOffset + modifier;
-        if (nextWeekOffset in cachedSchedules) {
+        if (nextWeekOffset in schedule) {
             return;
         }
-        const nextSchedule = await fetch("api/schedule", {
+        const nextWeekSchedule = await fetch("api/schedule", {
             method: "POST",
             body: JSON.stringify({ weekOffset: nextWeekOffset }),
         }).then((r) => r.json());
-        if (nextSchedule != undefined) {
-            setCachedSchedules({ ...cachedSchedules, [nextWeekOffset]: nextSchedule });
+        if (nextWeekSchedule != undefined) {
+            setSchedule({ ...schedule, [nextWeekOffset]: nextWeekSchedule });
         }
     }
 
