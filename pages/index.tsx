@@ -1,13 +1,13 @@
 import type { NextPage } from "next";
 import React from "react";
-import { fetchSchedules } from "../lib/integration/sit";
+import { fetchSitSchedule } from "../lib/integration/sit";
 import { SitWeekSchedule } from "../types/integration/sit";
 import { ClassPopularityIndex } from "../types/rezervo";
 import { createClassPopularityIndex } from "../lib/popularity";
 import Integration from "../components/Integration";
 
 export async function getStaticProps() {
-    const initialCachedSchedules = await fetchSchedules([-1, 0, 1, 2, 3]);
+    const initialCachedSchedules = await fetchSitSchedule([-1, 0, 1, 2, 3]);
     const classPopularityIndex = await createClassPopularityIndex(initialCachedSchedules[-1]!);
     const invalidationTimeInSeconds = 60 * 60;
 

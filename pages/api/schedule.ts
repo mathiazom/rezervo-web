@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchSchedule } from "../../lib/integration/sit";
+import { fetchSitWeekSchedule } from "../../lib/integration/sit";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const weekOffset = JSON.parse(req.body)["weekOffset"];
@@ -7,6 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ message: "weekOffset is a required parameter" });
     }
 
-    const result = await fetchSchedule(weekOffset);
+    const result = await fetchSitWeekSchedule(weekOffset);
     return res.json(result);
 }
