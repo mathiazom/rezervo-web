@@ -1,7 +1,7 @@
 import { useUserConfig } from "../hooks/useUserConfig";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { ClassPopularityIndex, NotificationsConfig, RezervoSchedule } from "../types/rezervo";
-import { SitClass, SitWeekSchedule } from "../types/integration/sit";
+import { ClassPopularityIndex, NotificationsConfig, RezervoSchedule, RezervoWeekSchedule } from "../types/rezervo";
+import { SitClass } from "../types/integration/sit";
 import { classConfigRecurrentId } from "../lib/integration/sit";
 import PageHead from "./utils/PageHead";
 import { Box, Divider, Stack } from "@mui/material";
@@ -38,9 +38,9 @@ function Integration({
 
     const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
 
-    const [currentWeekSchedule, setCurrentWeekSchedule] = useState<SitWeekSchedule>(initialSchedule[0]!);
+    const [currentWeekSchedule, setCurrentWeekSchedule] = useState<RezervoWeekSchedule>(initialSchedule[0]!);
 
-    const classes = useMemo(() => currentWeekSchedule.days.flatMap((d) => d.classes) ?? [], [currentWeekSchedule.days]);
+    const classes = useMemo(() => currentWeekSchedule.flatMap((d) => d.classes) ?? [], [currentWeekSchedule]);
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         setSelectedClassIds((s) =>

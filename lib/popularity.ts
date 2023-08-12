@@ -1,6 +1,6 @@
-import { SitClass, SitWeekSchedule } from "../types/integration/sit";
+import { SitClass } from "../types/integration/sit";
 import { isClassInThePast, sitClassRecurrentId } from "./integration/sit";
-import { ClassPopularity, ClassPopularityIndex } from "../types/rezervo";
+import { ClassPopularity, ClassPopularityIndex, RezervoWeekSchedule } from "../types/rezervo";
 
 export function determineClassPopularity(sitClass: SitClass) {
     if (!sitClass || sitClass.available === undefined) return ClassPopularity.Unknown;
@@ -9,8 +9,8 @@ export function determineClassPopularity(sitClass: SitClass) {
     return ClassPopularity.Low;
 }
 
-export async function createClassPopularityIndex(previousWeekSchedule: SitWeekSchedule): Promise<ClassPopularityIndex> {
-    return previousWeekSchedule.days
+export function createClassPopularityIndex(previousWeekSchedule: RezervoWeekSchedule): ClassPopularityIndex {
+    return previousWeekSchedule
         .flatMap((d) => d.classes)
         .reduce(
             (popularityIndex, _class) => ({

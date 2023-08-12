@@ -34,11 +34,6 @@ async function fetchSitDaySchedulesWithOffset(token: string, dayOffset: number):
     return await scheduleResponse.json();
 }
 
-export async function fetchSitSchedule(weekOffsets: number[]): Promise<{ [weekOffset: number]: SitWeekSchedule }> {
-    const weekOffsetToSchedule = (o: number) => fetchSitWeekSchedule(o).then((s) => ({ [o]: s }));
-    return (await Promise.all(weekOffsets.map(weekOffsetToSchedule))).reduce((acc, o) => ({ ...acc, ...o }), {});
-}
-
 export async function fetchSitWeekSchedule(weekOffset: number): Promise<SitWeekSchedule> {
     const token = await fetchSitPublicToken();
     const mondayOffset = calculateMondayOffset();
