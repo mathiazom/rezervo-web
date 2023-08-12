@@ -46,8 +46,8 @@ function WeekSchedule({
                 <Stack direction={"row"} margin={"auto"} spacing={2} px={1}>
                     {weekSchedule.map((daySchedule) => (
                         <DaySchedule
-                            key={daySchedule.date}
-                            day={daySchedule}
+                            key={daySchedule.date.toString()}
+                            daySchedule={daySchedule}
                             classPopularityIndex={classPopularityIndex}
                             selectable={selectable}
                             selectedClassIds={selectedClassIds}

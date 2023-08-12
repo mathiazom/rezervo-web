@@ -40,7 +40,10 @@ function Integration({
 
     const [currentWeekSchedule, setCurrentWeekSchedule] = useState<RezervoWeekSchedule>(initialSchedule[0]!);
 
-    const classes = useMemo(() => currentWeekSchedule.flatMap((d) => d.classes) ?? [], [currentWeekSchedule]);
+    const classes = useMemo(
+        () => currentWeekSchedule.flatMap((daySchedule) => daySchedule.classes) ?? [],
+        [currentWeekSchedule]
+    );
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         setSelectedClassIds((s) =>

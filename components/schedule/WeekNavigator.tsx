@@ -2,8 +2,12 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { DateTime } from "luxon";
 import { RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
+import { getDateTime } from "../../lib/integration/common";
+
+function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
+    return getDateTime(weekSchedule[0]!.date).weekNumber;
+}
 
 export default function WeekNavigator({
     initialSchedule,
@@ -13,14 +17,10 @@ export default function WeekNavigator({
     setCurrentWeekSchedule: Dispatch<SetStateAction<RezervoWeekSchedule>>;
 }) {
     const [weekOffset, setWeekOffset] = useState(0);
-    const [weekNumber, setWeekNumber] = useState(weekNumberFromWeekSchedule(initialSchedule[0]!));
+    const [weekNumber, setWeekNumber] = useState(getWeekNumber(initialSchedule[0]!));
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
     const [schedule, setSchedule] = useState<RezervoSchedule>(initialSchedule);
-
-    function weekNumberFromWeekSchedule(weekSchedule: RezervoWeekSchedule): number {
-        return DateTime.fromISO(weekSchedule[0]!.date).weekNumber;
-    }
 
     async function updateWeekOffset(modifier: number) {
         switch (modifier) {
@@ -47,7 +47,7 @@ export default function WeekNavigator({
         }
         setWeekOffset(currentWeekOffset);
         setCurrentWeekSchedule(currentWeekSchedule);
-        setWeekNumber(weekNumberFromWeekSchedule(currentWeekSchedule));
+        setWeekNumber(getWeekNumber(currentWeekSchedule));
         setLoadingPreviousWeek(false);
         setLoadingNextWeek(false);
         // Pre-fetch next schedule (in same direction) if not in cache
