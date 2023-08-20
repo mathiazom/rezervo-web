@@ -1,12 +1,11 @@
-import { DateTime, DateTimeOptions } from "luxon";
-import { TIME_ZONE } from "../../config/config";
+import { DateTime } from "luxon";
+import { LOCALE, TIME_ZONE } from "../../config/config";
 import { RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
-const localizedDateTimeOptions: DateTimeOptions = { zone: TIME_ZONE, locale: "no" };
-export const getDateTime = (date: string): DateTime => DateTime.fromISO(date, localizedDateTimeOptions);
+export const getDateTime = (date: string): DateTime => DateTime.fromISO(date, { zone: TIME_ZONE, locale: LOCALE });
 
 export const getCapitalizedWeekday = (date: DateTime): string => {
     if (!date.isValid || date.weekdayLong === null) {
