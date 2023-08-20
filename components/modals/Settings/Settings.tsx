@@ -16,6 +16,7 @@ import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsAct
 import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
 import { DEFAULT_REMINDER_HOURS } from "../../../config/config";
 import { useUserConfig } from "../../../hooks/useUserConfig";
+import CalendarFeed from "./CalendarFeed";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({
@@ -133,15 +134,26 @@ export default function Settings({
                     Innstillinger
                 </Typography>
             </Box>
-            <Box pt={2} pb={2}>
-                <FormGroup sx={{ gap: 1 }}>
+            <Box pt={2} sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <FormGroup sx={{ gap: "1rem" }}>
                     <FormGroup>
                         <FormLabel>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                 <PlayCircleOutlineRoundedIcon />
-                                <Typography>Booking aktiv</Typography>
+                                <Typography
+                                    sx={{
+                                        userSelect: "none",
+                                    }}
+                                >
+                                    Booking aktiv
+                                </Typography>
                                 <Box
-                                    sx={{ display: "flex", alignItems: "center", justifyContent: "right", flexGrow: 1 }}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "right",
+                                        flexGrow: 1,
+                                    }}
                                 >
                                     {bookingActiveLoading && <CircularProgress size="1rem" />}
                                     <Switch
@@ -160,9 +172,20 @@ export default function Settings({
                         <FormLabel>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                 <NotificationsActiveRoundedIcon />
-                                <Typography>Påminnelse om time</Typography>
+                                <Typography
+                                    sx={{
+                                        userSelect: "none",
+                                    }}
+                                >
+                                    Påminnelse om time
+                                </Typography>
                                 <Box
-                                    sx={{ display: "flex", alignItems: "center", justifyContent: "right", flexGrow: 1 }}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "right",
+                                        flexGrow: 1,
+                                    }}
                                 >
                                     {notificationsConfigLoading && <CircularProgress size="1rem" />}
                                     <Switch
@@ -175,7 +198,7 @@ export default function Settings({
                                 </Box>
                             </Box>
                         </FormLabel>
-                        <Box sx={{ display: "flex", gap: 2, alignItems: "center", ml: "33px" }}>
+                        <Box sx={{ display: "flex", gap: 2, alignItems: "center", ml: "33px", pb: 1 }}>
                             <FormControl>
                                 <Input
                                     value={reminderHours}
@@ -195,6 +218,8 @@ export default function Settings({
                             <FormLabel disabled={!reminderActive}>timer før</FormLabel>
                         </Box>
                     </FormGroup>
+                    <Divider />
+                    <CalendarFeed />
                 </FormGroup>
             </Box>
         </Box>

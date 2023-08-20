@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 export function useCopyToClipboard(
     text: string,
     options?: { successDuration?: number }
-): [boolean, (text: string) => Promise<boolean>] {
+): [boolean, boolean, (text: string) => Promise<boolean>] {
     const [isCopied, setIsCopied] = useState(false);
     const successDuration = options && options.successDuration;
 
@@ -26,6 +26,7 @@ export function useCopyToClipboard(
 
     return [
         isCopied,
+        !!navigator?.clipboard,
         async (text) => {
             if (!navigator?.clipboard) {
                 console.warn("Clipboard not supported");
