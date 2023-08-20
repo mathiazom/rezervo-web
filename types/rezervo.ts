@@ -1,4 +1,4 @@
-import { SitWeekSchedule } from "./integration/sit";
+import { SitClass } from "./integration/sit";
 
 export type ClassTimeConfig = {
     hour: number;
@@ -67,5 +67,19 @@ export type ClassPopularityIndex = {
     [recurrentId: string]: ClassPopularity;
 };
 
-// This will eventually be implemented as its own type, but for now it ports to SitWeekSchedule
-export type RezervoSchedule = { [weekOffset: number]: SitWeekSchedule };
+export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };
+
+export type RezervoWeekSchedule = RezervoDaySchedule[];
+
+export type RezervoDaySchedule = {
+    date: string;
+    classes: RezervoClass[];
+};
+
+// This will eventually be implemented as its own type, but for now it ports to SitClass
+export type RezervoClass = SitClass;
+
+export type IntegrationPageProps = {
+    initialSchedule: RezervoSchedule;
+    classPopularityIndex: ClassPopularityIndex;
+};
