@@ -42,7 +42,14 @@ export async function fetchRezervoWeekSchedule<T>(
     // eslint-disable-next-line no-unused-vars
     weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule
 ): Promise<RezervoWeekSchedule> {
-    return weekScheduleAdapter(await weekScheduleFetcher(weekOffset));
+    const weekSchedule = weekScheduleAdapter(await weekScheduleFetcher(weekOffset));
+    if (
+        weekSchedule.length !== 7 ||
+        weekSchedule.some((daySchedule) => daySchedule === null || daySchedule === undefined)
+    ) {
+        throw new Error("Week schedule must have 7 valid DaySchedule entries");
+    }
+    return weekSchedule;
 }
 
 export async function fetchRezervoSchedule<T>(
