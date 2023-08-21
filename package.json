@@ -17,7 +17,6 @@
         "@mui/icons-material": "^5.11.16",
         "@mui/lab": "^5.0.0-alpha.131",
         "@mui/material": "^5.13.2",
-        "@types/json-diff": "^0.9.1",
         "axios": "^1.4.0",
         "json-diff": "^1.0.3",
         "luxon": "^3.3.0",
@@ -31,18 +30,19 @@
         "swr": "^2.1.5"
     },
     "devDependencies": {
-        "@types/luxon": "^3.3.0",
-        "@types/node": "^20.2.3",
-        "@types/react": "^18.2.6",
-        "@types/react-dom": "^18.2.4",
-        "@types/react-syntax-highlighter": "^15.5.6",
-        "eslint": "^8.41.0",
-        "eslint-config-next": "^13.4.3",
-        "eslint-config-prettier": "^8.8.0",
+        "@types/json-diff": "^1.0.0",
+        "@types/luxon": "^3.3.1",
+        "@types/node": "^20.5.1",
+        "@types/react": "^18.2.20",
+        "@types/react-dom": "^18.2.7",
+        "@types/react-syntax-highlighter": "^15.5.7",
+        "eslint": "^8.47.0",
+        "eslint-config-next": "^13.4.19",
+        "eslint-config-prettier": "^9.0.0",
         "eslint-import-resolver-typescript": "^3.6.0",
         "eslint-plugin-import": "^2.28.1",
         "eslint-plugin-simple-import-sort": "^10.0.0",
-        "prettier": "^2.8.8",
-        "typescript": "^5.0.4"
+        "prettier": "^3.0.2",
+        "typescript": "^5.1.6"
     }
 }
