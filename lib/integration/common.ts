@@ -1,7 +1,13 @@
 import { DateTime } from "luxon";
 import { LOCALE, TIME_ZONE } from "../../config/config";
-import { ClassConfig, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
-import { IntegrationIdentifier, RezervoIntegration, RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
+import {
+    IntegrationIdentifier,
+    RezervoIntegration,
+    ClassConfig,
+    RezervoClass,
+    RezervoWeekSchedule,
+    RezervoSchedule,
+} from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
 import { fetchSitWeekSchedule } from "./sit";
 import { sitToRezervoWeekSchedule } from "./adapters";

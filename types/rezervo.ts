@@ -122,7 +122,7 @@ export type RezervoClass = {
         count: number;
         userPosition: number | null;
     };
-    weekday?: number;
+    weekday: number | undefined;
 };
 
 export type IntegrationPageProps = {
