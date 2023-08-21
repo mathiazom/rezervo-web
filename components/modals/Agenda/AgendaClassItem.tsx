@@ -31,7 +31,7 @@ export default function AgendaClassItem({
             ? `rgb(${hexWithOpacityToRgb(
                   agendaClass._class.color,
                   agendaClass.markedForDeletion ? 0.3 : 0.6,
-                  dark ? 0 : 255
+                  dark ? 0 : 255,
               ).join(",")})`
             : agendaClass.markedForDeletion
             ? "#696969"

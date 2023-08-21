@@ -22,7 +22,7 @@ export async function fetchFscWeekSchedule(weekOffset: number): Promise<FscWeekS
     const fscWeekScheduleResponse: FscWeekScheduleResponse = await response.json();
     if (!fscWeekScheduleResponse.success) {
         throw new Error(
-            `Failed to fetch schedule with startDate ${startDate}, received errors ${fscWeekScheduleResponse.errors}`
+            `Failed to fetch schedule with startDate ${startDate}, received errors ${fscWeekScheduleResponse.errors}`,
         );
     }
     return fscWeekScheduleResponse.data;

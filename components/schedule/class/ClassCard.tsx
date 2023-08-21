@@ -36,7 +36,7 @@ const ClassCard = ({
     const { userSessionsIndex } = useUserSessions();
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
-        selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null
+        selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
     );
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const ClassCard = ({
     const showSelected = !isInThePast && selected;
 
     const usersPlanned = configUsers.filter(
-        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name)
+        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
 
     return (

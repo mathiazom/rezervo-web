@@ -53,7 +53,7 @@ function ConfigBar({
             selectedClassIds != null &&
             originalSelectedClassIds != null &&
             !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
-        [originalSelectedClassIds, selectedClassIds]
+        [originalSelectedClassIds, selectedClassIds],
     );
 
     // Pre-generate all class config strings
@@ -73,7 +73,7 @@ function ConfigBar({
                     time: timeForClass(c),
                 },
             }),
-            {}
+            {},
         );
         // Locate any class configs from the user config that do not exist in the current schedule
         const ghostClassesConfigs =
@@ -84,7 +84,7 @@ function ConfigBar({
                         ...o,
                         [classConfigRecurrentId(c)]: c,
                     }),
-                    {}
+                    {},
                 ) ?? {};
         return { ...classesConfigMap, ...ghostClassesConfigs };
     }, [classes, userConfig?.classes]);

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export function useCopyToClipboard(
     text: string,
-    options?: { successDuration?: number }
+    options?: { successDuration?: number },
 ): [boolean, boolean, (text: string) => Promise<boolean>] {
     const [isCopied, setIsCopied] = useState(false);
     const successDuration = options && options.successDuration;
