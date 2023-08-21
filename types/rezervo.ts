@@ -80,9 +80,7 @@ export type RezervoIntegration<T> = {
 
 export type RezervoBusinessUnit<T> = {
     name: string;
-    // eslint-disable-next-line no-unused-vars
     weekScheduleFetcher: (weekNumber: number) => Promise<T>;
-    // eslint-disable-next-line no-unused-vars
     weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
 };
 

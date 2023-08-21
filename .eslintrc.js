@@ -15,5 +15,8 @@ module.exports = {
         browser: true,
         es2022: true,
     },
+    rules: {
+        "no-unused-vars": ["error", { args: "none" }],
+    },
     extends: ["eslint:recommended", "next/core-web-vitals", "prettier"],
 };

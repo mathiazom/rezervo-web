@@ -12,9 +12,7 @@ export default function Agenda({
     onSetToDelete,
 }: {
     agendaClasses: AgendaClass[];
-    // eslint-disable-next-line no-unused-vars
     onInfo: (c: SitClass) => void;
-    // eslint-disable-next-line no-unused-vars
     onSetToDelete: (cc: ClassConfig, toDelete: boolean) => void;
 }) {
     const theme = useTheme();

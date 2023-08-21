@@ -21,7 +21,6 @@ export default function AgendaClassItem({
     onInfo,
 }: {
     agendaClass: AgendaClass;
-    // eslint-disable-next-line no-unused-vars
     onSetToDelete: (toDelete: boolean) => void;
     onInfo: () => void;
 }) {
