@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useUserCalendarFeedUrl } from "../../../hooks/useUserCalendarFeedUrl";
 import { Box, Checkbox, FormControlLabel, FormGroup, FormLabel, Typography } from "@mui/material";
 import { useCopyToClipboard } from "../../../hooks/useCopyToClipboard";
-import Copy from "@mui/icons-material/ContentCopy";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
@@ -65,7 +64,7 @@ export default function CalendarFeed() {
                                                 },
                                             }}
                                         >
-                                            <Copy />
+                                            <ContentCopyIcon />
                                         </IconButton>
                                     ) : (
                                         <Tooltip title={isCopiedToClipboard ? "Kopiert" : "Kopier URL"}>
