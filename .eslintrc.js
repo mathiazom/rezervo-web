@@ -19,9 +19,6 @@ module.exports = {
         browser: true,
         es2022: true,
     },
-    rules: {
-        "no-unused-vars": ["error", { args: "none" }],
-    },
     extends: [
         "eslint:recommended",
         "plugin:import/recommended",
@@ -29,4 +26,10 @@ module.exports = {
         "next/core-web-vitals",
         "prettier",
     ],
+    plugins: ["simple-import-sort"],
+    rules: {
+        "no-unused-vars": ["error", { args: "none" }],
+        "simple-import-sort/imports": "error",
+        "simple-import-sort/exports": "error",
+    },
 };
