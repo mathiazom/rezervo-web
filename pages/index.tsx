@@ -1,21 +1,29 @@
 import type { NextPage } from "next";
 import React from "react";
-import { fetchSitWeekSchedule } from "../lib/integration/sit";
 import { IntegrationPageProps } from "../types/rezervo";
 import Integration from "../components/Integration";
-import { fetchIntegrationPageStaticProps } from "../lib/integration/common";
-import { sitToRezervoWeekSchedule } from "../lib/integration/adapters";
+import { activeIntegrations, fetchIntegrationPageStaticProps } from "../lib/integration/common";
+
+const integration = activeIntegrations.sit;
 
 export async function getStaticProps(): Promise<{
     revalidate: number;
     props: IntegrationPageProps;
 }> {
-    return await fetchIntegrationPageStaticProps(fetchSitWeekSchedule, sitToRezervoWeekSchedule);
+    const businessUnit = integration.businessUnits[0];
+    if (!businessUnit) {
+        throw new Error(`${integration.name} does not have any business units`);
+    }
+    return await fetchIntegrationPageStaticProps(businessUnit.weekScheduleFetcher, businessUnit.weekScheduleAdapter);
 }
 
 const Index: NextPage<IntegrationPageProps> = ({ initialSchedule, classPopularityIndex }) => {
     return (
-        <Integration initialSchedule={initialSchedule} classPopularityIndex={classPopularityIndex} acronym={"sit"} />
+        <Integration
+            initialSchedule={initialSchedule}
+            classPopularityIndex={classPopularityIndex}
+            acronym={integration.acronym}
+        />
     );
 };
 

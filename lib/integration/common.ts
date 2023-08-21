@@ -1,7 +1,9 @@
 import { DateTime } from "luxon";
 import { LOCALE, TIME_ZONE } from "../../config/config";
-import { RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
+import { IntegrationIdentifier, RezervoIntegration, RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
+import { fetchSitWeekSchedule } from "./sit";
+import { sitToRezervoWeekSchedule } from "./adapters";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
@@ -68,3 +70,25 @@ export async function fetchRezervoSchedule<T>(
 
     return schedules.reduce((acc, next): RezervoSchedule => ({ ...acc, ...next }), {});
 }
+
+export const activeIntegrations: {
+    // eslint-disable-next-line no-unused-vars
+    [identifier in IntegrationIdentifier]: RezervoIntegration;
+} = {
+    [IntegrationIdentifier.sit]: {
+        name: "Sit Trening",
+        acronym: IntegrationIdentifier.sit,
+        businessUnits: [
+            {
+                name: "Trondheim",
+                weekScheduleFetcher: fetchSitWeekSchedule,
+                weekScheduleAdapter: sitToRezervoWeekSchedule,
+            },
+        ],
+    },
+    [IntegrationIdentifier.fsc]: {
+        name: "Family Sports Club",
+        acronym: IntegrationIdentifier.fsc,
+        businessUnits: [],
+    },
+};
