@@ -72,18 +72,18 @@ export enum IntegrationIdentifier {
     fsc = "fsc",
 }
 
-export type RezervoIntegration = {
+export type RezervoIntegration<T> = {
     name: string;
     acronym: IntegrationIdentifier;
-    businessUnits: RezervoBusinessUnit[];
+    businessUnits: RezervoBusinessUnit<T>[];
 };
 
-export type RezervoBusinessUnit = {
+export type RezervoBusinessUnit<T> = {
     name: string;
     // eslint-disable-next-line no-unused-vars
-    weekScheduleFetcher: (weekNumber: number) => Promise<any>;
+    weekScheduleFetcher: (weekNumber: number) => Promise<T>;
     // eslint-disable-next-line no-unused-vars
-    weekScheduleAdapter: (weekSchedule: any) => RezervoWeekSchedule;
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };

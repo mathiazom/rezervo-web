@@ -4,6 +4,8 @@ import { IntegrationIdentifier, RezervoIntegration, RezervoSchedule, RezervoWeek
 import { createClassPopularityIndex } from "../popularity";
 import { fetchSitWeekSchedule } from "./sit";
 import { sitToRezervoWeekSchedule } from "./adapters";
+import { SitWeekSchedule } from "../../types/integration/sit";
+import { FscWeekSchedule } from "../../types/integration/fsc";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
@@ -71,9 +73,14 @@ export async function fetchRezervoSchedule<T>(
     return schedules.reduce((acc, next): RezervoSchedule => ({ ...acc, ...next }), {});
 }
 
+export type IntegrationWeekSchedule = {
+    [IntegrationIdentifier.sit]: SitWeekSchedule;
+    [IntegrationIdentifier.fsc]: FscWeekSchedule;
+};
+
 export const activeIntegrations: {
     // eslint-disable-next-line no-unused-vars
-    [identifier in IntegrationIdentifier]: RezervoIntegration;
+    [identifier in IntegrationIdentifier]: RezervoIntegration<IntegrationWeekSchedule[identifier]>;
 } = {
     [IntegrationIdentifier.sit]: {
         name: "Sit Trening",
