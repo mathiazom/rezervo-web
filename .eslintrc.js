@@ -3,6 +3,10 @@ module.exports = {
         react: {
             version: "detect",
         },
+        "import/resolver": {
+            typescript: true,
+            node: true,
+        },
     },
     parserOptions: {
         ecmaVersion: 14,
@@ -18,5 +22,11 @@ module.exports = {
     rules: {
         "no-unused-vars": ["error", { args: "none" }],
     },
-    extends: ["eslint:recommended", "next/core-web-vitals", "prettier"],
+    extends: [
+        "eslint:recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript",
+        "next/core-web-vitals",
+        "prettier",
+    ],
 };
