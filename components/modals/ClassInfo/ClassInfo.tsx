@@ -17,6 +17,7 @@ import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
 import ConfirmationDialog from "../../utils/ConfirmationDialog";
 import { useUserSessions } from "../../../hooks/useUserSessions";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function ClassInfo({
     _class,
@@ -27,6 +28,7 @@ export default function ClassInfo({
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
 }) {
+    const { user } = useUser();
     const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -242,7 +244,8 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.description}</Typography>
-            {!isInThePast &&
+            {user &&
+                !isInThePast &&
                 _class.bookable &&
                 (selfBooked || selfOnWaitlist ? (
                     <LoadingButton
