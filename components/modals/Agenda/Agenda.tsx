@@ -1,10 +1,9 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import AgendaClassItem, { AgendaClass } from "./AgendaClassItem";
 import React from "react";
-import { classConfigRecurrentId } from "../../../lib/integration/sit";
-import { SitClass } from "../../../types/integration/sit";
-import { ClassConfig } from "../../../types/rezervo";
+import { ClassConfig, RezervoClass } from "../../../types/rezervo";
 import { WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
+import { classConfigRecurrentId } from "../../../lib/integration/common";
 
 export default function Agenda({
     agendaClasses,
@@ -12,7 +11,7 @@ export default function Agenda({
     onSetToDelete,
 }: {
     agendaClasses: AgendaClass[];
-    onInfo: (c: SitClass) => void;
+    onInfo: (c: RezervoClass) => void;
     onSetToDelete: (cc: ClassConfig, toDelete: boolean) => void;
 }) {
     const theme = useTheme();
@@ -76,7 +75,7 @@ export default function Agenda({
                                                     onSetToDelete={(toDelete: boolean) =>
                                                         onSetToDelete(cls.config, toDelete)
                                                     }
-                                                    onInfo={() => cls.sitClass && onInfo(cls.sitClass)}
+                                                    onInfo={() => cls._class && onInfo(cls._class)}
                                                     // onSettings={() =>
                                                     //     setSettingsClass(_class)
                                                     // }

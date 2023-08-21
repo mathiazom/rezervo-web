@@ -1,8 +1,12 @@
 import { useUserConfig } from "../hooks/useUserConfig";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { ClassPopularityIndex, NotificationsConfig, RezervoSchedule, RezervoWeekSchedule } from "../types/rezervo";
-import { SitClass } from "../types/integration/sit";
-import { classConfigRecurrentId } from "../lib/integration/sit";
+import {
+    ClassPopularityIndex,
+    NotificationsConfig,
+    RezervoClass,
+    RezervoSchedule,
+    RezervoWeekSchedule,
+} from "../types/rezervo";
 import PageHead from "./utils/PageHead";
 import { Box, Divider, Stack } from "@mui/material";
 import AppBar from "./utils/AppBar";
@@ -13,6 +17,7 @@ import ClassInfoModal from "./modals/ClassInfo/ClassInfoModal";
 import AgendaModal from "./modals/Agenda/AgendaModal";
 import SettingsModal from "./modals/Settings/SettingsModal";
 import WeekSchedule from "./schedule/WeekSchedule";
+import { classConfigRecurrentId } from "../lib/integration/common";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
@@ -36,7 +41,7 @@ function Integration({
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
 
-    const [classInfoClass, setClassInfoClass] = useState<SitClass | null>(null);
+    const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
 
     const [currentWeekSchedule, setCurrentWeekSchedule] = useState<RezervoWeekSchedule>(initialSchedule[0]!);
 

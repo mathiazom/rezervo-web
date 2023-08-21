@@ -14,11 +14,10 @@ import React, { useMemo } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
 import { arraysAreEqual } from "../../utils/arrayUtils";
-import { SitClass } from "../../types/integration/sit";
 import { DateTime } from "luxon";
-import { ClassConfig, NotificationsConfig, UserConfig } from "../../types/rezervo";
-import { classConfigRecurrentId, sitClassRecurrentId } from "../../lib/integration/sit";
+import { ClassConfig, NotificationsConfig, RezervoClass, UserConfig } from "../../types/rezervo";
 import { useUserConfig } from "../../hooks/useUserConfig";
+import { classConfigRecurrentId, classRecurrentId } from "../../lib/integration/common";
 
 function ConfigBar({
     classes,
@@ -33,7 +32,7 @@ function ConfigBar({
     onSettingsOpen,
     onAgendaOpen,
 }: {
-    classes: SitClass[];
+    classes: RezervoClass[];
     selectedClassIds: string[] | null;
     originalSelectedClassIds: string[] | null;
     userConfig: UserConfig | undefined;
@@ -58,14 +57,14 @@ function ConfigBar({
 
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
-        function timeForClass(_class: SitClass) {
+        function timeForClass(_class: RezervoClass) {
             const { hour, minute } = DateTime.fromISO(_class.from);
             return { hour, minute };
         }
         const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(
             (o, c) => ({
                 ...o,
-                [sitClassRecurrentId(c)]: {
+                [classRecurrentId(c)]: {
                     activity: c.activityId,
                     display_name: c.name,
                     weekday: c.weekday ?? -1,

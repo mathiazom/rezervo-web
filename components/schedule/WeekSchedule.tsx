@@ -1,8 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import DaySchedule from "./DaySchedule";
 import React, { useEffect } from "react";
-import { AllConfigsIndex, ClassPopularityIndex, RezervoWeekSchedule } from "../../types/rezervo";
-import { SitClass } from "../../types/integration/sit";
+import { AllConfigsIndex, ClassPopularityIndex, RezervoClass, RezervoWeekSchedule } from "../../types/rezervo";
 import { useRouter } from "next/router";
 
 function WeekSchedule({
@@ -20,7 +19,7 @@ function WeekSchedule({
     selectedClassIds: string[] | null;
     allConfigsIndex: AllConfigsIndex | null;
     onSelectedChanged: (classId: string, selected: boolean) => void;
-    onInfo: (c: SitClass) => void;
+    onInfo: (c: RezervoClass) => void;
 }) {
     const router = useRouter();
 

@@ -1,6 +1,5 @@
 import { GROUP_BOOKING_URL, TIME_ZONE } from "../../config/config";
-import { SitClass, SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
-import { ClassConfig } from "../../types/rezervo";
+import { SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
 import { weekdayNameToNumber } from "../../utils/timeUtils";
 import { DateTime } from "luxon";
 import { calculateMondayOffset } from "./common";
@@ -54,21 +53,4 @@ export async function fetchSitWeekSchedule(weekOffset: number): Promise<SitWeekS
             })),
         })),
     };
-}
-
-export function classConfigRecurrentId(classConfig: ClassConfig) {
-    return recurrentClassId(classConfig.activity, classConfig.weekday, classConfig.time.hour, classConfig.time.minute);
-}
-
-export function sitClassRecurrentId(sitClass: SitClass) {
-    const { hour, minute } = DateTime.fromISO(sitClass.from);
-    return recurrentClassId(sitClass.activityId, sitClass.weekday ?? -1, hour, minute);
-}
-
-export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {
-    return `${activityId}_${weekday}_${hour}_${minute}`;
-}
-
-export function isClassInThePast(_class: SitClass): boolean {
-    return DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
 }

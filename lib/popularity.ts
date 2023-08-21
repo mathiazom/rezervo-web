@@ -1,11 +1,10 @@
-import { SitClass } from "../types/integration/sit";
-import { isClassInThePast, sitClassRecurrentId } from "./integration/sit";
-import { ClassPopularity, ClassPopularityIndex, RezervoWeekSchedule } from "../types/rezervo";
+import { ClassPopularity, ClassPopularityIndex, RezervoClass, RezervoWeekSchedule } from "../types/rezervo";
+import { isClassInThePast, classRecurrentId } from "./integration/common";
 
-export function determineClassPopularity(sitClass: SitClass) {
-    if (!sitClass || sitClass.available === undefined) return ClassPopularity.Unknown;
-    if (sitClass.available <= 0) return ClassPopularity.High;
-    if (sitClass.available / sitClass.capacity <= 0.2) return ClassPopularity.Medium;
+export function determineClassPopularity(_class: RezervoClass) {
+    if (!_class || _class.available === undefined) return ClassPopularity.Unknown;
+    if (_class.available <= 0) return ClassPopularity.High;
+    if (_class.available / _class.capacity <= 0.2) return ClassPopularity.Medium;
     return ClassPopularity.Low;
 }
 
@@ -15,13 +14,13 @@ export function createClassPopularityIndex(previousWeekSchedule: RezervoWeekSche
         .reduce(
             (popularityIndex, _class) => ({
                 ...popularityIndex,
-                [sitClassRecurrentId(_class)]: determineClassPopularity(_class),
+                [classRecurrentId(_class)]: determineClassPopularity(_class),
             }),
             {} as ClassPopularityIndex
         );
 }
 
-export function stringifyClassPopularity(_class: SitClass, historicPopularity: ClassPopularity): string {
+export function stringifyClassPopularity(_class: RezervoClass, historicPopularity: ClassPopularity): string {
     let classPopularityInfo: string;
     const isInThePast = isClassInThePast(_class);
     const numberOfAttendees = _class.capacity - Math.max(_class.available, 0);
