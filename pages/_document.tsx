@@ -1,6 +1,6 @@
+import { getInitColorSchemeScript } from "@mui/material";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
-import { getInitColorSchemeScript } from "@mui/material";
 
 class MyDocument extends Document {
     override render() {

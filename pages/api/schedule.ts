@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { fetchSitWeekSchedule } from "../../lib/integration/sit";
+
 import { sitToRezervoWeekSchedule } from "../../lib/integration/adapters";
 import { fetchRezervoWeekSchedule } from "../../lib/integration/common";
+import { fetchSitWeekSchedule } from "../../lib/integration/sit";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const weekOffset = JSON.parse(req.body)["weekOffset"];

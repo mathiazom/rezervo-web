@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
 import React from "react";
-import { IntegrationPageProps } from "../types/rezervo";
+
 import Integration from "../components/Integration";
 import { activeIntegrations, fetchIntegrationPageStaticProps } from "../lib/integration/common";
+import { IntegrationPageProps } from "../types/rezervo";
 
 const integration = activeIntegrations.sit;
 

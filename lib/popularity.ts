@@ -1,5 +1,5 @@
 import { ClassPopularity, ClassPopularityIndex, RezervoClass, RezervoWeekSchedule } from "../types/rezervo";
-import { isClassInThePast, classRecurrentId } from "./integration/common";
+import { classRecurrentId, isClassInThePast } from "./integration/common";
 
 export function determineClassPopularity(_class: RezervoClass) {
     if (!_class || _class.available === undefined) return ClassPopularity.Unknown;

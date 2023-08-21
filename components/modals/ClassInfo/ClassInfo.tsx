@@ -1,22 +1,23 @@
-import { Box, Typography } from "@mui/material";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
-import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
+import LoadingButton from "@mui/lab/LoadingButton";
+import { Box, Typography } from "@mui/material";
+import { DateTime } from "luxon";
 import Image from "next/image";
 import React, { useState } from "react";
-import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { DateTime } from "luxon";
+
 import { TIME_ZONE } from "../../../config/config";
-import { formatNameArray } from "../../../utils/arrayUtils";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
-import { stringifyClassPopularity } from "../../../lib/popularity";
-import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
-import LoadingButton from "@mui/lab/LoadingButton";
-import ConfirmationDialog from "../../utils/ConfirmationDialog";
 import { useUserSessions } from "../../../hooks/useUserSessions";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { stringifyClassPopularity } from "../../../lib/popularity";
+import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
+import { formatNameArray } from "../../../utils/arrayUtils";
+import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
+import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
+import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
+import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
+import ConfirmationDialog from "../../utils/ConfirmationDialog";
 
 export default function ClassInfo({
     _class,

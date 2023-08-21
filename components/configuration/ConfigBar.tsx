@@ -1,23 +1,24 @@
-import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
-import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
-import IconButton from "@mui/material/IconButton";
-import UndoIcon from "@mui/icons-material/Undo";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import CloudDoneIcon from "@mui/icons-material/CloudDone";
-import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import { hexColorHash } from "../../utils/colorUtils";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
-import LoginIcon from "@mui/icons-material/Login";
-import React, { useMemo } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
-import { arraysAreEqual } from "../../utils/arrayUtils";
+import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
+import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
+import LoginIcon from "@mui/icons-material/Login";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
+import UndoIcon from "@mui/icons-material/Undo";
+import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import { DateTime } from "luxon";
-import { ClassConfig, NotificationsConfig, RezervoClass, UserConfig } from "../../types/rezervo";
+import React, { useMemo } from "react";
+
 import { useUserConfig } from "../../hooks/useUserConfig";
 import { classConfigRecurrentId, classRecurrentId } from "../../lib/integration/common";
+import { ClassConfig, NotificationsConfig, RezervoClass, UserConfig } from "../../types/rezervo";
+import { arraysAreEqual } from "../../utils/arrayUtils";
+import { hexColorHash } from "../../utils/colorUtils";
+import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
 
 function ConfigBar({
     classes,

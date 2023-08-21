@@ -1,5 +1,6 @@
 import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
+
 import { NotificationsConfig } from "../../../types/rezervo";
 import Settings from "./Settings";
 
