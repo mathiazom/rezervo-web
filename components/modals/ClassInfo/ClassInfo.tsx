@@ -6,12 +6,11 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
 import Image from "next/image";
 import React, { useState } from "react";
-import { SitClass } from "../../../types/integration/sit";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
 import { DateTime } from "luxon";
 import { TIME_ZONE } from "../../../config/config";
 import { formatNameArray } from "../../../utils/arrayUtils";
-import { ClassPopularity, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
+import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import { stringifyClassPopularity } from "../../../lib/popularity";
 import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -24,7 +23,7 @@ export default function ClassInfo({
     classPopularity,
     configUsers,
 }: {
-    _class: SitClass;
+    _class: RezervoClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
 }) {

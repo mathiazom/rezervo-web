@@ -1,5 +1,3 @@
-import { SitClass } from "./integration/sit";
-
 export type ClassTimeConfig = {
     hour: number;
     minute: number;
@@ -93,8 +91,38 @@ export type RezervoDaySchedule = {
     classes: RezervoClass[];
 };
 
-// This will eventually be implemented as its own type, but for now it ports to SitClass
-export type RezervoClass = SitClass;
+export type RezervoClass = {
+    id: number;
+    activityId: number;
+    available: number;
+    bookable: boolean;
+    capacity: number;
+    studio: {
+        id: number;
+        name: string;
+    };
+    room: string;
+    from: string;
+    to: string;
+    name: string;
+    description: string;
+    category: {
+        id: string;
+        name: string;
+    };
+    image: string;
+    color: string;
+    instructors: {
+        id: number;
+        name: string;
+    }[];
+    waitlist: {
+        active: boolean;
+        count: number;
+        userPosition: number | null;
+    };
+    weekday: number | undefined;
+};
 
 export type IntegrationPageProps = {
     initialSchedule: RezervoSchedule;

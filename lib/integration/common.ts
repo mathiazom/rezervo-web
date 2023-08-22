@@ -1,6 +1,13 @@
 import { DateTime } from "luxon";
 import { LOCALE, TIME_ZONE } from "../../config/config";
-import { IntegrationIdentifier, RezervoIntegration, RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
+import {
+    IntegrationIdentifier,
+    RezervoIntegration,
+    ClassConfig,
+    RezervoClass,
+    RezervoWeekSchedule,
+    RezervoSchedule,
+} from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
 import { fetchSitWeekSchedule } from "./sit";
 import { sitToRezervoWeekSchedule } from "./adapters";
@@ -65,6 +72,23 @@ export async function fetchRezervoSchedule<T>(
     );
 
     return schedules.reduce((acc, next): RezervoSchedule => ({ ...acc, ...next }), {});
+}
+
+export function classConfigRecurrentId(classConfig: ClassConfig) {
+    return recurrentClassId(classConfig.activity, classConfig.weekday, classConfig.time.hour, classConfig.time.minute);
+}
+
+export function classRecurrentId(_class: RezervoClass) {
+    const { hour, minute } = DateTime.fromISO(_class.from);
+    return recurrentClassId(_class.activityId, _class.weekday ?? -1, hour, minute);
+}
+
+export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {
+    return `${activityId}_${weekday}_${hour}_${minute}`;
+}
+
+export function isClassInThePast(_class: RezervoClass): boolean {
+    return DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
 }
 
 export type IntegrationWeekSchedule = {

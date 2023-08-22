@@ -1,11 +1,15 @@
 import { Box, Chip, Typography, useTheme } from "@mui/material";
 import ClassCard from "./class/ClassCard";
-import { sitClassRecurrentId } from "../../lib/integration/sit";
-import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex, RezervoDaySchedule } from "../../types/rezervo";
+import {
+    AllConfigsIndex,
+    ClassPopularity,
+    ClassPopularityIndex,
+    RezervoClass,
+    RezervoDaySchedule,
+} from "../../types/rezervo";
 import React from "react";
-import { SitClass } from "../../types/integration/sit";
 import { DateTime } from "luxon";
-import { getCapitalizedWeekday, getDateTime } from "../../lib/integration/common";
+import { classRecurrentId, getCapitalizedWeekday, getDateTime } from "../../lib/integration/common";
 
 function DaySchedule({
     daySchedule,
@@ -22,7 +26,7 @@ function DaySchedule({
     selectedClassIds: string[] | null;
     allConfigsIndex: AllConfigsIndex | null;
     onSelectedChanged: (classId: string, selected: boolean) => void;
-    onInfo: (c: SitClass) => void;
+    onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
 
@@ -67,13 +71,11 @@ function DaySchedule({
                     <Box key={_class.id} mb={1}>
                         <ClassCard
                             _class={_class}
-                            popularity={classPopularityIndex[sitClassRecurrentId(_class)] ?? ClassPopularity.Unknown}
-                            configUsers={allConfigsIndex ? allConfigsIndex[sitClassRecurrentId(_class)] ?? [] : []}
+                            popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
+                            configUsers={allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : []}
                             selectable={selectable}
-                            selected={
-                                selectedClassIds != null && selectedClassIds.includes(sitClassRecurrentId(_class))
-                            }
-                            onSelectedChanged={(s) => onSelectedChanged(sitClassRecurrentId(_class), s)}
+                            selected={selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))}
+                            onSelectedChanged={(s) => onSelectedChanged(classRecurrentId(_class), s)}
                             onInfo={() => onInfo(_class)}
                             // onSettings={() =>
                             //     setSettingsClass(_class)

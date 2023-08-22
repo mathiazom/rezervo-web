@@ -1,9 +1,8 @@
 import { Modal } from "@mui/material";
-import { classConfigRecurrentId, sitClassRecurrentId } from "../../../lib/integration/sit";
 import React, { Dispatch, SetStateAction } from "react";
 import Agenda from "./Agenda";
-import { UserConfig } from "../../../types/rezervo";
-import { SitClass } from "../../../types/integration/sit";
+import { RezervoClass, UserConfig } from "../../../types/rezervo";
+import { classConfigRecurrentId, classRecurrentId } from "../../../lib/integration/common";
 
 const AgendaModal = ({
     open,
@@ -17,9 +16,9 @@ const AgendaModal = ({
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     userConfig: UserConfig | undefined;
-    classes: SitClass[];
+    classes: RezervoClass[];
     selectedClassIds: string[] | null;
-    onInfo: Dispatch<SetStateAction<SitClass | null>>;
+    onInfo: Dispatch<SetStateAction<RezervoClass | null>>;
     onSelectedChanged: (classId: string, selected: boolean) => void;
 }) => {
     return (
@@ -29,7 +28,7 @@ const AgendaModal = ({
                     <Agenda
                         agendaClasses={userConfig.classes.map((c) => ({
                             config: c,
-                            sitClass: classes.find((sc) => sitClassRecurrentId(sc) === classConfigRecurrentId(c)),
+                            _class: classes.find((sc) => classRecurrentId(sc) === classConfigRecurrentId(c)),
                             markedForDeletion:
                                 selectedClassIds != null && !selectedClassIds.includes(classConfigRecurrentId(c)),
                         }))}
