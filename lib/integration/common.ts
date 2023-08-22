@@ -29,7 +29,7 @@ export const getCapitalizedWeekday = (date: DateTime): string => {
 
 export async function fetchIntegrationPageStaticProps<T>(
     weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
 ) {
     const initialSchedule = await fetchRezervoSchedule([-1, 0, 1, 2, 3], weekScheduleFetcher, weekScheduleAdapter);
     const classPopularityIndex = createClassPopularityIndex(initialSchedule[-1]!);
@@ -47,7 +47,7 @@ export async function fetchIntegrationPageStaticProps<T>(
 export async function fetchRezervoWeekSchedule<T>(
     weekOffset: number,
     weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
 ): Promise<RezervoWeekSchedule> {
     const weekSchedule = weekScheduleAdapter(await weekScheduleFetcher(weekOffset));
     if (
@@ -62,14 +62,14 @@ export async function fetchRezervoWeekSchedule<T>(
 export async function fetchRezervoSchedule<T>(
     weekOffsets: number[],
     weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
 ): Promise<RezervoSchedule> {
     const schedules = await Promise.all(
         weekOffsets.map(
             async (weekOffset: number): Promise<RezervoSchedule> => ({
                 [weekOffset]: await fetchRezervoWeekSchedule(weekOffset, weekScheduleFetcher, weekScheduleAdapter),
-            })
-        )
+            }),
+        ),
     );
 
     return schedules.reduce((acc, next): RezervoSchedule => ({ ...acc, ...next }), {});

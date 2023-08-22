@@ -36,7 +36,7 @@ export default function ClassInfo({
     const isInThePast = DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
 
     const usersBooked = userSessions.filter(
-        ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED
+        ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED,
     );
 
     const selfBooked = usersBooked.some((u) => u.is_self);
@@ -46,7 +46,7 @@ export default function ClassInfo({
     const selfOnWaitlist = usersOnWaitlist.some((u) => u.is_self);
 
     const usersPlanned = configUsers.filter(
-        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name)
+        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
 
     const [bookingLoading, setBookingLoading] = useState(false);
@@ -189,7 +189,7 @@ export default function ClassInfo({
                         {`${formatNameArray(
                             usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
-                            usersPlanned.some((u) => u.is_self)
+                            usersPlanned.some((u) => u.is_self),
                         )} ${
                             _class.bookable ? "har planlagt denne timen, men ikke booket plass!" : "skal på denne timen"
                         }`}
@@ -207,7 +207,7 @@ export default function ClassInfo({
                         {`${formatNameArray(
                             usersOnWaitlist.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
-                            usersOnWaitlist.some((u) => u.is_self)
+                            usersOnWaitlist.some((u) => u.is_self),
                         )} er på venteliste for denne timen`}
                     </Typography>
                 </Box>
@@ -223,7 +223,7 @@ export default function ClassInfo({
                         {`${formatNameArray(
                             usersBooked.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
-                            selfBooked
+                            selfBooked,
                         )} ${isInThePast ? "var på denne timen" : "har booket denne timen"}`}
                     </Typography>
                 </Box>

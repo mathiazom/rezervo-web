@@ -16,7 +16,7 @@ export function createClassPopularityIndex(previousWeekSchedule: RezervoWeekSche
                 ...popularityIndex,
                 [classRecurrentId(_class)]: determineClassPopularity(_class),
             }),
-            {} as ClassPopularityIndex
+            {} as ClassPopularityIndex,
         );
 }
 

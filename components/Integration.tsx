@@ -48,12 +48,12 @@ function Integration({
 
     const classes = useMemo(
         () => currentWeekSchedule.flatMap((daySchedule) => daySchedule.classes) ?? [],
-        [currentWeekSchedule]
+        [currentWeekSchedule],
     );
 
     const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
         setSelectedClassIds((s) =>
-            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId)
+            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId),
         );
     }, []);
 

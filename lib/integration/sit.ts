@@ -28,7 +28,7 @@ async function fetchSitDaySchedulesWithOffset(token: string, dayOffset: number):
     const scheduleResponse = await fetch(sitScheduleUrl(token, startDate.toISODate()));
     if (!scheduleResponse.ok) {
         throw new Error(
-            `Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`
+            `Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`,
         );
     }
     return await scheduleResponse.json();

@@ -40,7 +40,7 @@ export default withApiAuthRequired(async function handler(req, res) {
     let includePastQuery = req.query["include_past"];
     calendarFeedUrl.searchParams.set(
         "include_past",
-        (typeof includePastQuery !== "string" ? includePastQuery?.pop() : includePastQuery) || "true"
+        (typeof includePastQuery !== "string" ? includePastQuery?.pop() : includePastQuery) || "true",
     );
     calendarFeedUrl.searchParams.set("token", calendarToken);
     res.status(response.status).json(calendarFeedUrl);

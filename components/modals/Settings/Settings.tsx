@@ -51,7 +51,7 @@ export default function Settings({
     const { userConfig, putUserConfig } = useUserConfig();
     const [reminderActive, setReminderActive] = useState(notificationsConfig?.reminder_hours_before != null);
     const [reminderHours, setReminderHours] = useState<number | null>(
-        notificationsConfig?.reminder_hours_before ?? null
+        notificationsConfig?.reminder_hours_before ?? null,
     );
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
