@@ -67,6 +67,25 @@ export type ClassPopularityIndex = {
     [recurrentId: string]: ClassPopularity;
 };
 
+export enum IntegrationIdentifier {
+    sit = "sit",
+    fsc = "fsc",
+}
+
+export type RezervoIntegration<T> = {
+    name: string;
+    acronym: IntegrationIdentifier;
+    businessUnits: RezervoBusinessUnit<T>[];
+};
+
+export type RezervoBusinessUnit<T> = {
+    name: string;
+    // eslint-disable-next-line no-unused-vars
+    weekScheduleFetcher: (weekNumber: number) => Promise<T>;
+    // eslint-disable-next-line no-unused-vars
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
+};
+
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };
 
 export type RezervoWeekSchedule = RezervoDaySchedule[];
