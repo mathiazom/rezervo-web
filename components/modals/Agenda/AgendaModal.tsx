@@ -20,7 +20,6 @@ const AgendaModal = ({
     classes: SitClass[];
     selectedClassIds: string[] | null;
     onInfo: Dispatch<SetStateAction<SitClass | null>>;
-    // eslint-disable-next-line no-unused-vars
     onSelectedChanged: (classId: string, selected: boolean) => void;
 }) => {
     return (

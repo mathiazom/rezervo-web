@@ -21,9 +21,7 @@ function DaySchedule({
     selectable: boolean;
     selectedClassIds: string[] | null;
     allConfigsIndex: AllConfigsIndex | null;
-    // eslint-disable-next-line no-unused-vars
     onSelectedChanged: (classId: string, selected: boolean) => void;
-    // eslint-disable-next-line no-unused-vars
     onInfo: (c: SitClass) => void;
 }) {
     const theme = useTheme();

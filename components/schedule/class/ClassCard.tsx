@@ -29,7 +29,6 @@ const ClassCard = ({
     configUsers: UserNameWithIsSelf[];
     selectable: boolean;
     selected: boolean;
-    // eslint-disable-next-line no-unused-vars
     onSelectedChanged: (selected: boolean) => void;
     onInfo: () => void;
     // onSettings: () => void;
