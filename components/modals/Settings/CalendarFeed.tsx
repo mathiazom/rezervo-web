@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { useUserCalendarFeedUrl } from "../../../hooks/useUserCalendarFeedUrl";
+import { Check } from "@mui/icons-material";
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, Checkbox, FormControlLabel, FormGroup, FormLabel, Typography } from "@mui/material";
-import { useCopyToClipboard } from "../../../hooks/useCopyToClipboard";
-import Copy from "@mui/icons-material/ContentCopy";
-import Tooltip from "@mui/material/Tooltip";
-import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-import { Check } from "@mui/icons-material";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
+import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
+import React, { useState } from "react";
+
+import { useCopyToClipboard } from "../../../hooks/useCopyToClipboard";
+import { useUserCalendarFeedUrl } from "../../../hooks/useUserCalendarFeedUrl";
 
 export default function CalendarFeed() {
     const [includePastClasses, setIncludePastClasses] = useState(true);
@@ -65,7 +65,7 @@ export default function CalendarFeed() {
                                                 },
                                             }}
                                         >
-                                            <Copy />
+                                            <ContentCopyIcon />
                                         </IconButton>
                                     ) : (
                                         <Tooltip title={isCopiedToClipboard ? "Kopiert" : "Kopier URL"}>

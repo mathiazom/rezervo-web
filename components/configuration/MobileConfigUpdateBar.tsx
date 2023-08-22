@@ -1,6 +1,6 @@
-import { Box, CircularProgress, Fab, Typography } from "@mui/material";
-import UndoIcon from "@mui/icons-material/Undo";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import UndoIcon from "@mui/icons-material/Undo";
+import { Box, CircularProgress, Fab, Typography } from "@mui/material";
 import React from "react";
 
 export default function MobileConfigUpdateBar({

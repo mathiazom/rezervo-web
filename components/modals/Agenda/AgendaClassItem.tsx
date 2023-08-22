@@ -1,12 +1,13 @@
-import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
-import React from "react";
-import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
-import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import IconButton from "@mui/material/IconButton";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import { ClassConfig, RezervoClass } from "../../../types/rezervo";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
+import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import React from "react";
+
+import { ClassConfig, RezervoClass } from "../../../types/rezervo";
+import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
+import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 
 export type AgendaClass = {
     config: ClassConfig;
