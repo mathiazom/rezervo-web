@@ -45,5 +45,4 @@ export type SitInstructor = {
 export type SitCategory = {
     id: string;
     name: string;
-    excelineId: number;
 };

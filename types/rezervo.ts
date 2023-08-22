@@ -109,7 +109,6 @@ export type RezervoClass = {
     category: {
         id: string;
         name: string;
-        excelineId: number;
     };
     image: string;
     color: string;
