@@ -1,11 +1,11 @@
 import { DateTime } from "luxon";
 
 import { LOCALE, TIME_ZONE } from "../../config/config";
-import { FscWeekSchedule } from "../../types/integration/fsc";
 import { SitWeekSchedule } from "../../types/integration/sit";
 import {
     ClassConfig,
     IntegrationIdentifier,
+    RezervoBusinessUnit,
     RezervoClass,
     RezervoIntegration,
     RezervoSchedule,
@@ -28,10 +28,14 @@ export const getCapitalizedWeekday = (date: DateTime): string => {
 };
 
 export async function fetchIntegrationPageStaticProps<T>(
-    weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
+    businessUnit: RezervoBusinessUnit<T>,
+    integrationAcronym: string,
 ) {
-    const initialSchedule = await fetchRezervoSchedule([-1, 0, 1, 2, 3], weekScheduleFetcher, weekScheduleAdapter);
+    const initialSchedule = await fetchRezervoSchedule(
+        [-1, 0, 1, 2, 3],
+        businessUnit.weekScheduleFetcher,
+        businessUnit.weekScheduleAdapter,
+    );
     const classPopularityIndex = createClassPopularityIndex(initialSchedule[-1]!);
     const invalidationTimeInSeconds = 60 * 60;
 
@@ -39,6 +43,7 @@ export async function fetchIntegrationPageStaticProps<T>(
         props: {
             initialSchedule,
             classPopularityIndex,
+            integrationAcronym,
         },
         revalidate: invalidationTimeInSeconds,
     };
@@ -94,7 +99,7 @@ export function isClassInThePast(_class: RezervoClass): boolean {
 
 export type IntegrationWeekSchedule = {
     [IntegrationIdentifier.sit]: SitWeekSchedule;
-    [IntegrationIdentifier.fsc]: FscWeekSchedule;
+    // [IntegrationIdentifier.fsc]: FscWeekSchedule;
 };
 
 export const activeIntegrations: {
@@ -111,9 +116,11 @@ export const activeIntegrations: {
             },
         ],
     },
+    /*
     [IntegrationIdentifier.fsc]: {
         name: "Family Sports Club",
         acronym: IntegrationIdentifier.fsc,
         businessUnits: [],
     },
+     */
 };

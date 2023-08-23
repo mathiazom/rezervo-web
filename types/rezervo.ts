@@ -67,7 +67,7 @@ export type ClassPopularityIndex = {
 
 export enum IntegrationIdentifier {
     sit = "sit",
-    fsc = "fsc",
+    // fsc = "fsc",
 }
 
 export type RezervoIntegration<T> = {
@@ -127,4 +127,5 @@ export type RezervoClass = {
 export type IntegrationPageProps = {
     initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
+    integrationAcronym: string;
 };
