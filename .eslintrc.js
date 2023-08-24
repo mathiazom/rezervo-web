@@ -5,7 +5,9 @@ module.exports = {
         },
         "import/resolver": {
             typescript: true,
-            node: true,
+            node: {
+                moduleDirectory: ["."],
+            },
         },
     },
     parserOptions: {
@@ -26,10 +28,11 @@ module.exports = {
         "next/core-web-vitals",
         "prettier",
     ],
-    plugins: ["simple-import-sort"],
+    plugins: ["simple-import-sort", "eslint-plugin-no-relative-import-paths"],
     rules: {
         "no-unused-vars": ["error", { args: "none" }],
         "simple-import-sort/imports": "error",
         "simple-import-sort/exports": "error",
+        "no-relative-import-paths/no-relative-import-paths": "error",
     },
 };
