@@ -7,7 +7,6 @@ import React from "react";
 
 import { ClassConfig, RezervoClass } from "../../../types/rezervo";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 
 export type AgendaClass = {
     config: ClassConfig;
@@ -43,11 +42,11 @@ export default function AgendaClassItem({
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     }
 
-    const timeFrom = agendaClass._class?.startTimeISO
-        ? simpleTimeStringFromISO(agendaClass._class?.startTimeISO)
+    const timeFrom = agendaClass._class?.startTime
+        ? agendaClass._class.startTime.toFormat("HH:mm")
         : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
 
-    const timeTo = agendaClass._class?.endTimeISO ? simpleTimeStringFromISO(agendaClass._class?.endTimeISO) : null;
+    const timeTo = agendaClass._class?.endTime ? agendaClass._class.endTime.toFormat("HH:mm") : null;
 
     return (
         <Card

@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export type ClassTimeConfig = {
     hour: number;
     minute: number;
@@ -83,18 +85,22 @@ export type RezervoBusinessUnit<T> = {
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };
+export type RezervoScheduleDTO = { [weekOffset: number]: RezervoWeekScheduleDTO };
 
 export type RezervoWeekSchedule = RezervoDaySchedule[];
+export type RezervoWeekScheduleDTO = RezervoDayScheduleDTO[];
 
 export type RezervoDaySchedule = {
-    date: string;
+    date: DateTime;
     classes: RezervoClass[];
 };
+export type RezervoDayScheduleDTO = {
+    date: string;
+    classes: RezervoClassDTO[];
+};
 
-export type RezervoClass = {
+interface RezervoClassBase {
     id: number;
-    startTimeISO: string;
-    endTimeISO: string;
     location: {
         id: number;
         studio: string;
@@ -109,7 +115,15 @@ export type RezervoClass = {
     };
     activity: RezervoActivity;
     instructors: string[];
-};
+}
+export interface RezervoClass extends RezervoClassBase {
+    startTime: DateTime;
+    endTime: DateTime;
+}
+export interface RezervoClassDTO extends RezervoClassBase {
+    startTime: string;
+    endTime: string;
+}
 
 export type RezervoActivity = {
     id: number;
@@ -121,6 +135,6 @@ export type RezervoActivity = {
 };
 
 export type IntegrationPageProps = {
-    initialSchedule: RezervoSchedule;
+    initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
 };

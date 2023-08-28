@@ -4,18 +4,15 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Typography } from "@mui/material";
-import { DateTime } from "luxon";
 import Image from "next/image";
 import React, { useState } from "react";
 
-import { TIME_ZONE } from "../../../config/config";
 import { useUserSessions } from "../../../hooks/useUserSessions";
-import { getCapitalizedWeekday, getDateTime } from "../../../lib/integration/common";
+import { getCapitalizedWeekday, isClassInThePast } from "../../../lib/integration/common";
 import { stringifyClassPopularity } from "../../../lib/popularity";
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import { formatNameArray } from "../../../utils/arrayUtils";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
 import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "../../utils/ConfirmationDialog";
@@ -35,7 +32,7 @@ export default function ClassInfo({
     const color = (dark: boolean) =>
         `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
 
-    const isInThePast = DateTime.fromISO(_class.startTimeISO, { zone: TIME_ZONE }) < DateTime.now();
+    const isInThePast = isClassInThePast(_class);
 
     const usersBooked = userSessions.filter(
         ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED,
@@ -141,7 +138,7 @@ export default function ClassInfo({
             >
                 <AccessTimeRoundedIcon />
                 <Typography variant="body2" color="text.secondary">
-                    {simpleTimeStringFromISO(_class.startTimeISO)} - {simpleTimeStringFromISO(_class.endTimeISO)}
+                    {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
                 </Typography>
             </Box>
             <Box
@@ -279,8 +276,8 @@ export default function ClassInfo({
                 description={
                     <>
                         <Typography>{`Du er i ferd med å avbestille ${_class.activity.name} (${getCapitalizedWeekday(
-                            getDateTime(_class.startTimeISO),
-                        )}, ${simpleTimeStringFromISO(_class.startTimeISO)}.`}</Typography>
+                            _class.startTime,
+                        )}, ${_class.startTime.toFormat("HH:mm")}.`}</Typography>
                         <Typography>Dette kan ikke angres!</Typography>
                     </>
                 }

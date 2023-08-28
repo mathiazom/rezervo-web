@@ -1,11 +1,12 @@
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "../../types/rezervo";
+import { getDateTime } from "./common";
 
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {
         id: sitClass.id,
-        startTimeISO: sitClass.from.replace(" ", "T"), // convert to proper ISO8601
-        endTimeISO: sitClass.to.replace(" ", "T"), // convert to proper ISO8601
+        startTime: getDateTime(sitClass.from.replace(" ", "T")), // convert to proper ISO8601
+        endTime: getDateTime(sitClass.to.replace(" ", "T")), // convert to proper ISO8601
         location: {
             id: sitClass.studio.id,
             studio: sitClass.studio.name,
@@ -32,7 +33,7 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
 
 function sitToRezervoDaySchedule(sitDaySchedule: SitDaySchedule): RezervoDaySchedule {
     return {
-        date: sitDaySchedule.date,
+        date: getDateTime(sitDaySchedule.date),
         classes: sitDaySchedule.classes.map(sitToRezervoClass),
     };
 }

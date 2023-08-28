@@ -12,6 +12,7 @@ import {
     RezervoWeekSchedule,
 } from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
+import { serializeSchedule } from "../serializers";
 import { sitToRezervoWeekSchedule } from "./adapters";
 import { fetchSitWeekSchedule } from "./sit";
 
@@ -41,7 +42,7 @@ export async function fetchIntegrationPageStaticProps<T>(
 
     return {
         props: {
-            initialSchedule,
+            initialSchedule: serializeSchedule(initialSchedule),
             classPopularityIndex,
         },
         revalidate: invalidationTimeInSeconds,
@@ -84,7 +85,7 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 }
 
 export function classRecurrentId(_class: RezervoClass) {
-    const { hour, minute, weekday } = DateTime.fromISO(_class.startTimeISO);
+    const { hour, minute, weekday } = _class.startTime;
     return recurrentClassId(_class.activity.id, weekday, hour, minute);
 }
 
@@ -93,7 +94,7 @@ export function recurrentClassId(activityId: number, weekday: number, hour: numb
 }
 
 export function isClassInThePast(_class: RezervoClass): boolean {
-    return DateTime.fromISO(_class.startTimeISO, { zone: TIME_ZONE }) < DateTime.now();
+    return _class.startTime < DateTime.now();
 }
 
 export type IntegrationWeekSchedule = {

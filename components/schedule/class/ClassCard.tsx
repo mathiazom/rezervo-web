@@ -9,7 +9,6 @@ import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/ani
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import { randomElementFromArray } from "../../../utils/arrayUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import RippleBadge from "../../utils/RippleBadge";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 import ClassUserAvatar from "./ClassUserAvatar";
@@ -90,7 +89,7 @@ const ClassCard = ({
                     <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                 </Box>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {simpleTimeStringFromISO(_class.startTimeISO)} - {simpleTimeStringFromISO(_class.endTimeISO)}
+                    {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {_class.location.studio}

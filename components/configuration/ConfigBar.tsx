@@ -10,7 +10,6 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import UndoIcon from "@mui/icons-material/Undo";
 import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { DateTime } from "luxon";
 import React, { useMemo } from "react";
 
 import { useUserConfig } from "../../hooks/useUserConfig";
@@ -59,7 +58,7 @@ function ConfigBar({
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
         const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
-            const { hour, minute, weekday } = DateTime.fromISO(c.startTimeISO);
+            const { hour, minute, weekday } = c.startTime;
             return {
                 ...o,
                 [classRecurrentId(c)]: {

@@ -3,11 +3,11 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { getDateTime } from "../../lib/integration/common";
+import { deserializeWeekSchedule } from "../../lib/serializers";
 import { RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
 
 function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
-    return getDateTime(weekSchedule[0]!.date).weekNumber;
+    return weekSchedule[0]!.date.weekNumber;
 }
 
 export default function WeekNavigator({
@@ -35,10 +35,12 @@ export default function WeekNavigator({
         const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
         let currentWeekSchedule = schedule[currentWeekOffset];
         if (currentWeekSchedule === undefined) {
-            currentWeekSchedule = await fetch("api/schedule", {
-                method: "POST",
-                body: JSON.stringify({ weekOffset: currentWeekOffset }),
-            }).then((r) => r.json());
+            currentWeekSchedule = deserializeWeekSchedule(
+                await fetch("api/schedule", {
+                    method: "POST",
+                    body: JSON.stringify({ weekOffset: currentWeekOffset }),
+                }).then((r) => r.json()),
+            );
             if (currentWeekSchedule === undefined) {
                 setLoadingPreviousWeek(false);
                 setLoadingNextWeek(false);
@@ -56,10 +58,12 @@ export default function WeekNavigator({
         if (nextWeekOffset in schedule) {
             return;
         }
-        const nextWeekSchedule = await fetch("api/schedule", {
-            method: "POST",
-            body: JSON.stringify({ weekOffset: nextWeekOffset }),
-        }).then((r) => r.json());
+        const nextWeekSchedule = deserializeWeekSchedule(
+            await fetch("api/schedule", {
+                method: "POST",
+                body: JSON.stringify({ weekOffset: nextWeekOffset }),
+            }).then((r) => r.json()),
+        );
         if (nextWeekSchedule != undefined) {
             setSchedule({ ...schedule, [nextWeekOffset]: nextWeekSchedule });
         }
