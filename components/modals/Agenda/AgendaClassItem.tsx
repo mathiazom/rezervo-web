@@ -95,7 +95,7 @@ export default function AgendaClassItem({
                             </Typography>
                             {agendaClass._class && (
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                    {agendaClass._class.studio.name}
+                                    {agendaClass._class.location.studio}
                                 </Typography>
                             )}
                             {agendaClass._class && (

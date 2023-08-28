@@ -69,7 +69,7 @@ function ConfigBar({
                     activity: c.activityId,
                     display_name: c.name,
                     weekday: c.weekday ?? -1,
-                    studio: c.studio.id,
+                    studio: c.location.id,
                     time: timeForClass(c),
                 },
             }),

@@ -96,14 +96,14 @@ export type RezervoClass = {
     activityId: number;
     startTimeISO: string;
     endTimeISO: string;
+    location: {
+        id: number;
+        studio: string;
+        room: string;
+    };
     available: number;
     bookable: boolean;
     capacity: number;
-    studio: {
-        id: number;
-        name: string;
-    };
-    room: string;
     name: string;
     description: string;
     category: {

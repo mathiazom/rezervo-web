@@ -92,7 +92,7 @@ const ClassCard = ({
                     {simpleTimeStringFromISO(_class.startTimeISO)} - {simpleTimeStringFromISO(_class.endTimeISO)}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.studio.name}
+                    {_class.location.studio}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {_class.instructors.map((i) => i.name).join(", ")}

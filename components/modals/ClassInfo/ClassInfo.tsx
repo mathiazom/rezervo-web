@@ -152,8 +152,8 @@ export default function ClassInfo({
             >
                 <LocationOnRoundedIcon />
                 <Typography variant="body2" color="text.secondary">
-                    {_class.studio.name}
-                    {_class.room && _class.room.length > 0 ? `, ${_class.room}` : ""}
+                    {_class.location.studio}
+                    {_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}
                 </Typography>
             </Box>
             <Box
