@@ -19,12 +19,16 @@ export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).wee
 
 export const getDateTime = (date: string): DateTime => DateTime.fromISO(date, { zone: TIME_ZONE, locale: LOCALE });
 
+export const capitalizeFirstCharacter = (text: string) => {
+    return `${text[0]!.toUpperCase()}${text.slice(1)}`;
+};
+
 export const getCapitalizedWeekday = (date: DateTime): string => {
     if (!date.isValid || date.weekdayLong === null) {
         throw new Error("Invalid date");
     }
 
-    return `${date.weekdayLong[0]!.toUpperCase()}${date.weekdayLong.slice(1)}`;
+    return capitalizeFirstCharacter(date.weekdayLong);
 };
 
 export async function fetchIntegrationPageStaticProps<T>(
@@ -80,8 +84,8 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 }
 
 export function classRecurrentId(_class: RezervoClass) {
-    const { hour, minute } = DateTime.fromISO(_class.startTimeISO);
-    return recurrentClassId(_class.activity.id, _class.weekday ?? -1, hour, minute);
+    const { hour, minute, weekday } = DateTime.fromISO(_class.startTimeISO);
+    return recurrentClassId(_class.activity.id, weekday, hour, minute);
 }
 
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {

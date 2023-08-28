@@ -2,7 +2,6 @@ import { DateTime } from "luxon";
 
 import { GROUP_BOOKING_URL, TIME_ZONE } from "../../config/config";
 import { SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
-import { weekdayNameToNumber } from "../../utils/timeUtils";
 import { calculateMondayOffset } from "./common";
 
 function sitScheduleUrl(token: string, fromISO: string | null = null) {
@@ -50,7 +49,6 @@ export async function fetchSitWeekSchedule(weekOffset: number): Promise<SitWeekS
                 ..._class,
                 from: _class.from.replace(" ", "T"), // convert to proper ISO8601
                 to: _class.to.replace(" ", "T"), // convert to proper ISO8601
-                weekday: weekdayNameToNumber(day.dayName),
             })),
         })),
     };

@@ -27,7 +27,6 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
             image: sitClass.image,
         },
         instructors: sitClass.instructors.map((sitInstructor) => sitInstructor.name),
-        weekday: sitClass.weekday,
     };
 }
 

@@ -10,11 +10,12 @@ import React, { useState } from "react";
 
 import { TIME_ZONE } from "../../../config/config";
 import { useUserSessions } from "../../../hooks/useUserSessions";
+import { getCapitalizedWeekday, getDateTime } from "../../../lib/integration/common";
 import { stringifyClassPopularity } from "../../../lib/popularity";
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import { formatNameArray } from "../../../utils/arrayUtils";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { simpleTimeStringFromISO, WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
+import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
 import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "../../utils/ConfirmationDialog";
@@ -277,9 +278,9 @@ export default function ClassInfo({
                 title={`Avbestille time?`}
                 description={
                     <>
-                        <Typography>{`Du er i ferd med å avbestille ${_class.activity.name} (${
-                            _class.weekday ? `${WEEKDAY_NUMBER_TO_NAME.get(_class.weekday)}, ` : ""
-                        }${simpleTimeStringFromISO(_class.startTimeISO)}).`}</Typography>
+                        <Typography>{`Du er i ferd med å avbestille ${_class.activity.name} (${getCapitalizedWeekday(
+                            getDateTime(_class.startTimeISO),
+                        )}, ${simpleTimeStringFromISO(_class.startTimeISO)}.`}</Typography>
                         <Typography>Dette kan ikke angres!</Typography>
                     </>
                 }

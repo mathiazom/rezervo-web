@@ -109,7 +109,6 @@ export type RezervoClass = {
     };
     activity: RezervoActivity;
     instructors: string[];
-    weekday: number | undefined;
 };
 
 export type RezervoActivity = {

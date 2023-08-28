@@ -58,23 +58,19 @@ function ConfigBar({
 
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
-        function timeForClass(_class: RezervoClass) {
-            const { hour, minute } = DateTime.fromISO(_class.startTimeISO);
-            return { hour, minute };
-        }
-        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(
-            (o, c) => ({
+        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
+            const { hour, minute, weekday } = DateTime.fromISO(c.startTimeISO);
+            return {
                 ...o,
                 [classRecurrentId(c)]: {
                     activity: c.activity.id,
                     display_name: c.activity.name,
-                    weekday: c.weekday ?? -1,
+                    weekday: weekday,
                     studio: c.location.id,
-                    time: timeForClass(c),
+                    time: { hour, minute },
                 },
-            }),
-            {},
-        );
+            };
+        }, {});
         // Locate any class configs from the user config that do not exist in the current schedule
         const ghostClassesConfigs =
             userConfig?.classes
