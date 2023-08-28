@@ -1,5 +1,7 @@
+import { getDateTime } from "../lib/integration/common";
+
 export function simpleTimeStringFromISO(isoString: string) {
-    return isoString.split("T")[1]?.slice(0, 5);
+    return getDateTime(isoString).toFormat("hh:mm");
 }
 
 const WEEKDAY_NAME_NUMBER_ENTRIES: [string, number][] = [
