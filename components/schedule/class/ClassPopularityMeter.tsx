@@ -28,9 +28,9 @@ const ClassPopularityMeter = ({
     historicPopularity: ClassPopularity;
 }) => {
     const popularity =
-        isClassInThePast(_class) || _class.bookable ? determineClassPopularity(_class) : historicPopularity;
+        isClassInThePast(_class) || _class.isBookable ? determineClassPopularity(_class) : historicPopularity;
 
-    if (_class.bookable) {
+    if (_class.isBookable) {
         return (
             <Tooltip
                 title={"Påmelding for denne timen har åpnet. " + stringifyClassPopularity(_class, historicPopularity)}

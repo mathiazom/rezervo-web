@@ -12,16 +12,19 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
             studio: sitClass.studio.name,
             room: sitClass.room,
         },
-        available: sitClass.available,
-        bookable: sitClass.bookable,
-        capacity: sitClass.capacity,
+        isBookable: sitClass.bookable,
+        totalSlots: sitClass.capacity,
+        availableSlots: sitClass.available,
+        waitingList: {
+            count: sitClass.waitlist.count,
+            userPosition: sitClass.waitlist.userPosition,
+        },
         name: sitClass.name,
         description: sitClass.description,
         category: sitClass.category,
         image: sitClass.image,
         color: sitClass.color,
         instructors: sitClass.instructors,
-        waitlist: sitClass.waitlist,
         weekday: sitClass.weekday,
     };
 }

@@ -184,14 +184,16 @@ export default function ClassInfo({
             </Box>
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
-                    <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.bookable} />
+                    <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.isBookable} />
                     <Typography variant="body2" color="text.secondary">
                         {`${formatNameArray(
                             usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
                             usersPlanned.some((u) => u.is_self),
                         )} ${
-                            _class.bookable ? "har planlagt denne timen, men ikke booket plass!" : "skal på denne timen"
+                            _class.isBookable
+                                ? "har planlagt denne timen, men ikke booket plass!"
+                                : "skal på denne timen"
                         }`}
                     </Typography>
                 </Box>
@@ -246,13 +248,13 @@ export default function ClassInfo({
             <Typography pt={2}>{_class.description}</Typography>
             {user &&
                 !isInThePast &&
-                _class.bookable &&
+                _class.isBookable &&
                 (selfBooked || selfOnWaitlist ? (
                     <LoadingButton
                         sx={{ mt: 2 }}
                         variant={"outlined"}
                         color={"error"}
-                        disabled={isInThePast || !_class.bookable}
+                        disabled={isInThePast || !_class.isBookable}
                         onClick={() => setCancelBookingConfirmationOpen(true)}
                         loading={bookingLoading}
                     >
@@ -262,7 +264,7 @@ export default function ClassInfo({
                     <LoadingButton
                         sx={{ mt: 2 }}
                         variant={"outlined"}
-                        disabled={isInThePast || !_class.bookable}
+                        disabled={isInThePast || !_class.isBookable}
                         onClick={() => book()}
                         loading={bookingLoading}
                     >

@@ -101,9 +101,13 @@ export type RezervoClass = {
         studio: string;
         room: string;
     };
-    available: number;
-    bookable: boolean;
-    capacity: number;
+    isBookable: boolean;
+    totalSlots: number;
+    availableSlots: number;
+    waitingList: {
+        count: number;
+        userPosition: number | null;
+    };
     name: string;
     description: string;
     category: {
@@ -116,11 +120,6 @@ export type RezervoClass = {
         id: number;
         name: string;
     }[];
-    waitlist: {
-        active: boolean;
-        count: number;
-        userPosition: number | null;
-    };
     weekday: number | undefined;
 };
 

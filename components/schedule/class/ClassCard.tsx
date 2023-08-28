@@ -129,7 +129,11 @@ const ClassCard = ({
                                 {!isInThePast &&
                                     usersPlanned.length > 0 &&
                                     usersPlanned.map(({ user_name }) => (
-                                        <ClassUserAvatar key={user_name} username={user_name} alert={_class.bookable} />
+                                        <ClassUserAvatar
+                                            key={user_name}
+                                            username={user_name}
+                                            alert={_class.isBookable}
+                                        />
                                     ))}
                                 {userSessions.length > 0 &&
                                     userSessions.map(({ user_name, status }) => {
