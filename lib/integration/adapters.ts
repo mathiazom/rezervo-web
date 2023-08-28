@@ -4,8 +4,8 @@ import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "../../typ
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {
         id: sitClass.id,
-        startTimeISO: sitClass.from,
-        endTimeISO: sitClass.to,
+        startTimeISO: sitClass.from.replace(" ", "T"), // convert to proper ISO8601
+        endTimeISO: sitClass.to.replace(" ", "T"), // convert to proper ISO8601
         location: {
             id: sitClass.studio.id,
             studio: sitClass.studio.name,
