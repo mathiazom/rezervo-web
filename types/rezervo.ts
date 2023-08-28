@@ -93,7 +93,6 @@ export type RezervoDaySchedule = {
 
 export type RezervoClass = {
     id: number;
-    activityId: number;
     startTimeISO: string;
     endTimeISO: string;
     location: {
@@ -108,19 +107,21 @@ export type RezervoClass = {
         count: number;
         userPosition: number | null;
     };
-    name: string;
-    description: string;
-    category: {
-        id: string;
-        name: string;
-    };
-    image: string;
-    color: string;
+    activity: RezervoActivity;
     instructors: {
         id: number;
         name: string;
     }[];
     weekday: number | undefined;
+};
+
+export type RezervoActivity = {
+    id: number;
+    name: string;
+    category: string;
+    description: string;
+    color: string;
+    image: string;
 };
 
 export type IntegrationPageProps = {

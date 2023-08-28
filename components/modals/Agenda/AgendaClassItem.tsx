@@ -29,7 +29,7 @@ export default function AgendaClassItem({
     const classColorRGB = (dark: boolean) =>
         agendaClass._class
             ? `rgb(${hexWithOpacityToRgb(
-                  agendaClass._class.color,
+                  agendaClass._class.activity.color,
                   agendaClass.markedForDeletion ? 0.3 : 0.6,
                   dark ? 0 : 255,
               ).join(",")})`
@@ -37,7 +37,7 @@ export default function AgendaClassItem({
             ? "#696969"
             : "#111";
 
-    const displayName = agendaClass._class?.name ?? agendaClass.config.display_name;
+    const displayName = agendaClass._class?.activity.name ?? agendaClass.config.display_name;
 
     function hoursAndMinutesToClockString(hours: number, minutes: number) {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;

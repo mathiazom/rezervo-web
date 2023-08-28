@@ -4,7 +4,6 @@ import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "../../typ
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {
         id: sitClass.id,
-        activityId: sitClass.activityId,
         startTimeISO: sitClass.from,
         endTimeISO: sitClass.to,
         location: {
@@ -19,11 +18,14 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
             count: sitClass.waitlist.count,
             userPosition: sitClass.waitlist.userPosition,
         },
-        name: sitClass.name,
-        description: sitClass.description,
-        category: sitClass.category,
-        image: sitClass.image,
-        color: sitClass.color,
+        activity: {
+            id: sitClass.activityId,
+            name: sitClass.name,
+            category: sitClass.category.name,
+            description: sitClass.description,
+            color: sitClass.color,
+            image: sitClass.image,
+        },
         instructors: sitClass.instructors,
         weekday: sitClass.weekday,
     };

@@ -49,7 +49,8 @@ const ClassCard = ({
         onSelectedChanged(!selected);
     }
 
-    const classColorRGB = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
+    const classColorRGB = (dark: boolean) =>
+        `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = isClassInThePast(_class);
 
@@ -84,7 +85,7 @@ const ClassCard = ({
                             ...(showSelected ? { fontWeight: "bold" } : {}),
                         }}
                     >
-                        {_class.name}
+                        {_class.activity.name}
                     </Typography>
                     <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                 </Box>

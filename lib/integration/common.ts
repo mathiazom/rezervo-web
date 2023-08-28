@@ -81,7 +81,7 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 
 export function classRecurrentId(_class: RezervoClass) {
     const { hour, minute } = DateTime.fromISO(_class.startTimeISO);
-    return recurrentClassId(_class.activityId, _class.weekday ?? -1, hour, minute);
+    return recurrentClassId(_class.activity.id, _class.weekday ?? -1, hour, minute);
 }
 
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {

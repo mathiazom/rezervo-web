@@ -31,7 +31,8 @@ export default function ClassInfo({
     const { user } = useUser();
     const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
-    const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
+    const color = (dark: boolean) =>
+        `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = DateTime.fromISO(_class.startTimeISO, { zone: TIME_ZONE }) < DateTime.now();
 
@@ -113,7 +114,7 @@ export default function ClassInfo({
                     }}
                 />
                 <Typography variant="h6" component="h2">
-                    {_class.name}
+                    {_class.activity.name}
                 </Typography>
                 {/*{selectedClassIds.includes(*/}
                 {/*    modalClass.id.toString()*/}
@@ -230,11 +231,11 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {_class.image && (
+            {_class.activity.image && (
                 <Box pt={2}>
                     <Image
-                        src={_class.image}
-                        alt={_class.name}
+                        src={_class.activity.image}
+                        alt={_class.activity.name}
                         width={600}
                         height={300}
                         objectFit={"cover"}
@@ -245,7 +246,7 @@ export default function ClassInfo({
                     ></Image>
                 </Box>
             )}
-            <Typography pt={2}>{_class.description}</Typography>
+            <Typography pt={2}>{_class.activity.description}</Typography>
             {user &&
                 !isInThePast &&
                 _class.isBookable &&
@@ -276,7 +277,7 @@ export default function ClassInfo({
                 title={`Avbestille time?`}
                 description={
                     <>
-                        <Typography>{`Du er i ferd med å avbestille ${_class.name} (${
+                        <Typography>{`Du er i ferd med å avbestille ${_class.activity.name} (${
                             _class.weekday ? `${WEEKDAY_NUMBER_TO_NAME.get(_class.weekday)}, ` : ""
                         }${simpleTimeStringFromISO(_class.startTimeISO)}).`}</Typography>
                         <Typography>Dette kan ikke angres!</Typography>

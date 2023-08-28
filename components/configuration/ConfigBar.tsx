@@ -66,8 +66,8 @@ function ConfigBar({
             (o, c) => ({
                 ...o,
                 [classRecurrentId(c)]: {
-                    activity: c.activityId,
-                    display_name: c.name,
+                    activity: c.activity.id,
+                    display_name: c.activity.name,
                     weekday: c.weekday ?? -1,
                     studio: c.location.id,
                     time: timeForClass(c),
