@@ -108,10 +108,7 @@ export type RezervoClass = {
         userPosition: number | null;
     };
     activity: RezervoActivity;
-    instructors: {
-        id: number;
-        name: string;
-    }[];
+    instructors: string[];
     weekday: number | undefined;
 };
 

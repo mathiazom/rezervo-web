@@ -96,7 +96,7 @@ const ClassCard = ({
                     {_class.location.studio}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.instructors.map((i) => i.name).join(", ")}
+                    {_class.instructors.join(", ")}
                 </Typography>
             </CardContent>
             <CardActions sx={{ padding: 0 }} disableSpacing>

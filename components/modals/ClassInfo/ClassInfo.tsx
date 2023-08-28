@@ -167,7 +167,7 @@ export default function ClassInfo({
             >
                 <PersonRoundedIcon />
                 <Typography variant="body2" color="text.secondary">
-                    {_class.instructors.map((i) => i.name).join(", ")}
+                    {_class.instructors.join(", ")}
                 </Typography>
             </Box>
             <Box

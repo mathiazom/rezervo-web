@@ -100,7 +100,7 @@ export default function AgendaClassItem({
                             )}
                             {agendaClass._class && (
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                    {agendaClass._class.instructors.map((i) => i.name).join(", ")}
+                                    {agendaClass._class.instructors.join(", ")}
                                 </Typography>
                             )}
                         </Box>
