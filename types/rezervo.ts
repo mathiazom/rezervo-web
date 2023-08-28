@@ -94,6 +94,8 @@ export type RezervoDaySchedule = {
 export type RezervoClass = {
     id: number;
     activityId: number;
+    startTimeISO: string;
+    endTimeISO: string;
     available: number;
     bookable: boolean;
     capacity: number;
@@ -102,8 +104,6 @@ export type RezervoClass = {
         name: string;
     };
     room: string;
-    from: string;
-    to: string;
     name: string;
     description: string;
     category: {

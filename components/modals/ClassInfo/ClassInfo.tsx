@@ -33,7 +33,7 @@ export default function ClassInfo({
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
 
-    const isInThePast = DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
+    const isInThePast = DateTime.fromISO(_class.startTimeISO, { zone: TIME_ZONE }) < DateTime.now();
 
     const usersBooked = userSessions.filter(
         ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED,
@@ -139,7 +139,7 @@ export default function ClassInfo({
             >
                 <AccessTimeRoundedIcon />
                 <Typography variant="body2" color="text.secondary">
-                    {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
+                    {simpleTimeStringFromISO(_class.startTimeISO)} - {simpleTimeStringFromISO(_class.endTimeISO)}
                 </Typography>
             </Box>
             <Box
@@ -276,7 +276,7 @@ export default function ClassInfo({
                     <>
                         <Typography>{`Du er i ferd med å avbestille ${_class.name} (${
                             _class.weekday ? `${WEEKDAY_NUMBER_TO_NAME.get(_class.weekday)}, ` : ""
-                        }${simpleTimeStringFromISO(_class.from)}).`}</Typography>
+                        }${simpleTimeStringFromISO(_class.startTimeISO)}).`}</Typography>
                         <Typography>Dette kan ikke angres!</Typography>
                     </>
                 }

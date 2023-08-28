@@ -80,7 +80,7 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 }
 
 export function classRecurrentId(_class: RezervoClass) {
-    const { hour, minute } = DateTime.fromISO(_class.from);
+    const { hour, minute } = DateTime.fromISO(_class.startTimeISO);
     return recurrentClassId(_class.activityId, _class.weekday ?? -1, hour, minute);
 }
 
@@ -89,7 +89,7 @@ export function recurrentClassId(activityId: number, weekday: number, hour: numb
 }
 
 export function isClassInThePast(_class: RezervoClass): boolean {
-    return DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
+    return DateTime.fromISO(_class.startTimeISO, { zone: TIME_ZONE }) < DateTime.now();
 }
 
 export type IntegrationWeekSchedule = {

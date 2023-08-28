@@ -59,7 +59,7 @@ function ConfigBar({
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
         function timeForClass(_class: RezervoClass) {
-            const { hour, minute } = DateTime.fromISO(_class.from);
+            const { hour, minute } = DateTime.fromISO(_class.startTimeISO);
             return { hour, minute };
         }
         const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(

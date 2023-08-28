@@ -89,7 +89,7 @@ const ClassCard = ({
                     <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                 </Box>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
+                    {simpleTimeStringFromISO(_class.startTimeISO)} - {simpleTimeStringFromISO(_class.endTimeISO)}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                     {_class.studio.name}

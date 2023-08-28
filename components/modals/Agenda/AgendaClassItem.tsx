@@ -43,11 +43,11 @@ export default function AgendaClassItem({
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     }
 
-    const timeFrom = agendaClass._class?.from
-        ? simpleTimeStringFromISO(agendaClass._class?.from)
+    const timeFrom = agendaClass._class?.startTimeISO
+        ? simpleTimeStringFromISO(agendaClass._class?.startTimeISO)
         : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
 
-    const timeTo = agendaClass._class?.to ? simpleTimeStringFromISO(agendaClass._class?.to) : null;
+    const timeTo = agendaClass._class?.endTimeISO ? simpleTimeStringFromISO(agendaClass._class?.endTimeISO) : null;
 
     return (
         <Card
