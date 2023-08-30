@@ -76,9 +76,6 @@ function DaySchedule({
                             selected={selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))}
                             onSelectedChanged={(s) => onSelectedChanged(classRecurrentId(_class), s)}
                             onInfo={() => onInfo(_class)}
-                            // onSettings={() =>
-                            //     setSettingsClass(_class)
-                            // }
                         />
                     </Box>
                 ))

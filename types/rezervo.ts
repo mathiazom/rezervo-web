@@ -13,16 +13,21 @@ export type ClassConfig = {
     time: ClassTimeConfig;
 };
 
+export type IntegrationConfig = {
+    active: boolean;
+    classes: ClassConfig[];
+};
+export type IntegrationConfigPayload = IntegrationConfig;
+
 export type NotificationsConfig = {
     reminder_hours_before: number | null;
 };
 
-export type UserConfig = {
-    active: boolean;
-    classes: ClassConfig[];
+export type Preferences = {
     notifications: NotificationsConfig | null;
 };
-export type ConfigPayload = UserConfig;
+
+export type PreferencesPayload = Preferences;
 
 export type UserNameWithIsSelf = {
     is_self: boolean;
@@ -100,6 +105,7 @@ export type RezervoDayScheduleDTO = {
 };
 
 interface RezervoClassBase {
+    integration: IntegrationIdentifier;
     id: number;
     location: {
         id: number;
@@ -131,10 +137,15 @@ export type RezervoActivity = {
     category: string;
     description: string;
     color: string;
-    image: string;
+    image: string | null;
+};
+
+export type IntegrationPageParams = {
+    integration: IntegrationIdentifier;
 };
 
 export type IntegrationPageProps = {
+    integration: IntegrationIdentifier;
     initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
 };

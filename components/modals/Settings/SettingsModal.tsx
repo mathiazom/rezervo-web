@@ -1,32 +1,25 @@
 import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
-import { NotificationsConfig } from "../../../types/rezervo";
+import { IntegrationIdentifier } from "../../../types/rezervo";
 import Settings from "./Settings";
 
 const SettingsModal = ({
     open,
     setOpen,
+    integration,
     bookingActive,
     setBookingActive,
-    notificationsConfig,
-    setNotificationsConfig,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
+    integration: IntegrationIdentifier;
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
-    notificationsConfig: NotificationsConfig | null;
-    setNotificationsConfig: Dispatch<NotificationsConfig>;
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <Settings
-                bookingActive={bookingActive}
-                setBookingActive={setBookingActive}
-                notificationsConfig={notificationsConfig}
-                setNotificationsConfig={setNotificationsConfig}
-            />
+            <Settings integration={integration} bookingActive={bookingActive} setBookingActive={setBookingActive} />
         </Modal>
     );
 };

@@ -6,6 +6,7 @@ import { SitWeekSchedule } from "../../types/integration/sit";
 import {
     ClassConfig,
     IntegrationIdentifier,
+    RezervoBusinessUnit,
     RezervoClass,
     RezervoIntegration,
     RezervoSchedule,
@@ -13,12 +14,15 @@ import {
 } from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
 import { serializeSchedule } from "../serializers";
-import { sitToRezervoWeekSchedule } from "./adapters";
+import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "./adapters";
+import { fetchFscWeekSchedule } from "./fsc";
 import { fetchSitWeekSchedule } from "./sit";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
 export const getDateTime = (date: string): DateTime => DateTime.fromISO(date, { zone: TIME_ZONE, locale: LOCALE });
+
+export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
 export const capitalizeFirstCharacter = (text: string) => {
     return `${text[0]!.toUpperCase()}${text.slice(1)}`;
@@ -33,15 +37,20 @@ export const getCapitalizedWeekday = (date: DateTime): string => {
 };
 
 export async function fetchIntegrationPageStaticProps<T>(
-    weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
+    integration: IntegrationIdentifier,
+    businessUnit: RezervoBusinessUnit<T>,
 ) {
-    const initialSchedule = await fetchRezervoSchedule([-1, 0, 1, 2, 3], weekScheduleFetcher, weekScheduleAdapter);
+    const initialSchedule = await fetchRezervoSchedule(
+        [-1, 0, 1, 2, 3],
+        businessUnit.weekScheduleFetcher,
+        businessUnit.weekScheduleAdapter,
+    );
     const classPopularityIndex = createClassPopularityIndex(initialSchedule[-1]!);
     const invalidationTimeInSeconds = 60 * 60;
 
     return {
         props: {
+            integration,
             initialSchedule: serializeSchedule(initialSchedule),
             classPopularityIndex,
         },
@@ -86,7 +95,7 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 
 export function classRecurrentId(_class: RezervoClass) {
     const { hour, minute, weekday } = _class.startTime;
-    return recurrentClassId(_class.activity.id, weekday, hour, minute);
+    return recurrentClassId(_class.activity.id, (weekday + 6) % 7, hour, minute);
 }
 
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {
@@ -119,6 +128,12 @@ export const activeIntegrations: {
     [IntegrationIdentifier.fsc]: {
         name: "Family Sports Club",
         acronym: IntegrationIdentifier.fsc,
-        businessUnits: [],
+        businessUnits: [
+            {
+                name: "Ski",
+                weekScheduleFetcher: fetchFscWeekSchedule,
+                weekScheduleAdapter: fscToRezervoWeekSchedule,
+            },
+        ],
     },
 };

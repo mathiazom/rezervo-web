@@ -13,31 +13,31 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import { useUserConfig } from "../../hooks/useUserConfig";
-import { classConfigRecurrentId, classRecurrentId } from "../../lib/integration/common";
-import { ClassConfig, NotificationsConfig, RezervoClass, UserConfig } from "../../types/rezervo";
+import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "../../lib/integration/common";
+import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "../../types/rezervo";
 import { arraysAreEqual } from "../../utils/arrayUtils";
 import { hexColorHash } from "../../utils/colorUtils";
 import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
 
 function ConfigBar({
+    integration,
     classes,
     selectedClassIds,
     originalSelectedClassIds,
     userConfig,
     userConfigActive,
-    notificationsConfig,
     isLoadingConfig,
     isConfigError,
     onUndoSelectionChanges,
     onSettingsOpen,
     onAgendaOpen,
 }: {
+    integration: IntegrationIdentifier;
     classes: RezervoClass[];
     selectedClassIds: string[] | null;
     originalSelectedClassIds: string[] | null;
-    userConfig: UserConfig | undefined;
+    userConfig: IntegrationConfig | undefined;
     userConfigActive: boolean;
-    notificationsConfig: NotificationsConfig | null;
     isLoadingConfig: boolean;
     isConfigError: boolean;
     onUndoSelectionChanges: () => void;
@@ -45,7 +45,7 @@ function ConfigBar({
     onAgendaOpen: () => void;
 }) {
     const { user, isLoading } = useUser();
-    const { putUserConfig } = useUserConfig();
+    const { putUserConfig } = useUserConfig(integration);
 
     const selectionChanged = useMemo(
         () =>
@@ -64,7 +64,7 @@ function ConfigBar({
                 [classRecurrentId(c)]: {
                     activity: c.activity.id,
                     display_name: c.activity.name,
-                    weekday: weekday,
+                    weekday: zeroIndexedWeekday(weekday),
                     studio: c.location.id,
                     time: { hour, minute },
                 },
@@ -91,7 +91,6 @@ function ConfigBar({
         return putUserConfig({
             active: userConfigActive,
             classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
-            notifications: notificationsConfig,
         });
     }
 

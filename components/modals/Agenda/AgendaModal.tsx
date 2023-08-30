@@ -2,7 +2,7 @@ import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import { classConfigRecurrentId, classRecurrentId } from "../../../lib/integration/common";
-import { RezervoClass, UserConfig } from "../../../types/rezervo";
+import { IntegrationConfig, RezervoClass } from "../../../types/rezervo";
 import Agenda from "./Agenda";
 
 const AgendaModal = ({
@@ -16,7 +16,7 @@ const AgendaModal = ({
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    userConfig: UserConfig | undefined;
+    userConfig: IntegrationConfig | undefined;
     classes: RezervoClass[];
     selectedClassIds: string[] | null;
     onInfo: Dispatch<SetStateAction<RezervoClass | null>>;

@@ -7,7 +7,11 @@ import { deserializeWeekSchedule } from "../../lib/serializers";
 import { RezervoSchedule, RezervoWeekSchedule } from "../../types/rezervo";
 
 function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
-    return weekSchedule[0]!.date.weekNumber;
+    const firstDay = weekSchedule[0];
+    if (firstDay === undefined) {
+        throw new Error("Week schedule is empty (missing first day)");
+    }
+    return firstDay.date.weekNumber;
 }
 
 export default function WeekNavigator({

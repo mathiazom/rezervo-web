@@ -1,8 +1,19 @@
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
 
+function put(accessToken: string, body: any): Promise<Response> {
+    return fetch(`${process.env["CONFIG_HOST"]}/preferences`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+        },
+        body: body,
+    });
+}
+
 function get(accessToken: string): Promise<Response> {
-    return fetch(`${process.env["CONFIG_HOST"]}/cal_token`, {
+    return fetch(`${process.env["CONFIG_HOST"]}/preferences`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -20,6 +31,8 @@ export default withApiAuthRequired(async function handler(req, res) {
     }
     const response = await (() => {
         switch (req.method) {
+            case "PUT":
+                return put(accessToken, req.body);
             case "GET":
                 return get(accessToken);
             default:
@@ -35,13 +48,5 @@ export default withApiAuthRequired(async function handler(req, res) {
         res.status(response.status).json(response.statusText);
         return;
     }
-    const calendarToken = await response.json();
-    const calendarFeedUrl = new URL(`${process.env["CONFIG_HOST"]}/cal`);
-    let includePastQuery = req.query["include_past"];
-    calendarFeedUrl.searchParams.set(
-        "include_past",
-        (typeof includePastQuery !== "string" ? includePastQuery?.pop() : includePastQuery) || "true",
-    );
-    calendarFeedUrl.searchParams.set("token", calendarToken);
-    res.status(response.status).json(calendarFeedUrl);
+    res.status(response.status).json(await response.json());
 });

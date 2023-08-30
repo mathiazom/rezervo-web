@@ -30,9 +30,15 @@ export function deserializeWeekSchedule(weekScheduleDTO: RezervoWeekScheduleDTO)
 }
 export function deserializeSchedule(scheduleDTO: RezervoScheduleDTO): RezervoSchedule {
     return Object.keys(scheduleDTO)
-        .map((weekOffset) => ({
-            [Number(weekOffset)]: deserializeWeekSchedule(scheduleDTO[Number(weekOffset)]!),
-        }))
+        .map((weekOffset) => {
+            const weekSchedule = scheduleDTO[Number(weekOffset)];
+            if (weekSchedule === undefined) {
+                throw new Error(`Invalid week schedule for week offset ${weekOffset}`);
+            }
+            return {
+                [Number(weekOffset)]: deserializeWeekSchedule(weekSchedule),
+            };
+        })
         .reduce((acc, next) => ({ ...acc, ...next }), {});
 }
 
@@ -55,8 +61,14 @@ export function serializeWeekSchedule(weekSchedule: RezervoWeekSchedule): Rezerv
 }
 export function serializeSchedule(schedule: RezervoSchedule): RezervoScheduleDTO {
     return Object.keys(schedule)
-        .map((weekOffset) => ({
-            [Number(weekOffset)]: serializeWeekSchedule(schedule[Number(weekOffset)]!),
-        }))
+        .map((weekOffset) => {
+            const weekSchedule = schedule[Number(weekOffset)];
+            if (weekSchedule === undefined) {
+                throw new Error(`Invalid week schedule for week offset ${weekOffset}`);
+            }
+            return {
+                [Number(weekOffset)]: serializeWeekSchedule(weekSchedule),
+            };
+        })
         .reduce((acc, next) => ({ ...acc, ...next }), {});
 }

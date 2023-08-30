@@ -6,7 +6,7 @@ export function useUserCalendarFeedUrl(includePast: boolean) {
     const { user } = useUser();
 
     // `document.location` is used as a dummy origin, since URL only supports absolute paths
-    const userCalendarFeedTokenUrl = new URL("/api/cal_url", document.location.origin);
+    const userCalendarFeedTokenUrl = new URL("/api/cal-url", document.location.origin);
     userCalendarFeedTokenUrl.searchParams.set("include_past", String(includePast));
 
     const {

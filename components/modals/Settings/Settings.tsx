@@ -15,8 +15,14 @@ import {
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { DEFAULT_REMINDER_HOURS } from "../../../config/config";
+import { usePreferences } from "../../../hooks/usePreferences";
 import { useUserConfig } from "../../../hooks/useUserConfig";
-import { ConfigPayload, NotificationsConfig } from "../../../types/rezervo";
+import {
+    IntegrationConfigPayload,
+    IntegrationIdentifier,
+    NotificationsConfig,
+    PreferencesPayload,
+} from "../../../types/rezervo";
 import CalendarFeed from "./CalendarFeed";
 
 // Fix track not visible with "system" color scheme
@@ -38,32 +44,31 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
 }));
 
 export default function Settings({
+    integration,
     bookingActive,
     setBookingActive,
-    notificationsConfig,
-    setNotificationsConfig,
 }: {
+    integration: IntegrationIdentifier;
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
-    notificationsConfig: NotificationsConfig | null;
-    setNotificationsConfig: Dispatch<NotificationsConfig>;
 }) {
-    const { userConfig, putUserConfig } = useUserConfig();
-    const [reminderActive, setReminderActive] = useState(notificationsConfig?.reminder_hours_before != null);
+    const { userConfig, putUserConfig } = useUserConfig(integration);
+    const { preferences, putPreferences } = usePreferences();
+    const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminder_hours_before != null);
     const [reminderHours, setReminderHours] = useState<number | null>(
-        notificationsConfig?.reminder_hours_before ?? null,
+        preferences?.notifications?.reminder_hours_before ?? null,
     );
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        const newReminderHours = notificationsConfig?.reminder_hours_before;
+        const newReminderHours = preferences?.notifications?.reminder_hours_before;
         const newReminderActive = newReminderHours != null;
         setReminderActive(newReminderActive);
         if (newReminderActive) {
             setReminderHours(newReminderHours);
         }
-    }, [notificationsConfig?.reminder_hours_before, reminderHours]);
+    }, [preferences?.notifications?.reminder_hours_before, reminderHours]);
 
     async function onBookingActiveChanged(active: boolean) {
         setBookingActive(active);
@@ -71,14 +76,14 @@ export default function Settings({
         await putUserConfig({
             ...userConfig,
             active: active,
-        } as ConfigPayload);
+        } as IntegrationConfigPayload);
         setBookingActiveLoading(false);
     }
 
     function handleReminderActiveChanged(active: boolean) {
         setReminderActive(active);
         onNotificationsConfigChanged({
-            ...notificationsConfig,
+            ...(preferences?.notifications ?? {}),
             reminder_hours_before: active ? reminderHours ?? DEFAULT_REMINDER_HOURS : null,
         });
     }
@@ -89,18 +94,17 @@ export default function Settings({
             return;
         }
         onNotificationsConfigChanged({
-            ...notificationsConfig,
+            ...(preferences?.notifications ?? {}),
             reminder_hours_before: reminderActive ? reminderHours : null,
         });
     }
 
     function onNotificationsConfigChanged(notificationsConfig: NotificationsConfig) {
-        setNotificationsConfig(notificationsConfig);
         setNotificationsConfigLoading(true);
-        return putUserConfig({
-            ...userConfig,
+        return putPreferences({
+            ...preferences,
             notifications: notificationsConfig,
-        } as ConfigPayload).then(() => setNotificationsConfigLoading(false));
+        } as PreferencesPayload).then(() => setNotificationsConfigLoading(false));
     }
 
     return (

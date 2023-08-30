@@ -5,7 +5,7 @@ import { useUserConfig } from "../hooks/useUserConfig";
 import { classConfigRecurrentId } from "../lib/integration/common";
 import {
     ClassPopularityIndex,
-    NotificationsConfig,
+    IntegrationIdentifier,
     RezervoClass,
     RezervoSchedule,
     RezervoWeekSchedule,
@@ -25,16 +25,15 @@ const WeekScheduleMemo = memo(WeekSchedule);
 function Integration({
     initialSchedule,
     classPopularityIndex,
-    acronym,
+    integration,
 }: {
     initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
-    acronym: string;
+    integration: IntegrationIdentifier;
 }) {
-    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig();
+    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(integration);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
-    const [notificationsConfig, setNotificationsConfig] = useState<NotificationsConfig | null>(null);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
@@ -62,24 +61,23 @@ function Integration({
         setSelectedClassIds(classIds);
         setOriginalSelectedClassIds(classIds);
         setUserConfigActive(userConfig?.active ?? false);
-        setNotificationsConfig(userConfig?.notifications ?? null);
     }, [userConfig]);
 
     return (
         <>
-            <PageHead title={`${acronym}-rezervo`} />
+            <PageHead title={`${integration}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={<Logo integrationAcronym={acronym} />}
+                        leftComponent={<Logo integrationAcronym={integration} />}
                         rightComponent={
                             <ConfigBar
+                                integration={integration}
                                 classes={classes}
                                 selectedClassIds={selectedClassIds}
                                 originalSelectedClassIds={originalSelectedClassIds}
                                 userConfig={userConfig}
                                 userConfigActive={userConfigActive}
-                                notificationsConfig={notificationsConfig}
                                 isLoadingConfig={userConfig == null || userConfigLoading}
                                 isConfigError={userConfigError}
                                 onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
@@ -119,10 +117,9 @@ function Integration({
             <SettingsModal
                 open={isSettingsOpen}
                 setOpen={setIsSettingsOpen}
+                integration={integration}
                 bookingActive={userConfigActive}
                 setBookingActive={setUserConfigActive}
-                notificationsConfig={notificationsConfig}
-                setNotificationsConfig={setNotificationsConfig}
             />
         </>
     );

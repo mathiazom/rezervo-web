@@ -21,7 +21,7 @@ export type SitClass = {
     name: string;
     description: string;
     category: SitCategory;
-    image: string;
+    image: string | null;
     color: string;
     instructors: SitInstructor[];
     waitlist: {

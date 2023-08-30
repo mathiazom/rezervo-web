@@ -1,23 +1,14 @@
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
 
-function put(accessToken: string, body: any): Promise<Response> {
-    return fetch(`${process.env["CONFIG_HOST"]}/config`, {
-        method: "PUT",
+function post(integration: string, accessToken: string, body: any): Promise<Response> {
+    return fetch(`${process.env["CONFIG_HOST"]}/${integration}/book`, {
+        method: "POST",
         headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
         body: body,
-    });
-}
-
-function get(accessToken: string): Promise<Response> {
-    return fetch(`${process.env["CONFIG_HOST"]}/config`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
     });
 }
 
@@ -30,11 +21,14 @@ export default withApiAuthRequired(async function handler(req, res) {
         return;
     }
     const response = await (() => {
+        let integration = req.query["integration"];
+        integration = typeof integration !== "string" ? integration?.pop() : integration;
+        if (integration == null) {
+            return null;
+        }
         switch (req.method) {
-            case "PUT":
-                return put(accessToken, req.body);
-            case "GET":
-                return get(accessToken);
+            case "POST":
+                return post(integration, accessToken, req.body);
             default:
                 return null;
         }

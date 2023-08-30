@@ -44,7 +44,7 @@ export type FscClass = {
         totalBookable: number;
         reservedForDropin: number;
         leftToBook: number;
-        leftToBookIncDropin: number;
+        leftToBookIncDropin: number; // [sic]
         hasWaitingList: boolean;
         inWaitingList: number;
     };

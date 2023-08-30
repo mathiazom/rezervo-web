@@ -1,14 +1,18 @@
-import useSWR from "swr";
-import { UserSessionsIndex } from "../types/rezervo";
-import { fetcher } from "../utils/fetchUtils";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import useSWR from "swr";
 
-export function useUserSessions() {
+import { IntegrationIdentifier, UserSessionsIndex } from "../types/rezervo";
+import { fetcher } from "../utils/fetchUtils";
+
+export function useUserSessions(integration: IntegrationIdentifier) {
     const { user } = useUser();
 
-    const userSessionsApiUrl = "/api/sessions";
+    const userSessionsApiUrl = `/api/${integration}/sessions`;
 
-    const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(user ? userSessionsApiUrl : null, fetcher);
+    const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(
+        user && integration ? userSessionsApiUrl : null,
+        fetcher,
+    );
 
     return {
         userSessionsIndex: data,

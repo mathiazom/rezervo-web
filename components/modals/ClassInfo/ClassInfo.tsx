@@ -7,6 +7,7 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import { useUserConfig } from "../../../hooks/useUserConfig";
 import { useUserSessions } from "../../../hooks/useUserSessions";
 import { getCapitalizedWeekday, isClassInThePast } from "../../../lib/integration/common";
 import { stringifyClassPopularity } from "../../../lib/popularity";
@@ -27,7 +28,8 @@ export default function ClassInfo({
     configUsers: UserNameWithIsSelf[];
 }) {
     const { user } = useUser();
-    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions();
+    const { userConfig, userConfigLoading, userConfigError } = useUserConfig(_class.integration);
+    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions(_class.integration);
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>
         `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -54,7 +56,7 @@ export default function ClassInfo({
 
     async function book() {
         setBookingLoading(true);
-        await fetch("/api/book", {
+        await fetch(`/api/${_class.integration}/book`, {
             method: "POST",
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
@@ -64,7 +66,7 @@ export default function ClassInfo({
 
     async function cancelBooking() {
         setBookingLoading(true);
-        await fetch("/api/cancelBooking", {
+        await fetch(`/api/${_class.integration}/cancel-booking`, {
             method: "POST",
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
@@ -246,6 +248,9 @@ export default function ClassInfo({
             )}
             <Typography pt={2}>{_class.activity.description}</Typography>
             {user &&
+                userConfig != undefined &&
+                !userConfigLoading &&
+                !userConfigError &&
                 !isInThePast &&
                 _class.isBookable &&
                 (selfBooked || selfOnWaitlist ? (

@@ -21,8 +21,7 @@ const ClassCard = ({
     selected,
     onSelectedChanged,
     onInfo,
-}: // onSettings,
-{
+}: {
     _class: RezervoClass;
     popularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
@@ -30,9 +29,8 @@ const ClassCard = ({
     selected: boolean;
     onSelectedChanged: (selected: boolean) => void;
     onInfo: () => void;
-    // onSettings: () => void;
 }) => {
-    const { userSessionsIndex } = useUserSessions();
+    const { userSessionsIndex } = useUserSessions(_class.integration);
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
