@@ -1,31 +1,39 @@
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "../../types/rezervo";
+import { getDateTime } from "./common";
 
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {
         id: sitClass.id,
-        activityId: sitClass.activityId,
-        available: sitClass.available,
-        bookable: sitClass.bookable,
-        capacity: sitClass.capacity,
-        studio: sitClass.studio,
-        room: sitClass.room,
-        from: sitClass.from,
-        to: sitClass.to,
-        name: sitClass.name,
-        description: sitClass.description,
-        category: sitClass.category,
-        image: sitClass.image,
-        color: sitClass.color,
-        instructors: sitClass.instructors,
-        waitlist: sitClass.waitlist,
-        weekday: sitClass.weekday,
+        startTime: getDateTime(sitClass.from.replace(" ", "T")), // convert to proper ISO8601
+        endTime: getDateTime(sitClass.to.replace(" ", "T")), // convert to proper ISO8601
+        location: {
+            id: sitClass.studio.id,
+            studio: sitClass.studio.name,
+            room: sitClass.room,
+        },
+        isBookable: sitClass.bookable,
+        totalSlots: sitClass.capacity,
+        availableSlots: sitClass.available,
+        waitingList: {
+            count: sitClass.waitlist.count,
+            userPosition: sitClass.waitlist.userPosition,
+        },
+        activity: {
+            id: sitClass.activityId,
+            name: sitClass.name,
+            category: sitClass.category.name,
+            description: sitClass.description,
+            color: sitClass.color,
+            image: sitClass.image,
+        },
+        instructors: sitClass.instructors.map((sitInstructor) => sitInstructor.name),
     };
 }
 
 function sitToRezervoDaySchedule(sitDaySchedule: SitDaySchedule): RezervoDaySchedule {
     return {
-        date: sitDaySchedule.date,
+        date: getDateTime(sitDaySchedule.date),
         classes: sitDaySchedule.classes.map(sitToRezervoClass),
     };
 }

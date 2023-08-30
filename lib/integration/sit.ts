@@ -2,7 +2,6 @@ import { DateTime } from "luxon";
 
 import { GROUP_BOOKING_URL, TIME_ZONE } from "../../config/config";
 import { SitDaySchedule, SitWeekSchedule } from "../../types/integration/sit";
-import { weekdayNameToNumber } from "../../utils/timeUtils";
 import { calculateMondayOffset } from "./common";
 
 function sitScheduleUrl(token: string, fromISO: string | null = null) {
@@ -44,14 +43,6 @@ export async function fetchSitWeekSchedule(weekOffset: number): Promise<SitWeekS
             // Use offset -1 to fetch all today's events, not just the ones in the future
             ...(await fetchSitDaySchedulesWithOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
             ...(await fetchSitDaySchedulesWithOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
-        ].map((day) => ({
-            ...day,
-            classes: day.classes.map((_class) => ({
-                ..._class,
-                from: _class.from.replace(" ", "T"), // convert to proper ISO8601
-                to: _class.to.replace(" ", "T"), // convert to proper ISO8601
-                weekday: weekdayNameToNumber(day.dayName),
-            })),
-        })),
+        ],
     };
 }

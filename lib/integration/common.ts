@@ -12,6 +12,7 @@ import {
     RezervoWeekSchedule,
 } from "../../types/rezervo";
 import { createClassPopularityIndex } from "../popularity";
+import { serializeSchedule } from "../serializers";
 import { sitToRezervoWeekSchedule } from "./adapters";
 import { fetchSitWeekSchedule } from "./sit";
 
@@ -19,12 +20,16 @@ export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).wee
 
 export const getDateTime = (date: string): DateTime => DateTime.fromISO(date, { zone: TIME_ZONE, locale: LOCALE });
 
+export const capitalizeFirstCharacter = (text: string) => {
+    return `${text[0]!.toUpperCase()}${text.slice(1)}`;
+};
+
 export const getCapitalizedWeekday = (date: DateTime): string => {
     if (!date.isValid || date.weekdayLong === null) {
         throw new Error("Invalid date");
     }
 
-    return `${date.weekdayLong[0]!.toUpperCase()}${date.weekdayLong.slice(1)}`;
+    return capitalizeFirstCharacter(date.weekdayLong);
 };
 
 export async function fetchIntegrationPageStaticProps<T>(
@@ -37,7 +42,7 @@ export async function fetchIntegrationPageStaticProps<T>(
 
     return {
         props: {
-            initialSchedule,
+            initialSchedule: serializeSchedule(initialSchedule),
             classPopularityIndex,
         },
         revalidate: invalidationTimeInSeconds,
@@ -80,8 +85,8 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
 }
 
 export function classRecurrentId(_class: RezervoClass) {
-    const { hour, minute } = DateTime.fromISO(_class.from);
-    return recurrentClassId(_class.activityId, _class.weekday ?? -1, hour, minute);
+    const { hour, minute, weekday } = _class.startTime;
+    return recurrentClassId(_class.activity.id, weekday, hour, minute);
 }
 
 export function recurrentClassId(activityId: number, weekday: number, hour: number, minute: number) {
@@ -89,7 +94,7 @@ export function recurrentClassId(activityId: number, weekday: number, hour: numb
 }
 
 export function isClassInThePast(_class: RezervoClass): boolean {
-    return DateTime.fromISO(_class.from, { zone: TIME_ZONE }) < DateTime.now();
+    return _class.startTime < DateTime.now();
 }
 
 export type IntegrationWeekSchedule = {

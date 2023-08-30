@@ -1,9 +1,10 @@
 import { Box, Typography, useTheme } from "@mui/material";
+import { Info } from "luxon";
 import React from "react";
 
-import { classConfigRecurrentId } from "../../../lib/integration/common";
+import { LOCALE } from "../../../config/config";
+import { capitalizeFirstCharacter, classConfigRecurrentId } from "../../../lib/integration/common";
 import { ClassConfig, RezervoClass } from "../../../types/rezervo";
-import { WEEKDAY_NUMBER_TO_NAME } from "../../../utils/timeUtils";
 import AgendaClassItem, { AgendaClass } from "./AgendaClassItem";
 
 export default function Agenda({
@@ -51,12 +52,12 @@ export default function Agenda({
                 </Typography>
             </Box>
             <Box pt={2}>
-                {Array.from(WEEKDAY_NUMBER_TO_NAME).map(([dayNumber, dayName]) => {
-                    const dayClasses = agendaClasses.filter((a) => a.config.weekday === dayNumber);
+                {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
+                    const dayClasses = agendaClasses.filter((a) => a.config.weekday === weekday);
                     return (
                         <>
                             {dayClasses && dayClasses.length > 0 && (
-                                <Box pb={2} key={dayNumber}>
+                                <Box pb={2} key={weekday}>
                                     <Typography
                                         variant="h6"
                                         style={{
@@ -65,7 +66,9 @@ export default function Agenda({
                                         }}
                                         mb={0.5}
                                     >
-                                        {dayName}
+                                        {capitalizeFirstCharacter(
+                                            Info.weekdays("long", { locale: LOCALE })[weekday] ?? "",
+                                        )}
                                     </Typography>
                                     {dayClasses
                                         .sort((a, b) => configTimeMinutes(a.config) - configTimeMinutes(b.config))

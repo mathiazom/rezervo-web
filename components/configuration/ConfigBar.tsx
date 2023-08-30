@@ -10,7 +10,6 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import UndoIcon from "@mui/icons-material/Undo";
 import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { DateTime } from "luxon";
 import React, { useMemo } from "react";
 
 import { useUserConfig } from "../../hooks/useUserConfig";
@@ -58,23 +57,19 @@ function ConfigBar({
 
     // Pre-generate all class config strings
     const allClassesConfigMap = useMemo(() => {
-        function timeForClass(_class: RezervoClass) {
-            const { hour, minute } = DateTime.fromISO(_class.from);
-            return { hour, minute };
-        }
-        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>(
-            (o, c) => ({
+        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
+            const { hour, minute, weekday } = c.startTime;
+            return {
                 ...o,
                 [classRecurrentId(c)]: {
-                    activity: c.activityId,
-                    display_name: c.name,
-                    weekday: c.weekday ?? -1,
-                    studio: c.studio.id,
-                    time: timeForClass(c),
+                    activity: c.activity.id,
+                    display_name: c.activity.name,
+                    weekday: weekday,
+                    studio: c.location.id,
+                    time: { hour, minute },
                 },
-            }),
-            {},
-        );
+            };
+        }, {});
         // Locate any class configs from the user config that do not exist in the current schedule
         const ghostClassesConfigs =
             userConfig?.classes

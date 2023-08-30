@@ -7,7 +7,6 @@ import React from "react";
 
 import { ClassConfig, RezervoClass } from "../../../types/rezervo";
 import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 
 export type AgendaClass = {
     config: ClassConfig;
@@ -29,7 +28,7 @@ export default function AgendaClassItem({
     const classColorRGB = (dark: boolean) =>
         agendaClass._class
             ? `rgb(${hexWithOpacityToRgb(
-                  agendaClass._class.color,
+                  agendaClass._class.activity.color,
                   agendaClass.markedForDeletion ? 0.3 : 0.6,
                   dark ? 0 : 255,
               ).join(",")})`
@@ -37,17 +36,17 @@ export default function AgendaClassItem({
             ? "#696969"
             : "#111";
 
-    const displayName = agendaClass._class?.name ?? agendaClass.config.display_name;
+    const displayName = agendaClass._class?.activity.name ?? agendaClass.config.display_name;
 
     function hoursAndMinutesToClockString(hours: number, minutes: number) {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     }
 
-    const timeFrom = agendaClass._class?.from
-        ? simpleTimeStringFromISO(agendaClass._class?.from)
+    const timeFrom = agendaClass._class?.startTime
+        ? agendaClass._class.startTime.toFormat("HH:mm")
         : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
 
-    const timeTo = agendaClass._class?.to ? simpleTimeStringFromISO(agendaClass._class?.to) : null;
+    const timeTo = agendaClass._class?.endTime ? agendaClass._class.endTime.toFormat("HH:mm") : null;
 
     return (
         <Card
@@ -95,12 +94,12 @@ export default function AgendaClassItem({
                             </Typography>
                             {agendaClass._class && (
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                    {agendaClass._class.studio.name}
+                                    {agendaClass._class.location.studio}
                                 </Typography>
                             )}
                             {agendaClass._class && (
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                    {agendaClass._class.instructors.map((i) => i.name).join(", ")}
+                                    {agendaClass._class.instructors.join(", ")}
                                 </Typography>
                             )}
                         </Box>

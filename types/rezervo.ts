@@ -1,3 +1,5 @@
+import { DateTime } from "luxon";
+
 export type ClassTimeConfig = {
     hour: number;
     minute: number;
@@ -83,48 +85,56 @@ export type RezervoBusinessUnit<T> = {
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };
+export type RezervoScheduleDTO = { [weekOffset: number]: RezervoWeekScheduleDTO };
 
 export type RezervoWeekSchedule = RezervoDaySchedule[];
+export type RezervoWeekScheduleDTO = RezervoDayScheduleDTO[];
 
 export type RezervoDaySchedule = {
-    date: string;
+    date: DateTime;
     classes: RezervoClass[];
 };
+export type RezervoDayScheduleDTO = {
+    date: string;
+    classes: RezervoClassDTO[];
+};
 
-export type RezervoClass = {
+interface RezervoClassBase {
     id: number;
-    activityId: number;
-    available: number;
-    bookable: boolean;
-    capacity: number;
-    studio: {
+    location: {
         id: number;
-        name: string;
+        studio: string;
+        room: string;
     };
-    room: string;
-    from: string;
-    to: string;
-    name: string;
-    description: string;
-    category: {
-        id: string;
-        name: string;
-    };
-    image: string;
-    color: string;
-    instructors: {
-        id: number;
-        name: string;
-    }[];
-    waitlist: {
-        active: boolean;
+    isBookable: boolean;
+    totalSlots: number;
+    availableSlots: number;
+    waitingList: {
         count: number;
         userPosition: number | null;
     };
-    weekday: number | undefined;
+    activity: RezervoActivity;
+    instructors: string[];
+}
+export interface RezervoClass extends RezervoClassBase {
+    startTime: DateTime;
+    endTime: DateTime;
+}
+export interface RezervoClassDTO extends RezervoClassBase {
+    startTime: string;
+    endTime: string;
+}
+
+export type RezervoActivity = {
+    id: number;
+    name: string;
+    category: string;
+    description: string;
+    color: string;
+    image: string;
 };
 
 export type IntegrationPageProps = {
-    initialSchedule: RezervoSchedule;
+    initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
 };

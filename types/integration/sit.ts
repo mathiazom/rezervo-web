@@ -29,7 +29,6 @@ export type SitClass = {
         count: number;
         userPosition: number | null;
     };
-    weekday?: number;
 };
 
 export type SitStudio = {

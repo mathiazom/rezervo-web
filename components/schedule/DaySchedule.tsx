@@ -2,7 +2,7 @@ import { Box, Chip, Typography, useTheme } from "@mui/material";
 import { DateTime } from "luxon";
 import React from "react";
 
-import { classRecurrentId, getCapitalizedWeekday, getDateTime } from "../../lib/integration/common";
+import { classRecurrentId, getCapitalizedWeekday } from "../../lib/integration/common";
 import {
     AllConfigsIndex,
     ClassPopularity,
@@ -41,14 +41,12 @@ function DaySchedule({
         return date.endOf("day") > DateTime.now();
     }
 
-    const date = getDateTime(daySchedule.date);
-
     return (
         <Box key={daySchedule.date.toString()} width={180}>
-            <Box py={2} sx={{ opacity: isDayPassed(date) ? 1 : 0.5 }}>
+            <Box py={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }}>
                 <Typography variant="h6" component="div">
-                    {getCapitalizedWeekday(date)}{" "}
-                    {isToday(date) && (
+                    {getCapitalizedWeekday(daySchedule.date)}{" "}
+                    {isToday(daySchedule.date) && (
                         <Chip
                             size={"small"}
                             sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
@@ -64,7 +62,7 @@ function DaySchedule({
                         fontSize: 15,
                     }}
                 >
-                    {date.toFormat("yyyy-MM-dd")}
+                    {daySchedule.date.toFormat("yyyy-MM-dd")}
                 </Typography>
             </Box>
             {daySchedule.classes.length > 0 ? (

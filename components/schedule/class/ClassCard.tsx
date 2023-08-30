@@ -9,7 +9,6 @@ import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/ani
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
 import { randomElementFromArray } from "../../../utils/arrayUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import { simpleTimeStringFromISO } from "../../../utils/timeUtils";
 import RippleBadge from "../../utils/RippleBadge";
 import ClassPopularityMeter from "./ClassPopularityMeter";
 import ClassUserAvatar from "./ClassUserAvatar";
@@ -49,7 +48,8 @@ const ClassCard = ({
         onSelectedChanged(!selected);
     }
 
-    const classColorRGB = (dark: boolean) => `rgb(${hexWithOpacityToRgb(_class.color, 0.6, dark ? 0 : 255).join(",")})`;
+    const classColorRGB = (dark: boolean) =>
+        `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
 
     const isInThePast = isClassInThePast(_class);
 
@@ -84,18 +84,18 @@ const ClassCard = ({
                             ...(showSelected ? { fontWeight: "bold" } : {}),
                         }}
                     >
-                        {_class.name}
+                        {_class.activity.name}
                     </Typography>
                     <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                 </Box>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {simpleTimeStringFromISO(_class.from)} - {simpleTimeStringFromISO(_class.to)}
+                    {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.studio.name}
+                    {_class.location.studio}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.instructors.map((i) => i.name).join(", ")}
+                    {_class.instructors.join(", ")}
                 </Typography>
             </CardContent>
             <CardActions sx={{ padding: 0 }} disableSpacing>
@@ -129,7 +129,11 @@ const ClassCard = ({
                                 {!isInThePast &&
                                     usersPlanned.length > 0 &&
                                     usersPlanned.map(({ user_name }) => (
-                                        <ClassUserAvatar key={user_name} username={user_name} alert={_class.bookable} />
+                                        <ClassUserAvatar
+                                            key={user_name}
+                                            username={user_name}
+                                            alert={_class.isBookable}
+                                        />
                                     ))}
                                 {userSessions.length > 0 &&
                                     userSessions.map(({ user_name, status }) => {

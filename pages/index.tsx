@@ -3,6 +3,7 @@ import React from "react";
 
 import Integration from "../components/Integration";
 import { activeIntegrations, fetchIntegrationPageStaticProps } from "../lib/integration/common";
+import { deserializeSchedule } from "../lib/serializers";
 import { IntegrationPageProps } from "../types/rezervo";
 
 const integration = activeIntegrations.sit;
@@ -21,7 +22,7 @@ export async function getStaticProps(): Promise<{
 const Index: NextPage<IntegrationPageProps> = ({ initialSchedule, classPopularityIndex }) => {
     return (
         <Integration
-            initialSchedule={initialSchedule}
+            initialSchedule={deserializeSchedule(initialSchedule)}
             classPopularityIndex={classPopularityIndex}
             acronym={integration.acronym}
         />
