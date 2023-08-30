@@ -1,5 +1,7 @@
 # 🤸 rezervo-web
 
+[![rezervo-web](https://img.shields.io/badge/ghcr.io-mathiazom%2Frezervo--web-blue?logo=docker)](https://github.com/users/mathiazom/packages/container/package/rezervo-web)
+
 Web client for [`rezervo`](https://github.com/mathiazom/rezervo), including booking schedules and user preferences.
 
 ### Setup
