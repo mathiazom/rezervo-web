@@ -1,6 +1,6 @@
-# 🤸 sit-rezervo-web
+# 🤸 rezervo-web
 
-Web client for [`sit-rezervo`](https://github.com/mathiazom/sit-rezervo), including booking schedules and user preferences.
+Web client for [`rezervo`](https://github.com/mathiazom/rezervo), including booking schedules and user preferences.
 
 ### Setup
 
