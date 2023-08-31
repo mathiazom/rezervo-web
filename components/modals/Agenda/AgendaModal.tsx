@@ -1,9 +1,8 @@
 import { Modal } from "@mui/material";
+import Agenda from "components/modals/Agenda/Agenda";
+import { classConfigRecurrentId, classRecurrentId } from "lib/integration/common";
 import React, { Dispatch, SetStateAction } from "react";
-
-import { classConfigRecurrentId, classRecurrentId } from "../../../lib/integration/common";
-import { IntegrationConfig, RezervoClass } from "../../../types/rezervo";
-import Agenda from "./Agenda";
+import { IntegrationConfig, RezervoClass } from "types/rezervo";
 
 const AgendaModal = ({
     open,

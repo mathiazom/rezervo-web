@@ -4,9 +4,8 @@ import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React from "react";
-
-import { ClassConfig, RezervoClass } from "../../../types/rezervo";
-import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
+import { ClassConfig, RezervoClass } from "types/rezervo";
+import { hexWithOpacityToRgb } from "utils/colorUtils";
 
 export type AgendaClass = {
     config: ClassConfig;

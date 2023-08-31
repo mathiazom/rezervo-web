@@ -1,17 +1,16 @@
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { Avatar, AvatarGroup, Box, Card, CardActions, CardContent, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import ClassPopularityMeter from "components/schedule/class/ClassPopularityMeter";
+import ClassUserAvatar from "components/schedule/class/ClassUserAvatar";
+import RippleBadge from "components/utils/RippleBadge";
+import { useUserSessions } from "hooks/useUserSessions";
+import { isClassInThePast } from "lib/integration/common";
 import React, { useEffect, useState } from "react";
-
-import { useUserSessions } from "../../../hooks/useUserSessions";
-import { isClassInThePast } from "../../../lib/integration/common";
-import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "../../../types/animation";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
-import { randomElementFromArray } from "../../../utils/arrayUtils";
-import { hexColorHash, hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import RippleBadge from "../../utils/RippleBadge";
-import ClassPopularityMeter from "./ClassPopularityMeter";
-import ClassUserAvatar from "./ClassUserAvatar";
+import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "types/animation";
+import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "types/rezervo";
+import { randomElementFromArray } from "utils/arrayUtils";
+import { hexColorHash, hexWithOpacityToRgb } from "utils/colorUtils";
 
 const ClassCard = ({
     _class,

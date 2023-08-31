@@ -10,14 +10,13 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import UndoIcon from "@mui/icons-material/Undo";
 import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
+import MobileConfigUpdateBar from "components/configuration/MobileConfigUpdateBar";
+import { useUserConfig } from "hooks/useUserConfig";
+import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "lib/integration/common";
 import React, { useMemo } from "react";
-
-import { useUserConfig } from "../../hooks/useUserConfig";
-import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "../../lib/integration/common";
-import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "../../types/rezervo";
-import { arraysAreEqual } from "../../utils/arrayUtils";
-import { hexColorHash } from "../../utils/colorUtils";
-import MobileConfigUpdateBar from "./MobileConfigUpdateBar";
+import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "types/rezervo";
+import { arraysAreEqual } from "utils/arrayUtils";
+import { hexColorHash } from "utils/colorUtils";
 
 function ConfigBar({
     integration,

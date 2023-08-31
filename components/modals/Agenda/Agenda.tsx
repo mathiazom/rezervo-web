@@ -1,11 +1,10 @@
 import { Box, Typography, useTheme } from "@mui/material";
+import AgendaClassItem, { AgendaClass } from "components/modals/Agenda/AgendaClassItem";
+import { LOCALE } from "config/config";
+import { capitalizeFirstCharacter, classConfigRecurrentId } from "lib/integration/common";
 import { Info } from "luxon";
 import React from "react";
-
-import { LOCALE } from "../../../config/config";
-import { capitalizeFirstCharacter, classConfigRecurrentId } from "../../../lib/integration/common";
-import { ClassConfig, RezervoClass } from "../../../types/rezervo";
-import AgendaClassItem, { AgendaClass } from "./AgendaClassItem";
+import { ClassConfig, RezervoClass } from "types/rezervo";
 
 export default function Agenda({
     agendaClasses,

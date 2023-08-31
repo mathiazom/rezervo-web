@@ -1,8 +1,12 @@
+import { LOCALE, TIME_ZONE } from "config/config";
+import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "lib/integration/adapters";
+import { fetchFscWeekSchedule } from "lib/integration/fsc";
+import { fetchSitWeekSchedule } from "lib/integration/sit";
+import { createClassPopularityIndex } from "lib/popularity";
+import { serializeSchedule } from "lib/serializers";
 import { DateTime } from "luxon";
-
-import { LOCALE, TIME_ZONE } from "../../config/config";
-import { FscWeekSchedule } from "../../types/integration/fsc";
-import { SitWeekSchedule } from "../../types/integration/sit";
+import { FscWeekSchedule } from "types/integration/fsc";
+import { SitWeekSchedule } from "types/integration/sit";
 import {
     ClassConfig,
     IntegrationIdentifier,
@@ -11,12 +15,7 @@ import {
     RezervoIntegration,
     RezervoSchedule,
     RezervoWeekSchedule,
-} from "../../types/rezervo";
-import { createClassPopularityIndex } from "../popularity";
-import { serializeSchedule } from "../serializers";
-import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "./adapters";
-import { fetchFscWeekSchedule } from "./fsc";
-import { fetchSitWeekSchedule } from "./sit";
+} from "types/rezervo";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
