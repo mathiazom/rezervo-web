@@ -1,5 +1,10 @@
+const withPWA = require("next-pwa")({
+    dest: "public",
+    customWorkerDir: "serviceworker",
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withPWA({
     reactStrictMode: true,
     output: "standalone",
     images: {
@@ -18,6 +23,6 @@ const nextConfig = {
             },
         ],
     },
-};
+});
 
 module.exports = nextConfig;
