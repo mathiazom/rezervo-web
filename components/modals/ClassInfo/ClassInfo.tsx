@@ -4,19 +4,18 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Typography } from "@mui/material";
+import ClassPopularityMeter from "components/schedule/class/ClassPopularityMeter";
+import ClassUsersAvatarGroup from "components/schedule/class/ClassUsersAvatarGroup";
+import ConfirmationDialog from "components/utils/ConfirmationDialog";
+import { useUserConfig } from "hooks/useUserConfig";
+import { useUserSessions } from "hooks/useUserSessions";
+import { getCapitalizedWeekday, isClassInThePast } from "lib/integration/common";
+import { stringifyClassPopularity } from "lib/popularity";
 import Image from "next/image";
 import React, { useState } from "react";
-
-import { useUserConfig } from "../../../hooks/useUserConfig";
-import { useUserSessions } from "../../../hooks/useUserSessions";
-import { getCapitalizedWeekday, isClassInThePast } from "../../../lib/integration/common";
-import { stringifyClassPopularity } from "../../../lib/popularity";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "../../../types/rezervo";
-import { formatNameArray } from "../../../utils/arrayUtils";
-import { hexWithOpacityToRgb } from "../../../utils/colorUtils";
-import ClassPopularityMeter from "../../schedule/class/ClassPopularityMeter";
-import ClassUsersAvatarGroup from "../../schedule/class/ClassUsersAvatarGroup";
-import ConfirmationDialog from "../../utils/ConfirmationDialog";
+import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "types/rezervo";
+import { formatNameArray } from "utils/arrayUtils";
+import { hexWithOpacityToRgb } from "utils/colorUtils";
 
 export default function ClassInfo({
     _class,

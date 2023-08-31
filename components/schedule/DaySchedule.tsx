@@ -1,16 +1,15 @@
 import { Box, Chip, Typography, useTheme } from "@mui/material";
+import ClassCard from "components/schedule/class/ClassCard";
+import { classRecurrentId, getCapitalizedWeekday } from "lib/integration/common";
 import { DateTime } from "luxon";
 import React from "react";
-
-import { classRecurrentId, getCapitalizedWeekday } from "../../lib/integration/common";
 import {
     AllConfigsIndex,
     ClassPopularity,
     ClassPopularityIndex,
     RezervoClass,
     RezervoDaySchedule,
-} from "../../types/rezervo";
-import ClassCard from "./class/ClassCard";
+} from "types/rezervo";
 
 function DaySchedule({
     daySchedule,

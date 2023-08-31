@@ -1,7 +1,6 @@
 import { AvatarGroup } from "@mui/material";
+import ClassUserAvatar from "components/schedule/class/ClassUserAvatar";
 import React from "react";
-
-import ClassUserAvatar from "./ClassUserAvatar";
 
 export default function ClassUsersAvatarGroup({
     users,

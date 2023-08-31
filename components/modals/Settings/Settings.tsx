@@ -12,18 +12,17 @@ import {
     Switch as MaterialUISwitch,
     Typography,
 } from "@mui/material";
+import CalendarFeed from "components/modals/Settings/CalendarFeed";
+import { DEFAULT_REMINDER_HOURS } from "config/config";
+import { usePreferences } from "hooks/usePreferences";
+import { useUserConfig } from "hooks/useUserConfig";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-
-import { DEFAULT_REMINDER_HOURS } from "../../../config/config";
-import { usePreferences } from "../../../hooks/usePreferences";
-import { useUserConfig } from "../../../hooks/useUserConfig";
 import {
     IntegrationConfigPayload,
     IntegrationIdentifier,
     NotificationsConfig,
     PreferencesPayload,
-} from "../../../types/rezervo";
-import CalendarFeed from "./CalendarFeed";
+} from "types/rezervo";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({

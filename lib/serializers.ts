@@ -1,3 +1,4 @@
+import { getDateTime } from "lib/integration/common";
 import {
     RezervoClass,
     RezervoClassDTO,
@@ -7,8 +8,7 @@ import {
     RezervoScheduleDTO,
     RezervoWeekSchedule,
     RezervoWeekScheduleDTO,
-} from "../types/rezervo";
-import { getDateTime } from "./integration/common";
+} from "types/rezervo";
 
 function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
     return {
