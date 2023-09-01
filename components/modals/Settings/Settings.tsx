@@ -13,6 +13,7 @@ import {
     Typography,
 } from "@mui/material";
 import CalendarFeed from "components/modals/Settings/CalendarFeed";
+import PushNotifications from "components/modals/Settings/PushNotifications";
 import { DEFAULT_REMINDER_HOURS } from "config/config";
 import { usePreferences } from "hooks/usePreferences";
 import { useUserConfig } from "hooks/useUserConfig";
@@ -222,6 +223,7 @@ export default function Settings({
                             <FormLabel disabled={!reminderActive}>timer før</FormLabel>
                         </Box>
                     </FormGroup>
+                    <PushNotifications canActivate={reminderActive} />
                     <Divider />
                     <CalendarFeed />
                 </FormGroup>
