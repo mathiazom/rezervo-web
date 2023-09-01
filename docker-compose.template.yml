@@ -1,0 +1,8 @@
+name: "rezervo-web"
+services:
+  rezervo-web:
+    image: ghcr.io/mathiazom/rezervo-web:main
+    container_name: rezervo-web
+    restart: unless-stopped
+    volumes:
+      - .env:/app/.env.local:ro
