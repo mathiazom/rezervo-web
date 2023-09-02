@@ -237,8 +237,8 @@ export default function ClassInfo({
                         alt={_class.activity.name}
                         width={600}
                         height={300}
-                        objectFit={"cover"}
                         style={{
+                            objectFit: "cover",
                             borderRadius: "0.25em",
                             padding: 0,
                         }}
