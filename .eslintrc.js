@@ -1,4 +1,5 @@
 module.exports = {
+    parser: "@typescript-eslint/parser",
     settings: {
         react: {
             version: "detect",
@@ -22,17 +23,29 @@ module.exports = {
         es2022: true,
     },
     extends: [
-        "eslint:recommended",
+        "next/core-web-vitals",
         "plugin:import/recommended",
         "plugin:import/typescript",
-        "next/core-web-vitals",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
         "prettier",
     ],
-    plugins: ["simple-import-sort", "eslint-plugin-no-relative-import-paths"],
+    plugins: ["eslint-plugin-no-relative-import-paths"],
     rules: {
-        "no-unused-vars": ["error", { args: "none" }],
-        "simple-import-sort/imports": "error",
-        "simple-import-sort/exports": "error",
         "no-relative-import-paths/no-relative-import-paths": "error",
+        /** @see https://medium.com/weekly-webtips/how-to-sort-imports-like-a-pro-in-typescript-4ee8afd7258a */
+        "import/order": [
+            "error",
+            {
+                groups: ["builtin", "external", "internal", ["sibling", "parent"], "index", "unknown"],
+                "newlines-between": "always",
+                alphabetize: {
+                    order: "asc",
+                    caseInsensitive: true,
+                },
+            },
+        ],
+        /** */
     },
 };
