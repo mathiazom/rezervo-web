@@ -10,12 +10,12 @@ const nextConfig = withPWA({
     async redirects() {
         return [
             {
-                // TODO: most recent integration or a first-time pickeryarn 
-                source: '/',
-                destination: '/sit',
+                // TODO: most recent integration or a first-time pickeryarn
+                source: "/",
+                destination: "/sit",
                 permanent: false,
             },
-        ]
+        ];
     },
     images: {
         remotePatterns: [
