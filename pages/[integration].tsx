@@ -1,8 +1,9 @@
+import type { GetStaticPaths, NextPage } from "next";
+import React from "react";
+
 import Integration from "components/Integration";
 import { activeIntegrations, fetchIntegrationPageStaticProps } from "lib/integration/common";
 import { deserializeSchedule } from "lib/serializers";
-import type { GetStaticPaths, NextPage } from "next";
-import React from "react";
 import { IntegrationPageParams, IntegrationPageProps, RezervoIntegration } from "types/rezervo";
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -20,6 +21,7 @@ export async function getStaticProps({ params }: { params: IntegrationPageParams
     revalidate: number;
     props: IntegrationPageProps;
 }> {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const integration: RezervoIntegration<any> = activeIntegrations[params.integration];
     const businessUnit = integration.businessUnits[0];
     if (!businessUnit) {

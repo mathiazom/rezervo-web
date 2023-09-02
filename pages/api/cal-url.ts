@@ -1,5 +1,6 @@
-import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
+
+import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 function get(accessToken: string): Promise<Response> {
     return fetch(`${process.env["CONFIG_HOST"]}/cal-token`, {
@@ -37,7 +38,7 @@ export default withApiAuthRequired(async function handler(req, res) {
     }
     const calendarToken = await response.json();
     const calendarFeedUrl = new URL(`${process.env["CONFIG_HOST"]}/cal`);
-    let includePastQuery = req.query["include_past"];
+    const includePastQuery = req.query["include_past"];
     calendarFeedUrl.searchParams.set(
         "include_past",
         (typeof includePastQuery !== "string" ? includePastQuery?.pop() : includePastQuery) || "true",

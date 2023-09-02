@@ -19,6 +19,7 @@ export function usePreferences() {
 
     const { data, error, isLoading } = useSWR<Preferences>(user ? preferencesApiUrl : null, fetcher);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { trigger, isMutating } = useSWRMutation<Preferences, any, string, PreferencesPayload>(
         preferencesApiUrl,
         putPreferences,

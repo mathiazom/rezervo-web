@@ -1,6 +1,8 @@
-import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
 
+import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function put(integration: string, accessToken: string, body: any): Promise<Response> {
     return fetch(`${process.env["CONFIG_HOST"]}/${integration}/config`, {
         method: "PUT",

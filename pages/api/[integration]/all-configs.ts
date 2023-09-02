@@ -1,5 +1,6 @@
-import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import { constants } from "http2";
+
+import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 function get(integration: string, accessToken: string): Promise<Response> {
     return fetch(`${process.env["CONFIG_HOST"]}/${integration}/all-configs`, {

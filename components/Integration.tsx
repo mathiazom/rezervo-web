@@ -1,4 +1,6 @@
 import { Box, Divider, Stack } from "@mui/material";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+
 import ConfigBar from "components/configuration/ConfigBar";
 import AgendaModal from "components/modals/Agenda/AgendaModal";
 import ClassInfoModal from "components/modals/ClassInfo/ClassInfoModal";
@@ -10,7 +12,6 @@ import Logo from "components/utils/Logo";
 import PageHead from "components/utils/PageHead";
 import { useUserConfig } from "hooks/useUserConfig";
 import { classConfigRecurrentId } from "lib/integration/common";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import {
     ClassPopularityIndex,
     IntegrationIdentifier,

@@ -1,5 +1,6 @@
-import { getDateTime, zeroIndexedWeekday } from "lib/integration/common";
 import { DateTime } from "luxon";
+
+import { getDateTime, zeroIndexedWeekday } from "lib/integration/common";
 import { FscClass, FscWeekSchedule } from "types/integration/fsc";
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "types/integration/sit";
 import { IntegrationIdentifier, RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "types/rezervo";

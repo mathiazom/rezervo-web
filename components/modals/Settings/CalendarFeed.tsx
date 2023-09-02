@@ -6,9 +6,10 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
+import React, { useState } from "react";
+
 import { useCopyToClipboard } from "hooks/useCopyToClipboard";
 import { useUserCalendarFeedUrl } from "hooks/useUserCalendarFeedUrl";
-import React, { useState } from "react";
 
 export default function CalendarFeed() {
     const [includePastClasses, setIncludePastClasses] = useState(true);

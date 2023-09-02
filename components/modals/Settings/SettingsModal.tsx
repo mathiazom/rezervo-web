@@ -1,6 +1,7 @@
 import { Modal } from "@mui/material";
-import Settings from "components/modals/Settings/Settings";
 import React, { Dispatch, SetStateAction } from "react";
+
+import Settings from "components/modals/Settings/Settings";
 import { IntegrationIdentifier } from "types/rezervo";
 
 const SettingsModal = ({

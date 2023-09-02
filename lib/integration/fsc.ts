@@ -1,6 +1,7 @@
+import { DateTime } from "luxon";
+
 import { TIME_ZONE } from "config/config";
 import { calculateMondayOffset } from "lib/integration/common";
-import { DateTime } from "luxon";
 import { FscWeekSchedule, FscWeekScheduleResponse } from "types/integration/fsc";
 
 function fscWeekScheduleUrl(fromDate: DateTime) {
