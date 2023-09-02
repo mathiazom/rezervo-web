@@ -7,6 +7,16 @@ const withPWA = require("next-pwa")({
 const nextConfig = withPWA({
     reactStrictMode: true,
     output: "standalone",
+    async redirects() {
+        return [
+            {
+                // TODO: most recent integration or a first-time pickeryarn 
+                source: '/',
+                destination: '/sit',
+                permanent: false,
+            },
+        ]
+    },
     images: {
         remotePatterns: [
             {
