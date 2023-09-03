@@ -1,8 +1,8 @@
 import { DateTime } from "luxon";
 
-import { GROUP_BOOKING_URL, TIME_ZONE } from "config/config";
-import { calculateMondayOffset } from "lib/integration/common";
-import { SitDaySchedule, SitWeekSchedule } from "types/integration/sit";
+import { GROUP_BOOKING_URL, TIME_ZONE } from "@/config/config";
+import { calculateMondayOffset } from "@/lib/integration/common";
+import { SitDaySchedule, SitWeekSchedule } from "@/types/integration/sit";
 
 function sitScheduleUrl(token: string, fromISO: string | null = null) {
     return (

@@ -1,6 +1,6 @@
 import "styles/globals.css";
 import "styles/animations.css";
-import "components/schedule/class/ClassCard.css";
+import "@/components/schedule/class/ClassCard.css";
 
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, experimental_extendTheme } from "@mui/material";

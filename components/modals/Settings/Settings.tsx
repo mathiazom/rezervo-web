@@ -14,16 +14,16 @@ import {
 } from "@mui/material";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import CalendarFeed from "components/modals/Settings/CalendarFeed";
-import { DEFAULT_REMINDER_HOURS } from "config/config";
-import { usePreferences } from "hooks/usePreferences";
-import { useUserConfig } from "hooks/useUserConfig";
+import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
+import { DEFAULT_REMINDER_HOURS } from "@/config/config";
+import { usePreferences } from "@/hooks/usePreferences";
+import { useUserConfig } from "@/hooks/useUserConfig";
 import {
     IntegrationConfigPayload,
     IntegrationIdentifier,
     NotificationsConfig,
     PreferencesPayload,
-} from "types/rezervo";
+} from "@/types/rezervo";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({

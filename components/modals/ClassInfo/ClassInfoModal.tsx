@@ -1,9 +1,9 @@
 import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
-import ClassInfo from "components/modals/ClassInfo/ClassInfo";
-import { classRecurrentId } from "lib/integration/common";
-import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex, RezervoClass } from "types/rezervo";
+import ClassInfo from "@/components/modals/ClassInfo/ClassInfo";
+import { classRecurrentId } from "@/lib/integration/common";
+import { AllConfigsIndex, ClassPopularity, ClassPopularityIndex, RezervoClass } from "@/types/rezervo";
 
 const ClassInfoModal = ({
     classInfoClass,

@@ -2,8 +2,8 @@ import { Box, Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
-import DaySchedule from "components/schedule/DaySchedule";
-import { AllConfigsIndex, ClassPopularityIndex, RezervoClass, RezervoWeekSchedule } from "types/rezervo";
+import DaySchedule from "@/components/schedule/DaySchedule";
+import { AllConfigsIndex, ClassPopularityIndex, RezervoClass, RezervoWeekSchedule } from "@/types/rezervo";
 
 function WeekSchedule({
     weekSchedule,

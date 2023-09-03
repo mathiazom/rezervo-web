@@ -1,24 +1,24 @@
 import { Box, Divider, Stack } from "@mui/material";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
-import ConfigBar from "components/configuration/ConfigBar";
-import AgendaModal from "components/modals/Agenda/AgendaModal";
-import ClassInfoModal from "components/modals/ClassInfo/ClassInfoModal";
-import SettingsModal from "components/modals/Settings/SettingsModal";
-import WeekNavigator from "components/schedule/WeekNavigator";
-import WeekSchedule from "components/schedule/WeekSchedule";
-import AppBar from "components/utils/AppBar";
-import Logo from "components/utils/Logo";
-import PageHead from "components/utils/PageHead";
-import { useUserConfig } from "hooks/useUserConfig";
-import { classConfigRecurrentId } from "lib/integration/common";
+import ConfigBar from "@/components/configuration/ConfigBar";
+import AgendaModal from "@/components/modals/Agenda/AgendaModal";
+import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
+import SettingsModal from "@/components/modals/Settings/SettingsModal";
+import WeekNavigator from "@/components/schedule/WeekNavigator";
+import WeekSchedule from "@/components/schedule/WeekSchedule";
+import AppBar from "@/components/utils/AppBar";
+import Logo from "@/components/utils/Logo";
+import PageHead from "@/components/utils/PageHead";
+import { useUserConfig } from "@/hooks/useUserConfig";
+import { classConfigRecurrentId } from "@/lib/integration/common";
 import {
     ClassPopularityIndex,
     IntegrationIdentifier,
     RezervoClass,
     RezervoSchedule,
     RezervoWeekSchedule,
-} from "types/rezervo";
+} from "@/types/rezervo";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);

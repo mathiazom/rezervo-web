@@ -7,16 +7,16 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 
-import ClassPopularityMeter from "components/schedule/class/ClassPopularityMeter";
-import ClassUsersAvatarGroup from "components/schedule/class/ClassUsersAvatarGroup";
-import ConfirmationDialog from "components/utils/ConfirmationDialog";
-import { useUserConfig } from "hooks/useUserConfig";
-import { useUserSessions } from "hooks/useUserSessions";
-import { getCapitalizedWeekday, isClassInThePast } from "lib/integration/common";
-import { stringifyClassPopularity } from "lib/popularity";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "types/rezervo";
-import { formatNameArray } from "utils/arrayUtils";
-import { hexWithOpacityToRgb } from "utils/colorUtils";
+import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
+import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
+import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import { useUserConfig } from "@/hooks/useUserConfig";
+import { useUserSessions } from "@/hooks/useUserSessions";
+import { getCapitalizedWeekday, isClassInThePast } from "@/lib/integration/common";
+import { stringifyClassPopularity } from "@/lib/popularity";
+import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
+import { formatNameArray } from "@/utils/arrayUtils";
+import { hexWithOpacityToRgb } from "@/utils/colorUtils";
 
 export default function ClassInfo({
     _class,
