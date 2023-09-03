@@ -4,23 +4,11 @@ module.exports = {
         react: {
             version: "detect",
         },
-        "import/resolver": {
-            typescript: true,
-            node: {
-                moduleDirectory: ["src"],
-            },
-        },
-    },
-    parserOptions: {
-        ecmaVersion: 14,
-        sourceType: "module",
-        ecmaFeatures: {
-            modules: true,
-        },
     },
     env: {
         browser: true,
-        es2022: true,
+        node: true,
+        es2024: true,
     },
     extends: [
         "next/core-web-vitals",
