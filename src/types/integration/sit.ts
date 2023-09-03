@@ -27,7 +27,6 @@ export type SitClass = {
     waitlist: {
         active: boolean;
         count: number;
-        userPosition: number | null;
     };
 };
 
