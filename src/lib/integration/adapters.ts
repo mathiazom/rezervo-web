@@ -1,10 +1,9 @@
 import { DateTime } from "luxon";
 
-import { getDateTime, zeroIndexedWeekday } from "@/lib/integration/common";
-import { FscClass, FscWeekSchedule } from "@/types/integration/fsc";
+import { determineActivityCategory, getDateTime, zeroIndexedWeekday } from "@/lib/integration/common";
+import { DetailedFscClass, DetailedFscWeekSchedule } from "@/types/integration/fsc";
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "@/types/integration/sit";
 import { IntegrationIdentifier, RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/rezervo";
-import { hexColorHash } from "@/utils/colorUtils";
 
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {
@@ -44,7 +43,8 @@ export function sitToRezervoWeekSchedule(sitWeekSchedule: SitWeekSchedule): Reze
     return sitWeekSchedule.days.map(sitToRezervoDaySchedule);
 }
 
-function fscToRezervoClass(fscClass: FscClass): RezervoClass {
+function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
+    const category = determineActivityCategory(fscClass.name);
     return {
         integration: IntegrationIdentifier.fsc,
         id: fscClass.id,
@@ -54,18 +54,18 @@ function fscToRezervoClass(fscClass: FscClass): RezervoClass {
             room: fscClass.locations.map((location) => location.name).join(", "),
         },
         isBookable:
-            DateTime.fromISO(fscClass.bookableEarliest) < DateTime.now() &&
-            DateTime.fromISO(fscClass.bookableLatest) > DateTime.now(),
+            getDateTime(fscClass.bookableEarliest) < DateTime.now() &&
+            getDateTime(fscClass.bookableLatest) > DateTime.now(),
         totalSlots: fscClass.slots.total,
         availableSlots: fscClass.slots.leftToBook,
         waitingListCount: fscClass.slots.inWaitingList,
         activity: {
             id: fscClass.groupActivityProduct.id,
-            name: fscClass.groupActivityProduct.name,
-            category: "FSC", // FSC does not seem to have categories
-            color: hexColorHash(fscClass.locations.map((location) => location.name).join(", ")),
-            description: "", // TODO: available at 'https://fsc.no/api/v1/products/groupactivities/{fscClass.groupActivityProduct.id}'
-            image: null, // TODO: available at 'https://fsc.no/api/v1/products/groupactivities/{fscClass.groupActivityProduct.id}'
+            name: fscClass.groupActivityProduct.name.replace(/\s\(\d+\)$/, ""),
+            category: category.name,
+            color: category.color,
+            description: fscClass.description,
+            image: fscClass.image,
         },
         instructors: fscClass.instructors.map((instructor) => instructor.name),
         startTime: getDateTime(fscClass.duration.start),
@@ -73,7 +73,7 @@ function fscToRezervoClass(fscClass: FscClass): RezervoClass {
     };
 }
 
-export function fscToRezervoWeekSchedule(fscWeekSchedule: FscWeekSchedule): RezervoWeekSchedule {
+export function fscToRezervoWeekSchedule(fscWeekSchedule: DetailedFscWeekSchedule): RezervoWeekSchedule {
     const schedule: RezervoWeekSchedule = [];
     for (const fscClass of fscWeekSchedule) {
         const date = getDateTime(fscClass.duration.start);
