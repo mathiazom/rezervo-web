@@ -7,7 +7,7 @@ module.exports = {
         "import/resolver": {
             typescript: true,
             node: {
-                moduleDirectory: ["."],
+                moduleDirectory: ["src"],
             },
         },
     },
@@ -36,7 +36,7 @@ module.exports = {
         "no-relative-import-paths/no-relative-import-paths": [
             "error",
             {
-                rootDir: ".",
+                rootDir: "src",
                 prefix: "@",
             },
         ],

@@ -1,6 +1,6 @@
 const withPWA = require("next-pwa")({
     dest: "public",
-    customWorkerDir: "serviceworker",
+    customWorkerDir: "src/serviceworker",
 });
 
 /** @type {import('next').NextConfig} */
