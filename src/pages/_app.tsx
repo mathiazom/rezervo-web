@@ -1,5 +1,5 @@
-import "styles/globals.css";
-import "styles/animations.css";
+import "@/styles/globals.css";
+import "@/styles/animations.css";
 import "@/components/schedule/class/ClassCard.css";
 
 import { UserProvider } from "@auth0/nextjs-auth0/client";
