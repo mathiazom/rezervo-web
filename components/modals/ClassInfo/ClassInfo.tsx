@@ -238,6 +238,7 @@ export default function ClassInfo({
                         width={600}
                         height={300}
                         style={{
+                            maxWidth: "100%",
                             objectFit: "cover",
                             borderRadius: "0.25em",
                             padding: 0,
