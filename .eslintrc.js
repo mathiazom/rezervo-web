@@ -33,7 +33,13 @@ module.exports = {
     ],
     plugins: ["eslint-plugin-no-relative-import-paths"],
     rules: {
-        "no-relative-import-paths/no-relative-import-paths": "error",
+        "no-relative-import-paths/no-relative-import-paths": [
+            "error",
+            {
+                rootDir: ".",
+                prefix: "@",
+            },
+        ],
         /** @see https://medium.com/weekly-webtips/how-to-sort-imports-like-a-pro-in-typescript-4ee8afd7258a */
         "import/order": [
             "error",
