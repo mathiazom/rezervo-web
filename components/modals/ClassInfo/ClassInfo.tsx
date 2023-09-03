@@ -231,12 +231,11 @@ export default function ClassInfo({
                 </Box>
             )}
             {_class.activity.image && (
-                <Box pt={2}>
+                <Box pt={2} sx={{ position: "relative", height: 300 }}>
                     <Image
                         src={_class.activity.image}
                         alt={_class.activity.name}
-                        width={600}
-                        height={300}
+                        fill
                         style={{
                             objectFit: "cover",
                             borderRadius: "0.25em",
