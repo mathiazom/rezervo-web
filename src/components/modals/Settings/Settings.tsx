@@ -15,6 +15,7 @@ import {
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
+import PushNotifications from "@/components/modals/Settings/PushNotifications";
 import { DEFAULT_REMINDER_HOURS } from "@/config/config";
 import { usePreferences } from "@/hooks/usePreferences";
 import { useUserConfig } from "@/hooks/useUserConfig";
@@ -85,6 +86,7 @@ export default function Settings({
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
             reminder_hours_before: active ? reminderHours ?? DEFAULT_REMINDER_HOURS : null,
+            push_notification_subscription: preferences?.notifications?.push_notification_subscription ?? null,
         });
     }
 
@@ -96,6 +98,7 @@ export default function Settings({
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
             reminder_hours_before: reminderActive ? reminderHours : null,
+            push_notification_subscription: preferences?.notifications?.push_notification_subscription ?? null,
         });
     }
 
@@ -172,6 +175,7 @@ export default function Settings({
                             </Box>
                         </FormLabel>
                     </FormGroup>
+                    <PushNotifications />
                     <Divider orientation="horizontal" />
                     <FormGroup>
                         <FormLabel>
