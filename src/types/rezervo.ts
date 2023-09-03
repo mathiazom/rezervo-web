@@ -146,3 +146,9 @@ export type IntegrationPageProps = {
     initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
 };
+
+export type RezervoCategory = {
+    name: string;
+    color: string;
+    keywords: string[];
+};

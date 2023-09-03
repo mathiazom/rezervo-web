@@ -6,12 +6,13 @@ import { fetchFscWeekSchedule } from "@/lib/integration/fsc";
 import { fetchSitWeekSchedule } from "@/lib/integration/sit";
 import { createClassPopularityIndex } from "@/lib/popularity";
 import { serializeSchedule } from "@/lib/serializers";
-import { FscWeekSchedule } from "@/types/integration/fsc";
+import { DetailedFscWeekSchedule } from "@/types/integration/fsc";
 import { SitWeekSchedule } from "@/types/integration/sit";
 import {
     ClassConfig,
     IntegrationIdentifier,
     RezervoBusinessUnit,
+    RezervoCategory,
     RezervoClass,
     RezervoIntegration,
     RezervoSchedule,
@@ -106,9 +107,55 @@ export function isClassInThePast(_class: RezervoClass): boolean {
     return _class.startTime < DateTime.now();
 }
 
+const categories: RezervoCategory[] = [
+    {
+        name: "Annet",
+        color: "#FFFF66",
+        keywords: ["happening", "event"],
+    },
+    {
+        name: "Mosjon",
+        color: "#00B050",
+        keywords: ["godt voksen"],
+    },
+    {
+        name: "Dans",
+        color: "#E96179",
+        keywords: ["dans", "dance", "sh'bam"],
+    },
+    {
+        name: "Body & Mind",
+        color: "#8BD4F0",
+        keywords: ["yoga", "pilates", "smidig", "stretch", "mobilitet", "meditate"],
+    },
+    {
+        name: "Kondisjon",
+        color: "#6AD3B4",
+        keywords: ["step", "løp", "puls", "bodyattack", "cardio"],
+    },
+    {
+        name: "Spinning",
+        color: "#4C2C7E",
+        keywords: ["spin", "sykkel"],
+    },
+    {
+        name: "Styrke & Utholdenhet",
+        color: "#F8A800",
+        keywords: ["pump", "styrke", "core", "sterk", "tabata", "stærk", "strength", "hardhausen", "slynge"],
+    },
+];
+
+export function determineActivityCategory(activityName: string): RezervoCategory {
+    return (
+        categories.find((category) =>
+            category.keywords.some((keyword) => activityName.toLowerCase().includes(keyword)),
+        ) ?? categories[0]!
+    );
+}
+
 export type IntegrationWeekSchedule = {
     [IntegrationIdentifier.sit]: SitWeekSchedule;
-    [IntegrationIdentifier.fsc]: FscWeekSchedule;
+    [IntegrationIdentifier.fsc]: DetailedFscWeekSchedule;
 };
 
 export const activeIntegrations: {

@@ -1,8 +1,11 @@
-export type FscWeekScheduleResponse = {
+export type FscResponse = {
     success: boolean;
     errors?: {
         [errorType: string]: string[];
     };
+};
+
+export type FscWeekScheduleResponse = FscResponse & {
     data: FscWeekSchedule;
 };
 
@@ -44,8 +47,45 @@ export type FscClass = {
         totalBookable: number;
         reservedForDropin: number;
         leftToBook: number;
-        leftToBookIncDropin: number; // [sic]
+        leftToBookIncDropin: number; // also known as leftToBookIncludingDropIn
         hasWaitingList: boolean;
         inWaitingList: number;
     };
+};
+
+export type FscActivityDetailResponse = FscResponse & {
+    data: FscActivityDetail;
+};
+
+export type FscActivityDetail = {
+    id: number;
+    name: string;
+    productLabels: {
+        id: number;
+        name: string;
+    }[];
+    businessUnits: {
+        id: number;
+        name: string;
+        location: string;
+        companyNameForInvoice: string;
+    }[];
+    description: string;
+    assets?: {
+        reference: string;
+        type: string;
+        contentType: string;
+        contentUrl: string;
+        imageWidth: number;
+        imageHeight: number;
+        focalPointX: number;
+        focalPointY: number;
+    }[];
+    participantsMustPay: boolean;
+};
+
+export type DetailedFscWeekSchedule = DetailedFscClass[];
+export type DetailedFscClass = FscClass & {
+    description: string;
+    image: string;
 };

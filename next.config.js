@@ -31,6 +31,10 @@ const nextConfig = withPWA({
                 protocol: "https",
                 hostname: "s.gravatar.com",
             },
+            {
+                protocol: "https",
+                hostname: "storage.googleapis.com",
+            },
         ],
     },
 });
