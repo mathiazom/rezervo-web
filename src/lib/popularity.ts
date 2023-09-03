@@ -33,8 +33,8 @@ export function stringifyClassPopularity(_class: RezervoClass, historicPopularit
         classPopularityInfo = historicPopularity;
     }
 
-    if (_class.waitingList.count > 0) {
-        classPopularityInfo += ` | ${_class.waitingList.count} ${isInThePast ? "fikk ikke plass" : "er på venteliste"}`;
+    if (_class.waitingListCount > 0) {
+        classPopularityInfo += ` | ${_class.waitingListCount} ${isInThePast ? "fikk ikke plass" : "er på venteliste"}`;
     }
     return classPopularityInfo;
 }

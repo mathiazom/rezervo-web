@@ -115,10 +115,7 @@ interface RezervoClassBase {
     isBookable: boolean;
     totalSlots: number;
     availableSlots: number;
-    waitingList: {
-        count: number;
-        userPosition: number | null;
-    };
+    waitingListCount: number;
     activity: RezervoActivity;
     instructors: string[];
 }

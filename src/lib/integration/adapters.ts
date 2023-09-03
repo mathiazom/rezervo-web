@@ -20,10 +20,7 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
         isBookable: sitClass.bookable,
         totalSlots: sitClass.capacity,
         availableSlots: sitClass.available,
-        waitingList: {
-            count: sitClass.waitlist.count,
-            userPosition: sitClass.waitlist.userPosition,
-        },
+        waitingListCount: sitClass.waitlist.count,
         activity: {
             id: sitClass.activityId,
             name: sitClass.name,
@@ -61,10 +58,7 @@ function fscToRezervoClass(fscClass: FscClass): RezervoClass {
             DateTime.fromISO(fscClass.bookableLatest) > DateTime.now(),
         totalSlots: fscClass.slots.total,
         availableSlots: fscClass.slots.leftToBook,
-        waitingList: {
-            count: fscClass.slots.inWaitingList,
-            userPosition: null, // TODO: missing here
-        },
+        waitingListCount: fscClass.slots.inWaitingList,
         activity: {
             id: fscClass.groupActivityProduct.id,
             name: fscClass.groupActivityProduct.name,
