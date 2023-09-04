@@ -1,8 +1,9 @@
 import { DateTime } from "luxon";
 
 import { IntegrationIdentifier } from "@/lib/integrations/active";
-import { determineActivityCategory, getDateTime, zeroIndexedWeekday } from "@/lib/integrations/common";
+import { determineActivityCategory } from "@/lib/integrations/common";
 import { DetailedFscClass, DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
+import { getDateTime, zeroIndexedWeekday } from "@/lib/utils/dateUtils";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/rezervo";
 
 function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {

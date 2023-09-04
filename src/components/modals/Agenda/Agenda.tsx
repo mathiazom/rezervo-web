@@ -4,7 +4,8 @@ import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
 import { LOCALE } from "@/lib/consts";
-import { capitalizeFirstCharacter, classConfigRecurrentId } from "@/lib/integrations/common";
+import { classConfigRecurrentId } from "@/lib/integrations/common";
+import { capitalizeFirstCharacter } from "@/lib/utils/dateUtils";
 import { ClassConfig, RezervoClass } from "@/types/rezervo";
 
 export default function Agenda({

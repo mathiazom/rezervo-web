@@ -1,6 +1,6 @@
 import { IntegrationIdentifier } from "@/lib/integrations/active";
-import { getDateTime } from "@/lib/integrations/common";
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
+import { getDateTime } from "@/lib/utils/dateUtils";
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/rezervo";
 
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {

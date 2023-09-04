@@ -1,7 +1,6 @@
 import { DateTime } from "luxon";
 
 import { TIME_ZONE } from "@/lib/consts";
-import { calculateMondayOffset } from "@/lib/integrations/common";
 import {
     DetailedFscClass,
     DetailedFscWeekSchedule,
@@ -11,6 +10,7 @@ import {
     FscWeekSchedule,
     FscWeekScheduleResponse,
 } from "@/lib/integrations/fsc/types";
+import { calculateMondayOffset } from "@/lib/utils/dateUtils";
 
 function fscWeekScheduleUrl(fromDate: DateTime) {
     return `https://fsc.no/api/v1/businessunits/8/groupactivities?period_start=${fromDate.toUTC()}&period_end=${fromDate
