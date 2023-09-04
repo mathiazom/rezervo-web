@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 import { TIME_ZONE } from "@/config/config";
-import { calculateMondayOffset } from "@/lib/integration/common";
+import { calculateMondayOffset } from "@/lib/integrations/common";
 import {
     DetailedFscClass,
     DetailedFscWeekSchedule,

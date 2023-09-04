@@ -1,4 +1,4 @@
-import { getDateTime } from "@/lib/integration/common";
+import { getDateTime } from "@/lib/integrations/common";
 import {
     RezervoClass,
     RezervoClassDTO,

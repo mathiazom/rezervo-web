@@ -12,7 +12,7 @@ import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarG
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { getCapitalizedWeekday, isClassInThePast } from "@/lib/integration/common";
+import { getCapitalizedWeekday, isClassInThePast } from "@/lib/integrations/common";
 import { stringifyClassPopularity } from "@/lib/popularity";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";

@@ -12,7 +12,7 @@ import AppBar from "@/components/utils/AppBar";
 import Logo from "@/components/utils/Logo";
 import PageHead from "@/components/utils/PageHead";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { classConfigRecurrentId } from "@/lib/integration/common";
+import { classConfigRecurrentId } from "@/lib/integrations/common";
 import {
     ClassPopularityIndex,
     IntegrationProfile,

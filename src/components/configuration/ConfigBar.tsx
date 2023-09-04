@@ -16,7 +16,7 @@ import React, { useMemo } from "react";
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integration/common";
+import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integrations/common";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "@/types/rezervo";

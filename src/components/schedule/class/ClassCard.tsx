@@ -7,7 +7,7 @@ import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMet
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { isClassInThePast } from "@/lib/integration/common";
+import { isClassInThePast } from "@/lib/integrations/common";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";

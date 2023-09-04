@@ -47,4 +47,4 @@ yarn tsc
 
 #### 🔌 Support new integration
 
-Add your own integration by adding it to [`activeIntegrations`](src/lib/integration/common.ts).
+Add your own integration by adding it to [`activeIntegrations`](src/lib/integrations/common.ts).

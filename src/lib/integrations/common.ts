@@ -1,9 +1,9 @@
 import { DateTime } from "luxon";
 
 import { LOCALE, TIME_ZONE } from "@/config/config";
-import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "@/lib/integration/adapters";
-import { fetchFscWeekSchedule } from "@/lib/integration/fsc";
-import { fetchSitWeekSchedule } from "@/lib/integration/sit";
+import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "@/lib/integrations/adapters";
+import { fetchFscWeekSchedule } from "@/lib/integrations/fsc";
+import { fetchSitWeekSchedule } from "@/lib/integrations/sit";
 import { createClassPopularityIndex } from "@/lib/popularity";
 import { serializeSchedule } from "@/lib/serializers";
 import { DetailedFscWeekSchedule } from "@/types/integration/fsc";
