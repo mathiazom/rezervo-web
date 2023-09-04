@@ -24,7 +24,8 @@ import { DEFAULT_REMINDER_HOURS } from "@/lib/consts";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { IntegrationConfigPayload, IntegrationProfile, NotificationsConfig, PreferencesPayload } from "@/types/rezervo";
+import { IntegrationConfigPayload, NotificationsConfig, PreferencesPayload } from "@/types/config";
+import { IntegrationProfile } from "@/types/integration";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({

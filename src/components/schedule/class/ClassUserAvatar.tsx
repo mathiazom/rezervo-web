@@ -4,7 +4,7 @@ import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { StatusColors } from "@/types/rezervo";
+import { StatusColors } from "@/types/userSessions";
 
 export default function ClassUserAvatar({
     username,

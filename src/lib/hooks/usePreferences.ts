@@ -3,7 +3,7 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { Preferences, PreferencesPayload } from "@/types/rezervo";
+import { Preferences, PreferencesPayload } from "@/types/config";
 
 function putPreferences(url: string, { arg: preferences }: { arg: PreferencesPayload }) {
     return fetch(url, {

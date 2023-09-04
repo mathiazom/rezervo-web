@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { UserSessionsIndex } from "@/types/rezervo";
+import { UserSessionsIndex } from "@/types/userSessions";
 
 export function useUserSessions(integration: IntegrationIdentifier) {
     const { user } = useUser();

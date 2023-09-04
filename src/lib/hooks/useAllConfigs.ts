@@ -3,7 +3,7 @@ import useSWR from "swr";
 
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { AllConfigsIndex } from "@/types/rezervo";
+import { AllConfigsIndex } from "@/types/config";
 
 export function useAllConfigs(integration: IntegrationIdentifier) {
     const { user } = useUser();

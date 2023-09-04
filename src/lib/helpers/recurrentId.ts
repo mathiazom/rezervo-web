@@ -1,4 +1,5 @@
-import { ClassConfig, RezervoClass } from "@/types/rezervo";
+import { ClassConfig } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 
 export function classConfigRecurrentId(classConfig: ClassConfig) {
     return recurrentClassId(classConfig.activity, classConfig.weekday, classConfig.time.hour, classConfig.time.minute);

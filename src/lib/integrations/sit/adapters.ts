@@ -1,7 +1,7 @@
 import { getDateTime } from "@/lib/helpers/date";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
-import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/rezervo";
+import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/integration";
 
 function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {

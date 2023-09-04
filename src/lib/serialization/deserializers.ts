@@ -1,5 +1,5 @@
 import { getDateTime } from "@/lib/helpers/date";
-import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/rezervo";
+import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import {
     RezervoClassDTO,
     RezervoDayScheduleDTO,

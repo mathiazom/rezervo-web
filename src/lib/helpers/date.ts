@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 import { LOCALE, TIME_ZONE } from "@/lib/consts";
-import { RezervoClass } from "@/types/rezervo";
+import { RezervoClass } from "@/types/integration";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 

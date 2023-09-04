@@ -4,7 +4,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
-import { RezervoSchedule, RezervoWeekSchedule } from "@/types/rezervo";
+import { RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 
 function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
     const firstDay = weekSchedule[0];

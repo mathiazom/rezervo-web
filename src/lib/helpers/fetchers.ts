@@ -1,6 +1,6 @@
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { serializeSchedule } from "@/lib/serialization/serializers";
-import { IntegrationProfile, RezervoBusinessUnit, RezervoSchedule, RezervoWeekSchedule } from "@/types/rezervo";
+import { IntegrationProfile, RezervoBusinessUnit, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import { IntegrationPageProps } from "@/types/serialization";
 
 export async function fetchIntegrationPageStaticProps<T>(

@@ -13,8 +13,8 @@ import Logo from "@/components/utils/Logo";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { IntegrationProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import { ClassPopularityIndex } from "@/types/popularity";
-import { IntegrationProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/rezervo";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);

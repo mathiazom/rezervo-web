@@ -16,8 +16,10 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { UserNameWithIsSelf } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 import { ClassPopularity } from "@/types/popularity";
-import { RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
+import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 export default function ClassInfo({
     _class,

@@ -4,7 +4,7 @@ import determineActivityCategory from "@/lib/helpers/activityCategorization";
 import { getDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { DetailedFscClass, DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
-import { RezervoClass, RezervoWeekSchedule } from "@/types/rezervo";
+import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 
 function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
     const category = determineActivityCategory(fscClass.name);

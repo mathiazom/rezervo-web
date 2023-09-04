@@ -5,7 +5,7 @@ import useSWRMutation from "swr/mutation";
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { IntegrationConfigPayload, IntegrationConfig } from "@/types/rezervo";
+import { IntegrationConfigPayload, IntegrationConfig } from "@/types/config";
 
 function putConfig(url: string, { arg: config }: { arg: IntegrationConfigPayload }) {
     return fetch(url, {

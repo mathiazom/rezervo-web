@@ -4,7 +4,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import IntegrationUserSettings from "@/components/modals/IntegrationUser/IntegrationUserSettings";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
-import { IntegrationUserPayload } from "@/types/rezervo";
+import { IntegrationUserPayload } from "@/types/config";
 
 const IntegrationUserSettingsModal = ({
     open,

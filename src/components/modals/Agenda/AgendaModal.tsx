@@ -3,7 +3,8 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { IntegrationConfig, RezervoClass } from "@/types/rezervo";
+import { IntegrationConfig } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 
 const AgendaModal = ({
     open,

@@ -1,4 +1,8 @@
-import { RezervoCategory } from "@/types/rezervo";
+type RezervoCategory = {
+    name: string;
+    color: string;
+    keywords: string[];
+};
 
 const activityCategorization: RezervoCategory[] = [
     {

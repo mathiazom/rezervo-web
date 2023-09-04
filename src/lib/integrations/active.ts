@@ -4,7 +4,7 @@ import { DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
 import { sitToRezervoWeekSchedule } from "@/lib/integrations/sit/adapters";
 import { fetchSitWeekSchedule } from "@/lib/integrations/sit/fetchers";
 import { SitWeekSchedule } from "@/lib/integrations/sit/types";
-import { RezervoIntegration } from "@/types/rezervo";
+import { RezervoIntegration } from "@/types/integration";
 
 export enum IntegrationIdentifier {
     sit = "sit",

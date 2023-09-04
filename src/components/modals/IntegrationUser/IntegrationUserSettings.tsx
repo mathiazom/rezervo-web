@@ -7,7 +7,7 @@ import React, { useState } from "react";
 
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
-import { IntegrationUserPayload } from "@/types/rezervo";
+import { IntegrationUserPayload } from "@/types/config";
 
 export default function IntegrationUserSettings({
     integration,

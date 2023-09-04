@@ -6,7 +6,8 @@ import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaC
 import { LOCALE } from "@/lib/consts";
 import { capitalizeFirstCharacter } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
-import { ClassConfig, RezervoClass } from "@/types/rezervo";
+import { ClassConfig } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 
 export default function Agenda({
     agendaClasses,

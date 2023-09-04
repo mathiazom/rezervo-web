@@ -21,7 +21,8 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { ClassConfig, IntegrationConfig, RezervoClass } from "@/types/rezervo";
+import { ClassConfig, IntegrationConfig } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 
 function ConfigBar({
     integration,

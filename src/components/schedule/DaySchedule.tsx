@@ -5,8 +5,9 @@ import React from "react";
 import ClassCard from "@/components/schedule/class/ClassCard";
 import { getCapitalizedWeekday } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { AllConfigsIndex } from "@/types/config";
+import { RezervoClass, RezervoDaySchedule } from "@/types/integration";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
-import { AllConfigsIndex, RezervoClass, RezervoDaySchedule } from "@/types/rezervo";
 
 function DaySchedule({
     daySchedule,
