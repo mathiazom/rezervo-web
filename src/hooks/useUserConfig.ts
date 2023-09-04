@@ -20,7 +20,10 @@ export function useUserConfig(integration: IntegrationIdentifier) {
 
     const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(integration);
 
-    const { data, error, isLoading } = useSWR<IntegrationConfig>(user && integration ? configApiUrl : null, fetcher);
+    const { data, error, isLoading, mutate } = useSWR<IntegrationConfig>(
+        user && integration ? configApiUrl : null,
+        fetcher,
+    );
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { trigger, isMutating } = useSWRMutation<IntegrationConfig, any, string, IntegrationConfigPayload>(
@@ -35,8 +38,10 @@ export function useUserConfig(integration: IntegrationIdentifier) {
 
     return {
         userConfig: data,
-        userConfigError: error,
+        userConfigError: !isLoading && !isMutating ? error : null,
         userConfigLoading: isLoading || isMutating,
+        userConfigMissing: error && error.status === 404,
+        mutateUserConfig: mutate,
         putUserConfig: trigger,
         allConfigsIndex: allConfigsIndex,
     };

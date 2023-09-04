@@ -1,4 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { RocketLaunchRounded } from "@mui/icons-material";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -13,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
+import { useIntegrationUser } from "@/hooks/useIntegrationUser";
 import { useUserConfig } from "@/hooks/useUserConfig";
 import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integration/common";
 import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "@/types/rezervo";
@@ -30,6 +32,7 @@ function ConfigBar({
     isConfigError,
     onUndoSelectionChanges,
     onSettingsOpen,
+    onIntegrationUserSettingsOpen,
     onAgendaOpen,
 }: {
     integration: IntegrationIdentifier;
@@ -42,10 +45,12 @@ function ConfigBar({
     isConfigError: boolean;
     onUndoSelectionChanges: () => void;
     onSettingsOpen: () => void;
+    onIntegrationUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
 }) {
     const { user, isLoading } = useUser();
-    const { putUserConfig } = useUserConfig(integration);
+    const { integrationUserMissing } = useIntegrationUser(integration);
+    const { userConfigMissing, putUserConfig } = useUserConfig(integration);
 
     const selectionChanged = useMemo(
         () =>
@@ -108,18 +113,15 @@ function ConfigBar({
                         gap: { xs: 1, md: 1.5 },
                     }}
                 >
-                    {isConfigError ? (
-                        <Box mr={1.5}>
-                            <Tooltip title={"Feilet"}>
-                                <Badge
-                                    overlap={"circular"}
-                                    badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"error"} />}
-                                >
-                                    <CloudOffRoundedIcon color={"disabled"} />
-                                </Badge>
+                    {integrationUserMissing ? (
+                        <Box>
+                            <Tooltip title={`Konfigurer ${integration}-bruker`}>
+                                <IconButton onClick={() => onIntegrationUserSettingsOpen()}>
+                                    <RocketLaunchRounded />
+                                </IconButton>
                             </Tooltip>
                         </Box>
-                    ) : isLoadingConfig ? (
+                    ) : isLoadingConfig || userConfigMissing ? (
                         <CircularProgress
                             sx={{
                                 mr: 1,
@@ -131,6 +133,17 @@ function ConfigBar({
                             size={26}
                             thickness={6}
                         />
+                    ) : isConfigError ? (
+                        <Box mr={1.5}>
+                            <Tooltip title={"Feilet"}>
+                                <Badge
+                                    overlap={"circular"}
+                                    badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"error"} />}
+                                >
+                                    <CloudOffRoundedIcon color={"disabled"} />
+                                </Badge>
+                            </Tooltip>
+                        </Box>
                     ) : (
                         <>
                             {selectionChanged ? (

@@ -1,6 +1,8 @@
+import { EditRounded } from "@mui/icons-material";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
 import {
+    Avatar,
     Box,
     CircularProgress,
     Divider,
@@ -11,19 +13,18 @@ import {
     styled,
     Switch as MaterialUISwitch,
     Typography,
+    useTheme,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
+import RippleBadge from "@/components/utils/RippleBadge";
 import { DEFAULT_REMINDER_HOURS } from "@/config/config";
+import { useIntegrationUser } from "@/hooks/useIntegrationUser";
 import { usePreferences } from "@/hooks/usePreferences";
 import { useUserConfig } from "@/hooks/useUserConfig";
-import {
-    IntegrationConfigPayload,
-    IntegrationIdentifier,
-    NotificationsConfig,
-    PreferencesPayload,
-} from "@/types/rezervo";
+import { IntegrationConfigPayload, IntegrationProfile, NotificationsConfig, PreferencesPayload } from "@/types/rezervo";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({
@@ -44,15 +45,22 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
 }));
 
 export default function Settings({
-    integration,
+    integrationProfile,
     bookingActive,
     setBookingActive,
+    openIntegrationUserSettings,
 }: {
-    integration: IntegrationIdentifier;
+    integrationProfile: IntegrationProfile;
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
+    openIntegrationUserSettings: () => void;
 }) {
-    const { userConfig, putUserConfig } = useUserConfig(integration);
+    const theme = useTheme();
+    const { integrationUser, integrationUserError, integrationUserLoading } = useIntegrationUser(
+        integrationProfile.acronym,
+    );
+    const integrated = integrationUser !== undefined && integrationUserError == undefined && !integrationUserLoading;
+    const { userConfig, putUserConfig } = useUserConfig(integrationProfile.acronym);
     const { preferences, putPreferences } = usePreferences();
     const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminder_hours_before != null);
     const [reminderHours, setReminderHours] = useState<number | null>(
@@ -141,6 +149,57 @@ export default function Settings({
             </Box>
             <Box pt={2} sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <FormGroup sx={{ gap: "1rem" }}>
+                    <FormGroup
+                        sx={{
+                            maxWidth: "100%",
+                            paddingBottom: "0.75rem",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                gap: "1rem",
+                                backgroundColor: theme.palette.grey[200],
+                                padding: "1rem 1.25rem",
+                                borderRadius: "6px",
+                                width: "100%",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
+                            <RippleBadge
+                                invisible={!integrated}
+                                overlap="circular"
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "right",
+                                }}
+                                variant={"dot"}
+                                rippleColor={"#44b700"}
+                            >
+                                <Avatar
+                                    sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
+                                    src={integrationProfile.logo}
+                                >
+                                    {integrationProfile.acronym}
+                                </Avatar>
+                            </RippleBadge>
+                            <Typography
+                                noWrap
+                                sx={{
+                                    flexGrow: 1,
+                                    color: theme.palette.grey[600],
+                                }}
+                            >
+                                {integrationUser?.username}
+                            </Typography>
+                            <FormLabel>
+                                <IconButton onClick={() => openIntegrationUserSettings()}>
+                                    <EditRounded />
+                                </IconButton>
+                            </FormLabel>
+                        </Box>
+                    </FormGroup>
                     <FormGroup>
                         <FormLabel>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>

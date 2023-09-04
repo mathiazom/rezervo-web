@@ -10,7 +10,7 @@ const nextConfig = withPWA({
     async redirects() {
         return [
             {
-                // TODO: most recent integration or a first-time pickeryarn
+                // TODO: most recent integration or a first-time picker
                 source: "/",
                 destination: "/sit",
                 permanent: false,

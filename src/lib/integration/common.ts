@@ -11,6 +11,8 @@ import { SitWeekSchedule } from "@/types/integration/sit";
 import {
     ClassConfig,
     IntegrationIdentifier,
+    IntegrationPageProps,
+    IntegrationProfile,
     RezervoBusinessUnit,
     RezervoCategory,
     RezervoClass,
@@ -38,9 +40,12 @@ export const getCapitalizedWeekday = (date: DateTime): string => {
 };
 
 export async function fetchIntegrationPageStaticProps<T>(
-    integration: IntegrationIdentifier,
+    integrationProfile: IntegrationProfile,
     businessUnit: RezervoBusinessUnit<T>,
-) {
+): Promise<{
+    revalidate: number;
+    props: IntegrationPageProps;
+}> {
     const initialSchedule = await fetchRezervoSchedule(
         [-1, 0, 1, 2, 3],
         businessUnit.weekScheduleFetcher,
@@ -51,7 +56,7 @@ export async function fetchIntegrationPageStaticProps<T>(
 
     return {
         props: {
-            integration,
+            integrationProfile: integrationProfile,
             initialSchedule: serializeSchedule(initialSchedule),
             classPopularityIndex,
         },
@@ -162,8 +167,11 @@ export const activeIntegrations: {
     [identifier in IntegrationIdentifier]: RezervoIntegration<IntegrationWeekSchedule[identifier]>;
 } = {
     [IntegrationIdentifier.sit]: {
-        name: "Sit Trening",
-        acronym: IntegrationIdentifier.sit,
+        profile: {
+            acronym: IntegrationIdentifier.sit,
+            name: "Sit Trening",
+            logo: "/integrations/sit.png",
+        },
         businessUnits: [
             {
                 name: "Trondheim",
@@ -173,8 +181,11 @@ export const activeIntegrations: {
         ],
     },
     [IntegrationIdentifier.fsc]: {
-        name: "Family Sports Club",
-        acronym: IntegrationIdentifier.fsc,
+        profile: {
+            acronym: IntegrationIdentifier.fsc,
+            name: "Family Sports Club",
+            logo: "/integrations/fsc.png",
+        },
         businessUnits: [
             {
                 name: "Ski",

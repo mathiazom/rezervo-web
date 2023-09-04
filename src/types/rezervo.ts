@@ -19,6 +19,14 @@ export type IntegrationConfig = {
 };
 export type IntegrationConfigPayload = IntegrationConfig;
 
+export type IntegrationUser = {
+    username: string;
+};
+
+export type IntegrationUserPayload = IntegrationUser & {
+    password: string;
+};
+
 export type NotificationsConfig = {
     reminder_hours_before: number | null;
 };
@@ -77,9 +85,14 @@ export enum IntegrationIdentifier {
     fsc = "fsc",
 }
 
-export type RezervoIntegration<T> = {
-    name: string;
+export type IntegrationProfile = {
     acronym: IntegrationIdentifier;
+    name: string;
+    logo: string;
+};
+
+export type RezervoIntegration<T> = {
+    profile: IntegrationProfile;
     businessUnits: RezervoBusinessUnit<T>[];
 };
 
@@ -142,7 +155,7 @@ export type IntegrationPageParams = {
 };
 
 export type IntegrationPageProps = {
-    integration: IntegrationIdentifier;
+    integrationProfile: IntegrationProfile;
     initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
 };

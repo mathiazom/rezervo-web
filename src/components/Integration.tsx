@@ -4,6 +4,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
+import IntegrationUserSettingsModal from "@/components/modals/IntegrationUser/IntegrationUserSettingsModal";
 import SettingsModal from "@/components/modals/Settings/SettingsModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
@@ -14,7 +15,7 @@ import { useUserConfig } from "@/hooks/useUserConfig";
 import { classConfigRecurrentId } from "@/lib/integration/common";
 import {
     ClassPopularityIndex,
-    IntegrationIdentifier,
+    IntegrationProfile,
     RezervoClass,
     RezervoSchedule,
     RezervoWeekSchedule,
@@ -22,16 +23,19 @@ import {
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
+
 function Integration({
     initialSchedule,
     classPopularityIndex,
-    integration,
+    integrationProfile,
 }: {
     initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
-    integration: IntegrationIdentifier;
+    integrationProfile: IntegrationProfile;
 }) {
-    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(integration);
+    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(
+        integrationProfile.acronym,
+    );
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -39,6 +43,7 @@ function Integration({
     const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isIntegrationUserSettingsOpen, setIsIntegrationUserSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
 
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
@@ -65,14 +70,14 @@ function Integration({
 
     return (
         <>
-            <PageHead title={`${integration}-rezervo`} />
+            <PageHead title={`${integrationProfile.acronym}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={<Logo integrationAcronym={integration} />}
+                        leftComponent={<Logo integrationAcronym={integrationProfile.acronym} />}
                         rightComponent={
                             <ConfigBar
-                                integration={integration}
+                                integration={integrationProfile.acronym}
                                 classes={classes}
                                 selectedClassIds={selectedClassIds}
                                 originalSelectedClassIds={originalSelectedClassIds}
@@ -82,6 +87,7 @@ function Integration({
                                 isConfigError={userConfigError}
                                 onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
+                                onIntegrationUserSettingsOpen={() => setIsIntegrationUserSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
                             />
                         }
@@ -117,11 +123,19 @@ function Integration({
             <SettingsModal
                 open={isSettingsOpen}
                 setOpen={setIsSettingsOpen}
-                integration={integration}
+                integrationProfile={integrationProfile}
                 bookingActive={userConfigActive}
                 setBookingActive={setUserConfigActive}
+                openIntegrationUserSettings={() => setIsIntegrationUserSettingsOpen(true)}
+            />
+            <IntegrationUserSettingsModal
+                open={isIntegrationUserSettingsOpen}
+                setOpen={setIsIntegrationUserSettingsOpen}
+                integration={integrationProfile.acronym}
+                onSubmit={() => setIsIntegrationUserSettingsOpen(false)}
             />
         </>
     );
 }
+
 export default Integration;

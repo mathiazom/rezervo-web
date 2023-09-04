@@ -2,24 +2,31 @@ import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import Settings from "@/components/modals/Settings/Settings";
-import { IntegrationIdentifier } from "@/types/rezervo";
+import { IntegrationProfile } from "@/types/rezervo";
 
 const SettingsModal = ({
     open,
     setOpen,
-    integration,
+    integrationProfile,
     bookingActive,
     setBookingActive,
+    openIntegrationUserSettings,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    integration: IntegrationIdentifier;
+    integrationProfile: IntegrationProfile;
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
+    openIntegrationUserSettings: () => void;
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <Settings integration={integration} bookingActive={bookingActive} setBookingActive={setBookingActive} />
+            <Settings
+                integrationProfile={integrationProfile}
+                bookingActive={bookingActive}
+                setBookingActive={setBookingActive}
+                openIntegrationUserSettings={openIntegrationUserSettings}
+            />
         </Modal>
     );
 };

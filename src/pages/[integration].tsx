@@ -25,17 +25,21 @@ export async function getStaticProps({ params }: { params: IntegrationPageParams
     const integration: RezervoIntegration<any> = activeIntegrations[params.integration];
     const businessUnit = integration.businessUnits[0];
     if (!businessUnit) {
-        throw new Error(`${integration.name} does not have any business units`);
+        throw new Error(`${integration.profile.name} does not have any business units`);
     }
-    return await fetchIntegrationPageStaticProps(params.integration, businessUnit);
+    return await fetchIntegrationPageStaticProps(integration.profile, businessUnit);
 }
 
-const IntegrationPage: NextPage<IntegrationPageProps> = ({ integration, initialSchedule, classPopularityIndex }) => {
+const IntegrationPage: NextPage<IntegrationPageProps> = ({
+    integrationProfile,
+    initialSchedule,
+    classPopularityIndex,
+}) => {
     return (
         <Integration
             initialSchedule={deserializeSchedule(initialSchedule)}
             classPopularityIndex={classPopularityIndex}
-            integration={integration}
+            integrationProfile={integrationProfile}
         />
     );
 };

@@ -4,6 +4,9 @@ export function fetcher<JSON = any>(input: any, init?: any): Promise<JSON> {
         if (r.ok) {
             return r.json();
         }
-        throw new Error(r.statusText);
+        throw {
+            statusText: r.statusText,
+            status: r.status,
+        };
     });
 }
