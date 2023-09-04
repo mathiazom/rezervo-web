@@ -11,7 +11,8 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
+import { ClassPopularity } from "@/types/popularity";
+import { RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
 
 const ClassCard = ({
     _class,

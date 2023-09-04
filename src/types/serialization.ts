@@ -1,4 +1,5 @@
-import { ClassPopularityIndex, IntegrationProfile, RezervoClassBase } from "@/types/rezervo";
+import { ClassPopularityIndex } from "@/types/popularity";
+import { IntegrationProfile, RezervoClassBase } from "@/types/rezervo";
 
 export type RezervoScheduleDTO = { [weekOffset: number]: RezervoWeekScheduleDTO };
 export type RezervoWeekScheduleDTO = RezervoDayScheduleDTO[];

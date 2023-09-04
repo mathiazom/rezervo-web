@@ -5,7 +5,8 @@ import { Tooltip } from "@mui/material";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { determineClassPopularity, stringifyClassPopularity } from "@/lib/helpers/popularity";
-import { ClassPopularity, RezervoClass, StatusColors } from "@/types/rezervo";
+import { ClassPopularity } from "@/types/popularity";
+import { RezervoClass, StatusColors } from "@/types/rezervo";
 
 const ClassPopularityIcon = ({ popularity }: { popularity: ClassPopularity }) => {
     switch (popularity) {
