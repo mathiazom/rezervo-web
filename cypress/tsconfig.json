@@ -1,0 +1,12 @@
+// TS complation fails because Cypress does not currently work with moduleResolution: bundler
+// This is an active issue https://github.com/cypress-io/cypress/issues/27731
+
+{
+    "compilerOptions": {
+        "target": "es5",
+        "lib": ["es5", "dom"],
+        "types": ["cypress", "node"],
+        "baseUrl": "../src/*"
+    },
+    "include": ["**/*.ts"]
+}

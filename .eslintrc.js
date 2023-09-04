@@ -12,6 +12,7 @@ module.exports = {
     },
     extends: [
         "next/core-web-vitals",
+        "plugin:cypress/recommended",
         "plugin:import/recommended",
         "plugin:import/typescript",
         "eslint:recommended",

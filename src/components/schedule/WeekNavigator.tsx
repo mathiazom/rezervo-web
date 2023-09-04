@@ -76,6 +76,7 @@ export default function WeekNavigator({
     return (
         <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
             <LoadingButton
+                data-testid={"prev-week-btn"}
                 loading={loadingPreviousWeek}
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
@@ -84,8 +85,14 @@ export default function WeekNavigator({
             >
                 <ArrowBack />
             </LoadingButton>
-            <Typography sx={{ opacity: 0.7 }} mx={2} variant={"subtitle2"}>{`UKE ${weekNumber}`}</Typography>
+            <Typography
+                data-testid={"week-number"}
+                sx={{ opacity: 0.7 }}
+                mx={2}
+                variant={"subtitle2"}
+            >{`UKE ${weekNumber}`}</Typography>
             <LoadingButton
+                data-testid={"next-week-btn"}
                 loading={loadingNextWeek}
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
@@ -95,6 +102,7 @@ export default function WeekNavigator({
                 <ArrowForward />
             </LoadingButton>
             <Button
+                data-testid={"today-week-btn"}
                 sx={{
                     ml: 1,
                     position: { xs: "absolute", md: "inherit" },

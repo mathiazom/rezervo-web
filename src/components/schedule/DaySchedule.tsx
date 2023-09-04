@@ -43,14 +43,15 @@ function DaySchedule({
 
     return (
         <Box key={daySchedule.date.toString()} width={180}>
-            <Box py={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }}>
-                <Typography variant="h6" component="div">
+            <Box py={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }} data-testid={"date-info"}>
+                <Typography variant="h6" component="div" data-testid={"weekday"}>
                     {getCapitalizedWeekday(daySchedule.date)}{" "}
                     {isToday(daySchedule.date) && (
                         <Chip
                             size={"small"}
                             sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
                             label="I dag"
+                            data-testid={"today-chip"}
                         />
                     )}
                 </Typography>
@@ -61,6 +62,7 @@ function DaySchedule({
                         color: theme.palette.grey[600],
                         fontSize: 15,
                     }}
+                    data-testid={"date"}
                 >
                     {daySchedule.date.toFormat("yyyy-MM-dd")}
                 </Typography>

@@ -22,6 +22,11 @@ jobs:
               with:
                   path: ./node_modules/
                   key: ${{ github.sha }}-install
+            - name: Cache Cypress
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cache/Cypress/
+                  key: ${{ github.sha }}-cypress
 
     code_style:
         runs-on: ubuntu-latest
@@ -75,3 +80,29 @@ jobs:
               with:
                   path: ./.next/
                   key: ${{ github.sha }}-build
+
+    cypress:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - uses: actions/checkout@v3
+            - name: Retrive install cache
+              uses: actions/cache@v3
+              with:
+                  path: ./node_modules/
+                  key: ${{ github.sha }}-install
+            - name: Retrive Cypress cache
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cache/Cypress/
+                  key: ${{ github.sha }}-cypress
+            - name: Retrive build cache
+              uses: actions/cache@v3
+              with:
+                  path: ./.next/
+                  key: ${{ github.sha }}-build
+            - name: Run Cypress
+              uses: cypress-io/github-action@v5
+              with:
+                  install: false
+                  start: yarn start
