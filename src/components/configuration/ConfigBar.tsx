@@ -17,9 +17,9 @@ import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdate
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integration/common";
+import { arraysAreEqual } from "@/lib/utils/arrayUtils";
+import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "@/types/rezervo";
-import { arraysAreEqual } from "@/utils/arrayUtils";
-import { hexColorHash } from "@/utils/colorUtils";
 
 function ConfigBar({
     integration,

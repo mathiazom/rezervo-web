@@ -5,8 +5,8 @@ import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@
 import IconButton from "@mui/material/IconButton";
 import React from "react";
 
+import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ClassConfig, RezervoClass } from "@/types/rezervo";
-import { hexWithOpacityToRgb } from "@/utils/colorUtils";
 
 export type AgendaClass = {
     config: ClassConfig;

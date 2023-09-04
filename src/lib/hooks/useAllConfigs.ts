@@ -1,8 +1,8 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
+import { fetcher } from "@/lib/utils/fetchUtils";
 import { AllConfigsIndex, IntegrationIdentifier } from "@/types/rezervo";
-import { fetcher } from "@/utils/fetchUtils";
 
 export function useAllConfigs(integration: IntegrationIdentifier) {
     const { user } = useUser();

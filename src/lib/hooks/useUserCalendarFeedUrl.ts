@@ -1,7 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
-import { fetcher } from "@/utils/fetchUtils";
+import { fetcher } from "@/lib/utils/fetchUtils";
 
 export function useUserCalendarFeedUrl(includePast: boolean) {
     const { user } = useUser();

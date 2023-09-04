@@ -2,8 +2,8 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
+import { fetcher } from "@/lib/utils/fetchUtils";
 import { Preferences, PreferencesPayload } from "@/types/rezervo";
-import { fetcher } from "@/utils/fetchUtils";
 
 function putPreferences(url: string, { arg: preferences }: { arg: PreferencesPayload }) {
     return fetch(url, {

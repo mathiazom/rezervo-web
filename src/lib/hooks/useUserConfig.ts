@@ -3,8 +3,8 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
+import { fetcher } from "@/lib/utils/fetchUtils";
 import { IntegrationConfigPayload, IntegrationIdentifier, IntegrationConfig } from "@/types/rezervo";
-import { fetcher } from "@/utils/fetchUtils";
 
 function putConfig(url: string, { arg: config }: { arg: IntegrationConfigPayload }) {
     return fetch(url, {

@@ -8,10 +8,10 @@ import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { isClassInThePast } from "@/lib/integration/common";
+import { randomElementFromArray } from "@/lib/utils/arrayUtils";
+import { hexColorHash, hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
-import { randomElementFromArray } from "@/utils/arrayUtils";
-import { hexColorHash, hexWithOpacityToRgb } from "@/utils/colorUtils";
 
 const ClassCard = ({
     _class,
