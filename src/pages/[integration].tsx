@@ -4,8 +4,9 @@ import React from "react";
 import Integration from "@/components/Integration";
 import activeIntegrations from "@/lib/integrations/active";
 import { fetchIntegrationPageStaticProps } from "@/lib/integrations/common";
-import { deserializeSchedule } from "@/lib/serializers";
-import { IntegrationPageParams, IntegrationPageProps, RezervoIntegration } from "@/types/rezervo";
+import { deserializeSchedule } from "@/lib/serialization/deserializers";
+import { IntegrationPageParams, RezervoIntegration } from "@/types/rezervo";
+import { IntegrationPageProps } from "@/types/serialization";
 
 export const getStaticPaths: GetStaticPaths = async () => {
     return {

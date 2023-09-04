@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { fetchRezervoWeekSchedule } from "@/lib/integrations/common";
 import { sitToRezervoWeekSchedule } from "@/lib/integrations/sit/adapters";
 import { fetchSitWeekSchedule } from "@/lib/integrations/sit/fetchers";
-import { serializeWeekSchedule } from "@/lib/serializers";
+import { serializeWeekSchedule } from "@/lib/serialization/serializers";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const weekOffset = JSON.parse(req.body)["weekOffset"];

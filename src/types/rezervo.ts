@@ -100,21 +100,15 @@ export type RezervoBusinessUnit<T> = {
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };
-export type RezervoScheduleDTO = { [weekOffset: number]: RezervoWeekScheduleDTO };
 
 export type RezervoWeekSchedule = RezervoDaySchedule[];
-export type RezervoWeekScheduleDTO = RezervoDayScheduleDTO[];
 
 export type RezervoDaySchedule = {
     date: DateTime;
     classes: RezervoClass[];
 };
-export type RezervoDayScheduleDTO = {
-    date: string;
-    classes: RezervoClassDTO[];
-};
 
-interface RezervoClassBase {
+export type RezervoClassBase = {
     integration: IntegrationIdentifier;
     id: number;
     location: {
@@ -128,15 +122,12 @@ interface RezervoClassBase {
     waitingListCount: number;
     activity: RezervoActivity;
     instructors: string[];
-}
-export interface RezervoClass extends RezervoClassBase {
+};
+
+export type RezervoClass = RezervoClassBase & {
     startTime: DateTime;
     endTime: DateTime;
-}
-export interface RezervoClassDTO extends RezervoClassBase {
-    startTime: string;
-    endTime: string;
-}
+};
 
 export type RezervoActivity = {
     id: number;
@@ -149,12 +140,6 @@ export type RezervoActivity = {
 
 export type IntegrationPageParams = {
     integration: IntegrationIdentifier;
-};
-
-export type IntegrationPageProps = {
-    integrationProfile: IntegrationProfile;
-    initialSchedule: RezervoScheduleDTO;
-    classPopularityIndex: ClassPopularityIndex;
 };
 
 export type RezervoCategory = {

@@ -3,7 +3,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { deserializeWeekSchedule } from "@/lib/serializers";
+import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { RezervoSchedule, RezervoWeekSchedule } from "@/types/rezervo";
 
 function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {

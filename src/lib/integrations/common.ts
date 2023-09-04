@@ -1,10 +1,9 @@
 import { DateTime } from "luxon";
 
 import { createClassPopularityIndex } from "@/lib/popularity";
-import { serializeSchedule } from "@/lib/serializers";
+import { serializeSchedule } from "@/lib/serialization/serializers";
 import {
     ClassConfig,
-    IntegrationPageProps,
     IntegrationProfile,
     RezervoBusinessUnit,
     RezervoCategory,
@@ -12,6 +11,7 @@ import {
     RezervoSchedule,
     RezervoWeekSchedule,
 } from "@/types/rezervo";
+import { IntegrationPageProps } from "@/types/serialization";
 
 export async function fetchIntegrationPageStaticProps<T>(
     integrationProfile: IntegrationProfile,
