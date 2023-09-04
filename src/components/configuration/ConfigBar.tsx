@@ -16,10 +16,11 @@ import React, { useMemo } from "react";
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integrations/common";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "@/types/rezervo";
+import { ClassConfig, IntegrationConfig, RezervoClass } from "@/types/rezervo";
 
 function ConfigBar({
     integration,

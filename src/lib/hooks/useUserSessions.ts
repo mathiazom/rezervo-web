@@ -1,8 +1,9 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
+import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { IntegrationIdentifier, UserSessionsIndex } from "@/types/rezervo";
+import { UserSessionsIndex } from "@/types/rezervo";
 
 export function useUserSessions(integration: IntegrationIdentifier) {
     const { user } = useUser();

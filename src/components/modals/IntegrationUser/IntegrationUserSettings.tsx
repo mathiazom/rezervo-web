@@ -6,7 +6,8 @@ import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
-import { IntegrationIdentifier, IntegrationUserPayload } from "@/types/rezervo";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationUserPayload } from "@/types/rezervo";
 
 export default function IntegrationUserSettings({
     integration,

@@ -1,8 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { sitToRezervoWeekSchedule } from "@/lib/integrations/adapters";
 import { fetchRezervoWeekSchedule } from "@/lib/integrations/common";
-import { fetchSitWeekSchedule } from "@/lib/integrations/sit";
+import { sitToRezervoWeekSchedule } from "@/lib/integrations/sit/adapters";
+import { fetchSitWeekSchedule } from "@/lib/integrations/sit/fetchers";
 import { serializeWeekSchedule } from "@/lib/serializers";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

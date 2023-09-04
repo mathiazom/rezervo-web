@@ -1,5 +1,7 @@
 import { DateTime } from "luxon";
 
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+
 export type ClassTimeConfig = {
     hour: number;
     minute: number;
@@ -79,11 +81,6 @@ export enum ClassPopularity {
 export type ClassPopularityIndex = {
     [recurrentId: string]: ClassPopularity;
 };
-
-export enum IntegrationIdentifier {
-    sit = "sit",
-    fsc = "fsc",
-}
 
 export type IntegrationProfile = {
     acronym: IntegrationIdentifier;

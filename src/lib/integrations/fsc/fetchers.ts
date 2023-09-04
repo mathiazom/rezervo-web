@@ -10,7 +10,7 @@ import {
     FscClass,
     FscWeekSchedule,
     FscWeekScheduleResponse,
-} from "@/types/integration/fsc";
+} from "@/lib/integrations/fsc/types";
 
 function fscWeekScheduleUrl(fromDate: DateTime) {
     return `https://fsc.no/api/v1/businessunits/8/groupactivities?period_start=${fromDate.toUTC()}&period_end=${fromDate

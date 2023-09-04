@@ -3,8 +3,9 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { IntegrationIdentifier, IntegrationUser, IntegrationUserPayload } from "@/types/rezervo";
+import { IntegrationUser, IntegrationUserPayload } from "@/types/rezervo";
 
 function putIntegrationUser(url: string, { arg: integrationUser }: { arg: IntegrationUserPayload }) {
     return fetch(url, {

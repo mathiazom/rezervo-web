@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 
 import { GROUP_BOOKING_URL, TIME_ZONE } from "@/lib/consts";
 import { calculateMondayOffset } from "@/lib/integrations/common";
-import { SitDaySchedule, SitWeekSchedule } from "@/types/integration/sit";
+import { SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
 
 function sitScheduleUrl(token: string, fromISO: string | null = null) {
     return (

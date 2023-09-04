@@ -3,7 +3,8 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import IntegrationUserSettings from "@/components/modals/IntegrationUser/IntegrationUserSettings";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
-import { IntegrationIdentifier, IntegrationUserPayload } from "@/types/rezervo";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationUserPayload } from "@/types/rezervo";
 
 const IntegrationUserSettingsModal = ({
     open,

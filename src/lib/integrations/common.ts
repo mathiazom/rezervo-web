@@ -1,22 +1,15 @@
 import { DateTime } from "luxon";
 
 import { LOCALE, TIME_ZONE } from "@/lib/consts";
-import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "@/lib/integrations/adapters";
-import { fetchFscWeekSchedule } from "@/lib/integrations/fsc";
-import { fetchSitWeekSchedule } from "@/lib/integrations/sit";
 import { createClassPopularityIndex } from "@/lib/popularity";
 import { serializeSchedule } from "@/lib/serializers";
-import { DetailedFscWeekSchedule } from "@/types/integration/fsc";
-import { SitWeekSchedule } from "@/types/integration/sit";
 import {
     ClassConfig,
-    IntegrationIdentifier,
     IntegrationPageProps,
     IntegrationProfile,
     RezervoBusinessUnit,
     RezervoCategory,
     RezervoClass,
-    RezervoIntegration,
     RezervoSchedule,
     RezervoWeekSchedule,
 } from "@/types/rezervo";
@@ -157,41 +150,3 @@ export function determineActivityCategory(activityName: string): RezervoCategory
         ) ?? categories[0]!
     );
 }
-
-export type IntegrationWeekSchedule = {
-    [IntegrationIdentifier.sit]: SitWeekSchedule;
-    [IntegrationIdentifier.fsc]: DetailedFscWeekSchedule;
-};
-
-export const activeIntegrations: {
-    [identifier in IntegrationIdentifier]: RezervoIntegration<IntegrationWeekSchedule[identifier]>;
-} = {
-    [IntegrationIdentifier.sit]: {
-        profile: {
-            acronym: IntegrationIdentifier.sit,
-            name: "Sit Trening",
-            logo: "/integrations/sit.png",
-        },
-        businessUnits: [
-            {
-                name: "Trondheim",
-                weekScheduleFetcher: fetchSitWeekSchedule,
-                weekScheduleAdapter: sitToRezervoWeekSchedule,
-            },
-        ],
-    },
-    [IntegrationIdentifier.fsc]: {
-        profile: {
-            acronym: IntegrationIdentifier.fsc,
-            name: "Family Sports Club",
-            logo: "/integrations/fsc.png",
-        },
-        businessUnits: [
-            {
-                name: "Ski",
-                weekScheduleFetcher: fetchFscWeekSchedule,
-                weekScheduleAdapter: fscToRezervoWeekSchedule,
-            },
-        ],
-    },
-};

@@ -2,7 +2,8 @@ import type { GetStaticPaths, NextPage } from "next";
 import React from "react";
 
 import Integration from "@/components/Integration";
-import { activeIntegrations, fetchIntegrationPageStaticProps } from "@/lib/integrations/common";
+import activeIntegrations from "@/lib/integrations/active";
+import { fetchIntegrationPageStaticProps } from "@/lib/integrations/common";
 import { deserializeSchedule } from "@/lib/serializers";
 import { IntegrationPageParams, IntegrationPageProps, RezervoIntegration } from "@/types/rezervo";
 
