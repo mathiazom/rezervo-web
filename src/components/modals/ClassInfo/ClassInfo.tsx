@@ -10,13 +10,12 @@ import React, { useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
+import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { isClassInThePast } from "@/lib/integrations/common";
-import { stringifyClassPopularity } from "@/lib/popularity";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { getCapitalizedWeekday } from "@/lib/utils/dateUtils";
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
 
 export default function ClassInfo({

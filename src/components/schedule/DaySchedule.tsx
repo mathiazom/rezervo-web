@@ -3,8 +3,8 @@ import { DateTime } from "luxon";
 import React from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
-import { classRecurrentId } from "@/lib/integrations/common";
-import { getCapitalizedWeekday } from "@/lib/utils/dateUtils";
+import { getCapitalizedWeekday } from "@/lib/helpers/date";
+import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import {
     AllConfigsIndex,
     ClassPopularity,

@@ -1,4 +1,4 @@
-import { getDateTime } from "@/lib/utils/dateUtils";
+import { getDateTime } from "@/lib/helpers/date";
 import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/rezervo";
 import {
     RezervoClassDTO,

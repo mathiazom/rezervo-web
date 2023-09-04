@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 
 import { LOCALE, TIME_ZONE } from "@/lib/consts";
+import { RezervoClass } from "@/types/rezervo";
 
 export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
 
@@ -19,3 +20,7 @@ export const getCapitalizedWeekday = (date: DateTime): string => {
 
     return capitalizeFirstCharacter(date.weekdayLong);
 };
+
+export function isClassInThePast(_class: RezervoClass): boolean {
+    return _class.startTime < DateTime.now();
+}

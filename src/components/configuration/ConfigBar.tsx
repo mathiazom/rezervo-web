@@ -14,13 +14,13 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
+import { zeroIndexedWeekday } from "@/lib/helpers/date";
+import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
-import { classConfigRecurrentId, classRecurrentId } from "@/lib/integrations/common";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { zeroIndexedWeekday } from "@/lib/utils/dateUtils";
 import { ClassConfig, IntegrationConfig, RezervoClass } from "@/types/rezervo";
 
 function ConfigBar({
