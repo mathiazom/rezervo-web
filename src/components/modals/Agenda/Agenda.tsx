@@ -3,7 +3,7 @@ import { Info } from "luxon";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
-import { LOCALE } from "@/config/config";
+import { LOCALE } from "@/lib/consts";
 import { capitalizeFirstCharacter, classConfigRecurrentId } from "@/lib/integrations/common";
 import { ClassConfig, RezervoClass } from "@/types/rezervo";
 

@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { LOCALE, TIME_ZONE } from "@/config/config";
+import { LOCALE, TIME_ZONE } from "@/lib/consts";
 import { fscToRezervoWeekSchedule, sitToRezervoWeekSchedule } from "@/lib/integrations/adapters";
 import { fetchFscWeekSchedule } from "@/lib/integrations/fsc";
 import { fetchSitWeekSchedule } from "@/lib/integrations/sit";

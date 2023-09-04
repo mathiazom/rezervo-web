@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { GROUP_BOOKING_URL, TIME_ZONE } from "@/config/config";
+import { GROUP_BOOKING_URL, TIME_ZONE } from "@/lib/consts";
 import { calculateMondayOffset } from "@/lib/integrations/common";
 import { SitDaySchedule, SitWeekSchedule } from "@/types/integration/sit";
 
