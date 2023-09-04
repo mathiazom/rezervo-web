@@ -14,8 +14,8 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
-import { useIntegrationUser } from "@/hooks/useIntegrationUser";
-import { useUserConfig } from "@/hooks/useUserConfig";
+import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integration/common";
 import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "@/types/rezervo";
 import { arraysAreEqual } from "@/utils/arrayUtils";

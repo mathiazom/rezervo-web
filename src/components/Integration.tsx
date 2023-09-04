@@ -11,7 +11,7 @@ import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import Logo from "@/components/utils/Logo";
 import PageHead from "@/components/utils/PageHead";
-import { useUserConfig } from "@/hooks/useUserConfig";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { classConfigRecurrentId } from "@/lib/integration/common";
 import {
     ClassPopularityIndex,

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import RippleBadge from "@/components/utils/RippleBadge";
-import { useUserSessions } from "@/hooks/useUserSessions";
+import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { isClassInThePast } from "@/lib/integration/common";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
 import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";

@@ -21,9 +21,9 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { DEFAULT_REMINDER_HOURS } from "@/config/config";
-import { useIntegrationUser } from "@/hooks/useIntegrationUser";
-import { usePreferences } from "@/hooks/usePreferences";
-import { useUserConfig } from "@/hooks/useUserConfig";
+import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
+import { usePreferences } from "@/lib/hooks/usePreferences";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { IntegrationConfigPayload, IntegrationProfile, NotificationsConfig, PreferencesPayload } from "@/types/rezervo";
 
 // Fix track not visible with "system" color scheme
