@@ -9,10 +9,12 @@ import SettingsModal from "@/components/modals/Settings/SettingsModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
+import ErrorMessage from "@/components/utils/ErrorMessage";
 import Logo from "@/components/utils/Logo";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { RezervoError } from "@/types/errors";
 import { IntegrationProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import { ClassPopularityIndex } from "@/types/popularity";
 
@@ -23,10 +25,12 @@ function Integration({
     initialSchedule,
     classPopularityIndex,
     integrationProfile,
+    error,
 }: {
     initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
     integrationProfile: IntegrationProfile;
+    error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(
         integrationProfile.acronym,
@@ -87,18 +91,27 @@ function Integration({
                             />
                         }
                     />
-                    <WeekNavigator initialSchedule={initialSchedule} setCurrentWeekSchedule={setCurrentWeekSchedule} />
+                    {error === undefined && (
+                        <WeekNavigator
+                            initialSchedule={initialSchedule}
+                            setCurrentWeekSchedule={setCurrentWeekSchedule}
+                        />
+                    )}
                     <Divider orientation="horizontal" />
                 </Box>
-                <WeekScheduleMemo
-                    weekSchedule={currentWeekSchedule}
-                    classPopularityIndex={classPopularityIndex}
-                    selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
-                    selectedClassIds={selectedClassIds}
-                    allConfigsIndex={allConfigsIndex ?? null}
-                    onSelectedChanged={onSelectedChanged}
-                    onInfo={setClassInfoClass}
-                />
+                {error === undefined ? (
+                    <WeekScheduleMemo
+                        weekSchedule={currentWeekSchedule}
+                        classPopularityIndex={classPopularityIndex}
+                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                        selectedClassIds={selectedClassIds}
+                        allConfigsIndex={allConfigsIndex ?? null}
+                        onSelectedChanged={onSelectedChanged}
+                        onInfo={setClassInfoClass}
+                    />
+                ) : (
+                    <ErrorMessage error={error} integrationProfile={integrationProfile} />
+                )}
             </Stack>
             <ClassInfoModal
                 classInfoClass={classInfoClass}
