@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
 
-import { TIME_ZONE } from "@/lib/consts";
 import { calculateMondayOffset } from "@/lib/helpers/date";
 import { SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
 
@@ -25,7 +24,7 @@ function fetchSitPublicToken() {
 }
 
 async function fetchSitDaySchedulesWithOffset(token: string, dayOffset: number): Promise<{ days: SitDaySchedule[] }> {
-    const startDate = DateTime.now().setZone(TIME_ZONE).plus({ day: dayOffset });
+    const startDate = DateTime.now().plus({ day: dayOffset });
     const scheduleResponse = await fetch(sitScheduleUrl(token, startDate.toISODate()));
     if (!scheduleResponse.ok) {
         throw new Error(

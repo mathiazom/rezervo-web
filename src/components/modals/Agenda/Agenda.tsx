@@ -3,7 +3,6 @@ import { Info } from "luxon";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
-import { LOCALE } from "@/lib/consts";
 import { capitalizeFirstCharacter } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { ClassConfig } from "@/types/config";
@@ -68,9 +67,7 @@ export default function Agenda({
                                         }}
                                         mb={0.5}
                                     >
-                                        {capitalizeFirstCharacter(
-                                            Info.weekdays("long", { locale: LOCALE })[weekday] ?? "",
-                                        )}
+                                        {capitalizeFirstCharacter(Info.weekdays("long")[weekday] ?? "")}
                                     </Typography>
                                     {dayClasses
                                         .sort((a, b) => configTimeMinutes(a.config) - configTimeMinutes(b.config))

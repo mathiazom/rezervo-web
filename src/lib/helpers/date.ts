@@ -1,11 +1,10 @@
 import { DateTime } from "luxon";
 
-import { LOCALE, TIME_ZONE } from "@/lib/consts";
 import { RezervoClass } from "@/types/integration";
 
-export const calculateMondayOffset = () => DateTime.now().setZone(TIME_ZONE).weekday - 1;
+export const calculateMondayOffset = () => DateTime.now().weekday - 1;
 
-export const getDateTime = (date: string): DateTime => DateTime.fromISO(date, { zone: TIME_ZONE, locale: LOCALE });
+export const getDateTime = (date: string): DateTime => DateTime.fromISO(date);
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
