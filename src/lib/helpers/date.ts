@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime, Info } from "luxon";
 
 import { RezervoClass } from "@/types/integration";
 
@@ -6,7 +6,7 @@ export const calculateMondayOffset = () => DateTime.now().weekday - 1;
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
-export const capitalizeFirstCharacter = (text: string) => {
+const capitalizeFirstCharacter = (text: string) => {
     return `${text[0]!.toUpperCase()}${text.slice(1)}`;
 };
 
@@ -16,6 +16,10 @@ export const getCapitalizedWeekday = (date: DateTime): string => {
     }
 
     return capitalizeFirstCharacter(date.weekdayLong);
+};
+
+export const getCapitalizedWeekdays = (): string[] => {
+    return Info.weekdays("long").map((weekday) => capitalizeFirstCharacter(weekday));
 };
 
 export function isClassInThePast(_class: RezervoClass): boolean {
