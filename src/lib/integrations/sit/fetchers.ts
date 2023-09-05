@@ -12,12 +12,10 @@ function sitScheduleUrl(token: string, fromISO: string | null = null) {
     );
 }
 
-function sitGroupBookingUrl() {
-    return "https://www.sit.no/trening/gruppe";
-}
+const SIT_GROUP_BOOKING_URL = "https://www.sit.no/trening/gruppe";
 
 function fetchSitPublicToken() {
-    return fetch(sitGroupBookingUrl())
+    return fetch(SIT_GROUP_BOOKING_URL)
         .then((res) => res.text())
         .then((text) => text.replace(/[\n\r]/g, "").replace(/\s+/g, " "))
         .then((soup) => {
