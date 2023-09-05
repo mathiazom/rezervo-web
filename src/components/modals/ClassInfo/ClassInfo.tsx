@@ -10,13 +10,16 @@ import React, { useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
-import { useUserConfig } from "@/hooks/useUserConfig";
-import { useUserSessions } from "@/hooks/useUserSessions";
-import { getCapitalizedWeekday, isClassInThePast } from "@/lib/integration/common";
-import { stringifyClassPopularity } from "@/lib/popularity";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
-import { formatNameArray } from "@/utils/arrayUtils";
-import { hexWithOpacityToRgb } from "@/utils/colorUtils";
+import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
+import { stringifyClassPopularity } from "@/lib/helpers/popularity";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { formatNameArray } from "@/lib/utils/arrayUtils";
+import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { UserNameWithIsSelf } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
+import { ClassPopularity } from "@/types/popularity";
+import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 export default function ClassInfo({
     _class,

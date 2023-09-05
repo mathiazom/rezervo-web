@@ -3,9 +3,11 @@ import { Info } from "luxon";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
-import { LOCALE } from "@/config/config";
-import { capitalizeFirstCharacter, classConfigRecurrentId } from "@/lib/integration/common";
-import { ClassConfig, RezervoClass } from "@/types/rezervo";
+import { LOCALE } from "@/lib/consts";
+import { capitalizeFirstCharacter } from "@/lib/helpers/date";
+import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
+import { ClassConfig } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 
 export default function Agenda({
     agendaClasses,

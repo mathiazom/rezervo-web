@@ -14,12 +14,15 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
-import { useIntegrationUser } from "@/hooks/useIntegrationUser";
-import { useUserConfig } from "@/hooks/useUserConfig";
-import { classConfigRecurrentId, classRecurrentId, zeroIndexedWeekday } from "@/lib/integration/common";
-import { ClassConfig, IntegrationConfig, IntegrationIdentifier, RezervoClass } from "@/types/rezervo";
-import { arraysAreEqual } from "@/utils/arrayUtils";
-import { hexColorHash } from "@/utils/colorUtils";
+import { zeroIndexedWeekday } from "@/lib/helpers/date";
+import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { arraysAreEqual } from "@/lib/utils/arrayUtils";
+import { hexColorHash } from "@/lib/utils/colorUtils";
+import { ClassConfig, IntegrationConfig } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
 
 function ConfigBar({
     integration,

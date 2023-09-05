@@ -11,15 +11,10 @@ import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import Logo from "@/components/utils/Logo";
 import PageHead from "@/components/utils/PageHead";
-import { useUserConfig } from "@/hooks/useUserConfig";
-import { classConfigRecurrentId } from "@/lib/integration/common";
-import {
-    ClassPopularityIndex,
-    IntegrationProfile,
-    RezervoClass,
-    RezervoSchedule,
-    RezervoWeekSchedule,
-} from "@/types/rezervo";
+import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { IntegrationProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
+import { ClassPopularityIndex } from "@/types/popularity";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);

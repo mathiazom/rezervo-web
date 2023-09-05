@@ -1,8 +1,8 @@
 import { DateTime } from "luxon";
 
-import { GROUP_BOOKING_URL, TIME_ZONE } from "@/config/config";
-import { calculateMondayOffset } from "@/lib/integration/common";
-import { SitDaySchedule, SitWeekSchedule } from "@/types/integration/sit";
+import { TIME_ZONE } from "@/lib/consts";
+import { calculateMondayOffset } from "@/lib/helpers/date";
+import { SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
 
 function sitScheduleUrl(token: string, fromISO: string | null = null) {
     return (
@@ -12,8 +12,10 @@ function sitScheduleUrl(token: string, fromISO: string | null = null) {
     );
 }
 
+const SIT_GROUP_BOOKING_URL = "https://www.sit.no/trening/gruppe";
+
 function fetchSitPublicToken() {
-    return fetch(GROUP_BOOKING_URL)
+    return fetch(SIT_GROUP_BOOKING_URL)
         .then((res) => res.text())
         .then((text) => text.replace(/[\n\r]/g, "").replace(/\s+/g, " "))
         .then((soup) => {

@@ -3,8 +3,8 @@ import { Avatar, Badge } from "@mui/material";
 import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
-import { StatusColors } from "@/types/rezervo";
-import { hexColorHash } from "@/utils/colorUtils";
+import { hexColorHash } from "@/lib/utils/colorUtils";
+import { StatusColors } from "@/types/userSessions";
 
 export default function ClassUserAvatar({
     username,

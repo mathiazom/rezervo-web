@@ -2,9 +2,10 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { useUserConfig } from "@/hooks/useUserConfig";
-import { IntegrationIdentifier, IntegrationUser, IntegrationUserPayload } from "@/types/rezervo";
-import { fetcher } from "@/utils/fetchUtils";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { fetcher } from "@/lib/utils/fetchUtils";
+import { IntegrationUser, IntegrationUserPayload } from "@/types/config";
 
 function putIntegrationUser(url: string, { arg: integrationUser }: { arg: IntegrationUserPayload }) {
     return fetch(url, {

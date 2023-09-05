@@ -2,9 +2,11 @@ import type { GetStaticPaths, NextPage } from "next";
 import React from "react";
 
 import Integration from "@/components/Integration";
-import { activeIntegrations, fetchIntegrationPageStaticProps } from "@/lib/integration/common";
-import { deserializeSchedule } from "@/lib/serializers";
-import { IntegrationPageParams, IntegrationPageProps, RezervoIntegration } from "@/types/rezervo";
+import { fetchIntegrationPageStaticProps } from "@/lib/helpers/fetchers";
+import activeIntegrations from "@/lib/integrations/active";
+import { deserializeSchedule } from "@/lib/serialization/deserializers";
+import { IntegrationPageParams, RezervoIntegration } from "@/types/integration";
+import { IntegrationPageProps } from "@/types/serialization";
 
 export const getStaticPaths: GetStaticPaths = async () => {
     return {

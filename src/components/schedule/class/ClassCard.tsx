@@ -6,12 +6,15 @@ import React, { useEffect, useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import RippleBadge from "@/components/utils/RippleBadge";
-import { useUserSessions } from "@/hooks/useUserSessions";
-import { isClassInThePast } from "@/lib/integration/common";
+import { isClassInThePast } from "@/lib/helpers/date";
+import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { randomElementFromArray } from "@/lib/utils/arrayUtils";
+import { hexColorHash, hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
-import { ClassPopularity, RezervoClass, SessionStatus, StatusColors, UserNameWithIsSelf } from "@/types/rezervo";
-import { randomElementFromArray } from "@/utils/arrayUtils";
-import { hexColorHash, hexWithOpacityToRgb } from "@/utils/colorUtils";
+import { UserNameWithIsSelf } from "@/types/config";
+import { RezervoClass } from "@/types/integration";
+import { ClassPopularity } from "@/types/popularity";
+import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 const ClassCard = ({
     _class,

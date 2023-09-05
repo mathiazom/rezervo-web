@@ -2,9 +2,10 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { useAllConfigs } from "@/hooks/useAllConfigs";
-import { IntegrationConfigPayload, IntegrationIdentifier, IntegrationConfig } from "@/types/rezervo";
-import { fetcher } from "@/utils/fetchUtils";
+import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { fetcher } from "@/lib/utils/fetchUtils";
+import { IntegrationConfigPayload, IntegrationConfig } from "@/types/config";
 
 function putConfig(url: string, { arg: config }: { arg: IntegrationConfigPayload }) {
     return fetch(url, {

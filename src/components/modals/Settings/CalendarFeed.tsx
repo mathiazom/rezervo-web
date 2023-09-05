@@ -8,8 +8,8 @@ import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useState } from "react";
 
-import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
-import { useUserCalendarFeedUrl } from "@/hooks/useUserCalendarFeedUrl";
+import { useCopyToClipboard } from "@/lib/hooks/useCopyToClipboard";
+import { useUserCalendarFeedUrl } from "@/lib/hooks/useUserCalendarFeedUrl";
 
 export default function CalendarFeed() {
     const [includePastClasses, setIncludePastClasses] = useState(true);

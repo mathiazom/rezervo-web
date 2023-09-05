@@ -3,7 +3,9 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
-import { AllConfigsIndex, ClassPopularityIndex, RezervoClass, RezervoWeekSchedule } from "@/types/rezervo";
+import { AllConfigsIndex } from "@/types/config";
+import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
+import { ClassPopularityIndex } from "@/types/popularity";
 
 function WeekSchedule({
     weekSchedule,

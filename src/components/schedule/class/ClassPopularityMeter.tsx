@@ -3,9 +3,11 @@ import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import { Tooltip } from "@mui/material";
 
 import RippleBadge from "@/components/utils/RippleBadge";
-import { isClassInThePast } from "@/lib/integration/common";
-import { determineClassPopularity, stringifyClassPopularity } from "@/lib/popularity";
-import { ClassPopularity, RezervoClass, StatusColors } from "@/types/rezervo";
+import { isClassInThePast } from "@/lib/helpers/date";
+import { determineClassPopularity, stringifyClassPopularity } from "@/lib/helpers/popularity";
+import { RezervoClass } from "@/types/integration";
+import { ClassPopularity } from "@/types/popularity";
+import { StatusColors } from "@/types/userSessions";
 
 const ClassPopularityIcon = ({ popularity }: { popularity: ClassPopularity }) => {
     switch (popularity) {

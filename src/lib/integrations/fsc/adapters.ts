@@ -1,47 +1,10 @@
 import { DateTime } from "luxon";
 
-import { determineActivityCategory, getDateTime, zeroIndexedWeekday } from "@/lib/integration/common";
-import { DetailedFscClass, DetailedFscWeekSchedule } from "@/types/integration/fsc";
-import { SitClass, SitDaySchedule, SitWeekSchedule } from "@/types/integration/sit";
-import { IntegrationIdentifier, RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/rezervo";
-
-function sitToRezervoClass(sitClass: SitClass): RezervoClass {
-    return {
-        integration: IntegrationIdentifier.sit,
-        id: sitClass.id,
-        startTime: getDateTime(sitClass.from.replace(" ", "T")), // convert to proper ISO8601
-        endTime: getDateTime(sitClass.to.replace(" ", "T")), // convert to proper ISO8601
-        location: {
-            id: sitClass.studio.id,
-            studio: sitClass.studio.name,
-            room: sitClass.room,
-        },
-        isBookable: sitClass.bookable,
-        totalSlots: sitClass.capacity,
-        availableSlots: sitClass.available,
-        waitingListCount: sitClass.waitlist.count,
-        activity: {
-            id: sitClass.activityId,
-            name: sitClass.name,
-            category: sitClass.category.name,
-            description: sitClass.description,
-            color: sitClass.color,
-            image: sitClass.image,
-        },
-        instructors: sitClass.instructors.map((sitInstructor) => sitInstructor.name),
-    };
-}
-
-function sitToRezervoDaySchedule(sitDaySchedule: SitDaySchedule): RezervoDaySchedule {
-    return {
-        date: getDateTime(sitDaySchedule.date),
-        classes: sitDaySchedule.classes.map(sitToRezervoClass),
-    };
-}
-
-export function sitToRezervoWeekSchedule(sitWeekSchedule: SitWeekSchedule): RezervoWeekSchedule {
-    return sitWeekSchedule.days.map(sitToRezervoDaySchedule);
-}
+import determineActivityCategory from "@/lib/helpers/activityCategorization";
+import { getDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { DetailedFscClass, DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
+import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 
 function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
     const category = determineActivityCategory(fscClass.name);

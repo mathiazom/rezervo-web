@@ -2,8 +2,9 @@ import { Dialog } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import IntegrationUserSettings from "@/components/modals/IntegrationUser/IntegrationUserSettings";
-import { useIntegrationUser } from "@/hooks/useIntegrationUser";
-import { IntegrationIdentifier, IntegrationUserPayload } from "@/types/rezervo";
+import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
+import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationUserPayload } from "@/types/config";
 
 const IntegrationUserSettingsModal = ({
     open,
