@@ -4,8 +4,6 @@ import { RezervoClass } from "@/types/integration";
 
 export const calculateMondayOffset = () => DateTime.now().weekday - 1;
 
-export const getDateTime = (date: string): DateTime => DateTime.fromISO(date);
-
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
 export const capitalizeFirstCharacter = (text: string) => {
