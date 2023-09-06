@@ -5,7 +5,7 @@ import React from "react";
 class MyDocument extends Document {
     override render() {
         return (
-            <Html>
+            <Html lang="no">
                 <Head>
                     <link
                         rel="stylesheet"
