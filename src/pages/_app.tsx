@@ -7,6 +7,8 @@ import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, experimen
 import type { AppProps } from "next/app";
 import React from "react";
 
+import DateTimeProvider from "@/components/utils/DateTimeProvider";
+
 const theme = experimental_extendTheme({
     colorSchemes: {
         light: {
@@ -57,7 +59,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <CssVarsProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
             <UserProvider>
-                <Component {...pageProps} />
+                <DateTimeProvider>
+                    <Component {...pageProps} />
+                </DateTimeProvider>
             </UserProvider>
         </CssVarsProvider>
     );
