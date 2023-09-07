@@ -1,5 +1,4 @@
-import { DateTime } from "luxon";
-
+import { getDateTime } from "@/lib/helpers/date";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { SitClass, SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/integration";
@@ -8,8 +7,8 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
     return {
         integration: IntegrationIdentifier.sit,
         id: sitClass.id,
-        startTime: DateTime.fromISO(sitClass.from.replace(" ", "T")), // convert to proper ISO8601
-        endTime: DateTime.fromISO(sitClass.to.replace(" ", "T")), // convert to proper ISO8601
+        startTime: getDateTime(sitClass.from.replace(" ", "T")), // convert to proper ISO8601
+        endTime: getDateTime(sitClass.to.replace(" ", "T")), // convert to proper ISO8601
         location: {
             id: sitClass.studio.id,
             studio: sitClass.studio.name,
@@ -33,7 +32,7 @@ function sitToRezervoClass(sitClass: SitClass): RezervoClass {
 
 function sitToRezervoDaySchedule(sitDaySchedule: SitDaySchedule): RezervoDaySchedule {
     return {
-        date: DateTime.fromISO(sitDaySchedule.date),
+        date: getDateTime(sitDaySchedule.date),
         classes: sitDaySchedule.classes.map(sitToRezervoClass),
     };
 }
