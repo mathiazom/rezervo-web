@@ -1,5 +1,4 @@
-import { DateTime } from "luxon";
-
+import { getDateTime } from "@/lib/helpers/date";
 import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import {
     RezervoClassDTO,
@@ -11,14 +10,14 @@ import {
 function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
     return {
         ...classDTO,
-        startTime: DateTime.fromISO(classDTO.startTime),
-        endTime: DateTime.fromISO(classDTO.endTime),
+        startTime: getDateTime(classDTO.startTime),
+        endTime: getDateTime(classDTO.endTime),
     };
 }
 
 function deserializeDaySchedule(dayScheduleDTO: RezervoDayScheduleDTO): RezervoDaySchedule {
     return {
-        date: DateTime.fromISO(dayScheduleDTO.date),
+        date: getDateTime(dayScheduleDTO.date),
         classes: dayScheduleDTO.classes.map(deserializeClass),
     };
 }
