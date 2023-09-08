@@ -1,8 +1,8 @@
-import { DateTime, Info } from "luxon";
+import { DateTime, Info, Settings } from "luxon";
 
 import { RezervoClass } from "@/types/integration";
 
-export const calculateMondayOffset = () => DateTime.now().weekday - 1;
+export const calculateMondayOffset = () => getLocalizedDateTime().now().weekday - 1;
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
@@ -23,5 +23,11 @@ export const getCapitalizedWeekdays = (): string[] => {
 };
 
 export function isClassInThePast(_class: RezervoClass): boolean {
-    return _class.startTime < DateTime.now();
+    return _class.startTime < getLocalizedDateTime().now();
+}
+
+export function getLocalizedDateTime(): typeof DateTime {
+    Settings.defaultLocale = "no";
+    Settings.defaultZone = "Europe/Oslo";
+    return DateTime;
 }

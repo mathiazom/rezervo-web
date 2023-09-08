@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { calculateMondayOffset } from "@/lib/helpers/date";
+import { calculateMondayOffset, getLocalizedDateTime } from "@/lib/helpers/date";
 import {
     DetailedFscClass,
     DetailedFscWeekSchedule,
@@ -72,7 +72,8 @@ async function fetchDetailedFscWeekSchedule(fscWeekSchedule: FscWeekSchedule): P
 }
 
 export async function fetchFscWeekSchedule(weekOffset: number): Promise<DetailedFscWeekSchedule> {
-    const startDate = DateTime.now()
+    const startDate = getLocalizedDateTime()
+        .now()
         .startOf("day")
         .plus({ day: weekOffset * 7 - calculateMondayOffset() });
     const response = await fetch(fscWeekScheduleUrl(startDate));
