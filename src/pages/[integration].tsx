@@ -36,12 +36,14 @@ const IntegrationPage: NextPage<IntegrationPageProps> = ({
     integrationProfile,
     initialSchedule,
     classPopularityIndex,
+    error,
 }) => {
     return (
         <Integration
             initialSchedule={deserializeSchedule(initialSchedule)}
             classPopularityIndex={classPopularityIndex}
             integrationProfile={integrationProfile}
+            error={error}
         />
     );
 };

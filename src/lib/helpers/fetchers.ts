@@ -1,5 +1,6 @@
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { serializeSchedule } from "@/lib/serialization/serializers";
+import { RezervoError } from "@/types/errors";
 import { IntegrationProfile, RezervoBusinessUnit, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import { IntegrationPageProps } from "@/types/serialization";
 
@@ -10,11 +11,26 @@ export async function fetchIntegrationPageStaticProps<T>(
     revalidate: number;
     props: IntegrationPageProps;
 }> {
-    const initialSchedule = await fetchRezervoSchedule(
-        [-1, 0, 1, 2, 3],
-        businessUnit.weekScheduleFetcher,
-        businessUnit.weekScheduleAdapter,
-    );
+    let initialSchedule;
+    try {
+        initialSchedule = await fetchRezervoSchedule(
+            [-1, 0, 1, 2, 3],
+            businessUnit.weekScheduleFetcher,
+            businessUnit.weekScheduleAdapter,
+        );
+    } catch (e) {
+        console.error(e);
+        return {
+            props: {
+                integrationProfile: integrationProfile,
+                initialSchedule: { 0: [] },
+                classPopularityIndex: {},
+                error: RezervoError.INTEGRATION_SCHEDULE_UNAVAILABLE,
+            },
+            revalidate: 1,
+        };
+    }
+
     const classPopularityIndex = createClassPopularityIndex(initialSchedule[-1]!);
     const invalidationTimeInSeconds = 60 * 60;
 

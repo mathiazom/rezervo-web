@@ -1,3 +1,4 @@
+import { RezervoError } from "@/types/errors";
 import { IntegrationProfile, RezervoClassBase } from "@/types/integration";
 import { ClassPopularityIndex } from "@/types/popularity";
 
@@ -16,4 +17,5 @@ export type IntegrationPageProps = {
     integrationProfile: IntegrationProfile;
     initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
+    error?: RezervoError;
 };
