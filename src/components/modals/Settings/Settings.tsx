@@ -19,6 +19,7 @@ import IconButton from "@mui/material/IconButton";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
+import PushNotifications from "@/components/modals/Settings/PushNotifications";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { DEFAULT_REMINDER_HOURS } from "@/lib/consts";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
@@ -232,6 +233,7 @@ export default function Settings({
                             </Box>
                         </FormLabel>
                     </FormGroup>
+                    <PushNotifications />
                     <Divider orientation="horizontal" />
                     <FormGroup>
                         <FormLabel>
