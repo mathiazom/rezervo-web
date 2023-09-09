@@ -76,7 +76,7 @@ export default function Settings({
         const newReminderActive = newReminderHours != null;
         setReminderActive(newReminderActive);
         if (newReminderActive) {
-            setReminderHours(newReminderHours);
+            setReminderHours(newReminderHours ?? null);
         }
     }, [preferences?.notifications?.reminder_hours_before, reminderHours]);
 
@@ -161,7 +161,7 @@ export default function Settings({
                             sx={{
                                 display: "flex",
                                 gap: "1rem",
-                                backgroundColor: theme.palette.grey[200],
+                                backgroundColor: theme.palette.secondaryBackground.default,
                                 padding: "1rem 1.25rem",
                                 borderRadius: "6px",
                                 width: "100%",
@@ -190,7 +190,8 @@ export default function Settings({
                                 noWrap
                                 sx={{
                                     flexGrow: 1,
-                                    color: theme.palette.grey[600],
+                                    opacity: 0.6,
+                                    color: theme.palette.primary.contrastText,
                                 }}
                             >
                                 {integrationUser?.username}

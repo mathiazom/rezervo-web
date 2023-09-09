@@ -4,8 +4,21 @@ import "@/components/schedule/class/ClassCard.css";
 
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, experimental_extendTheme } from "@mui/material";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { TypeBackground } from "@mui/material/styles/createPalette";
 import type { AppProps } from "next/app";
 import React from "react";
+
+declare module "@mui/material/styles/createPalette" {
+    interface Palette {
+        secondaryBackground: Partial<TypeBackground>;
+    }
+
+    interface PaletteOptions {
+        secondaryBackground?: Partial<TypeBackground>;
+    }
+}
 
 const theme = experimental_extendTheme({
     colorSchemes: {
@@ -27,6 +40,10 @@ const theme = experimental_extendTheme({
                     default: "#fff",
                     paper: "#eee",
                 },
+                secondaryBackground: {
+                    default: "#eee",
+                    paper: "#ddd",
+                },
             },
         },
         dark: {
@@ -46,6 +63,10 @@ const theme = experimental_extendTheme({
                 background: {
                     default: "#000",
                     paper: "#111",
+                },
+                secondaryBackground: {
+                    default: "#212121",
+                    paper: "#222",
                 },
             },
         },
