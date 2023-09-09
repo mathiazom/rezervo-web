@@ -2,6 +2,8 @@ import { constants } from "http2";
 
 import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
+import { integrationIdentifierFromRequest } from "@/lib/helpers/api";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function put(integration: string, accessToken: string, body: any): Promise<Response> {
     return fetch(`${process.env["CONFIG_HOST"]}/${integration}/config`, {
@@ -32,8 +34,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         return;
     }
     const response = await (() => {
-        let integration = req.query["integration"];
-        integration = typeof integration !== "string" ? integration?.pop() : integration;
+        const integration = integrationIdentifierFromRequest(req);
         if (integration == null) {
             return null;
         }

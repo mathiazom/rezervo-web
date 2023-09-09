@@ -93,6 +93,7 @@ function Integration({
                     />
                     {error === undefined && (
                         <WeekNavigator
+                            integration={integrationProfile.acronym}
                             initialSchedule={initialSchedule}
                             setCurrentWeekSchedule={setCurrentWeekSchedule}
                         />
