@@ -1,7 +1,5 @@
-import { DateTime } from "luxon";
-
 import determineActivityCategory from "@/lib/helpers/activityCategorization";
-import { getDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { DetailedFscClass, DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
@@ -17,8 +15,8 @@ function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
             room: fscClass.locations.map((location) => location.name).join(", "),
         },
         isBookable:
-            getDateTime(fscClass.bookableEarliest) < DateTime.now() &&
-            getDateTime(fscClass.bookableLatest) > DateTime.now(),
+            LocalizedDateTime.fromISO(fscClass.bookableEarliest) < LocalizedDateTime.now() &&
+            LocalizedDateTime.fromISO(fscClass.bookableLatest) > LocalizedDateTime.now(),
         totalSlots: fscClass.slots.total,
         availableSlots: fscClass.slots.leftToBook,
         waitingListCount: fscClass.slots.inWaitingList,
@@ -31,15 +29,15 @@ function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
             image: fscClass.image,
         },
         instructors: fscClass.instructors.map((instructor) => instructor.name),
-        startTime: getDateTime(fscClass.duration.start),
-        endTime: getDateTime(fscClass.duration.end),
+        startTime: LocalizedDateTime.fromISO(fscClass.duration.start),
+        endTime: LocalizedDateTime.fromISO(fscClass.duration.end),
     };
 }
 
 export function fscToRezervoWeekSchedule(fscWeekSchedule: DetailedFscWeekSchedule): RezervoWeekSchedule {
     const schedule: RezervoWeekSchedule = [];
     for (const fscClass of fscWeekSchedule) {
-        const date = getDateTime(fscClass.duration.start);
+        const date = LocalizedDateTime.fromISO(fscClass.duration.start);
         const weekday = zeroIndexedWeekday(date.weekday);
         if (schedule[weekday] === undefined) {
             schedule[weekday] = { date, classes: [] };

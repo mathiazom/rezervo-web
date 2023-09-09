@@ -1,10 +1,8 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import { Info } from "luxon";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
-import { LOCALE } from "@/lib/consts";
-import { capitalizeFirstCharacter } from "@/lib/helpers/date";
+import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { ClassConfig } from "@/types/config";
 import { RezervoClass } from "@/types/integration";
@@ -56,6 +54,7 @@ export default function Agenda({
             <Box pt={2}>
                 {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
                     const dayClasses = agendaClasses.filter((a) => a.config.weekday === weekday);
+                    const weekdays = getCapitalizedWeekdays();
                     return (
                         <>
                             {dayClasses && dayClasses.length > 0 && (
@@ -68,9 +67,7 @@ export default function Agenda({
                                         }}
                                         mb={0.5}
                                     >
-                                        {capitalizeFirstCharacter(
-                                            Info.weekdays("long", { locale: LOCALE })[weekday] ?? "",
-                                        )}
+                                        {weekdays[weekday]}
                                     </Typography>
                                     {dayClasses
                                         .sort((a, b) => configTimeMinutes(a.config) - configTimeMinutes(b.config))

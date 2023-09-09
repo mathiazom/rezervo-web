@@ -1,4 +1,4 @@
-import { getDateTime } from "@/lib/helpers/date";
+import { LocalizedDateTime } from "@/lib/helpers/date";
 import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import {
     RezervoClassDTO,
@@ -10,14 +10,14 @@ import {
 function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
     return {
         ...classDTO,
-        startTime: getDateTime(classDTO.startTime),
-        endTime: getDateTime(classDTO.endTime),
+        startTime: LocalizedDateTime.fromISO(classDTO.startTime),
+        endTime: LocalizedDateTime.fromISO(classDTO.endTime),
     };
 }
 
 function deserializeDaySchedule(dayScheduleDTO: RezervoDayScheduleDTO): RezervoDaySchedule {
     return {
-        date: getDateTime(dayScheduleDTO.date),
+        date: LocalizedDateTime.fromISO(dayScheduleDTO.date),
         classes: dayScheduleDTO.classes.map(deserializeClass),
     };
 }
