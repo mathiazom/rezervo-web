@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import React from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
-import { getCapitalizedWeekday, getLocalizedDateTime } from "@/lib/helpers/date";
+import { getCapitalizedWeekday, LocalizedDateTime } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { AllConfigsIndex } from "@/types/config";
 import { RezervoClass, RezervoDaySchedule } from "@/types/integration";
@@ -32,10 +32,11 @@ function DaySchedule({
         return a.startOf("day") <= b && b <= a.endOf("day");
     }
     function isToday(date: DateTime) {
-        return sameDay(date, getLocalizedDateTime().now());
+        // return sameDay(date, getLocalizedDateTime().now());
+        return sameDay(date, LocalizedDateTime.now());
     }
     function isDayPassed(date: DateTime) {
-        return date.endOf("day") > getLocalizedDateTime().now();
+        return date.endOf("day") > LocalizedDateTime.now();
     }
 
     return (

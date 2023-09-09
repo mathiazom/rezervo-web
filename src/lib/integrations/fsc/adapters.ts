@@ -1,12 +1,11 @@
 import determineActivityCategory from "@/lib/helpers/activityCategorization";
-import { getLocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { DetailedFscClass, DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 
 function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
     const category = determineActivityCategory(fscClass.name);
-    const localizedDateTime = getLocalizedDateTime();
     return {
         integration: IntegrationIdentifier.fsc,
         id: fscClass.id,
@@ -16,8 +15,8 @@ function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
             room: fscClass.locations.map((location) => location.name).join(", "),
         },
         isBookable:
-            localizedDateTime.fromISO(fscClass.bookableEarliest) < localizedDateTime.now() &&
-            localizedDateTime.fromISO(fscClass.bookableLatest) > localizedDateTime.now(),
+            LocalizedDateTime.fromISO(fscClass.bookableEarliest) < LocalizedDateTime.now() &&
+            LocalizedDateTime.fromISO(fscClass.bookableLatest) > LocalizedDateTime.now(),
         totalSlots: fscClass.slots.total,
         availableSlots: fscClass.slots.leftToBook,
         waitingListCount: fscClass.slots.inWaitingList,
@@ -30,15 +29,15 @@ function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
             image: fscClass.image,
         },
         instructors: fscClass.instructors.map((instructor) => instructor.name),
-        startTime: localizedDateTime.fromISO(fscClass.duration.start),
-        endTime: localizedDateTime.fromISO(fscClass.duration.end),
+        startTime: LocalizedDateTime.fromISO(fscClass.duration.start),
+        endTime: LocalizedDateTime.fromISO(fscClass.duration.end),
     };
 }
 
 export function fscToRezervoWeekSchedule(fscWeekSchedule: DetailedFscWeekSchedule): RezervoWeekSchedule {
     const schedule: RezervoWeekSchedule = [];
     for (const fscClass of fscWeekSchedule) {
-        const date = getLocalizedDateTime().fromISO(fscClass.duration.start);
+        const date = LocalizedDateTime.fromISO(fscClass.duration.start);
         const weekday = zeroIndexedWeekday(date.weekday);
         if (schedule[weekday] === undefined) {
             schedule[weekday] = { date, classes: [] };
