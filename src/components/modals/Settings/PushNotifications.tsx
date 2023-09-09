@@ -3,6 +3,7 @@ import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { Box, CircularProgress, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import { usePushNotificationPublicKey } from "@/lib/hooks/usePushNotificationPublicKey";
 import { usePushNotificationSubscription } from "@/lib/hooks/usePushNotificationSubscription";
 import { base64ToUint8Array } from "@/lib/utils/base64Utils";
 
@@ -14,9 +15,10 @@ const PushNotifications = () => {
 
     const { subscribeToPush, unsubscribeFromPush, verifySubscription } = usePushNotificationSubscription();
 
-    const webPushPublicKey = process.env["NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY"];
+    const { pushNotificationPublicKey, pushNotificationPublicKeyLoading, pushNotificationPublicKeyError } =
+        usePushNotificationPublicKey();
 
-    if (!webPushPublicKey) {
+    if (pushNotificationPublicKeyError || (!pushNotificationPublicKey && !pushNotificationPublicKeyLoading)) {
         throw new Error("Web push public key must be set as an environment variable");
     }
 
@@ -47,9 +49,12 @@ const PushNotifications = () => {
         if (registration === null) {
             throw new Error("Service worker is not registered");
         }
+        if (pushNotificationPublicKey == null) {
+            throw new Error("Web push public key is not available");
+        }
         const sub = await registration.pushManager.subscribe({
             userVisibleOnly: true,
-            applicationServerKey: base64ToUint8Array(webPushPublicKey),
+            applicationServerKey: base64ToUint8Array(pushNotificationPublicKey),
         });
         setSubscription(sub);
         await subscribeToPush(sub);
