@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { RocketLaunchRounded } from "@mui/icons-material";
+import { PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -9,7 +9,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import UndoIcon from "@mui/icons-material/Undo";
-import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
@@ -51,6 +51,8 @@ function ConfigBar({
     onIntegrationUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
 }) {
+    const theme = useTheme();
+
     const { user, isLoading } = useUser();
     const { integrationUserMissing } = useIntegrationUser(integration);
     const { userConfigMissing, putUserConfig } = useUserConfig(integration);
@@ -198,17 +200,30 @@ function ConfigBar({
                         </>
                     )}
                     {user.name && (
-                        <Tooltip title={user.name}>
-                            <Avatar
-                                sx={{
-                                    width: 32,
-                                    height: 32,
-                                    fontSize: 18,
-                                    backgroundColor: hexColorHash(user.name),
-                                }}
+                        <Tooltip title={`${user.name}${userConfig?.active ? "" : " (pauset)"}`}>
+                            <Badge
+                                invisible={userConfig?.active ?? true}
+                                overlap={"circular"}
+                                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                                badgeContent={
+                                    <PauseCircleRounded
+                                        fontSize={"small"}
+                                        color={"disabled"}
+                                        sx={{ backgroundColor: theme.palette.background.default, borderRadius: "50%" }}
+                                    />
+                                }
                             >
-                                {user.name[0]}
-                            </Avatar>
+                                <Avatar
+                                    sx={{
+                                        width: 32,
+                                        height: 32,
+                                        fontSize: 18,
+                                        backgroundColor: hexColorHash(user.name),
+                                    }}
+                                >
+                                    {user.name[0]}
+                                </Avatar>
+                            </Badge>
                         </Tooltip>
                     )}
                     <Tooltip title={"Logg ut"}>
