@@ -1,5 +1,5 @@
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import { Avatar, Badge } from "@mui/material";
+import { Avatar, Badge, useTheme } from "@mui/material";
 import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
@@ -17,6 +17,7 @@ export default function ClassUserAvatar({
     alert?: boolean;
     invisibleBadge?: boolean;
 }) {
+    const theme = useTheme();
     const avatar = (
         <Avatar
             alt={username}
@@ -31,7 +32,16 @@ export default function ClassUserAvatar({
         <Badge
             overlap="circular"
             anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"error"} />}
+            badgeContent={
+                <ErrorRoundedIcon
+                    fontSize={"small"}
+                    color={"error"}
+                    sx={{
+                        backgroundColor: theme.palette.background.default,
+                        borderRadius: "50%",
+                    }}
+                />
+            }
         >
             {avatar}
         </Badge>
