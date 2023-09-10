@@ -187,7 +187,7 @@ export default function ClassInfo({
                 </Typography>
             </Box>
             {!isInThePast && usersPlanned.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1.5 }}>
                     <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.isBookable} />
                     <Typography variant="body2" color="text.secondary">
                         {`${formatNameArray(
@@ -203,7 +203,7 @@ export default function ClassInfo({
                 </Box>
             )}
             {!isInThePast && usersOnWaitlist.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mt: 1.5 }}>
                     <ClassUsersAvatarGroup
                         users={usersOnWaitlist.map((u) => u.user_name)}
                         rippleColor={StatusColors.WAITLIST}
@@ -219,7 +219,7 @@ export default function ClassInfo({
                 </Box>
             )}
             {usersBooked.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1.5 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mt: 1.5 }}>
                     <ClassUsersAvatarGroup
                         users={usersBooked.map((u) => u.user_name)}
                         rippleColor={StatusColors.ACTIVE}
