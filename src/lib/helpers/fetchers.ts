@@ -32,7 +32,7 @@ export async function fetchIntegrationPageStaticProps<T>(
     }
 
     const classPopularityIndex = createClassPopularityIndex(initialSchedule[-1]!);
-    const invalidationTimeInSeconds = 60 * 60;
+    const invalidationTimeInSeconds = 5 * 60;
 
     return {
         props: {
