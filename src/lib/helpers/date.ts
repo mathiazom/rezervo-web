@@ -26,6 +26,18 @@ export function isClassInThePast(_class: RezervoClass): boolean {
     return _class.startTime < LocalizedDateTime.now();
 }
 
+export function sameDay(a: DateTime, b: DateTime): boolean {
+    return a.startOf("day") <= b && b <= a.endOf("day");
+}
+
+export function isToday(date: DateTime) {
+    return sameDay(date, LocalizedDateTime.now());
+}
+
+export function isDayPassed(date: DateTime) {
+    return date.endOf("day") > LocalizedDateTime.now();
+}
+
 export const LocalizedDateTime: typeof DateTime = (() => {
     Settings.defaultLocale = "no";
     Settings.defaultZone = "Europe/Oslo";

@@ -1,9 +1,8 @@
 import { Box, Chip, Typography, useTheme } from "@mui/material";
-import { DateTime } from "luxon";
 import React from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
-import { getCapitalizedWeekday, LocalizedDateTime } from "@/lib/helpers/date";
+import { getCapitalizedWeekday, isDayPassed, isToday } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { AllConfigsIndex } from "@/types/config";
 import { RezervoClass, RezervoDaySchedule } from "@/types/integration";
@@ -27,17 +26,6 @@ function DaySchedule({
     onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
-
-    function sameDay(a: DateTime, b: DateTime): boolean {
-        return a.startOf("day") <= b && b <= a.endOf("day");
-    }
-    function isToday(date: DateTime) {
-        // return sameDay(date, getLocalizedDateTime().now());
-        return sameDay(date, LocalizedDateTime.now());
-    }
-    function isDayPassed(date: DateTime) {
-        return date.endOf("day") > LocalizedDateTime.now();
-    }
 
     return (
         <Box key={daySchedule.date.toString()} width={180}>
