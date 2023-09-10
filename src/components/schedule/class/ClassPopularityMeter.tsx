@@ -45,7 +45,7 @@ const ClassPopularityMeter = ({
                         horizontal: "right",
                     }}
                     variant={"dot"}
-                    rippleColor={StatusColors.ACTIVE}
+                    rippleColor={_class.availableSlots > 0 ? StatusColors.ACTIVE : StatusColors.WAITLIST}
                 >
                     <ClassPopularityIcon popularity={popularity} />
                 </RippleBadge>
