@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
+import activeIntegrations from "@/lib/integrations/active";
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Check for secret to confirm this is a valid request
     if (req.query["secret"] !== process.env["REVALIDATION_SECRET_TOKEN"]) {
@@ -7,7 +9,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        await res.revalidate("/");
+        await Promise.all(
+            Object.keys(activeIntegrations).map((integration) => {
+                console.log(`Revalidating /${integration}`);
+                return res.revalidate(`/${integration}`);
+            }),
+        );
         return res.json({ revalidated: true });
     } catch (err) {
         // If there was an error, Next.js will continue
