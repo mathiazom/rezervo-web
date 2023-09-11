@@ -1,4 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { Diversity3Rounded } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
@@ -173,6 +174,21 @@ export default function ClassInfo({
                     {_class.instructors.join(", ")}
                 </Typography>
             </Box>
+            {!_class.isBookable && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        paddingTop: 1,
+                        gap: 1,
+                        alignItems: "center",
+                    }}
+                >
+                    <Diversity3Rounded />
+                    <Typography variant="body2" color="text.secondary">
+                        {_class.totalSlots} plasser
+                    </Typography>
+                </Box>
+            )}
             <Box
                 sx={{
                     display: "flex",
