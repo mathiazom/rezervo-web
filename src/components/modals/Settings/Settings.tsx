@@ -9,9 +9,11 @@ import {
     FormControl,
     FormGroup,
     FormLabel,
-    Input,
+    MenuItem,
+    Select,
     styled,
     Switch as MaterialUISwitch,
+    TextField,
     Typography,
     useTheme,
 } from "@mui/material";
@@ -21,7 +23,7 @@ import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
 import RippleBadge from "@/components/utils/RippleBadge";
-import { DEFAULT_REMINDER_HOURS } from "@/lib/consts";
+import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -46,6 +48,11 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
     },
 }));
 
+enum ReminderTimeBeforeInputUnit {
+    HOURS = "hours",
+    MINUTES = "minutes",
+}
+
 export default function Settings({
     integrationProfile,
     bookingActive,
@@ -64,21 +71,14 @@ export default function Settings({
     const integrated = integrationUser !== undefined && integrationUserError == undefined && !integrationUserLoading;
     const { userConfig, putUserConfig } = useUserConfig(integrationProfile.acronym);
     const { preferences, putPreferences } = usePreferences();
-    const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminder_hours_before != null);
-    const [reminderHours, setReminderHours] = useState<number | null>(
-        preferences?.notifications?.reminder_hours_before ?? null,
-    );
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        const newReminderHours = preferences?.notifications?.reminder_hours_before;
-        const newReminderActive = newReminderHours != null;
-        setReminderActive(newReminderActive);
-        if (newReminderActive) {
-            setReminderHours(newReminderHours ?? null);
-        }
-    }, [preferences?.notifications?.reminder_hours_before, reminderHours]);
+    const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminder_hours_before != null);
+    const [reminderHoursBefore, setReminderHoursBefore] = useState<number | null>(null);
+    const [reminderTimeBeforeInput, setReminderTimeBeforeInput] = useState<string | null>(null);
+    const [reminderTimeBeforeInputUnit, setReminderTimeBeforeInputUnit] = useState<ReminderTimeBeforeInputUnit | null>(
+        null,
+    );
 
     async function onBookingActiveChanged(active: boolean) {
         setBookingActive(active);
@@ -92,20 +92,66 @@ export default function Settings({
 
     function handleReminderActiveChanged(active: boolean) {
         setReminderActive(active);
-        onNotificationsConfigChanged({
-            ...(preferences?.notifications ?? {}),
-            reminder_hours_before: active ? reminderHours ?? DEFAULT_REMINDER_HOURS : null,
-        });
-    }
-
-    function handleReminderHoursChanged(reminderHours: number | null) {
-        setReminderHours(reminderHours);
-        if (reminderHours == null) {
-            return;
+        if (active && reminderHoursBefore == null) {
+            setReminderHoursBefore(DEFAULT_REMINDER_HOURS);
+            setReminderTimeBeforeInput(DEFAULT_REMINDER_HOURS.toString());
+            setReminderTimeBeforeInputUnit(ReminderTimeBeforeInputUnit.HOURS);
         }
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
-            reminder_hours_before: reminderActive ? reminderHours : null,
+            reminder_hours_before: active ? reminderHoursBefore ?? DEFAULT_REMINDER_HOURS : null,
+        });
+    }
+
+    function reminderTimeBeforeInputUnitFromHours(reminderHoursBefore: number): ReminderTimeBeforeInputUnit {
+        if (reminderHoursBefore < 2 || (reminderHoursBefore * 100) % 1 !== 0) {
+            return ReminderTimeBeforeInputUnit.MINUTES;
+        }
+        return ReminderTimeBeforeInputUnit.HOURS;
+    }
+
+    function handleReminderHoursUnitChanged(unit: ReminderTimeBeforeInputUnit) {
+        setReminderTimeBeforeInputUnit(unit);
+        if (reminderHoursBefore != null && reminderTimeBeforeInput != null) {
+            handleReminderHoursChanged(reminderTimeBeforeInput, unit);
+        }
+    }
+
+    function handleReminderHoursChanged(reminderTimeBeforeInput: string, unit: ReminderTimeBeforeInputUnit) {
+        const reminderTimeBeforeTrimmed = reminderTimeBeforeInput.trim();
+        let newReminderTimeBefore = Number(reminderTimeBeforeTrimmed);
+        if (
+            Number.isNaN(newReminderTimeBefore) ||
+            Number.isNaN(parseFloat(reminderTimeBeforeTrimmed)) ||
+            newReminderTimeBefore < 0
+        ) {
+            const newReminderHoursBefore = reminderHoursBefore ?? DEFAULT_REMINDER_HOURS;
+            const unit = reminderTimeBeforeInputUnitFromHours(newReminderHoursBefore);
+            setReminderTimeBeforeInput(
+                (unit === ReminderTimeBeforeInputUnit.MINUTES
+                    ? newReminderHoursBefore * 60
+                    : newReminderHoursBefore
+                ).toString(),
+            );
+            setReminderTimeBeforeInputUnit(unit);
+            return;
+        }
+        if (unit === ReminderTimeBeforeInputUnit.MINUTES) {
+            newReminderTimeBefore = Math.round(newReminderTimeBefore);
+        }
+        let newReminderHoursBefore =
+            unit === ReminderTimeBeforeInputUnit.MINUTES ? newReminderTimeBefore / 60 : newReminderTimeBefore;
+        newReminderHoursBefore = Math.max(MIN_REMINDER_HOURS, Math.min(MAX_REMINDER_HOURS, newReminderHoursBefore));
+        setReminderHoursBefore(newReminderHoursBefore);
+        setReminderTimeBeforeInput(
+            (unit === ReminderTimeBeforeInputUnit.MINUTES
+                ? newReminderHoursBefore * 60
+                : newReminderHoursBefore
+            ).toString(),
+        );
+        onNotificationsConfigChanged({
+            ...(preferences?.notifications ?? {}),
+            reminder_hours_before: reminderActive ? newReminderHoursBefore : null,
         });
     }
 
@@ -116,6 +162,32 @@ export default function Settings({
             notifications: notificationsConfig,
         } as PreferencesPayload).then(() => setNotificationsConfigLoading(false));
     }
+
+    useEffect(
+        () => {
+            const newReminderHoursBefore = preferences?.notifications?.reminder_hours_before;
+            if (newReminderHoursBefore == null) {
+                setReminderActive(false);
+                return;
+            }
+            setReminderActive(true);
+            setReminderHoursBefore(newReminderHoursBefore);
+            let unit = reminderTimeBeforeInputUnit;
+            if (reminderTimeBeforeInput == null) {
+                // assume this is initial load and convert to the appropriate unit
+                unit = reminderTimeBeforeInputUnitFromHours(newReminderHoursBefore);
+                setReminderTimeBeforeInputUnit(unit);
+            }
+            setReminderTimeBeforeInput(
+                (unit === ReminderTimeBeforeInputUnit.MINUTES
+                    ? Math.round(newReminderHoursBefore * 60)
+                    : newReminderHoursBefore
+                ).toString(),
+            );
+        },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [preferences?.notifications?.reminder_hours_before],
+    );
 
     return (
         <Box
@@ -266,24 +338,47 @@ export default function Settings({
                                 </Box>
                             </Box>
                         </FormLabel>
-                        <Box sx={{ display: "flex", gap: 2, alignItems: "center", ml: "33px", pb: 1 }}>
+                        <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", ml: "33px", pb: 1 }}>
                             <FormControl>
-                                <Input
-                                    value={reminderHours}
-                                    onChange={({ target: { value } }) => {
-                                        handleReminderHoursChanged(value == "" ? null : Number(value));
-                                    }}
-                                    inputProps={{
-                                        step: 0.1,
-                                        min: 0,
-                                        max: 48,
-                                        type: "number",
-                                    }}
-                                    disabled={!reminderActive}
+                                <TextField
+                                    disabled={!reminderActive || reminderHoursBefore == null}
+                                    inputProps={{ inputMode: "numeric" }}
+                                    value={
+                                        reminderTimeBeforeInput ??
+                                        (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
+                                    }
+                                    onChange={({ target: { value } }) => setReminderTimeBeforeInput(value)}
+                                    onBlur={() =>
+                                        reminderTimeBeforeInput != null &&
+                                        reminderTimeBeforeInputUnit != null &&
+                                        handleReminderHoursChanged(reminderTimeBeforeInput, reminderTimeBeforeInputUnit)
+                                    }
                                     sx={{ width: "4rem" }}
+                                    size={"small"}
                                 />
                             </FormControl>
-                            <FormLabel disabled={!reminderActive}>timer før</FormLabel>
+                            <FormLabel disabled={!reminderActive}>
+                                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                                    <Select
+                                        disabled={!reminderActive || reminderHoursBefore == null}
+                                        value={
+                                            reminderTimeBeforeInputUnit ??
+                                            reminderTimeBeforeInputUnitFromHours(
+                                                reminderHoursBefore ?? DEFAULT_REMINDER_HOURS,
+                                            )
+                                        }
+                                        onChange={({ target: { value } }) => {
+                                            handleReminderHoursUnitChanged(value as ReminderTimeBeforeInputUnit);
+                                        }}
+                                        inputProps={{ "aria-label": "Without label" }}
+                                        size={"small"}
+                                    >
+                                        <MenuItem value={ReminderTimeBeforeInputUnit.HOURS}>timer</MenuItem>
+                                        <MenuItem value={ReminderTimeBeforeInputUnit.MINUTES}>minutter</MenuItem>
+                                    </Select>
+                                    <Typography>før start</Typography>
+                                </Box>
+                            </FormLabel>
                         </Box>
                     </FormGroup>
                     <Divider />
