@@ -174,7 +174,7 @@ export default function ClassInfo({
                     {_class.instructors.join(", ")}
                 </Typography>
             </Box>
-            {!_class.isBookable && (
+            {!_class.isBookable && !isClassInThePast(_class) && (
                 <Box
                     sx={{
                         display: "flex",
