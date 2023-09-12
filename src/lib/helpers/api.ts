@@ -1,19 +1,9 @@
 import { constants } from "http2";
 
 import { AppRouteHandlerFnContext, getAccessToken } from "@auth0/nextjs-auth0";
-import { NextApiRequest } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
 import { IntegrationIdentifier } from "@/lib/integrations/active";
-
-export function integrationIdentifierFromRequest(req: NextApiRequest): IntegrationIdentifier | null {
-    const integrationArg = req.query["integration"];
-    const integrationIdentifier = typeof integrationArg !== "string" ? integrationArg?.pop() : integrationArg;
-    if (integrationIdentifier == undefined || !(integrationIdentifier in IntegrationIdentifier)) {
-        return null;
-    }
-    return IntegrationIdentifier[integrationIdentifier as keyof typeof IntegrationIdentifier];
-}
 
 export function integrationIdentifierFromContext(context: AppRouteHandlerFnContext): IntegrationIdentifier | null {
     const integrationArg = context.params["integration"];
