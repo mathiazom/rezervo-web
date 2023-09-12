@@ -9,6 +9,8 @@ import {
 function serializeClass(_class: RezervoClass): RezervoClassDTO {
     return {
         ..._class,
+        bookingOpensAt: _class.bookingOpensAt.toISO() ?? "",
+        bookingClosesAt: _class.bookingClosesAt.toISO() ?? "",
         startTime: _class.startTime.toISO() ?? "",
         endTime: _class.endTime.toISO() ?? "",
     };

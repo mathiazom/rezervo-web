@@ -3,7 +3,7 @@ import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import { Tooltip } from "@mui/material";
 
 import RippleBadge from "@/components/utils/RippleBadge";
-import { isClassInThePast } from "@/lib/helpers/date";
+import { isClassBookable, isClassInThePast } from "@/lib/helpers/date";
 import { determineClassPopularity, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { RezervoClass } from "@/types/integration";
 import { ClassPopularity } from "@/types/popularity";
@@ -29,10 +29,10 @@ const ClassPopularityMeter = ({
     _class: RezervoClass;
     historicPopularity: ClassPopularity;
 }) => {
-    const popularity =
-        isClassInThePast(_class) || _class.isBookable ? determineClassPopularity(_class) : historicPopularity;
+    const isBookable = isClassBookable(_class);
+    const popularity = isClassInThePast(_class) || isBookable ? determineClassPopularity(_class) : historicPopularity;
 
-    if (_class.isBookable) {
+    if (isBookable) {
         return (
             <Tooltip
                 title={"Påmelding for denne timen har åpnet. " + stringifyClassPopularity(_class, historicPopularity)}

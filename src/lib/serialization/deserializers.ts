@@ -10,6 +10,8 @@ import {
 function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
     return {
         ...classDTO,
+        bookingOpensAt: LocalizedDateTime.fromISO(classDTO.bookingOpensAt),
+        bookingClosesAt: LocalizedDateTime.fromISO(classDTO.bookingClosesAt),
         startTime: LocalizedDateTime.fromISO(classDTO.startTime),
         endTime: LocalizedDateTime.fromISO(classDTO.endTime),
     };

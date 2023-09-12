@@ -14,9 +14,8 @@ function fscToRezervoClass(fscClass: DetailedFscClass): RezervoClass {
             studio: fscClass.businessUnit.name,
             room: fscClass.locations.map((location) => location.name).join(", "),
         },
-        isBookable:
-            LocalizedDateTime.fromISO(fscClass.bookableEarliest) < LocalizedDateTime.now() &&
-            LocalizedDateTime.fromISO(fscClass.bookableLatest) > LocalizedDateTime.now(),
+        bookingOpensAt: LocalizedDateTime.fromISO(fscClass.bookableEarliest),
+        bookingClosesAt: LocalizedDateTime.fromISO(fscClass.bookableLatest),
         totalSlots: fscClass.slots.total,
         availableSlots: fscClass.slots.leftToBook,
         waitingListCount: fscClass.slots.inWaitingList,

@@ -26,6 +26,10 @@ export function isClassInThePast(_class: RezervoClass): boolean {
     return _class.startTime < LocalizedDateTime.now();
 }
 
+export function isClassBookable(_class: RezervoClass): boolean {
+    return _class.bookingOpensAt < LocalizedDateTime.now() && _class.bookingClosesAt > LocalizedDateTime.now();
+}
+
 export function sameDay(a: DateTime, b: DateTime): boolean {
     return a.startOf("day") <= b && b <= a.endOf("day");
 }

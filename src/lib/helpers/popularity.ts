@@ -1,4 +1,4 @@
-import { isClassInThePast } from "@/lib/helpers/date";
+import { isClassBookable, isClassInThePast } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
@@ -29,7 +29,7 @@ export function stringifyClassPopularity(_class: RezervoClass, historicPopularit
 
     if (isInThePast) {
         classPopularityInfo = `${numberOfAttendees} av ${_class.totalSlots} deltok`;
-    } else if (_class.isBookable) {
+    } else if (isClassBookable(_class)) {
         classPopularityInfo = `${numberOfAttendees} av ${_class.totalSlots} er påmeldt`;
     } else {
         classPopularityInfo = historicPopularity;

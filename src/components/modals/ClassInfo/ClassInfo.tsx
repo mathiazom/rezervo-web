@@ -11,7 +11,7 @@ import React, { useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
-import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
+import { isClassInThePast, getCapitalizedWeekday, isClassBookable } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
@@ -78,6 +78,7 @@ export default function ClassInfo({
         setBookingLoading(false);
     }
 
+    const isBookable = isClassBookable(_class);
     return (
         <Box
             sx={{
@@ -174,7 +175,7 @@ export default function ClassInfo({
                     {_class.instructors.join(", ")}
                 </Typography>
             </Box>
-            {!_class.isBookable && !isClassInThePast(_class) && (
+            {!isBookable && !isClassInThePast(_class) && (
                 <Box
                     sx={{
                         display: "flex",
@@ -204,17 +205,13 @@ export default function ClassInfo({
             </Box>
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1.5 }}>
-                    <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.isBookable} />
+                    <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={isBookable} />
                     <Typography variant="body2" color="text.secondary">
                         {`${formatNameArray(
                             usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
                             usersPlanned.some((u) => u.is_self),
-                        )} ${
-                            _class.isBookable
-                                ? "har planlagt denne timen, men ikke booket plass!"
-                                : "skal på denne timen"
-                        }`}
+                        )} ${isBookable ? "har planlagt denne timen, men ikke booket plass!" : "skal på denne timen"}`}
                     </Typography>
                 </Box>
             )}
@@ -272,13 +269,13 @@ export default function ClassInfo({
                 !userConfigLoading &&
                 !userConfigError &&
                 !isInThePast &&
-                _class.isBookable &&
+                isBookable &&
                 (selfBooked || selfOnWaitlist ? (
                     <LoadingButton
                         sx={{ mt: 2 }}
                         variant={"outlined"}
                         color={"error"}
-                        disabled={isInThePast || !_class.isBookable}
+                        disabled={isInThePast || !isBookable}
                         onClick={() => setCancelBookingConfirmationOpen(true)}
                         loading={bookingLoading}
                     >
@@ -288,7 +285,7 @@ export default function ClassInfo({
                     <LoadingButton
                         sx={{ mt: 2 }}
                         variant={"outlined"}
-                        disabled={isInThePast || !_class.isBookable}
+                        disabled={isInThePast || !isBookable}
                         onClick={() => book()}
                         loading={bookingLoading}
                     >

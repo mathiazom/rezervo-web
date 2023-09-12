@@ -36,7 +36,6 @@ export type RezervoClassBase = {
         studio: string;
         room: string;
     };
-    isBookable: boolean;
     totalSlots: number;
     availableSlots: number;
     waitingListCount: number;
@@ -45,6 +44,8 @@ export type RezervoClassBase = {
 };
 
 export type RezervoClass = RezervoClassBase & {
+    bookingOpensAt: DateTime;
+    bookingClosesAt: DateTime;
     startTime: DateTime;
     endTime: DateTime;
 };

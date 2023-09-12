@@ -9,6 +9,8 @@ export type RezervoDayScheduleDTO = {
     classes: RezervoClassDTO[];
 };
 export type RezervoClassDTO = RezervoClassBase & {
+    bookingOpensAt: string;
+    bookingClosesAt: string;
     startTime: string;
     endTime: string;
 };

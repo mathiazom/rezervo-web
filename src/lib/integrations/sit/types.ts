@@ -13,6 +13,7 @@ export type SitClass = {
     activityId: number;
     available: number;
     bookable: boolean;
+    bookingOpensAt: string;
     capacity: number;
     studio: SitStudio;
     room: string;

@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import RippleBadge from "@/components/utils/RippleBadge";
-import { isClassInThePast } from "@/lib/helpers/date";
+import { isClassBookable, isClassInThePast } from "@/lib/helpers/date";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexColorHash, hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
@@ -133,7 +133,7 @@ const ClassCard = ({
                                         <ClassUserAvatar
                                             key={user_name}
                                             username={user_name}
-                                            alert={_class.isBookable}
+                                            alert={isClassBookable(_class)}
                                         />
                                     ))}
                                 {userSessions.length > 0 &&
