@@ -72,6 +72,7 @@ function ConfigBar({
             return {
                 ...o,
                 [classRecurrentId(c)]: {
+                    integration: integration,
                     activity: c.activity.id,
                     display_name: c.activity.name,
                     weekday: zeroIndexedWeekday(weekday),
