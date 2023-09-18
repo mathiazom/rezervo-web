@@ -13,7 +13,7 @@ const activityCategorization: RezervoCategory[] = [
     {
         name: "Mosjon",
         color: "#00B050",
-        keywords: ["godt voksen"],
+        keywords: ["godt voksen", "sprek mamma", "mor og barn"],
     },
     {
         name: "Dans",
@@ -38,7 +38,18 @@ const activityCategorization: RezervoCategory[] = [
     {
         name: "Styrke & Utholdenhet",
         color: "#F8A800",
-        keywords: ["pump", "styrke", "core", "sterk", "tabata", "stærk", "strength", "hardhausen", "slynge"],
+        keywords: [
+            "pump",
+            "styrke",
+            "core",
+            "sterk",
+            "tabata",
+            "stærk",
+            "strength",
+            "hardhausen",
+            "slynge",
+            "crosstraining",
+        ],
     },
 ];
 
