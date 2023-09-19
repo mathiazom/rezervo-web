@@ -26,5 +26,6 @@ export const DELETE = withApiAuthRequired(async (req) => {
     );
     if (operationFailed(response)) return response as NextResponse;
 
-    return NextResponse.json(await response.json(), { status: response.status });
+    // Should return `204 No Content`, but `NextResponse` does not support it, and `withApiAuthRequired` requires `NextResponse`
+    return NextResponse.json(null, { status: response.status == 204 ? 200 : response.status });
 });
