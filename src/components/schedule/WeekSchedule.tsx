@@ -53,7 +53,7 @@ function WeekSchedule({
     }, [onInfo, router, weekSchedule]);
 
     return (
-        <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        <Box sx={{ flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>
             <Stack direction={"column"}>
                 <Stack direction={"row"} margin={"auto"} paddingRight={"1rem"}>
                     {weekSchedule.map((daySchedule) => (

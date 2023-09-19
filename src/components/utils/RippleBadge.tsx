@@ -4,6 +4,7 @@ const RippleBadge = styled(Badge, {
     shouldForwardProp: (prop) => prop !== "rippleColor",
 })(({ rippleColor }: { rippleColor: string }) => ({
     "& .MuiBadge-badge": {
+        zIndex: 0,
         backgroundColor: rippleColor,
         color: rippleColor,
         boxShadow: "0 0 0 2px white",
