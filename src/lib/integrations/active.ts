@@ -23,9 +23,16 @@ const activeIntegrations: {
         profile: {
             acronym: IntegrationIdentifier.sit,
             name: "Sit Trening",
-            logo: {
-                small: "/integrations/sit/logo_small.png",
-                large: "/integrations/sit/logo_large.png",
+            images: {
+                light: {
+                    largeLogo: "/integrations/sit/light/logo_large.svg",
+                },
+                dark: {
+                    largeLogo: "/integrations/sit/dark/logo_large.svg",
+                },
+                common: {
+                    smallLogo: "/integrations/sit/common/logo_small.png",
+                },
             },
         },
         businessUnits: [
@@ -40,9 +47,16 @@ const activeIntegrations: {
         profile: {
             acronym: IntegrationIdentifier.fsc,
             name: "Family Sports Club",
-            logo: {
-                small: "/integrations/fsc/logo_small.png",
-                large: "/integrations/fsc/logo_large.png",
+            images: {
+                light: {
+                    largeLogo: "/integrations/fsc/light/logo_large.svg",
+                },
+                dark: {
+                    largeLogo: "/integrations/fsc/dark/logo_large.svg",
+                },
+                common: {
+                    smallLogo: "/integrations/fsc/common/logo_small.png",
+                },
             },
         },
         businessUnits: [

@@ -5,9 +5,16 @@ import { IntegrationIdentifier } from "@/lib/integrations/active";
 export type IntegrationProfile = {
     acronym: IntegrationIdentifier;
     name: string;
-    logo: {
-        small: string;
-        large: string;
+    images: {
+        light: {
+            largeLogo: string;
+        };
+        dark: {
+            largeLogo: string;
+        };
+        common: {
+            smallLogo: string;
+        };
     };
 };
 

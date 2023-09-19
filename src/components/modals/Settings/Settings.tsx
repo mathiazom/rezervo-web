@@ -253,7 +253,7 @@ export default function Settings({
                             >
                                 <Avatar
                                     sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
-                                    src={integrationProfile.logo.small}
+                                    src={integrationProfile.images.common.smallLogo}
                                 >
                                     {integrationProfile.acronym}
                                 </Avatar>
