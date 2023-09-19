@@ -316,7 +316,7 @@ export default function ClassInfo({
                     <>
                         <Typography>{`Du er i ferd med å avbestille ${_class.activity.name} (${getCapitalizedWeekday(
                             _class.startTime,
-                        )}, ${_class.startTime.toFormat("HH:mm")}.`}</Typography>
+                        )}, ${_class.startTime.toFormat("HH:mm")}).`}</Typography>
                         <Typography>Dette kan ikke angres!</Typography>
                     </>
                 }
