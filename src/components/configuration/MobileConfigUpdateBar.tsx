@@ -21,7 +21,7 @@ export default function MobileConfigUpdateBar({
     return (
         <Box
             sx={{
-                zIndex: 1,
+                zIndex: 2,
                 position: "fixed",
                 padding: "1.5rem",
                 bottom: 0,
