@@ -5,7 +5,10 @@ import { IntegrationIdentifier } from "@/lib/integrations/active";
 export type IntegrationProfile = {
     acronym: IntegrationIdentifier;
     name: string;
-    logo: string;
+    logo: {
+        small: string;
+        large: string;
+    };
 };
 
 export type RezervoIntegration<T> = {
