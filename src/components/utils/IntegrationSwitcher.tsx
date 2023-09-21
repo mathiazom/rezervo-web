@@ -55,7 +55,12 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                                 value={integration.profile.acronym}
                                 key={integration.profile.acronym}
                                 sx={{ margin: 0, padding: 0 }}
-                                onClick={() => setIntegrationLoading(integration.profile.acronym)}
+                                onClick={() =>
+                                    !isLoading &&
+                                    (isCurrentIntegration
+                                        ? setOpen(false)
+                                        : setIntegrationLoading(integration.profile.acronym))
+                                }
                             >
                                 <Link
                                     href={`/${integration.profile.acronym}`}
@@ -73,6 +78,7 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                                             ...(isLoading || isCurrentIntegration
                                                 ? {
                                                       pointerEvents: "none",
+                                                      touchEvents: "none",
                                                   }
                                                 : {}),
                                         }}
