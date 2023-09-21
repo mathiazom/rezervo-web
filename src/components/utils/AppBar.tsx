@@ -10,10 +10,10 @@ export default function AppBar({
 }) {
     return (
         <Box display={"flex"} justifyContent={"center"}>
-            <Box width={1388}>
-                <Box display="flex" py={2} alignItems={"center"}>
+            <Box width={1388} height={60}>
+                <Box display="flex" p={1} alignItems={"center"}>
                     {leftComponent}
-                    <Box sx={{ marginLeft: "auto", marginRight: { xs: 1, md: 2 } }}>{rightComponent}</Box>
+                    <Box sx={{ marginLeft: "auto" }}>{rightComponent}</Box>
                 </Box>
             </Box>
         </Box>

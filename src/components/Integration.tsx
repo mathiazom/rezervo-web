@@ -10,7 +10,7 @@ import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ErrorMessage from "@/components/utils/ErrorMessage";
-import Logo from "@/components/utils/Logo";
+import IntegrationSwitcher from "@/components/utils/IntegrationSwitcher";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -67,13 +67,17 @@ function Integration({
         setUserConfigActive(userConfig?.active ?? false);
     }, [userConfig]);
 
+    useEffect(() => {
+        setCurrentWeekSchedule(initialSchedule[0]!);
+    }, [initialSchedule]);
+
     return (
         <>
             <PageHead title={`${integrationProfile.acronym}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={<Logo integrationAcronym={integrationProfile.acronym} />}
+                        leftComponent={<IntegrationSwitcher currentIntegrationProfile={integrationProfile} />}
                         rightComponent={
                             <ConfigBar
                                 integration={integrationProfile.acronym}
