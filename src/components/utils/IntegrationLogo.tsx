@@ -13,13 +13,7 @@ function IntegrationLogo({ integrationProfile }: { integrationProfile: Integrati
     }, [theme.palette.mode]);
 
     return (
-        <Box
-            sx={{
-                position: "relative",
-                height: 25,
-                width: 75,
-            }}
-        >
+        <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
             {themeMode && (
                 <Image
                     src={
