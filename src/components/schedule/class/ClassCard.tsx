@@ -63,144 +63,140 @@ const ClassCard = ({
     return (
         <Card
             sx={{
-                opacity: isInThePast ? 0.6 : 1,
-                background: "none",
-                position: "relative",
-                borderLeft: `0.4rem solid ${classColorRGB(false)}`,
+                background: `rgb(${hexWithOpacityToRgb("#ffffff", isInThePast ? 0.6 : 1, 255).join(",")})`,
                 '[data-mui-color-scheme="dark"] &': {
-                    borderLeft: `0.4rem solid ${classColorRGB(true)}`,
+                    background: `rgb(${hexWithOpacityToRgb("#191919", isInThePast ? 0.6 : 1, 0).join(",")})`,
                 },
             }}
         >
-            <CardContent
-                className={"unselectable"}
-                onClick={selectable && !isInThePast ? handleClick : undefined}
-                sx={{ paddingBottom: 1 }}
-            >
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                    <Typography
-                        sx={{
-                            textDecoration: isInThePast ? "line-through" : "none",
-                            fontSize: "1.05rem",
-                            ...(showSelected ? { fontWeight: "bold" } : {}),
-                        }}
-                    >
-                        {_class.activity.name}
-                    </Typography>
-                    <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
-                </Box>
-                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
-                </Typography>
-                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.location.studio}
-                </Typography>
-                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                    {_class.instructors.join(", ")}
-                </Typography>
-            </CardContent>
-            <CardActions sx={{ padding: 0 }} disableSpacing>
-                <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
-                    <Box sx={{ display: "flex" }}>
-                        <IconButton onClick={onInfo} size={"small"} sx={{ padding: 0 }}>
-                            <InfoOutlinedIcon />
-                        </IconButton>
-                        {/*{selected && (*/}
-                        {/*    <IconButton onClick={onSettings} size={"small"}>*/}
-                        {/*        <SettingsOutlinedIcon />*/}
-                        {/*    </IconButton>*/}
-                        {/*)}*/}
-                        {(userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0)) && (
-                            <AvatarGroup
-                                max={4}
-                                sx={{
-                                    justifyContent: "start",
-                                    marginLeft: "auto",
-                                    "& .MuiAvatar-root": {
-                                        width: 24,
-                                        height: 24,
-                                        fontSize: 12,
-                                        borderColor: "white",
-                                        '[data-mui-color-scheme="dark"] &': {
-                                            borderColor: "#191919",
-                                        },
-                                    },
-                                }}
-                            >
-                                {!isInThePast &&
-                                    usersPlanned.length > 0 &&
-                                    usersPlanned.map(({ user_name }) => (
-                                        <ClassUserAvatar
-                                            key={user_name}
-                                            username={user_name}
-                                            alert={_class.isBookable}
-                                        />
-                                    ))}
-                                {userSessions.length > 0 &&
-                                    userSessions.map(({ user_name, status }) => {
-                                        const rippleColor =
-                                            status === SessionStatus.BOOKED || status === SessionStatus.CONFIRMED
-                                                ? StatusColors.ACTIVE
-                                                : StatusColors.WAITLIST;
-                                        return (
-                                            <RippleBadge
-                                                key={user_name}
-                                                invisible={isInThePast}
-                                                overlap="circular"
-                                                anchorOrigin={{
-                                                    vertical: "bottom",
-                                                    horizontal: "right",
-                                                }}
-                                                variant={"dot"}
-                                                rippleColor={rippleColor}
-                                            >
-                                                <Avatar
-                                                    alt={user_name}
-                                                    sx={{
-                                                        backgroundColor: hexColorHash(user_name),
-                                                    }}
-                                                >
-                                                    {user_name[0]}
-                                                </Avatar>
-                                            </RippleBadge>
-                                        );
-                                    })}
-                            </AvatarGroup>
-                        )}
-                    </Box>
-                </Box>
-            </CardActions>
             <Box
                 sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    height: "100%",
-                    width: "100%",
-                    zIndex: -1,
-                    backgroundColor: "white",
+                    opacity: isInThePast ? 0.5 : 1,
+                    background: "none",
+                    position: "relative",
+                    borderLeft: `0.4rem solid ${classColorRGB(false)}`,
                     '[data-mui-color-scheme="dark"] &': {
-                        backgroundColor: "#191919",
+                        borderLeft: `0.4rem solid ${classColorRGB(true)}`,
                     },
                 }}
-            />
-            {selectAnimation && (
-                <Box
-                    className={selectAnimation ? (showSelected ? selectAnimation.enter : selectAnimation.leave) : ""}
-                    sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        height: "100%",
-                        width: "100%",
-                        zIndex: -1,
-                        backgroundColor: classColorRGB(false),
-                        '[data-mui-color-scheme="dark"] &': {
-                            backgroundColor: classColorRGB(true),
-                        },
-                    }}
-                />
-            )}
+            >
+                {selectAnimation && (
+                    <Box
+                        className={
+                            selectAnimation ? (showSelected ? selectAnimation.enter : selectAnimation.leave) : ""
+                        }
+                        sx={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            height: "100%",
+                            width: "100%",
+                            backgroundColor: classColorRGB(false),
+                            '[data-mui-color-scheme="dark"] &': {
+                                backgroundColor: classColorRGB(true),
+                            },
+                        }}
+                    />
+                )}
+                <CardContent
+                    className={"unselectable"}
+                    onClick={selectable && !isInThePast ? handleClick : undefined}
+                    sx={{ paddingBottom: 1, zIndex: 1, position: "relative" }}
+                >
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                        <Typography
+                            sx={{
+                                textDecoration: isInThePast ? "line-through" : "none",
+                                fontSize: "1.05rem",
+                                ...(showSelected ? { fontWeight: "bold" } : {}),
+                            }}
+                        >
+                            {_class.activity.name}
+                        </Typography>
+                        <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
+                    </Box>
+                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
+                    </Typography>
+                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        {_class.location.studio}
+                    </Typography>
+                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        {_class.instructors.join(", ")}
+                    </Typography>
+                </CardContent>
+                <CardActions sx={{ padding: 0, zIndex: 1, position: "relative" }} disableSpacing>
+                    <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
+                        <Box sx={{ display: "flex" }}>
+                            <IconButton onClick={onInfo} size={"small"} sx={{ padding: 0 }}>
+                                <InfoOutlinedIcon />
+                            </IconButton>
+                            {/*{selected && (*/}
+                            {/*    <IconButton onClick={onSettings} size={"small"}>*/}
+                            {/*        <SettingsOutlinedIcon />*/}
+                            {/*    </IconButton>*/}
+                            {/*)}*/}
+                            {(userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0)) && (
+                                <AvatarGroup
+                                    max={4}
+                                    sx={{
+                                        justifyContent: "start",
+                                        marginLeft: "auto",
+                                        "& .MuiAvatar-root": {
+                                            width: 24,
+                                            height: 24,
+                                            fontSize: 12,
+                                            borderColor: "white",
+                                            '[data-mui-color-scheme="dark"] &': {
+                                                borderColor: "#191919",
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {!isInThePast &&
+                                        usersPlanned.length > 0 &&
+                                        usersPlanned.map(({ user_name }) => (
+                                            <ClassUserAvatar
+                                                key={user_name}
+                                                username={user_name}
+                                                alert={_class.isBookable}
+                                            />
+                                        ))}
+                                    {userSessions.length > 0 &&
+                                        userSessions.map(({ user_name, status }) => {
+                                            const rippleColor =
+                                                status === SessionStatus.BOOKED || status === SessionStatus.CONFIRMED
+                                                    ? StatusColors.ACTIVE
+                                                    : StatusColors.WAITLIST;
+                                            return (
+                                                <RippleBadge
+                                                    key={user_name}
+                                                    invisible={isInThePast}
+                                                    overlap="circular"
+                                                    anchorOrigin={{
+                                                        vertical: "bottom",
+                                                        horizontal: "right",
+                                                    }}
+                                                    variant={"dot"}
+                                                    rippleColor={rippleColor}
+                                                >
+                                                    <Avatar
+                                                        alt={user_name}
+                                                        sx={{
+                                                            backgroundColor: hexColorHash(user_name),
+                                                        }}
+                                                    >
+                                                        {user_name[0]}
+                                                    </Avatar>
+                                                </RippleBadge>
+                                            );
+                                        })}
+                                </AvatarGroup>
+                            )}
+                        </Box>
+                    </Box>
+                </CardActions>
+            </Box>
         </Card>
     );
 };

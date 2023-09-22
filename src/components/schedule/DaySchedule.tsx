@@ -29,7 +29,7 @@ function DaySchedule({
 
     return (
         <Box key={daySchedule.date.toString()} width={180}>
-            <Box py={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }}>
+            <Box pt={1.5} pb={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }}>
                 <Typography variant="h6" component="div">
                     {getCapitalizedWeekday(daySchedule.date)}{" "}
                     {isToday(daySchedule.date) && (

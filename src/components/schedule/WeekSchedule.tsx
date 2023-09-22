@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { alpha, Box, Stack, useTheme } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
@@ -25,6 +25,7 @@ function WeekSchedule({
     onSelectedChanged: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {
+    const theme = useTheme();
     const router = useRouter();
     const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -55,24 +56,38 @@ function WeekSchedule({
     return (
         <Box sx={{ flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>
             <Stack direction={"column"}>
-                <Stack direction={"row"} margin={"auto"} paddingRight={"1rem"}>
-                    {weekSchedule.map((daySchedule) => (
-                        <Box
-                            key={daySchedule.date.toString()}
-                            ref={isToday(daySchedule.date) ? scrollToTodayRef : null}
-                            paddingLeft={"1rem"}
-                        >
-                            <DaySchedule
-                                daySchedule={daySchedule}
-                                classPopularityIndex={classPopularityIndex}
-                                selectable={selectable}
-                                selectedClassIds={selectedClassIds}
-                                allConfigsIndex={allConfigsIndex}
-                                onSelectedChanged={onSelectedChanged}
-                                onInfo={onInfo}
-                            />
-                        </Box>
-                    ))}
+                <Stack direction={"row"} margin={"auto"} paddingX={"0.5rem"}>
+                    {weekSchedule.map((daySchedule) => {
+                        const dayIsToday = isToday(daySchedule.date);
+                        return (
+                            <Box
+                                key={daySchedule.date.toString()}
+                                ref={dayIsToday ? scrollToTodayRef : null}
+                                paddingX={dayIsToday ? "0.9rem" : "0.5rem"}
+                                marginX={dayIsToday ? "0.1rem" : "0rem"}
+                                sx={{
+                                    ...(dayIsToday
+                                        ? {
+                                              backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                                              '[data-mui-color-scheme="dark"] &': {
+                                                  backgroundColor: alpha(theme.palette.primary.main, 0.2),
+                                              },
+                                          }
+                                        : {}),
+                                }}
+                            >
+                                <DaySchedule
+                                    daySchedule={daySchedule}
+                                    classPopularityIndex={classPopularityIndex}
+                                    selectable={selectable}
+                                    selectedClassIds={selectedClassIds}
+                                    allConfigsIndex={allConfigsIndex}
+                                    onSelectedChanged={onSelectedChanged}
+                                    onInfo={onInfo}
+                                />
+                            </Box>
+                        );
+                    })}
                 </Stack>
             </Stack>
         </Box>
