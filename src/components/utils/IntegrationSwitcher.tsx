@@ -30,7 +30,7 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
 
     return (
         <>
-            <Button onClick={() => setOpen(true)}>
+            <Button onClick={() => setOpen(true)} sx={{ paddingX: 0 }}>
                 <Box sx={{ height: 25, width: 75 }}>
                     <IntegrationLogo integrationProfile={currentIntegrationProfile} />
                 </Box>
