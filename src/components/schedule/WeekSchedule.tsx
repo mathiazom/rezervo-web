@@ -14,6 +14,7 @@ function WeekSchedule({
     selectable,
     selectedClassIds,
     allConfigsIndex,
+    todayRef,
     onSelectedChanged,
     onInfo,
 }: {
@@ -22,22 +23,12 @@ function WeekSchedule({
     selectable: boolean;
     selectedClassIds: string[] | null;
     allConfigsIndex: AllConfigsIndex | null;
+    todayRef: React.MutableRefObject<HTMLDivElement | null>;
     onSelectedChanged: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
     const router = useRouter();
-    const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        const target = scrollToTodayRef.current;
-        if (target != null) {
-            target.scrollIntoView({
-                behavior: "smooth",
-                inline: "start",
-            });
-        }
-    }, [scrollToTodayRef]);
 
     useEffect(() => {
         const { classId, ...queryWithoutParam } = router.query;
@@ -62,7 +53,7 @@ function WeekSchedule({
                         return (
                             <Box
                                 key={daySchedule.date.toString()}
-                                ref={dayIsToday ? scrollToTodayRef : null}
+                                ref={dayIsToday ? todayRef : null}
                                 paddingX={dayIsToday ? "0.9rem" : "0.5rem"}
                                 marginX={dayIsToday ? "0.1rem" : "0rem"}
                                 sx={{

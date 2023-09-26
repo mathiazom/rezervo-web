@@ -19,10 +19,12 @@ export default function WeekNavigator({
     integration,
     initialSchedule,
     setCurrentWeekSchedule,
+    onGoToToday,
 }: {
     integration: IntegrationIdentifier;
     initialSchedule: RezervoSchedule;
     setCurrentWeekSchedule: Dispatch<SetStateAction<RezervoWeekSchedule>>;
+    onGoToToday: () => void;
 }) {
     const [weekOffset, setWeekOffset] = useState(0);
     const [weekNumber, setWeekNumber] = useState(getWeekNumber(initialSchedule[0]!));
@@ -105,8 +107,7 @@ export default function WeekNavigator({
                 }}
                 variant={"outlined"}
                 size={"small"}
-                disabled={weekOffset === 0}
-                onClick={() => updateWeekOffset(0)}
+                onClick={() => updateWeekOffset(0).then(() => onGoToToday())}
             >
                 I dag
             </Button>

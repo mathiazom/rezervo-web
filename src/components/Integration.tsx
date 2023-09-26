@@ -60,6 +60,8 @@ function Integration({
         );
     }, []);
 
+    const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
+
     useEffect(() => {
         const classIds = userConfig?.classes?.map(classConfigRecurrentId) ?? null;
         setSelectedClassIds(classIds);
@@ -70,6 +72,20 @@ function Integration({
     useEffect(() => {
         setCurrentWeekSchedule(initialSchedule[0]!);
     }, [initialSchedule]);
+
+    useEffect(() => {
+        scrollToToday();
+    }, [scrollToTodayRef]);
+
+    function scrollToToday() {
+        const target = scrollToTodayRef.current;
+        if (target != null) {
+            target.scrollIntoView({
+                behavior: "smooth",
+                inline: "start",
+            });
+        }
+    }
 
     return (
         <>
@@ -100,6 +116,7 @@ function Integration({
                             integration={integrationProfile.acronym}
                             initialSchedule={initialSchedule}
                             setCurrentWeekSchedule={setCurrentWeekSchedule}
+                            onGoToToday={scrollToToday}
                         />
                     )}
                     <Divider orientation="horizontal" />
@@ -113,6 +130,7 @@ function Integration({
                         allConfigsIndex={allConfigsIndex ?? null}
                         onSelectedChanged={onSelectedChanged}
                         onInfo={setClassInfoClass}
+                        todayRef={scrollToTodayRef}
                     />
                 ) : (
                     <ErrorMessage error={error} integrationProfile={integrationProfile} />
