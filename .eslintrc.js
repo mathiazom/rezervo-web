@@ -1,5 +1,8 @@
 module.exports = {
     parser: "@typescript-eslint/parser",
+    parserOptions: {
+        project: "./tsconfig.json",
+    },
     settings: {
         react: {
             version: "detect",
@@ -17,6 +20,7 @@ module.exports = {
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:deprecation/recommended",
         "prettier",
     ],
     plugins: ["eslint-plugin-no-relative-import-paths"],
