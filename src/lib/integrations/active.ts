@@ -1,9 +1,9 @@
-import { fscToRezervoWeekSchedule } from "@/lib/integrations/fsc/adapters";
-import { fetchFscWeekSchedule } from "@/lib/integrations/fsc/fetchers";
-import { DetailedFscWeekSchedule } from "@/lib/integrations/fsc/types";
 import { sitToRezervoWeekSchedule } from "@/lib/integrations/sit/adapters";
 import { fetchSitWeekSchedule } from "@/lib/integrations/sit/fetchers";
 import { SitWeekSchedule } from "@/lib/integrations/sit/types";
+import { brpToRezervoWeekSchedule } from "@/lib/providers/brpsystems/adapters";
+import { fetchBrpWeekSchedule } from "@/lib/providers/brpsystems/fetchers";
+import { DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
 import { RezervoIntegration } from "@/types/integration";
 
 export enum IntegrationIdentifier {
@@ -13,7 +13,7 @@ export enum IntegrationIdentifier {
 
 export type IntegrationWeekSchedule = {
     [IntegrationIdentifier.sit]: SitWeekSchedule;
-    [IntegrationIdentifier.fsc]: DetailedFscWeekSchedule;
+    [IntegrationIdentifier.fsc]: DetailedBrpWeekSchedule;
 };
 
 const activeIntegrations: {
@@ -62,8 +62,10 @@ const activeIntegrations: {
         businessUnits: [
             {
                 name: "Ski",
-                weekScheduleFetcher: fetchFscWeekSchedule,
-                weekScheduleAdapter: fscToRezervoWeekSchedule,
+                weekScheduleFetcher: (weekNumber: number) =>
+                    fetchBrpWeekSchedule(weekNumber, IntegrationIdentifier.fsc),
+                weekScheduleAdapter: (brpWeekSchedule: DetailedBrpWeekSchedule) =>
+                    brpToRezervoWeekSchedule(brpWeekSchedule, IntegrationIdentifier.fsc),
             },
         ],
     },
