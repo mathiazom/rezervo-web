@@ -5,20 +5,18 @@ import {
     DetailedFscClass,
     DetailedFscWeekSchedule,
     FscActivityDetail,
-    FscActivityDetailResponse,
     FscClass,
     FscWeekSchedule,
-    FscWeekScheduleResponse,
 } from "@/lib/integrations/fsc/types";
 
 function fscWeekScheduleUrl(fromDate: DateTime) {
-    return `https://fsc.no/api/v1/businessunits/8/groupactivities?period_start=${fromDate.toUTC()}&period_end=${fromDate
+    return `https://fsc.brpsystems.com/brponline/api/ver3/businessunits/8/groupactivities?period.start=${fromDate.toUTC()}&period.end=${fromDate
         .plus({ week: 1 })
         .toUTC()}`;
 }
 
 function fscActivityDetailUrl(activityId: number) {
-    return `https://fsc.no/api/v1/products/groupactivities/${activityId}`;
+    return `https://fsc.brpsystems.com/brponline/api/ver3/products/groupactivities/${activityId}`;
 }
 
 async function fetchActivityDetail(activityId: number) {
@@ -29,14 +27,9 @@ async function fetchActivityDetail(activityId: number) {
             );
         }
 
-        const groupActivityDetailResponse: FscActivityDetailResponse = await response.json();
+        const groupActivityDetail: FscActivityDetail = await response.json();
 
-        if (!groupActivityDetailResponse.success) {
-            throw new Error(
-                `Failed to fetch class detail for fsc class with id ${activityId}, received errors ${groupActivityDetailResponse.errors}`,
-            );
-        }
-        return groupActivityDetailResponse.data;
+        return groupActivityDetail;
     });
 }
 
@@ -79,11 +72,6 @@ export async function fetchFscWeekSchedule(weekOffset: number): Promise<Detailed
     if (!response.ok) {
         throw new Error(`Failed to fetch schedule with startDate ${startDate}, received status ${response.status}`);
     }
-    const fscWeekScheduleResponse: FscWeekScheduleResponse = await response.json();
-    if (!fscWeekScheduleResponse.success) {
-        throw new Error(
-            `Failed to fetch schedule with startDate ${startDate}, received errors ${fscWeekScheduleResponse.errors}`,
-        );
-    }
-    return fetchDetailedFscWeekSchedule(fscWeekScheduleResponse.data);
+    const fscWeekSchedule: FscWeekSchedule = await response.json();
+    return fetchDetailedFscWeekSchedule(fscWeekSchedule);
 }

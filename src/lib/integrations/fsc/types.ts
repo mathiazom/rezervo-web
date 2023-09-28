@@ -1,14 +1,3 @@
-export type FscResponse = {
-    success: boolean;
-    errors?: {
-        [errorType: string]: string[];
-    };
-};
-
-export type FscWeekScheduleResponse = FscResponse & {
-    data: FscWeekSchedule;
-};
-
 export type FscWeekSchedule = FscClass[];
 
 export type FscClass = {
@@ -51,10 +40,6 @@ export type FscClass = {
         hasWaitingList: boolean;
         inWaitingList: number;
     };
-};
-
-export type FscActivityDetailResponse = FscResponse & {
-    data: FscActivityDetail;
 };
 
 export type FscActivityDetail = {
