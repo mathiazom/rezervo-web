@@ -6,18 +6,9 @@ import { fetchIBookingWeekSchedule } from "@/lib/providers/ibooking/fetchers";
 import { IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { RezervoProvider } from "@/types/integration";
 
-export enum ProviderIdentifier {
-    ibooking = "ibooking",
-    brp = "brpsystems",
-}
-
-export type ProviderWeekSchedule = {
-    [ProviderIdentifier.ibooking]: IBookingWeekSchedule;
-    [ProviderIdentifier.brp]: DetailedBrpWeekSchedule;
-};
-
 export const activeProviders: {
-    [identifier in ProviderIdentifier]: RezervoProvider<ProviderWeekSchedule[identifier]>;
+    ibooking: RezervoProvider<IBookingWeekSchedule>;
+    brpsystems: RezervoProvider<DetailedBrpWeekSchedule>;
 } = {
     ibooking: {
         weekScheduleFetcher: fetchIBookingWeekSchedule,

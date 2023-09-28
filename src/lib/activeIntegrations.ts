@@ -9,14 +9,10 @@ export enum IntegrationIdentifier {
     tret = "3t",
 }
 
-export type IntegrationWeekSchedule = {
-    [IntegrationIdentifier.sit]: IBookingWeekSchedule;
-    [IntegrationIdentifier.fsc]: DetailedBrpWeekSchedule;
-    [IntegrationIdentifier.tret]: DetailedBrpWeekSchedule;
-};
-
 const activeIntegrations: {
-    [identifier in IntegrationIdentifier]: RezervoIntegration<IntegrationWeekSchedule[identifier]>;
+    [IntegrationIdentifier.sit]: RezervoIntegration<IBookingWeekSchedule>;
+    [IntegrationIdentifier.fsc]: RezervoIntegration<DetailedBrpWeekSchedule>;
+    [IntegrationIdentifier.tret]: RezervoIntegration<DetailedBrpWeekSchedule>;
 } = {
     [IntegrationIdentifier.sit]: {
         profile: {
