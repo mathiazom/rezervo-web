@@ -1,7 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
-import { IntegrationIdentifier } from "@/lib/providers/active";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { AllConfigsIndex } from "@/types/config";
 

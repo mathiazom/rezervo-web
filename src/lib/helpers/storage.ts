@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-import { IntegrationIdentifier } from "@/lib/providers/active";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 
 const STORAGE_KEYS = {
     SELECTED_INTEGRATION: "rezervo.selectedIntegration",

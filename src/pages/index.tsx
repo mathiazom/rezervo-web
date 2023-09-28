@@ -6,8 +6,8 @@ import React, { useEffect, useState } from "react";
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
 import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
+import activeIntegrations, { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/providers/active";
 
 function IndexPage() {
     const theme = useTheme();

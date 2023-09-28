@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { IntegrationIdentifier } from "@/lib/providers/active";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 
 export type IntegrationProfile = {
     acronym: IntegrationIdentifier;
@@ -18,15 +18,19 @@ export type IntegrationProfile = {
     };
 };
 
-export type RezervoIntegration<T> = {
-    profile: IntegrationProfile;
-    businessUnits: RezervoBusinessUnit<T>[];
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
+export type RezervoProvider<T> = {
+    weekScheduleFetcher: (weekNumber: number, integration: IntegrationIdentifier) => Promise<T>;
+    weekScheduleAdapter: (weekSchedule: T, integration: IntegrationIdentifier) => RezervoWeekSchedule;
 };
 
-export type RezervoBusinessUnit<T> = {
+export type RezervoIntegration<T> = {
+    profile: IntegrationProfile;
+    businessUnits: RezervoBusinessUnit[];
+    provider: RezervoProvider<T>;
+};
+
+export type RezervoBusinessUnit = {
     name: string;
-    weekScheduleFetcher: (weekNumber: number) => Promise<T>;
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };

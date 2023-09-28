@@ -2,9 +2,9 @@ import type { GetStaticPaths, NextPage } from "next";
 import React, { useEffect } from "react";
 
 import Integration from "@/components/Integration";
+import activeIntegrations from "@/lib/activeIntegrations";
 import { fetchIntegrationPageStaticProps } from "@/lib/helpers/fetchers";
 import { storeSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations from "@/lib/providers/active";
 import { deserializeSchedule } from "@/lib/serialization/deserializers";
 import { IntegrationPageParams, RezervoIntegration } from "@/types/integration";
 import { IntegrationPageProps } from "@/types/serialization";
@@ -30,7 +30,7 @@ export async function getStaticProps({ params }: { params: IntegrationPageParams
     if (!businessUnit) {
         throw new Error(`${integration.profile.name} does not have any business units`);
     }
-    return await fetchIntegrationPageStaticProps(integration, businessUnit);
+    return await fetchIntegrationPageStaticProps(integration);
 }
 
 const IntegrationPage: NextPage<IntegrationPageProps> = ({

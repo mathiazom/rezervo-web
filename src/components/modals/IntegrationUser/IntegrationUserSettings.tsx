@@ -5,8 +5,8 @@ import { Box, Button, DialogActions, DialogContent, DialogTitle } from "@mui/mat
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
-import { IntegrationIdentifier } from "@/lib/providers/active";
 import { IntegrationUserPayload } from "@/types/config";
 
 export default function IntegrationUserSettings({

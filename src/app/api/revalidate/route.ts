@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
-import activeIntegrations from "@/lib/providers/active";
+import activeIntegrations from "@/lib/activeIntegrations";
 
 export const GET = async (req: NextRequest) => {
     const secret = req.nextUrl.searchParams.get("secret");

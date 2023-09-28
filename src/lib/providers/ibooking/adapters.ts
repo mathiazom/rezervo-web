@@ -1,5 +1,5 @@
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { LocalizedDateTime } from "@/lib/helpers/date";
-import { IntegrationIdentifier } from "@/lib/providers/active";
 import { IBookingClass, IBookingDaySchedule, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/integration";
 

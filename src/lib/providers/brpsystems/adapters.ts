@@ -1,6 +1,6 @@
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import determineActivityCategory from "@/lib/helpers/activityCategorization";
 import { LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
-import { IntegrationIdentifier } from "@/lib/providers/active";
 import { DetailedBrpClass, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 

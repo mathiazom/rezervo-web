@@ -52,4 +52,4 @@ yarn tsc
 
 #### 🔌 Support new integration
 
-Add your own integration by adding it to [`activeIntegrations`](src/lib/providers/active.ts).
+Add your own integration by adding it to [`activeIntegrations`](src/lib/activeIntegrations.ts).

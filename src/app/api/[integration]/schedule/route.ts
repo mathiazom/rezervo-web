@@ -3,9 +3,9 @@ import { constants } from "http2";
 import { AppRouteHandlerFnContext } from "@auth0/nextjs-auth0";
 import { NextRequest, NextResponse } from "next/server";
 
+import activeIntegrations from "@/lib/activeIntegrations";
 import { integrationIdentifierFromContext, respondNotFound } from "@/lib/helpers/api";
 import { fetchRezervoWeekSchedule } from "@/lib/helpers/fetchers";
-import activeIntegrations from "@/lib/providers/active";
 import { serializeWeekSchedule } from "@/lib/serialization/serializers";
 import { RezervoIntegration } from "@/types/integration";
 
@@ -32,8 +32,9 @@ export const POST = async (req: NextRequest, ctx: AppRouteHandlerFnContext) => {
         serializeWeekSchedule(
             await fetchRezervoWeekSchedule(
                 weekOffset,
-                businessUnit.weekScheduleFetcher,
-                integration.weekScheduleAdapter,
+                (weekNumber: number) =>
+                    integration.provider.weekScheduleFetcher(weekNumber, integration.profile.acronym),
+                (weekSchedule) => integration.provider.weekScheduleAdapter(weekSchedule, integration.profile.acronym),
             ),
         ),
     );

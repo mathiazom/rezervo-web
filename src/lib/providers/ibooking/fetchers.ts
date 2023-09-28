@@ -1,5 +1,5 @@
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { calculateMondayOffset, LocalizedDateTime } from "@/lib/helpers/date";
-import { IntegrationIdentifier } from "@/lib/providers/active";
 import { IBookingDaySchedule, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 
 function iBookingScheduleUrl(token: string, fromISO: string | null = null, integration: IntegrationIdentifier) {
