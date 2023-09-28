@@ -21,12 +21,12 @@ export type IntegrationProfile = {
 export type RezervoIntegration<T> = {
     profile: IntegrationProfile;
     businessUnits: RezervoBusinessUnit<T>[];
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
 };
 
 export type RezervoBusinessUnit<T> = {
     name: string;
     weekScheduleFetcher: (weekNumber: number) => Promise<T>;
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };

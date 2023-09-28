@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest, ctx: AppRouteHandlerFnContext) => {
             await fetchRezervoWeekSchedule(
                 weekOffset,
                 businessUnit.weekScheduleFetcher,
-                businessUnit.weekScheduleAdapter,
+                integration.weekScheduleAdapter,
             ),
         ),
     );

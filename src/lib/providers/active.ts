@@ -40,10 +40,10 @@ const activeIntegrations: {
                 name: "Trondheim",
                 weekScheduleFetcher: (weekNumber: number) =>
                     fetchIBookingWeekSchedule(weekNumber, IntegrationIdentifier.sit),
-                weekScheduleAdapter: (iBookingWeekSchedule: IBookingWeekSchedule) =>
-                    iBookingToRezervoWeekSchedule(iBookingWeekSchedule, IntegrationIdentifier.sit),
             },
         ],
+        weekScheduleAdapter: (iBookingWeekSchedule: IBookingWeekSchedule) =>
+            iBookingToRezervoWeekSchedule(iBookingWeekSchedule, IntegrationIdentifier.sit),
     },
     [IntegrationIdentifier.fsc]: {
         profile: {
@@ -66,10 +66,10 @@ const activeIntegrations: {
                 name: "Ski",
                 weekScheduleFetcher: (weekNumber: number) =>
                     fetchBrpWeekSchedule(weekNumber, IntegrationIdentifier.fsc),
-                weekScheduleAdapter: (brpWeekSchedule: DetailedBrpWeekSchedule) =>
-                    brpToRezervoWeekSchedule(brpWeekSchedule, IntegrationIdentifier.fsc),
             },
         ],
+        weekScheduleAdapter: (brpWeekSchedule: DetailedBrpWeekSchedule) =>
+            brpToRezervoWeekSchedule(brpWeekSchedule, IntegrationIdentifier.fsc),
     },
 };
 
