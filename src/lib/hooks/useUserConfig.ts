@@ -3,7 +3,7 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/providers/active";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { IntegrationConfigPayload, IntegrationConfig } from "@/types/config";
 

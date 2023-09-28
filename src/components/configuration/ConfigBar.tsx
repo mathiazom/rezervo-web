@@ -18,7 +18,7 @@ import { zeroIndexedWeekday } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/providers/active";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ClassConfig, IntegrationConfig } from "@/types/config";

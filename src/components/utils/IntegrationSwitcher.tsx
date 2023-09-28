@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
 import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
+import activeIntegrations, { IntegrationIdentifier } from "@/lib/providers/active";
 import { IntegrationProfile } from "@/types/integration";
 
 function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationProfile: IntegrationProfile }) {

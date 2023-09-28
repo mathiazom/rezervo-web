@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 import { calculateMondayOffset, LocalizedDateTime } from "@/lib/helpers/date";
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/providers/active";
 import {
     DetailedBrpClass,
     DetailedBrpWeekSchedule,

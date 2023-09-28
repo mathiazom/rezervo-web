@@ -3,7 +3,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/providers/active";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 

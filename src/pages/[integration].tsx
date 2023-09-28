@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Integration from "@/components/Integration";
 import { fetchIntegrationPageStaticProps } from "@/lib/helpers/fetchers";
 import { storeSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations from "@/lib/integrations/active";
+import activeIntegrations from "@/lib/providers/active";
 import { deserializeSchedule } from "@/lib/serialization/deserializers";
 import { IntegrationPageParams, RezervoIntegration } from "@/types/integration";
 import { IntegrationPageProps } from "@/types/serialization";

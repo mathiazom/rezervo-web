@@ -7,7 +7,7 @@ import IntegrationLogo from "@/components/utils/IntegrationLogo";
 import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
 import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
+import activeIntegrations, { IntegrationIdentifier } from "@/lib/providers/active";
 
 function IndexPage() {
     const theme = useTheme();

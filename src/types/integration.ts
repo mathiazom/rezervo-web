@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/providers/active";
 
 export type IntegrationProfile = {
     acronym: IntegrationIdentifier;

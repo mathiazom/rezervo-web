@@ -1,9 +1,9 @@
-import { sitToRezervoWeekSchedule } from "@/lib/integrations/sit/adapters";
-import { fetchSitWeekSchedule } from "@/lib/integrations/sit/fetchers";
-import { SitWeekSchedule } from "@/lib/integrations/sit/types";
 import { brpToRezervoWeekSchedule } from "@/lib/providers/brpsystems/adapters";
 import { fetchBrpWeekSchedule } from "@/lib/providers/brpsystems/fetchers";
 import { DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
+import { iBookingToRezervoWeekSchedule } from "@/lib/providers/ibooking/adapters";
+import { fetchIBookingWeekSchedule } from "@/lib/providers/ibooking/fetchers";
+import { IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { RezervoIntegration } from "@/types/integration";
 
 export enum IntegrationIdentifier {
@@ -12,7 +12,7 @@ export enum IntegrationIdentifier {
 }
 
 export type IntegrationWeekSchedule = {
-    [IntegrationIdentifier.sit]: SitWeekSchedule;
+    [IntegrationIdentifier.sit]: IBookingWeekSchedule;
     [IntegrationIdentifier.fsc]: DetailedBrpWeekSchedule;
 };
 
@@ -38,8 +38,10 @@ const activeIntegrations: {
         businessUnits: [
             {
                 name: "Trondheim",
-                weekScheduleFetcher: fetchSitWeekSchedule,
-                weekScheduleAdapter: sitToRezervoWeekSchedule,
+                weekScheduleFetcher: (weekNumber: number) =>
+                    fetchIBookingWeekSchedule(weekNumber, IntegrationIdentifier.sit),
+                weekScheduleAdapter: (iBookingWeekSchedule: IBookingWeekSchedule) =>
+                    iBookingToRezervoWeekSchedule(iBookingWeekSchedule, IntegrationIdentifier.sit),
             },
         ],
     },

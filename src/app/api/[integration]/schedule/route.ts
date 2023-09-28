@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { integrationIdentifierFromContext, respondNotFound } from "@/lib/helpers/api";
 import { fetchRezervoWeekSchedule } from "@/lib/helpers/fetchers";
-import activeIntegrations from "@/lib/integrations/active";
+import activeIntegrations from "@/lib/providers/active";
 import { serializeWeekSchedule } from "@/lib/serialization/serializers";
 import { RezervoIntegration } from "@/types/integration";
 

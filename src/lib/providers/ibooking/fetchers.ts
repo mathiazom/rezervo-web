@@ -1,9 +1,10 @@
 import { calculateMondayOffset, LocalizedDateTime } from "@/lib/helpers/date";
-import { SitDaySchedule, SitWeekSchedule } from "@/lib/integrations/sit/types";
+import { IntegrationIdentifier } from "@/lib/providers/active";
+import { IBookingDaySchedule, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 
-function sitScheduleUrl(token: string, fromISO: string | null = null) {
+function iBookingScheduleUrl(token: string, fromISO: string | null = null, integration: IntegrationIdentifier) {
     return (
-        "https://ibooking.sit.no/webapp/api/Schedule/getSchedule" +
+        `https://ibooking.${integration}.no/webapp/api/Schedule/getSchedule` +
         `?token=${token}${fromISO ? "&from=" + fromISO : ""}` +
         "&studios=306,307,308,402,540,1132&lang=no&categories=5,6,7,8,9,10,11,12,14"
     );
@@ -11,7 +12,7 @@ function sitScheduleUrl(token: string, fromISO: string | null = null) {
 
 const SIT_GROUP_BOOKING_URL = "https://www.sit.no/trening/gruppe";
 
-function fetchSitPublicToken() {
+function fetchIBookingPublicToken() {
     return fetch(SIT_GROUP_BOOKING_URL)
         .then((res) => res.text())
         .then((text) => text.replace(/[\n\r]/g, "").replace(/\s+/g, " "))
@@ -21,9 +22,13 @@ function fetchSitPublicToken() {
         });
 }
 
-async function fetchSitDaySchedulesWithOffset(token: string, dayOffset: number): Promise<{ days: SitDaySchedule[] }> {
+async function fetchIBookingDaySchedulesWithOffset(
+    token: string,
+    dayOffset: number,
+    integration: IntegrationIdentifier,
+): Promise<{ days: IBookingDaySchedule[] }> {
     const startDate = LocalizedDateTime.now().plus({ day: dayOffset });
-    const scheduleResponse = await fetch(sitScheduleUrl(token, startDate.toISODate()));
+    const scheduleResponse = await fetch(iBookingScheduleUrl(token, startDate.toISODate(), integration));
     if (!scheduleResponse.ok) {
         throw new Error(
             `Failed to fetch schedule with startDate ${startDate}, received status ${scheduleResponse.status}`,
@@ -32,16 +37,23 @@ async function fetchSitDaySchedulesWithOffset(token: string, dayOffset: number):
     return await scheduleResponse.json();
 }
 
-export async function fetchSitWeekSchedule(weekOffset: number): Promise<SitWeekSchedule> {
-    const token = await fetchSitPublicToken();
+export async function fetchIBookingWeekSchedule(
+    weekOffset: number,
+    integration: IntegrationIdentifier,
+): Promise<IBookingWeekSchedule> {
+    const token = await fetchIBookingPublicToken();
     const mondayOffset = calculateMondayOffset();
 
     return {
         // Use two fetches to retrieve schedule for the next 7 days
         days: [
             // Use offset -1 to fetch all today's events, not just the ones in the future
-            ...(await fetchSitDaySchedulesWithOffset(token, -1 - mondayOffset + weekOffset * 7)).days.slice(1, 4),
-            ...(await fetchSitDaySchedulesWithOffset(token, 3 - mondayOffset + weekOffset * 7)).days.slice(0, 4),
+            ...(
+                await fetchIBookingDaySchedulesWithOffset(token, -1 - mondayOffset + weekOffset * 7, integration)
+            ).days.slice(1, 4),
+            ...(
+                await fetchIBookingDaySchedulesWithOffset(token, 3 - mondayOffset + weekOffset * 7, integration)
+            ).days.slice(0, 4),
         ],
     };
 }

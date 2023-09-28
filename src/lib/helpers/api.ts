@@ -3,7 +3,7 @@ import { constants } from "http2";
 import { AppRouteHandlerFnContext, getAccessToken } from "@auth0/nextjs-auth0";
 import { NextRequest, NextResponse } from "next/server";
 
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/providers/active";
 
 export function integrationIdentifierFromContext(context: AppRouteHandlerFnContext): IntegrationIdentifier | null {
     const integrationArg = context.params["integration"];
