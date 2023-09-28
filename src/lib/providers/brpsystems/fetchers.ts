@@ -10,8 +10,8 @@ import {
     BrpWeekSchedule,
 } from "@/lib/providers/brpsystems/types";
 
-function brpWeekScheduleUrl(fromDate: DateTime, integration: IntegrationIdentifier) {
-    return `https://${integration}.brpsystems.com/brponline/api/ver3/businessunits/8/groupactivities?period.start=${fromDate.toUTC()}&period.end=${fromDate
+function brpWeekScheduleUrl(fromDate: DateTime, integration: IntegrationIdentifier, businessUnit: number) {
+    return `https://${integration}.brpsystems.com/brponline/api/ver3/businessunits/${businessUnit}/groupactivities?period.start=${fromDate.toUTC()}&period.end=${fromDate
         .plus({ week: 1 })
         .toUTC()}`;
 }
@@ -71,11 +71,12 @@ async function fetchDetailedBrpWeekSchedule(
 export async function fetchBrpWeekSchedule(
     weekOffset: number,
     integration: IntegrationIdentifier,
+    businessUnit: number,
 ): Promise<DetailedBrpWeekSchedule> {
     const startDate = LocalizedDateTime.now()
         .startOf("day")
         .plus({ day: weekOffset * 7 - calculateMondayOffset() });
-    const response = await fetch(brpWeekScheduleUrl(startDate, integration));
+    const response = await fetch(brpWeekScheduleUrl(startDate, integration, businessUnit));
     if (!response.ok) {
         throw new Error(`Failed to fetch schedule with startDate ${startDate}, received status ${response.status}`);
     }

@@ -30,7 +30,7 @@ export async function getStaticProps({ params }: { params: IntegrationPageParams
     if (!businessUnit) {
         throw new Error(`${integration.profile.name} does not have any business units`);
     }
-    return await fetchIntegrationPageStaticProps(integration);
+    return await fetchIntegrationPageStaticProps(integration, businessUnit);
 }
 
 const IntegrationPage: NextPage<IntegrationPageProps> = ({

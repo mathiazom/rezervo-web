@@ -34,6 +34,7 @@ const activeIntegrations: {
         },
         businessUnits: [
             {
+                id: 0,
                 name: "Trondheim",
             },
         ],
@@ -57,6 +58,7 @@ const activeIntegrations: {
         },
         businessUnits: [
             {
+                id: 8,
                 name: "Ski",
             },
         ],
