@@ -7,11 +7,13 @@ import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 
 export function integrationIdentifierFromContext(context: AppRouteHandlerFnContext): IntegrationIdentifier | null {
     const integrationArg = context.params["integration"];
-    const integrationIdentifier = typeof integrationArg !== "string" ? integrationArg?.pop() : integrationArg;
-    if (integrationIdentifier == undefined || !(integrationIdentifier in IntegrationIdentifier)) {
+    const integrationIdentifier = (
+        typeof integrationArg !== "string" ? integrationArg?.pop() : integrationArg
+    ) as IntegrationIdentifier;
+    if (!Object.values(IntegrationIdentifier).includes(integrationIdentifier)) {
         return null;
     }
-    return IntegrationIdentifier[integrationIdentifier as keyof typeof IntegrationIdentifier];
+    return integrationIdentifier;
 }
 
 export async function tryUseRefreshToken(req: NextRequest): Promise<string | undefined> {

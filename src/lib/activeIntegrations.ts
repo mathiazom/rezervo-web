@@ -6,11 +6,13 @@ import { RezervoIntegration } from "@/types/integration";
 export enum IntegrationIdentifier {
     sit = "sit",
     fsc = "fsc",
+    tret = "3t",
 }
 
 export type IntegrationWeekSchedule = {
     [IntegrationIdentifier.sit]: IBookingWeekSchedule;
     [IntegrationIdentifier.fsc]: DetailedBrpWeekSchedule;
+    [IntegrationIdentifier.tret]: DetailedBrpWeekSchedule;
 };
 
 const activeIntegrations: {
@@ -60,6 +62,30 @@ const activeIntegrations: {
             {
                 id: 8,
                 name: "Ski",
+            },
+        ],
+        provider: activeProviders.brpsystems,
+    },
+    [IntegrationIdentifier.tret]: {
+        profile: {
+            acronym: IntegrationIdentifier.tret,
+            name: "3T",
+            images: {
+                light: {
+                    largeLogo: "/integrations/3t/light/logo_large.png",
+                },
+                dark: {
+                    largeLogo: "/integrations/3t/dark/logo_large.png",
+                },
+                common: {
+                    smallLogo: "/integrations/3t/common/logo_small.png",
+                },
+            },
+        },
+        businessUnits: [
+            {
+                id: 5860,
+                name: "Fossegrenda",
             },
         ],
         provider: activeProviders.brpsystems,
