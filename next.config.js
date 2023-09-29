@@ -10,10 +10,16 @@ const nextConfig = withPWA({
     async redirects() {
         return [
             {
-                // TODO: most recent integration or a first-time picker
                 source: "/",
-                destination: "/sit",
+                has: [
+                    {
+                        type: "cookie",
+                        key: "rezervo.selectedIntegration",
+                        value: "(?<integration>.*)",
+                    },
+                ],
                 permanent: false,
+                destination: "/:integration",
             },
         ];
     },

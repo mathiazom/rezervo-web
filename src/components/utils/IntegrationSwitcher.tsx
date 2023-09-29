@@ -1,19 +1,9 @@
-import {
-    Avatar,
-    Box,
-    Button,
-    Divider,
-    Drawer,
-    List,
-    ListItem,
-    ListItemButton,
-    Typography,
-    useTheme,
-} from "@mui/material";
+import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
+import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
 import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
 import { IntegrationProfile } from "@/types/integration";
 
@@ -90,24 +80,7 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                                         {!isLoading || integrationLoading !== integration.profile.acronym ? (
                                             <IntegrationLogo integrationProfile={integration.profile} />
                                         ) : (
-                                            <Avatar
-                                                sx={{
-                                                    width: "3rem",
-                                                    height: "3rem",
-                                                    animation: "spin 0.8s linear infinite",
-                                                    "@keyframes spin": {
-                                                        "0%": {
-                                                            transform: "rotate(0deg)",
-                                                        },
-                                                        "100%": {
-                                                            transform: "rotate(360deg)",
-                                                        },
-                                                    },
-                                                }}
-                                                src={integration.profile.images.common.smallLogo}
-                                            >
-                                                {integration.profile.acronym}
-                                            </Avatar>
+                                            <IntegrationLogoSpinner integrationProfile={integration.profile} />
                                         )}
                                     </ListItemButton>
                                 </Link>
