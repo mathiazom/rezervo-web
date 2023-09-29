@@ -4,13 +4,15 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
+import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
 import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations from "@/lib/integrations/active";
+import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
 
 function IndexPage() {
     const theme = useTheme();
     const router = useRouter();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
+    const [integrationLoading, setIntegrationLoading] = useState<IntegrationIdentifier | null>(null);
 
     useEffect(() => {
         const storedIntegration = getStoredSelectedIntegration();
@@ -76,8 +78,13 @@ function IndexPage() {
                                 }}
                                 disableTouchRipple
                                 component={"a"}
+                                onClick={() => setIntegrationLoading(integration.profile.acronym)}
                             >
-                                <IntegrationLogo integrationProfile={integration.profile} />
+                                {integrationLoading !== integration.profile.acronym ? (
+                                    <IntegrationLogo integrationProfile={integration.profile} />
+                                ) : (
+                                    <IntegrationLogoSpinner integrationProfile={integration.profile} />
+                                )}
                             </Button>
                         </Link>
                     );
