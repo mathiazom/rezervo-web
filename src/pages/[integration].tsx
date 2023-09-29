@@ -1,8 +1,9 @@
 import type { GetStaticPaths, NextPage } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 
 import Integration from "@/components/Integration";
 import { fetchIntegrationPageStaticProps } from "@/lib/helpers/fetchers";
+import { storeSelectedIntegration } from "@/lib/helpers/localStorage";
 import activeIntegrations from "@/lib/integrations/active";
 import { deserializeSchedule } from "@/lib/serialization/deserializers";
 import { IntegrationPageParams, RezervoIntegration } from "@/types/integration";
@@ -38,6 +39,10 @@ const IntegrationPage: NextPage<IntegrationPageProps> = ({
     classPopularityIndex,
     error,
 }) => {
+    useEffect(() => {
+        storeSelectedIntegration(integrationProfile.acronym);
+    }, [integrationProfile.acronym]);
+
     return (
         <Integration
             initialSchedule={deserializeSchedule(initialSchedule)}

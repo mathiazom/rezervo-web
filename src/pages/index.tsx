@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
-import { getStoredSelectedIntegration, storeSelectedIntegration } from "@/lib/helpers/localStorage";
+import { getStoredSelectedIntegration } from "@/lib/helpers/localStorage";
 import activeIntegrations from "@/lib/integrations/active";
 
 function IndexPage() {
@@ -46,7 +46,7 @@ function IndexPage() {
                 rezervo
             </Typography>
             <Typography variant={"h6"} sx={{ padding: "0.5rem", textAlign: "center" }}>
-                Velg ditt treningssenter
+                Velg treningssenter
             </Typography>
             <Divider />
             <Box
@@ -76,9 +76,6 @@ function IndexPage() {
                                 }}
                                 disableTouchRipple
                                 component={"a"}
-                                onClick={() => {
-                                    storeSelectedIntegration(integration.profile.acronym);
-                                }}
                             >
                                 <IntegrationLogo integrationProfile={integration.profile} />
                             </Button>
