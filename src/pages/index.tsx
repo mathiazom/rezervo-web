@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
-import { getStoredSelectedIntegration } from "@/lib/helpers/localStorage";
+import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
 import activeIntegrations from "@/lib/integrations/active";
 
 function IndexPage() {
