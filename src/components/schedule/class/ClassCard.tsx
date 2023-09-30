@@ -80,7 +80,7 @@ const ClassCard = ({
                     },
                 }}
             >
-                {selectAnimation && (
+                {!isInThePast && selectAnimation && (
                     <Box
                         className={
                             selectAnimation ? (showSelected ? selectAnimation.enter : selectAnimation.leave) : ""
