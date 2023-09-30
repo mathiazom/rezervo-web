@@ -188,7 +188,20 @@ function ConfigBar({
                             >
                                 <Tooltip title={"Agenda"}>
                                     <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
-                                        <FormatListBulletedRoundedIcon />
+                                        <Badge
+                                            invisible={
+                                                userConfig?.classes.every((configClass) =>
+                                                    classes.some(
+                                                        (_class) =>
+                                                            classRecurrentId(_class) ===
+                                                            classConfigRecurrentId(configClass),
+                                                    ),
+                                                ) ?? false
+                                            }
+                                            badgeContent={<ErrorRoundedIcon fontSize={"small"} color={"warning"} />}
+                                        >
+                                            <FormatListBulletedRoundedIcon />
+                                        </Badge>
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title={"Innstillinger"}>
