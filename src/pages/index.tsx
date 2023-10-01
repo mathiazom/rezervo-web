@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
 import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
+import PageHead from "@/components/utils/PageHead";
 import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
 import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
 
@@ -28,69 +29,72 @@ function IndexPage() {
     }
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-            }}
-        >
-            <Typography
-                variant="h4"
-                sx={{
-                    mt: "1rem",
-                    fontWeight: "bold",
-                    marginBottom: "1rem",
-                    color: theme.palette.primary.main,
-                }}
-            >
-                rezervo
-            </Typography>
-            <Typography variant={"h6"} sx={{ padding: "0.5rem", textAlign: "center" }}>
-                Velg treningssenter
-            </Typography>
-            <Divider />
+        <>
+            <PageHead title={"rezervo"} />
             <Box
                 sx={{
-                    justifyContent: "center",
                     display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "wrap",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
                 }}
             >
-                {Object.values(activeIntegrations).map((integration) => {
-                    return (
-                        <Link
-                            key={integration.profile.acronym}
-                            href={`/${integration.profile.acronym}`}
-                            style={{ width: "100%" }}
-                            passHref
-                            legacyBehavior
-                        >
-                            <Button
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    padding: "1.75rem",
-                                    height: "6rem",
-                                    width: "18rem",
-                                }}
-                                disableTouchRipple
-                                component={"a"}
-                                onClick={() => setIntegrationLoading(integration.profile.acronym)}
+                <Typography
+                    variant="h4"
+                    sx={{
+                        mt: "1rem",
+                        fontWeight: "bold",
+                        marginBottom: "1rem",
+                        color: theme.palette.primary.main,
+                    }}
+                >
+                    rezervo
+                </Typography>
+                <Typography variant={"h6"} sx={{ padding: "0.5rem", textAlign: "center" }}>
+                    Velg treningssenter
+                </Typography>
+                <Divider />
+                <Box
+                    sx={{
+                        justifyContent: "center",
+                        display: "flex",
+                        flexDirection: "row",
+                        flexWrap: "wrap",
+                    }}
+                >
+                    {Object.values(activeIntegrations).map((integration) => {
+                        return (
+                            <Link
+                                key={integration.profile.acronym}
+                                href={`/${integration.profile.acronym}`}
+                                style={{ width: "100%" }}
+                                passHref
+                                legacyBehavior
                             >
-                                {integrationLoading !== integration.profile.acronym ? (
-                                    <IntegrationLogo integrationProfile={integration.profile} />
-                                ) : (
-                                    <IntegrationLogoSpinner integrationProfile={integration.profile} />
-                                )}
-                            </Button>
-                        </Link>
-                    );
-                })}
+                                <Button
+                                    sx={{
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        padding: "1.75rem",
+                                        height: "6rem",
+                                        width: "18rem",
+                                    }}
+                                    disableTouchRipple
+                                    component={"a"}
+                                    onClick={() => setIntegrationLoading(integration.profile.acronym)}
+                                >
+                                    {integrationLoading !== integration.profile.acronym ? (
+                                        <IntegrationLogo integrationProfile={integration.profile} />
+                                    ) : (
+                                        <IntegrationLogoSpinner integrationProfile={integration.profile} />
+                                    )}
+                                </Button>
+                            </Link>
+                        );
+                    })}
+                </Box>
             </Box>
-        </Box>
+        </>
     );
 }
 
