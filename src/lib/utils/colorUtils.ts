@@ -10,7 +10,7 @@ export function hexColorHash(s: string) {
     let colour = "#";
     for (let i = 0; i < 3; i++) {
         const value = (hash >> (i * 8)) & 0xff;
-        colour += ("00" + value.toString(16)).substr(-2);
+        colour += value.toString(16).padStart(2, "0");
     }
     return colour;
 }
