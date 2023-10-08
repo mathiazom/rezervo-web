@@ -1,13 +1,10 @@
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { serializeSchedule } from "@/lib/serialization/serializers";
 import { RezervoError } from "@/types/errors";
-import { RezervoBusinessUnit, RezervoIntegration, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
+import { RezervoIntegration, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import { IntegrationPageProps } from "@/types/serialization";
 
-export async function fetchIntegrationPageStaticProps<T>(
-    integration: RezervoIntegration<T>,
-    businessUnit: RezervoBusinessUnit,
-): Promise<{
+export async function fetchIntegrationPageStaticProps<T>(integration: RezervoIntegration<T>): Promise<{
     revalidate: number;
     props: IntegrationPageProps;
 }> {
@@ -15,9 +12,8 @@ export async function fetchIntegrationPageStaticProps<T>(
     try {
         initialSchedule = await fetchRezervoSchedule(
             [-1, 0, 1, 2, 3],
-            (weekNumber: number) =>
-                integration.provider.weekScheduleFetcher(weekNumber, integration.profile.acronym, businessUnit.id),
-            (weekSchedule: T) => integration.provider.weekScheduleAdapter(weekSchedule, integration.profile.acronym),
+            integration.provider.weekScheduleFetcher,
+            integration.provider.weekScheduleAdapter,
         );
     } catch (e) {
         console.error(e);

@@ -23,18 +23,13 @@ export const POST = async (req: NextRequest, ctx: AppRouteHandlerFnContext) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const integration: RezervoIntegration<any> = activeIntegrations[integrationIdentifier];
-    const businessUnit = integration.businessUnits[0];
-    if (!businessUnit) {
-        throw new Error(`${integration.profile.name} does not have any business units`);
-    }
 
     return NextResponse.json(
         serializeWeekSchedule(
             await fetchRezervoWeekSchedule(
                 weekOffset,
-                (weekNumber: number) =>
-                    integration.provider.weekScheduleFetcher(weekNumber, integration.profile.acronym, businessUnit.id),
-                (weekSchedule) => integration.provider.weekScheduleAdapter(weekSchedule, integration.profile.acronym),
+                integration.provider.weekScheduleFetcher,
+                integration.provider.weekScheduleAdapter,
             ),
         ),
     );

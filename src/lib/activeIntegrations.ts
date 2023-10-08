@@ -1,4 +1,4 @@
-import { activeProviders } from "@/lib/providers/active";
+import { activeProviders, createProvider, ProviderIdentifier } from "@/lib/providers/active";
 import { DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
 import { IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { RezervoIntegration } from "@/types/integration";
@@ -32,11 +32,10 @@ const activeIntegrations: {
         },
         businessUnits: [
             {
-                id: 0,
                 name: "Trondheim",
             },
         ],
-        provider: activeProviders.ibooking,
+        provider: createProvider(activeProviders.ibooking, IntegrationIdentifier.sit, 0),
     },
     [IntegrationIdentifier.fsc]: {
         profile: {
@@ -56,11 +55,10 @@ const activeIntegrations: {
         },
         businessUnits: [
             {
-                id: 8,
                 name: "Ski",
             },
         ],
-        provider: activeProviders.brpsystems,
+        provider: createProvider(activeProviders.brpsystems, IntegrationIdentifier.fsc, 8),
     },
     [IntegrationIdentifier.tret]: {
         profile: {
@@ -80,11 +78,10 @@ const activeIntegrations: {
         },
         businessUnits: [
             {
-                id: 5860,
                 name: "Fossegrenda",
             },
         ],
-        provider: activeProviders.brpsystems,
+        provider: createProvider(activeProviders[ProviderIdentifier.brpsystems], IntegrationIdentifier.tret, 5860),
     },
 };
 

@@ -25,12 +25,7 @@ export async function getStaticProps({ params }: { params: IntegrationPageParams
     props: IntegrationPageProps;
 }> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const integration: RezervoIntegration<any> = activeIntegrations[params.integration];
-    const businessUnit = integration.businessUnits[0];
-    if (!businessUnit) {
-        throw new Error(`${integration.profile.name} does not have any business units`);
-    }
-    return await fetchIntegrationPageStaticProps(integration, businessUnit);
+    return await fetchIntegrationPageStaticProps(activeIntegrations[params.integration] as RezervoIntegration<any>);
 }
 
 const IntegrationPage: NextPage<IntegrationPageProps> = ({

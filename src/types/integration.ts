@@ -18,9 +18,14 @@ export type IntegrationProfile = {
     };
 };
 
-export type RezervoProvider<T> = {
+export type GenericRezervoProvider<T> = {
     weekScheduleFetcher: (weekNumber: number, integration: IntegrationIdentifier, businessUnit: number) => Promise<T>;
     weekScheduleAdapter: (weekSchedule: T, integration: IntegrationIdentifier) => RezervoWeekSchedule;
+};
+
+export type RezervoProvider<T> = {
+    weekScheduleFetcher: (weekNumber: number) => Promise<T>;
+    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
 };
 
 export type RezervoIntegration<T> = {
@@ -30,7 +35,6 @@ export type RezervoIntegration<T> = {
 };
 
 export type RezervoBusinessUnit = {
-    id: number;
     name: string;
 };
 
