@@ -78,10 +78,10 @@ const activeIntegrations: {
         },
         businessUnits: [
             {
-                name: "Fossegrenda",
+                name: "Rosten",
             },
         ],
-        provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.ttt, 5860),
+        provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.ttt, 1),
     },
 };
 
