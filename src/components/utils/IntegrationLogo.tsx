@@ -21,7 +21,7 @@ function IntegrationLogo({ integrationProfile }: { integrationProfile: Integrati
                             ? integrationProfile.images.dark.largeLogo
                             : integrationProfile.images.light.largeLogo
                     }
-                    alt={`${integrationProfile.acronym}-rezervo`}
+                    alt={`${integrationProfile.identifier}-rezervo`}
                     layout={"fill"}
                     objectFit={"contain"}
                     objectPosition={"center"}

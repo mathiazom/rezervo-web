@@ -66,10 +66,10 @@ export default function Settings({
 }) {
     const theme = useTheme();
     const { integrationUser, integrationUserError, integrationUserLoading } = useIntegrationUser(
-        integrationProfile.acronym,
+        integrationProfile.identifier,
     );
     const integrated = integrationUser !== undefined && integrationUserError == undefined && !integrationUserLoading;
-    const { userConfig, putUserConfig } = useUserConfig(integrationProfile.acronym);
+    const { userConfig, putUserConfig } = useUserConfig(integrationProfile.identifier);
     const { preferences, putPreferences } = usePreferences();
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
@@ -255,7 +255,7 @@ export default function Settings({
                                     sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
                                     src={integrationProfile.images.common.smallLogo}
                                 >
-                                    {integrationProfile.acronym}
+                                    {integrationProfile.identifier}
                                 </Avatar>
                             </RippleBadge>
                             <Typography

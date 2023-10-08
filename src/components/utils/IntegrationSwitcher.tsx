@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
 import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
+import activeIntegrations, { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { IntegrationProfile } from "@/types/integration";
 
 function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationProfile: IntegrationProfile }) {
@@ -38,22 +38,23 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                     <Divider />
                     {Object.values(activeIntegrations).map((integration) => {
                         const isLoading = integrationLoading !== null;
-                        const isCurrentLoadingIntegration = integration.profile.acronym === integrationLoading;
-                        const isCurrentIntegration = integration.profile.acronym === currentIntegrationProfile.acronym;
+                        const isCurrentLoadingIntegration = integration.profile.identifier === integrationLoading;
+                        const isCurrentIntegration =
+                            integration.profile.identifier === currentIntegrationProfile.identifier;
                         return (
                             <ListItem
-                                value={integration.profile.acronym}
-                                key={integration.profile.acronym}
+                                value={integration.profile.identifier}
+                                key={integration.profile.identifier}
                                 sx={{ margin: 0, padding: 0 }}
                                 onClick={() =>
                                     !isLoading &&
                                     (isCurrentIntegration
                                         ? setOpen(false)
-                                        : setIntegrationLoading(integration.profile.acronym))
+                                        : setIntegrationLoading(integration.profile.identifier))
                                 }
                             >
                                 <Link
-                                    href={`/${integration.profile.acronym}`}
+                                    href={`/${integration.profile.identifier}`}
                                     style={{ width: "100%" }}
                                     passHref
                                     legacyBehavior
@@ -77,7 +78,7 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                                         selected={isCurrentLoadingIntegration || (!isLoading && isCurrentIntegration)}
                                         component={"a"}
                                     >
-                                        {!isLoading || integrationLoading !== integration.profile.acronym ? (
+                                        {!isLoading || integrationLoading !== integration.profile.identifier ? (
                                             <IntegrationLogo integrationProfile={integration.profile} />
                                         ) : (
                                             <IntegrationLogoSpinner integrationProfile={integration.profile} />

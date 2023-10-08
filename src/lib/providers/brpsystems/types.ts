@@ -1,17 +1,6 @@
-export type FscResponse = {
-    success: boolean;
-    errors?: {
-        [errorType: string]: string[];
-    };
-};
+export type BrpWeekSchedule = BrpClass[];
 
-export type FscWeekScheduleResponse = FscResponse & {
-    data: FscWeekSchedule;
-};
-
-export type FscWeekSchedule = FscClass[];
-
-export type FscClass = {
+export type BrpClass = {
     id: number;
     name: string;
     duration: {
@@ -53,11 +42,7 @@ export type FscClass = {
     };
 };
 
-export type FscActivityDetailResponse = FscResponse & {
-    data: FscActivityDetail;
-};
-
-export type FscActivityDetail = {
+export type BrpActivityDetail = {
     id: number;
     name: string;
     productLabels: {
@@ -84,8 +69,13 @@ export type FscActivityDetail = {
     participantsMustPay: boolean;
 };
 
-export type DetailedFscWeekSchedule = DetailedFscClass[];
-export type DetailedFscClass = FscClass & {
+export type DetailedBrpWeekSchedule = DetailedBrpClass[];
+export type DetailedBrpClass = BrpClass & {
     description: string;
     image: string;
 };
+
+export enum BrpSubdomain {
+    fsc = "fsc",
+    ttt = "3t",
+}

@@ -14,11 +14,11 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { zeroIndexedWeekday } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { IntegrationIdentifier } from "@/lib/integrations/active";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ClassConfig, IntegrationConfig } from "@/types/config";

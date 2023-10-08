@@ -1,9 +1,9 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Stack, Typography } from "@mui/material";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { IntegrationIdentifier } from "@/lib/integrations/active";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 
@@ -31,6 +31,10 @@ export default function WeekNavigator({
     const [loadingNextWeek, setLoadingNextWeek] = useState(false);
     const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
     const [schedule, setSchedule] = useState<RezervoSchedule>(initialSchedule);
+
+    useEffect(() => {
+        setSchedule(initialSchedule);
+    }, [initialSchedule]);
 
     async function updateWeekOffset(modifier: number) {
         switch (modifier) {

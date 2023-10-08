@@ -1,46 +1,50 @@
-export type SitWeekSchedule = {
-    days: SitDaySchedule[];
+export type IBookingWeekSchedule = {
+    days: IBookingDaySchedule[];
 };
 
-export type SitDaySchedule = {
+export type IBookingDaySchedule = {
     date: string;
     dayName: string;
-    classes: SitClass[];
+    classes: IBookingClass[];
 };
 
-export type SitClass = {
+export type IBookingClass = {
     id: number;
     activityId: number;
     available: number;
     bookable: boolean;
     capacity: number;
-    studio: SitStudio;
+    studio: IBookingStudio;
     room: string;
     from: string;
     to: string;
     name: string;
     description: string;
-    category: SitCategory;
+    category: IBookingCategory;
     image: string | null;
     color: string;
-    instructors: SitInstructor[];
+    instructors: IBookingInstructor[];
     waitlist: {
         active: boolean;
         count: number;
     };
 };
 
-export type SitStudio = {
+export type IBookingStudio = {
     id: number;
     name: string;
 };
 
-export type SitInstructor = {
+export type IBookingInstructor = {
     id: number;
     name: string;
 };
 
-export type SitCategory = {
+export type IBookingCategory = {
     id: string;
     name: string;
 };
+
+export enum IBookingDomain {
+    sit = "sit",
+}

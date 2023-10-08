@@ -2,9 +2,9 @@ import type { GetStaticPaths, NextPage } from "next";
 import React, { useEffect } from "react";
 
 import Integration from "@/components/Integration";
+import activeIntegrations from "@/lib/activeIntegrations";
 import { fetchIntegrationPageStaticProps } from "@/lib/helpers/fetchers";
 import { storeSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations from "@/lib/integrations/active";
 import { deserializeSchedule } from "@/lib/serialization/deserializers";
 import { IntegrationPageParams, RezervoIntegration } from "@/types/integration";
 import { IntegrationPageProps } from "@/types/serialization";
@@ -25,12 +25,7 @@ export async function getStaticProps({ params }: { params: IntegrationPageParams
     props: IntegrationPageProps;
 }> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const integration: RezervoIntegration<any> = activeIntegrations[params.integration];
-    const businessUnit = integration.businessUnits[0];
-    if (!businessUnit) {
-        throw new Error(`${integration.profile.name} does not have any business units`);
-    }
-    return await fetchIntegrationPageStaticProps(integration.profile, businessUnit);
+    return await fetchIntegrationPageStaticProps(activeIntegrations[params.integration] as RezervoIntegration<any>);
 }
 
 const IntegrationPage: NextPage<IntegrationPageProps> = ({
@@ -40,8 +35,8 @@ const IntegrationPage: NextPage<IntegrationPageProps> = ({
     error,
 }) => {
     useEffect(() => {
-        storeSelectedIntegration(integrationProfile.acronym);
-    }, [integrationProfile.acronym]);
+        storeSelectedIntegration(integrationProfile.identifier);
+    }, [integrationProfile.identifier]);
 
     return (
         <Integration

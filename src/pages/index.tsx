@@ -6,8 +6,8 @@ import React, { useEffect, useState } from "react";
 import IntegrationLogo from "@/components/utils/IntegrationLogo";
 import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
+import activeIntegrations, { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/integrations/active";
 
 function IndexPage() {
     const theme = useTheme();
@@ -65,8 +65,8 @@ function IndexPage() {
                     {Object.values(activeIntegrations).map((integration) => {
                         return (
                             <Link
-                                key={integration.profile.acronym}
-                                href={`/${integration.profile.acronym}`}
+                                key={integration.profile.identifier}
+                                href={`/${integration.profile.identifier}`}
                                 style={{ width: "100%" }}
                                 passHref
                                 legacyBehavior
@@ -81,9 +81,9 @@ function IndexPage() {
                                     }}
                                     disableTouchRipple
                                     component={"a"}
-                                    onClick={() => setIntegrationLoading(integration.profile.acronym)}
+                                    onClick={() => setIntegrationLoading(integration.profile.identifier)}
                                 >
-                                    {integrationLoading !== integration.profile.acronym ? (
+                                    {integrationLoading !== integration.profile.identifier ? (
                                         <IntegrationLogo integrationProfile={integration.profile} />
                                     ) : (
                                         <IntegrationLogoSpinner integrationProfile={integration.profile} />

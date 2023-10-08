@@ -6,6 +6,7 @@ import React, { useEffect, useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import RippleBadge from "@/components/utils/RippleBadge";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
@@ -17,6 +18,7 @@ import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 const ClassCard = ({
+    integration,
     _class,
     popularity,
     configUsers,
@@ -25,6 +27,7 @@ const ClassCard = ({
     onSelectedChanged,
     onInfo,
 }: {
+    integration: IntegrationIdentifier;
     _class: RezervoClass;
     popularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
@@ -33,7 +36,7 @@ const ClassCard = ({
     onSelectedChanged: (selected: boolean) => void;
     onInfo: () => void;
 }) => {
-    const { userSessionsIndex } = useUserSessions(_class.integration);
+    const { userSessionsIndex } = useUserSessions(integration);
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
