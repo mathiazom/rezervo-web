@@ -21,7 +21,7 @@ export default function IntegrationLogoSpinner({ integrationProfile }: { integra
             }}
             src={integrationProfile.images.common.smallLogo}
         >
-            {integrationProfile.acronym}
+            {integrationProfile.identifier}
         </Avatar>
     );
 }

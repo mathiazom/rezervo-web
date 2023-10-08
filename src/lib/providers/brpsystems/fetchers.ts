@@ -1,6 +1,5 @@
 import { DateTime } from "luxon";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { calculateMondayOffset, LocalizedDateTime } from "@/lib/helpers/date";
 import {
     DetailedBrpClass,
@@ -8,23 +7,24 @@ import {
     BrpActivityDetail,
     BrpClass,
     BrpWeekSchedule,
+    BrpSubdomain,
 } from "@/lib/providers/brpsystems/types";
 
-function brpWeekScheduleUrl(fromDate: DateTime, integration: IntegrationIdentifier, businessUnit: number) {
-    return `https://${integration}.brpsystems.com/brponline/api/ver3/businessunits/${businessUnit}/groupactivities?period.start=${fromDate.toUTC()}&period.end=${fromDate
+function brpWeekScheduleUrl(fromDate: DateTime, subdomain: BrpSubdomain, businessUnit: number) {
+    return `https://${subdomain}.brpsystems.com/brponline/api/ver3/businessunits/${businessUnit}/groupactivities?period.start=${fromDate.toUTC()}&period.end=${fromDate
         .plus({ week: 1 })
         .toUTC()}`;
 }
 
-function brpActivityDetailUrl(activityId: number, integration: IntegrationIdentifier) {
-    return `https://${integration}.brpsystems.com/brponline/api/ver3/products/groupactivities/${activityId}`;
+function brpActivityDetailUrl(activityId: number, subdomain: BrpSubdomain) {
+    return `https://${subdomain}.brpsystems.com/brponline/api/ver3/products/groupactivities/${activityId}`;
 }
 
-async function fetchActivityDetail(activityId: number, integration: IntegrationIdentifier) {
-    return fetch(brpActivityDetailUrl(activityId, integration)).then(async (response: Response) => {
+async function fetchActivityDetail(activityId: number, subdomain: BrpSubdomain) {
+    return fetch(brpActivityDetailUrl(activityId, subdomain)).then(async (response: Response) => {
         if (!response.ok) {
             throw new Error(
-                `Failed to fetch class detail for ${integration} class with id ${activityId}, received status ${response.status}`,
+                `Failed to fetch class detail for ${subdomain} class with id ${activityId}, received status ${response.status}`,
             );
         }
 
@@ -46,7 +46,7 @@ function toDetailedBrpClass(brpClass: BrpClass, brpActivityDetail: BrpActivityDe
 
 async function fetchDetailedBrpWeekSchedule(
     brpWeekSchedule: BrpWeekSchedule,
-    integration: IntegrationIdentifier,
+    subdomain: BrpSubdomain,
 ): Promise<DetailedBrpWeekSchedule> {
     const fetchPromises: Map<number, Promise<BrpActivityDetail>> = new Map();
 
@@ -54,7 +54,7 @@ async function fetchDetailedBrpWeekSchedule(
         brpWeekSchedule.map(async (brpClass) => {
             const activityId = brpClass.groupActivityProduct.id;
             if (!fetchPromises.has(activityId)) {
-                fetchPromises.set(activityId, fetchActivityDetail(activityId, integration));
+                fetchPromises.set(activityId, fetchActivityDetail(activityId, subdomain));
             }
 
             const brpActivityDetail = await fetchPromises.get(activityId);
@@ -70,16 +70,16 @@ async function fetchDetailedBrpWeekSchedule(
 
 export async function fetchBrpWeekSchedule(
     weekOffset: number,
-    integration: IntegrationIdentifier,
+    subdomain: BrpSubdomain,
     businessUnit: number,
 ): Promise<DetailedBrpWeekSchedule> {
     const startDate = LocalizedDateTime.now()
         .startOf("day")
         .plus({ day: weekOffset * 7 - calculateMondayOffset() });
-    const response = await fetch(brpWeekScheduleUrl(startDate, integration, businessUnit));
+    const response = await fetch(brpWeekScheduleUrl(startDate, subdomain, businessUnit));
     if (!response.ok) {
         throw new Error(`Failed to fetch schedule with startDate ${startDate}, received status ${response.status}`);
     }
     const brpWeekSchedule: BrpWeekSchedule = await response.json();
-    return fetchDetailedBrpWeekSchedule(brpWeekSchedule, integration);
+    return fetchDetailedBrpWeekSchedule(brpWeekSchedule, subdomain);
 }

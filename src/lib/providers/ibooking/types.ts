@@ -44,3 +44,7 @@ export type IBookingCategory = {
     id: string;
     name: string;
 };
+
+export enum IBookingDomain {
+    sit = "sit",
+}

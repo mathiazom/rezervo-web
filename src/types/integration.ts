@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 
 export type IntegrationProfile = {
-    acronym: IntegrationIdentifier;
+    identifier: IntegrationIdentifier;
     name: string;
     images: {
         light: {
@@ -48,7 +48,6 @@ export type RezervoDaySchedule = {
 };
 
 export type RezervoClassBase = {
-    integration: IntegrationIdentifier;
     id: number;
     location: {
         id: number;

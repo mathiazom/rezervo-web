@@ -1,13 +1,11 @@
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import determineActivityCategory from "@/lib/helpers/activityCategorization";
 import { LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { DetailedBrpClass, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 
-function brpToRezervoClass(brpClass: DetailedBrpClass, integration: IntegrationIdentifier): RezervoClass {
+function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
     const category = determineActivityCategory(brpClass.name);
     return {
-        integration,
         id: brpClass.id,
         location: {
             id: brpClass.businessUnit.id,
@@ -34,10 +32,7 @@ function brpToRezervoClass(brpClass: DetailedBrpClass, integration: IntegrationI
     };
 }
 
-export function brpToRezervoWeekSchedule(
-    brpWeekSchedule: DetailedBrpWeekSchedule,
-    integration: IntegrationIdentifier,
-): RezervoWeekSchedule {
+export function brpToRezervoWeekSchedule(brpWeekSchedule: DetailedBrpWeekSchedule): RezervoWeekSchedule {
     const schedule: RezervoWeekSchedule = [];
     for (const brpClass of brpWeekSchedule) {
         const date = LocalizedDateTime.fromISO(brpClass.duration.start);
@@ -45,7 +40,7 @@ export function brpToRezervoWeekSchedule(
         if (schedule[weekday] === undefined) {
             schedule[weekday] = { date, classes: [] };
         }
-        schedule[weekday]?.classes.push(brpToRezervoClass(brpClass, integration));
+        schedule[weekday]?.classes.push(brpToRezervoClass(brpClass));
     }
     return schedule;
 }

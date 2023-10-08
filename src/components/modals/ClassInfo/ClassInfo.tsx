@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -24,17 +25,19 @@ import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 export default function ClassInfo({
+    integration,
     _class,
     classPopularity,
     configUsers,
 }: {
+    integration: IntegrationIdentifier;
     _class: RezervoClass;
     classPopularity: ClassPopularity;
     configUsers: UserNameWithIsSelf[];
 }) {
     const { user } = useUser();
-    const { userConfig, userConfigLoading, userConfigError } = useUserConfig(_class.integration);
-    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions(_class.integration);
+    const { userConfig, userConfigLoading, userConfigError } = useUserConfig(integration);
+    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions(integration);
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>
         `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -61,7 +64,7 @@ export default function ClassInfo({
 
     async function book() {
         setBookingLoading(true);
-        await fetch(`/api/${_class.integration}/book`, {
+        await fetch(`/api/${integration}/book`, {
             method: "POST",
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
@@ -71,7 +74,7 @@ export default function ClassInfo({
 
     async function cancelBooking() {
         setBookingLoading(true);
-        await fetch(`/api/${_class.integration}/cancel-booking`, {
+        await fetch(`/api/${integration}/cancel-booking`, {
             method: "POST",
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });

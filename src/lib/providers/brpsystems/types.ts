@@ -74,3 +74,8 @@ export type DetailedBrpClass = BrpClass & {
     description: string;
     image: string;
 };
+
+export enum BrpSubdomain {
+    fsc = "fsc",
+    ttt = "3t",
+}

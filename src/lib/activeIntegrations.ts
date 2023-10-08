@@ -1,22 +1,22 @@
-import { activeProviders, createProvider, ProviderIdentifier } from "@/lib/providers/active";
-import { DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
-import { IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
+import { activeProviders, ProviderIdentifier } from "@/lib/providers/active";
+import { BrpSubdomain, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
+import { IBookingDomain, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { RezervoIntegration } from "@/types/integration";
 
 export enum IntegrationIdentifier {
     sit = "sit",
     fsc = "fsc",
-    tret = "3t",
+    ttt = "3t",
 }
 
 const activeIntegrations: {
     [IntegrationIdentifier.sit]: RezervoIntegration<IBookingWeekSchedule>;
     [IntegrationIdentifier.fsc]: RezervoIntegration<DetailedBrpWeekSchedule>;
-    [IntegrationIdentifier.tret]: RezervoIntegration<DetailedBrpWeekSchedule>;
+    [IntegrationIdentifier.ttt]: RezervoIntegration<DetailedBrpWeekSchedule>;
 } = {
     [IntegrationIdentifier.sit]: {
         profile: {
-            acronym: IntegrationIdentifier.sit,
+            identifier: IntegrationIdentifier.sit,
             name: "Sit Trening",
             images: {
                 light: {
@@ -35,11 +35,11 @@ const activeIntegrations: {
                 name: "Trondheim",
             },
         ],
-        provider: createProvider(activeProviders.ibooking, IntegrationIdentifier.sit, 0),
+        provider: activeProviders[ProviderIdentifier.ibooking](IBookingDomain.sit),
     },
     [IntegrationIdentifier.fsc]: {
         profile: {
-            acronym: IntegrationIdentifier.fsc,
+            identifier: IntegrationIdentifier.fsc,
             name: "Family Sports Club",
             images: {
                 light: {
@@ -58,11 +58,11 @@ const activeIntegrations: {
                 name: "Ski",
             },
         ],
-        provider: createProvider(activeProviders.brpsystems, IntegrationIdentifier.fsc, 8),
+        provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.fsc, 8),
     },
-    [IntegrationIdentifier.tret]: {
+    [IntegrationIdentifier.ttt]: {
         profile: {
-            acronym: IntegrationIdentifier.tret,
+            identifier: IntegrationIdentifier.ttt,
             name: "3T",
             images: {
                 light: {
@@ -81,7 +81,7 @@ const activeIntegrations: {
                 name: "Fossegrenda",
             },
         ],
-        provider: createProvider(activeProviders[ProviderIdentifier.brpsystems], IntegrationIdentifier.tret, 5860),
+        provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.ttt, 5860),
     },
 };
 

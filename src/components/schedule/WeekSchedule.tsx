@@ -3,12 +3,14 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
+import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { isToday } from "@/lib/helpers/date";
 import { AllConfigsIndex } from "@/types/config";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
 import { ClassPopularityIndex } from "@/types/popularity";
 
 function WeekSchedule({
+    integration,
     weekSchedule,
     classPopularityIndex,
     selectable,
@@ -18,6 +20,7 @@ function WeekSchedule({
     onSelectedChanged,
     onInfo,
 }: {
+    integration: IntegrationIdentifier;
     weekSchedule: RezervoWeekSchedule;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
@@ -68,6 +71,7 @@ function WeekSchedule({
                                 }}
                             >
                                 <DaySchedule
+                                    integration={integration}
                                     daySchedule={daySchedule}
                                     classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}

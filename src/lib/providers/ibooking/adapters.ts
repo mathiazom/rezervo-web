@@ -1,11 +1,9 @@
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
 import { LocalizedDateTime } from "@/lib/helpers/date";
 import { IBookingClass, IBookingDaySchedule, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/integration";
 
-function iBookingToRezervoClass(iBookingClass: IBookingClass, integration: IntegrationIdentifier): RezervoClass {
+function iBookingToRezervoClass(iBookingClass: IBookingClass): RezervoClass {
     return {
-        integration,
         id: iBookingClass.id,
         startTime: LocalizedDateTime.fromISO(iBookingClass.from.replace(" ", "T")), // convert to proper ISO8601
         endTime: LocalizedDateTime.fromISO(iBookingClass.to.replace(" ", "T")), // convert to proper ISO8601
@@ -30,21 +28,13 @@ function iBookingToRezervoClass(iBookingClass: IBookingClass, integration: Integ
     };
 }
 
-function iBookingToRezervoDaySchedule(
-    iBookingDaySchedule: IBookingDaySchedule,
-    integration: IntegrationIdentifier,
-): RezervoDaySchedule {
+function iBookingToRezervoDaySchedule(iBookingDaySchedule: IBookingDaySchedule): RezervoDaySchedule {
     return {
         date: LocalizedDateTime.fromISO(iBookingDaySchedule.date),
-        classes: iBookingDaySchedule.classes.map((iBookingClass) => iBookingToRezervoClass(iBookingClass, integration)),
+        classes: iBookingDaySchedule.classes.map((iBookingClass) => iBookingToRezervoClass(iBookingClass)),
     };
 }
 
-export function iBookingToRezervoWeekSchedule(
-    iBookingWeekSchedule: IBookingWeekSchedule,
-    integration: IntegrationIdentifier,
-): RezervoWeekSchedule {
-    return iBookingWeekSchedule.days.map((iBookingDaySchedule) =>
-        iBookingToRezervoDaySchedule(iBookingDaySchedule, integration),
-    );
+export function iBookingToRezervoWeekSchedule(iBookingWeekSchedule: IBookingWeekSchedule): RezervoWeekSchedule {
+    return iBookingWeekSchedule.days.map((iBookingDaySchedule) => iBookingToRezervoDaySchedule(iBookingDaySchedule));
 }

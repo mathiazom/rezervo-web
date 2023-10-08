@@ -33,7 +33,7 @@ function Integration({
     error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(
-        integrationProfile.acronym,
+        integrationProfile.identifier,
     );
 
     const [userConfigActive, setUserConfigActive] = useState(true);
@@ -89,14 +89,14 @@ function Integration({
 
     return (
         <>
-            <PageHead title={`${integrationProfile.acronym}-rezervo`} />
+            <PageHead title={`${integrationProfile.identifier}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
                         leftComponent={<IntegrationSwitcher currentIntegrationProfile={integrationProfile} />}
                         rightComponent={
                             <ConfigBar
-                                integration={integrationProfile.acronym}
+                                integration={integrationProfile.identifier}
                                 classes={classes}
                                 selectedClassIds={selectedClassIds}
                                 originalSelectedClassIds={originalSelectedClassIds}
@@ -113,7 +113,7 @@ function Integration({
                     />
                     {error === undefined && (
                         <WeekNavigator
-                            integration={integrationProfile.acronym}
+                            integration={integrationProfile.identifier}
                             initialSchedule={initialSchedule}
                             setCurrentWeekSchedule={setCurrentWeekSchedule}
                             onGoToToday={scrollToToday}
@@ -123,6 +123,7 @@ function Integration({
                 </Box>
                 {error === undefined ? (
                     <WeekScheduleMemo
+                        integration={integrationProfile.identifier}
                         weekSchedule={currentWeekSchedule}
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
@@ -137,6 +138,7 @@ function Integration({
                 )}
             </Stack>
             <ClassInfoModal
+                integration={integrationProfile.identifier}
                 classInfoClass={classInfoClass}
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
@@ -162,7 +164,7 @@ function Integration({
             <IntegrationUserSettingsModal
                 open={isIntegrationUserSettingsOpen}
                 setOpen={setIsIntegrationUserSettingsOpen}
-                integration={integrationProfile.acronym}
+                integration={integrationProfile.identifier}
                 onSubmit={() => setIsIntegrationUserSettingsOpen(false)}
             />
         </>

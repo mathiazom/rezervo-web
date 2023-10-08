@@ -35,8 +35,8 @@ const IntegrationPage: NextPage<IntegrationPageProps> = ({
     error,
 }) => {
     useEffect(() => {
-        storeSelectedIntegration(integrationProfile.acronym);
-    }, [integrationProfile.acronym]);
+        storeSelectedIntegration(integrationProfile.identifier);
+    }, [integrationProfile.identifier]);
 
     return (
         <Integration
