@@ -28,6 +28,7 @@ export type IBookingClass = {
         active: boolean;
         count: number;
     };
+    cancelText: string | null;
 };
 
 export type IBookingStudio = {

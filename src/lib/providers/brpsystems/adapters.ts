@@ -15,6 +15,7 @@ function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
         isBookable:
             LocalizedDateTime.fromISO(brpClass.bookableEarliest) < LocalizedDateTime.now() &&
             LocalizedDateTime.fromISO(brpClass.bookableLatest) > LocalizedDateTime.now(),
+        isCancelled: brpClass.cancelled,
         totalSlots: brpClass.slots.total,
         availableSlots: brpClass.slots.leftToBook,
         waitingListCount: brpClass.slots.inWaitingList,

@@ -13,6 +13,7 @@ function iBookingToRezervoClass(iBookingClass: IBookingClass): RezervoClass {
             room: iBookingClass.room,
         },
         isBookable: iBookingClass.bookable,
+        isCancelled: iBookingClass.cancelText !== null,
         totalSlots: iBookingClass.capacity,
         availableSlots: iBookingClass.available,
         waitingListCount: iBookingClass.waitlist.count,

@@ -74,7 +74,7 @@ const ClassCard = ({
         >
             <Box
                 sx={{
-                    opacity: isInThePast ? 0.5 : 1,
+                    opacity: isInThePast || _class.isCancelled ? 0.5 : 1,
                     background: "none",
                     position: "relative",
                     borderLeft: `0.4rem solid ${classColorRGB(false)}`,
@@ -109,7 +109,7 @@ const ClassCard = ({
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography
                             sx={{
-                                textDecoration: isInThePast ? "line-through" : "none",
+                                textDecoration: isInThePast || _class.isCancelled ? "line-through" : "none",
                                 fontSize: "1.05rem",
                                 ...(showSelected ? { fontWeight: "bold" } : {}),
                             }}

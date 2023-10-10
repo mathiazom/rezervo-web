@@ -50,6 +50,7 @@ export type RezervoClassBase = {
         room: string;
     };
     isBookable: boolean;
+    isCancelled: boolean;
     totalSlots: number;
     availableSlots: number;
     waitingListCount: number;

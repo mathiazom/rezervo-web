@@ -2,6 +2,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { Diversity3Rounded } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -138,6 +139,21 @@ export default function ClassInfo({
                 {/*    </IconButton>*/}
                 {/*)}*/}
             </Box>
+            {_class.isCancelled && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        paddingTop: 1,
+                        gap: 1,
+                        alignItems: "center",
+                    }}
+                >
+                    <ErrorRoundedIcon color={"error"} />
+                    <Typography variant="body2" color="text.secondary">
+                        Denne timen har blitt avlyst!
+                    </Typography>
+                </Box>
+            )}
             <Box
                 sx={{
                     display: "flex",
