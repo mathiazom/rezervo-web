@@ -26,7 +26,7 @@ function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
             description: brpClass.description,
             image: brpClass.image,
         },
-        instructors: brpClass.instructors.map((instructor) => instructor.name),
+        instructors: brpClass.instructors.map((instructor) => instructor.name) || [],
         startTime: LocalizedDateTime.fromISO(brpClass.duration.start),
         endTime: LocalizedDateTime.fromISO(brpClass.duration.end),
     };

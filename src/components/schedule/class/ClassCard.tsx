@@ -124,9 +124,11 @@ const ClassCard = ({
                     <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                         {_class.location.studio}
                     </Typography>
-                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                        {_class.instructors.join(", ")}
-                    </Typography>
+                    {_class.instructors.length > 0 && (
+                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                            {_class.instructors.join(", ")}
+                        </Typography>
+                    )}
                 </CardContent>
                 <CardActions sx={{ padding: 0, zIndex: 1, position: "relative" }} disableSpacing>
                     <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>

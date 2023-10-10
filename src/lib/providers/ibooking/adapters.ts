@@ -24,7 +24,7 @@ function iBookingToRezervoClass(iBookingClass: IBookingClass): RezervoClass {
             color: iBookingClass.color,
             image: iBookingClass.image,
         },
-        instructors: iBookingClass.instructors.map((iBookingInstructor) => iBookingInstructor.name),
+        instructors: iBookingClass.instructors.map((iBookingInstructor) => iBookingInstructor.name) || [],
     };
 }
 
