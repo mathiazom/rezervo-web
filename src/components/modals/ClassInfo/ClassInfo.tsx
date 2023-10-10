@@ -178,19 +178,21 @@ export default function ClassInfo({
                     {_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}
                 </Typography>
             </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    paddingTop: 1,
-                    gap: 1,
-                    alignItems: "center",
-                }}
-            >
-                <PersonRoundedIcon />
-                <Typography variant="body2" color="text.secondary">
-                    {_class.instructors.join(", ")}
-                </Typography>
-            </Box>
+            {_class.instructors.length > 0 && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        paddingTop: 1,
+                        gap: 1,
+                        alignItems: "center",
+                    }}
+                >
+                    <PersonRoundedIcon />
+                    <Typography variant="body2" color="text.secondary">
+                        {_class.instructors.join(", ")}
+                    </Typography>
+                </Box>
+            )}
             {!_class.isBookable && !isClassInThePast(_class) && (
                 <Box
                     sx={{
