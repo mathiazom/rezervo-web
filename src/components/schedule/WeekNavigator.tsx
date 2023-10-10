@@ -33,6 +33,8 @@ export default function WeekNavigator({
     const [schedule, setSchedule] = useState<RezervoSchedule>(initialSchedule);
 
     useEffect(() => {
+        setWeekOffset(0);
+        setWeekNumber(getWeekNumber(initialSchedule[0]!));
         setSchedule(initialSchedule);
     }, [initialSchedule]);
 
