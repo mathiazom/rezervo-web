@@ -1,6 +1,7 @@
 import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import { Tooltip } from "@mui/material";
+import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { isClassInThePast } from "@/lib/helpers/date";
@@ -32,6 +33,8 @@ const ClassPopularityMeter = ({
     const popularity =
         isClassInThePast(_class) || _class.isBookable ? determineClassPopularity(_class) : historicPopularity;
 
+    const popularityIcon = <ClassPopularityIcon popularity={popularity} />;
+
     if (_class.isBookable) {
         return (
             <Tooltip
@@ -47,13 +50,13 @@ const ClassPopularityMeter = ({
                     variant={"dot"}
                     rippleColor={_class.availableSlots > 0 ? StatusColors.ACTIVE : StatusColors.WAITLIST}
                 >
-                    <ClassPopularityIcon popularity={popularity} />
+                    {popularityIcon}
                 </RippleBadge>
             </Tooltip>
         );
     }
 
-    return <ClassPopularityIcon popularity={popularity} />;
+    return popularityIcon;
 };
 
 export default ClassPopularityMeter;
