@@ -62,6 +62,7 @@ export function get(path: string, accessToken: string): Promise<Response> {
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
+        cache: "no-store",
     });
 }
 
