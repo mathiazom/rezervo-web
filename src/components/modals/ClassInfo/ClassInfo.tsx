@@ -1,8 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { Diversity3Rounded } from "@mui/icons-material";
+import { CancelRounded, Diversity3Rounded } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -83,6 +82,8 @@ export default function ClassInfo({
         setBookingLoading(false);
     }
 
+    const cancelledOpacity = 0.5;
+
     return (
         <Box
             sx={{
@@ -148,9 +149,9 @@ export default function ClassInfo({
                         alignItems: "center",
                     }}
                 >
-                    <ErrorRoundedIcon color={"error"} />
-                    <Typography variant="body2" color="text.secondary">
-                        Denne timen har blitt avlyst!
+                    <CancelRounded color={"error"} />
+                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "medium" }}>
+                        Timen er avlyst!
                     </Typography>
                 </Box>
             )}
@@ -160,6 +161,7 @@ export default function ClassInfo({
                     paddingTop: 1,
                     gap: 1,
                     alignItems: "center",
+                    opacity: _class.isCancelled ? cancelledOpacity : 1,
                 }}
             >
                 <CalendarMonthIcon />
@@ -173,6 +175,7 @@ export default function ClassInfo({
                     paddingTop: 1,
                     gap: 1,
                     alignItems: "center",
+                    opacity: _class.isCancelled ? cancelledOpacity : 1,
                 }}
             >
                 <AccessTimeRoundedIcon />
@@ -186,6 +189,7 @@ export default function ClassInfo({
                     paddingTop: 1,
                     gap: 1,
                     alignItems: "center",
+                    opacity: _class.isCancelled ? cancelledOpacity : 1,
                 }}
             >
                 <LocationOnRoundedIcon />
@@ -201,6 +205,7 @@ export default function ClassInfo({
                         paddingTop: 1,
                         gap: 1,
                         alignItems: "center",
+                        opacity: _class.isCancelled ? cancelledOpacity : 1,
                     }}
                 >
                     <PersonRoundedIcon />
@@ -216,6 +221,7 @@ export default function ClassInfo({
                         paddingTop: 1,
                         gap: 1,
                         alignItems: "center",
+                        opacity: _class.isCancelled ? cancelledOpacity : 1,
                     }}
                 >
                     <Diversity3Rounded />
@@ -230,6 +236,7 @@ export default function ClassInfo({
                     paddingTop: 1,
                     gap: 1,
                     alignItems: "center",
+                    opacity: _class.isCancelled ? cancelledOpacity : 1,
                 }}
             >
                 <ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />
@@ -254,7 +261,15 @@ export default function ClassInfo({
                 </Box>
             )}
             {!isInThePast && usersOnWaitlist.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mt: 1.5 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.25,
+                        mt: 1.5,
+                        opacity: _class.isCancelled ? cancelledOpacity : 1,
+                    }}
+                >
                     <ClassUsersAvatarGroup
                         users={usersOnWaitlist.map((u) => u.user_name)}
                         rippleColor={StatusColors.WAITLIST}
@@ -265,12 +280,24 @@ export default function ClassInfo({
                             usersOnWaitlist.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
                             usersOnWaitlist.some((u) => u.is_self),
-                        )} er på venteliste for denne timen`}
+                        )} ${
+                            _class.isCancelled
+                                ? "var på venteliste for denne timen"
+                                : "er på venteliste for denne timen"
+                        }`}
                     </Typography>
                 </Box>
             )}
             {usersBooked.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mt: 1.5 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.25,
+                        mt: 1.5,
+                        opacity: _class.isCancelled ? cancelledOpacity : 1,
+                    }}
+                >
                     <ClassUsersAvatarGroup
                         users={usersBooked.map((u) => u.user_name)}
                         rippleColor={StatusColors.ACTIVE}
@@ -281,7 +308,13 @@ export default function ClassInfo({
                             usersBooked.filter((u) => !u.is_self).map((u) => u.user_name),
                             4,
                             selfBooked,
-                        )} ${isInThePast ? "var på denne timen" : "har booket denne timen"}`}
+                        )} ${
+                            _class.isCancelled
+                                ? "hadde booket denne timen"
+                                : isInThePast
+                                ? "var på denne timen"
+                                : "har booket denne timen"
+                        }`}
                     </Typography>
                 </Box>
             )}
@@ -297,6 +330,11 @@ export default function ClassInfo({
                             objectFit: "cover",
                             borderRadius: "0.25em",
                             padding: 0,
+                            ...(_class.isCancelled
+                                ? {
+                                      filter: "grayscale(1)",
+                                  }
+                                : {}),
                         }}
                     ></Image>
                 </Box>

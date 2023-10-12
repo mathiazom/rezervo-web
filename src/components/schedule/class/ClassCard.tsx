@@ -1,5 +1,6 @@
+import { CancelRounded } from "@mui/icons-material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { Avatar, AvatarGroup, Box, Card, CardActions, CardContent, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useState } from "react";
 
@@ -103,7 +104,7 @@ const ClassCard = ({
                 )}
                 <CardContent
                     className={"unselectable"}
-                    onClick={selectable && !isInThePast ? handleClick : undefined}
+                    onClick={selectable && !isInThePast && !_class.isCancelled ? handleClick : undefined}
                     sx={{ paddingBottom: 1, zIndex: 1, position: "relative" }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -116,7 +117,18 @@ const ClassCard = ({
                         >
                             {_class.activity.name}
                         </Typography>
-                        <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
+                        {_class.isCancelled ? (
+                            <Tooltip title={"Timen er avlyst"}>
+                                <Badge
+                                    overlap={"circular"}
+                                    badgeContent={<CancelRounded fontSize={"small"} color={"error"} />}
+                                >
+                                    <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
+                                </Badge>
+                            </Tooltip>
+                        ) : (
+                            <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
+                        )}
                     </Box>
                     <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                         {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
