@@ -58,7 +58,7 @@ const ClassCard = ({
 
     const isInThePast = isClassInThePast(_class);
 
-    const showSelected = !isInThePast && selected;
+    const showSelected = !isInThePast && !_class.isCancelled && selected;
 
     const usersPlanned = configUsers.filter(
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),

@@ -255,6 +255,8 @@ export default function ClassInfo({
                         )} ${
                             _class.isBookable
                                 ? "har planlagt denne timen, men ikke booket plass!"
+                                : _class.isCancelled
+                                ? "skulle på denne timen"
                                 : "skal på denne timen"
                         }`}
                     </Typography>
