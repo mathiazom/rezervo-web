@@ -23,22 +23,22 @@ export async function tryUseRefreshToken(req: NextRequest): Promise<string | und
     return accessToken;
 }
 
-export function respondUnauthorized(): NextResponse {
-    return NextResponse.json("Not authenticated", { status: constants.HTTP_STATUS_UNAUTHORIZED });
+export function respondUnauthorized(): Response {
+    return Response.json("Not authenticated", { status: constants.HTTP_STATUS_UNAUTHORIZED });
 }
 
-export function respondInternalServerError(): NextResponse {
-    return NextResponse.json("Request failed", { status: constants.HTTP_STATUS_INTERNAL_SERVER_ERROR });
+export function respondInternalServerError(): Response {
+    return Response.json("Request failed", { status: constants.HTTP_STATUS_INTERNAL_SERVER_ERROR });
 }
-export function respondNotFound(): NextResponse {
-    return NextResponse.json("Not found", { status: constants.HTTP_STATUS_NOT_FOUND });
-}
-
-export function respondNonOkResponse(response: Response): NextResponse {
-    return NextResponse.json(response.statusText, { status: response.status });
+export function respondNotFound(): Response {
+    return Response.json("Not found", { status: constants.HTTP_STATUS_NOT_FOUND });
 }
 
-export async function doOperation(operation: () => Promise<Response>): Promise<NextResponse | Response> {
+export function respondNonOkResponse(response: Response): Response {
+    return Response.json(response.statusText, { status: response.status });
+}
+
+export async function doOperation(operation: () => Promise<Response>): Promise<Response> {
     const response = await operation();
 
     if (response == null) {
@@ -50,10 +50,6 @@ export async function doOperation(operation: () => Promise<Response>): Promise<N
     }
 
     return response;
-}
-
-export function operationFailed(response: unknown) {
-    return response instanceof NextResponse && response.status !== constants.HTTP_STATUS_OK;
 }
 
 export function get(path: string, accessToken: string): Promise<Response> {
