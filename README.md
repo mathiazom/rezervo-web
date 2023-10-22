@@ -31,7 +31,7 @@ yarn dev
 
 # or
 
-yarn build && yarn start
+yarn prod
 ```
 
 #### 🐋 Run with Docker
@@ -45,9 +45,10 @@ yarn build && yarn start
 #### 🧹 Code style, lint and type checking
 
 ```shell
-yarn prettier
-yarn lint
-yarn tsc
+yarn check
+
+# automatic fixes
+yarn fix
 ```
 
 #### 🔌 Support new integration
