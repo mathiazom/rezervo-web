@@ -22,9 +22,11 @@ function IntegrationLogo({ integrationProfile }: { integrationProfile: Integrati
                             : integrationProfile.images.light.largeLogo
                     }
                     alt={`${integrationProfile.identifier}-rezervo`}
-                    layout={"fill"}
-                    objectFit={"contain"}
-                    objectPosition={"center"}
+                    fill={true}
+                    style={{
+                        objectFit: "contain",
+                        objectPosition: "center",
+                    }}
                 />
             )}
         </Box>
