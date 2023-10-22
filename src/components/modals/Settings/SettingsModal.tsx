@@ -21,12 +21,14 @@ const SettingsModal = ({
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <Settings
-                integrationProfile={integrationProfile}
-                bookingActive={bookingActive}
-                setBookingActive={setBookingActive}
-                openIntegrationUserSettings={openIntegrationUserSettings}
-            />
+            <>
+                <Settings
+                    integrationProfile={integrationProfile}
+                    bookingActive={bookingActive}
+                    setBookingActive={setBookingActive}
+                    openIntegrationUserSettings={openIntegrationUserSettings}
+                />
+            </>
         </Modal>
     );
 };
