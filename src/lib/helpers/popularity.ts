@@ -1,6 +1,6 @@
 import { isClassInThePast } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
+import { RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 export function determineClassPopularity(_class: RezervoClass) {

@@ -1,4 +1,4 @@
-import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
+import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import {
     RezervoClassDTO,
     RezervoDayScheduleDTO,

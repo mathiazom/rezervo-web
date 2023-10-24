@@ -14,12 +14,12 @@ const nextConfig = withPWA({
                 has: [
                     {
                         type: "cookie",
-                        key: "rezervo.selectedIntegration",
-                        value: "(?<integration>.*)",
+                        key: "rezervo.selectedChain",
+                        value: "(?<chain>.*)",
                     },
                 ],
                 permanent: false,
-                destination: "/:integration",
+                destination: "/:chain",
             },
         ];
     },

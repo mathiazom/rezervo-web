@@ -11,17 +11,17 @@ export type ClassConfig = {
     time: ClassTimeConfig;
 };
 
-export type IntegrationConfig = {
+export type ChainConfig = {
     active: boolean;
     classes: ClassConfig[];
 };
-export type IntegrationConfigPayload = IntegrationConfig;
+export type ChainConfigPayload = ChainConfig;
 
-export type IntegrationUser = {
+export type ChainUser = {
     username: string;
 };
 
-export type IntegrationUserPayload = IntegrationUser & {
+export type ChainUserPayload = ChainUser & {
     password: string;
 };
 

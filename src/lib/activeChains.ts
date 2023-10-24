@@ -2,34 +2,34 @@ import { activeProviders, ProviderIdentifier } from "@/lib/providers/active";
 import { BrpSubdomain, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
 import { IBookingDomain, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
 import { checkSantaTime } from "@/lib/utils/santaUtils";
-import { RezervoIntegration } from "@/types/integration";
+import { RezervoChain } from "@/types/chain";
 
 const isSantaTime = checkSantaTime();
 
-export enum IntegrationIdentifier {
+export enum ChainIdentifier {
     sit = "sit",
     fsc = "fsc",
     ttt = "3t",
 }
 
-const activeIntegrations: {
-    [IntegrationIdentifier.sit]: RezervoIntegration<IBookingWeekSchedule>;
-    [IntegrationIdentifier.fsc]: RezervoIntegration<DetailedBrpWeekSchedule>;
-    [IntegrationIdentifier.ttt]: RezervoIntegration<DetailedBrpWeekSchedule>;
+const activeChains: {
+    [ChainIdentifier.sit]: RezervoChain<IBookingWeekSchedule>;
+    [ChainIdentifier.fsc]: RezervoChain<DetailedBrpWeekSchedule>;
+    [ChainIdentifier.ttt]: RezervoChain<DetailedBrpWeekSchedule>;
 } = {
-    [IntegrationIdentifier.sit]: {
+    [ChainIdentifier.sit]: {
         profile: {
-            identifier: IntegrationIdentifier.sit,
+            identifier: ChainIdentifier.sit,
             name: "Sit Trening",
             images: {
                 light: {
-                    largeLogo: `/integrations/sit/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/sit/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
                 },
                 dark: {
-                    largeLogo: `/integrations/sit/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/sit/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
                 },
                 common: {
-                    smallLogo: `/integrations/sit/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
+                    smallLogo: `/chains/sit/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
                 },
             },
         },
@@ -40,19 +40,19 @@ const activeIntegrations: {
         ],
         provider: activeProviders[ProviderIdentifier.ibooking](IBookingDomain.sit),
     },
-    [IntegrationIdentifier.fsc]: {
+    [ChainIdentifier.fsc]: {
         profile: {
-            identifier: IntegrationIdentifier.fsc,
+            identifier: ChainIdentifier.fsc,
             name: "Family Sports Club",
             images: {
                 light: {
-                    largeLogo: `/integrations/fsc/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/fsc/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
                 },
                 dark: {
-                    largeLogo: `/integrations/fsc/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/fsc/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
                 },
                 common: {
-                    smallLogo: `/integrations/fsc/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
+                    smallLogo: `/chains/fsc/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
                 },
             },
         },
@@ -63,19 +63,19 @@ const activeIntegrations: {
         ],
         provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.fsc, 8),
     },
-    [IntegrationIdentifier.ttt]: {
+    [ChainIdentifier.ttt]: {
         profile: {
-            identifier: IntegrationIdentifier.ttt,
+            identifier: ChainIdentifier.ttt,
             name: "3T",
             images: {
                 light: {
-                    largeLogo: `/integrations/3t/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/3t/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
                 },
                 dark: {
-                    largeLogo: `/integrations/3t/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/3t/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
                 },
                 common: {
-                    smallLogo: `/integrations/3t/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
+                    smallLogo: `/chains/3t/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
                 },
             },
         },
@@ -88,4 +88,4 @@ const activeIntegrations: {
     },
 };
 
-export default activeIntegrations;
+export default activeChains;

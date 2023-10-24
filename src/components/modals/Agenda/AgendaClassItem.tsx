@@ -6,8 +6,8 @@ import IconButton from "@mui/material/IconButton";
 import React from "react";
 
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
-import { RezervoClass } from "@/types/integration";
 
 export type AgendaClass = {
     config: ClassConfig;

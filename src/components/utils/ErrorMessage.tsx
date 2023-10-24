@@ -1,9 +1,9 @@
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 
+import { ChainProfile } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
-import { IntegrationProfile } from "@/types/integration";
 
-function ErrorMessage({ error, integrationProfile }: { error: RezervoError; integrationProfile: IntegrationProfile }) {
+function ErrorMessage({ error, chainProfile }: { error: RezervoError; chainProfile: ChainProfile }) {
     return (
         <Box sx={{ display: "flex", justifyContent: "center", bgcolor: "error.main" }}>
             <Alert
@@ -13,9 +13,9 @@ function ErrorMessage({ error, integrationProfile }: { error: RezervoError; inte
             >
                 <AlertTitle>Noe gikk galt</AlertTitle>
                 <Typography>
-                    {error === RezervoError.INTEGRATION_SCHEDULE_UNAVAILABLE ? (
+                    {error === RezervoError.CHAIN_SCHEDULE_UNAVAILABLE ? (
                         <>
-                            Klarte ikke hente timeplan for <strong>{integrationProfile.name}</strong>
+                            Klarte ikke hente timeplan for <strong>{chainProfile.name}</strong>
                         </>
                     ) : (
                         <>En ukjent feil har oppstått️</>

@@ -24,12 +24,12 @@ import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
-import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
+import { useChainUser } from "@/lib/hooks/useChainUser";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { IntegrationConfigPayload, NotificationsConfig, PreferencesPayload } from "@/types/config";
+import { ChainProfile } from "@/types/chain";
+import { ChainConfigPayload, NotificationsConfig, PreferencesPayload } from "@/types/config";
 import { Features } from "@/types/features";
-import { IntegrationProfile } from "@/types/integration";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({
@@ -55,24 +55,22 @@ enum ReminderTimeBeforeInputUnit {
 }
 
 export default function Settings({
-    integrationProfile,
+    chainProfile,
     bookingActive,
     features,
     setBookingActive,
-    openIntegrationUserSettings,
+    openChainUserSettings,
 }: {
-    integrationProfile: IntegrationProfile;
+    chainProfile: ChainProfile;
     bookingActive: boolean;
     features: Features | undefined;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
-    openIntegrationUserSettings: () => void;
+    openChainUserSettings: () => void;
 }) {
     const theme = useTheme();
-    const { integrationUser, integrationUserError, integrationUserLoading } = useIntegrationUser(
-        integrationProfile.identifier,
-    );
-    const integrated = integrationUser !== undefined && integrationUserError == undefined && !integrationUserLoading;
-    const { userConfig, putUserConfig } = useUserConfig(integrationProfile.identifier);
+    const { chainUser, chainUserError, chainUserLoading } = useChainUser(chainProfile.identifier);
+    const hasChainUser = chainUser !== undefined && chainUserError == undefined && !chainUserLoading;
+    const { userConfig, putUserConfig } = useUserConfig(chainProfile.identifier);
     const { preferences, putPreferences } = usePreferences();
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
@@ -89,7 +87,7 @@ export default function Settings({
         await putUserConfig({
             ...userConfig,
             active: active,
-        } as IntegrationConfigPayload);
+        } as ChainConfigPayload);
         setBookingActiveLoading(false);
     }
 
@@ -245,7 +243,7 @@ export default function Settings({
                             }}
                         >
                             <RippleBadge
-                                invisible={!integrated}
+                                invisible={!hasChainUser}
                                 overlap="circular"
                                 anchorOrigin={{
                                     vertical: "bottom",
@@ -256,9 +254,9 @@ export default function Settings({
                             >
                                 <Avatar
                                     sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
-                                    src={integrationProfile.images.common.smallLogo}
+                                    src={chainProfile.images.common.smallLogo}
                                 >
-                                    {integrationProfile.identifier}
+                                    {chainProfile.identifier}
                                 </Avatar>
                             </RippleBadge>
                             <Typography
@@ -269,10 +267,10 @@ export default function Settings({
                                     color: theme.palette.primary.contrastText,
                                 }}
                             >
-                                {integrationUser?.username}
+                                {chainUser?.username}
                             </Typography>
                             <FormLabel>
-                                <IconButton onClick={() => openIntegrationUserSettings()}>
+                                <IconButton onClick={() => openChainUserSettings()}>
                                     <EditRounded />
                                 </IconButton>
                             </FormLabel>

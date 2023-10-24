@@ -2,32 +2,29 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { IntegrationConfigPayload, IntegrationConfig } from "@/types/config";
+import { ChainConfigPayload, ChainConfig } from "@/types/config";
 
-function putConfig(url: string, { arg: config }: { arg: IntegrationConfigPayload }) {
+function putConfig(url: string, { arg: config }: { arg: ChainConfigPayload }) {
     return fetch(url, {
         method: "PUT",
         body: JSON.stringify(config, null, 2),
     }).then((r) => r.json());
 }
 
-export function useUserConfig(integration: IntegrationIdentifier) {
+export function useUserConfig(chain: ChainIdentifier) {
     const { user } = useUser();
 
-    const configApiUrl = `/api/${integration}/config`;
+    const configApiUrl = `/api/${chain}/config`;
 
-    const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(integration);
+    const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(chain);
 
-    const { data, error, isLoading, mutate } = useSWR<IntegrationConfig>(
-        user && integration ? configApiUrl : null,
-        fetcher,
-    );
+    const { data, error, isLoading, mutate } = useSWR<ChainConfig>(user && chain ? configApiUrl : null, fetcher);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { trigger, isMutating } = useSWRMutation<IntegrationConfig, any, string, IntegrationConfigPayload>(
+    const { trigger, isMutating } = useSWRMutation<ChainConfig, any, string, ChainConfigPayload>(
         configApiUrl,
         putConfig,
         {

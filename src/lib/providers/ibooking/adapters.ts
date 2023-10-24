@@ -1,6 +1,6 @@
 import { LocalizedDateTime } from "@/lib/helpers/date";
 import { IBookingClass, IBookingDaySchedule, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
-import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/integration";
+import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
 
 function iBookingToRezervoClass(iBookingClass: IBookingClass): RezervoClass {
     return {

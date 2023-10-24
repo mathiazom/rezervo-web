@@ -3,9 +3,9 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
-import { RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
+import { RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 
 function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
     const firstDay = weekSchedule[0];
@@ -16,12 +16,12 @@ function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
 }
 
 export default function WeekNavigator({
-    integration,
+    chain,
     initialSchedule,
     setCurrentWeekSchedule,
     onGoToToday,
 }: {
-    integration: IntegrationIdentifier;
+    chain: ChainIdentifier;
     initialSchedule: RezervoSchedule;
     setCurrentWeekSchedule: Dispatch<SetStateAction<RezervoWeekSchedule>>;
     onGoToToday: () => void;
@@ -51,7 +51,7 @@ export default function WeekNavigator({
         let currentWeekSchedule = schedule[currentWeekOffset];
         if (currentWeekSchedule === undefined) {
             currentWeekSchedule = deserializeWeekSchedule(
-                await fetch(`api/${integration}/schedule`, {
+                await fetch(`api/${chain}/schedule`, {
                     method: "POST",
                     body: JSON.stringify({ weekOffset: currentWeekOffset }),
                 }).then((r) => r.json()),
@@ -74,7 +74,7 @@ export default function WeekNavigator({
             return;
         }
         const nextWeekSchedule = deserializeWeekSchedule(
-            await fetch(`api/${integration}/schedule`, {
+            await fetch(`api/${chain}/schedule`, {
                 method: "POST",
                 body: JSON.stringify({ weekOffset: nextWeekOffset }),
             }).then((r) => r.json()),

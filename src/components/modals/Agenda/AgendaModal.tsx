@@ -3,8 +3,8 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { IntegrationConfig } from "@/types/config";
-import { RezervoClass } from "@/types/integration";
+import { RezervoClass } from "@/types/chain";
+import { ChainConfig } from "@/types/config";
 
 const AgendaModal = ({
     open,
@@ -17,7 +17,7 @@ const AgendaModal = ({
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    userConfig: IntegrationConfig | undefined;
+    userConfig: ChainConfig | undefined;
     classes: RezervoClass[];
     selectedClassIds: string[] | null;
     onInfo: Dispatch<SetStateAction<RezervoClass | null>>;

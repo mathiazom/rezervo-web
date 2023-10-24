@@ -1,17 +1,17 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { UserSessionsIndex } from "@/types/userSessions";
 
-export function useUserSessions(integration: IntegrationIdentifier) {
+export function useUserSessions(chain: ChainIdentifier) {
     const { user } = useUser();
 
-    const userSessionsApiUrl = `/api/${integration}/sessions`;
+    const userSessionsApiUrl = `/api/${chain}/sessions`;
 
     const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(
-        user && integration ? userSessionsApiUrl : null,
+        user && chain ? userSessionsApiUrl : null,
         fetcher,
     );
 

@@ -3,22 +3,22 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-import IntegrationLogo from "@/components/utils/IntegrationLogo";
-import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
+import ChainLogo from "@/components/utils/ChainLogo";
+import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/activeIntegrations";
-import { getStoredSelectedIntegration } from "@/lib/helpers/storage";
+import activeChains, { ChainIdentifier } from "@/lib/activeChains";
+import { getStoredSelectedChain } from "@/lib/helpers/storage";
 
 function IndexPage() {
     const theme = useTheme();
     const router = useRouter();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
-    const [integrationLoading, setIntegrationLoading] = useState<IntegrationIdentifier | null>(null);
+    const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
 
     useEffect(() => {
-        const storedIntegration = getStoredSelectedIntegration();
-        if (storedIntegration !== null) {
-            router.push(`/${storedIntegration}`);
+        const storedChain = getStoredSelectedChain();
+        if (storedChain !== null) {
+            router.push(`/${storedChain}`);
         } else {
             setCheckedLocalStorage(true);
         }
@@ -62,11 +62,11 @@ function IndexPage() {
                         flexWrap: "wrap",
                     }}
                 >
-                    {Object.values(activeIntegrations).map((integration) => {
+                    {Object.values(activeChains).map((chain) => {
                         return (
                             <Link
-                                key={integration.profile.identifier}
-                                href={`/${integration.profile.identifier}`}
+                                key={chain.profile.identifier}
+                                href={`/${chain.profile.identifier}`}
                                 style={{ width: "100%" }}
                                 passHref
                                 legacyBehavior
@@ -81,12 +81,12 @@ function IndexPage() {
                                     }}
                                     disableTouchRipple
                                     component={"a"}
-                                    onClick={() => setIntegrationLoading(integration.profile.identifier)}
+                                    onClick={() => setChainLoading(chain.profile.identifier)}
                                 >
-                                    {integrationLoading !== integration.profile.identifier ? (
-                                        <IntegrationLogo integrationProfile={integration.profile} />
+                                    {chainLoading !== chain.profile.identifier ? (
+                                        <ChainLogo chainProfile={chain.profile} />
                                     ) : (
-                                        <IntegrationLogoSpinner integrationProfile={integration.profile} />
+                                        <ChainLogoSpinner chainProfile={chain.profile} />
                                     )}
                                 </Button>
                             </Link>

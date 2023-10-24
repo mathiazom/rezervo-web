@@ -1,42 +1,42 @@
 import Cookies from "js-cookie";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 
 const STORAGE_KEYS = {
-    SELECTED_INTEGRATION: "rezervo.selectedIntegration",
+    SELECTED_CHAIN: "rezervo.selectedChain",
 };
 
-export function storeSelectedIntegration(integration: IntegrationIdentifier) {
-    storeSelectedIntegrationInLocalStorage(integration);
-    storeSelectedIntegrationAsCookie(integration);
+export function storeSelectedChain(chain: ChainIdentifier) {
+    storeSelectedChainInLocalStorage(chain);
+    storeSelectedChainAsCookie(chain);
 }
 
-function storeSelectedIntegrationAsCookie(integration: IntegrationIdentifier) {
+function storeSelectedChainAsCookie(chain: ChainIdentifier) {
     // using a common Max-Age upper limit of 400 days (https://www.cookiestatus.com/)
-    Cookies.set(STORAGE_KEYS.SELECTED_INTEGRATION, integration, { expires: 400 });
+    Cookies.set(STORAGE_KEYS.SELECTED_CHAIN, chain, { expires: 400 });
 }
 
-function storeSelectedIntegrationInLocalStorage(integration: IntegrationIdentifier) {
-    localStorage.setItem(STORAGE_KEYS.SELECTED_INTEGRATION, integration);
+function storeSelectedChainInLocalStorage(chain: ChainIdentifier) {
+    localStorage.setItem(STORAGE_KEYS.SELECTED_CHAIN, chain);
 }
 
-export function getStoredSelectedIntegration(): IntegrationIdentifier | null {
-    const integrationFromCookie = getSelectedIntegrationFromCookie();
-    if (integrationFromCookie) {
-        return integrationFromCookie;
+export function getStoredSelectedChain(): ChainIdentifier | null {
+    const chainFromCookie = getSelectedChainFromCookie();
+    if (chainFromCookie) {
+        return chainFromCookie;
     }
-    const integrationFromLocalStorage = getSelectedIntegrationFromLocalStorage();
-    if (integrationFromLocalStorage) {
+    const chainFromLocalStorage = getSelectedChainFromLocalStorage();
+    if (chainFromLocalStorage) {
         // sync cookie with localStorage for faster redirect next time
-        storeSelectedIntegrationAsCookie(integrationFromLocalStorage);
+        storeSelectedChainAsCookie(chainFromLocalStorage);
     }
-    return integrationFromLocalStorage;
+    return chainFromLocalStorage;
 }
 
-function getSelectedIntegrationFromCookie(): IntegrationIdentifier | undefined {
-    return Cookies.get(STORAGE_KEYS.SELECTED_INTEGRATION) as IntegrationIdentifier | undefined;
+function getSelectedChainFromCookie(): ChainIdentifier | undefined {
+    return Cookies.get(STORAGE_KEYS.SELECTED_CHAIN) as ChainIdentifier | undefined;
 }
 
-function getSelectedIntegrationFromLocalStorage(): IntegrationIdentifier | null {
-    return localStorage.getItem(STORAGE_KEYS.SELECTED_INTEGRATION) as IntegrationIdentifier | null;
+function getSelectedChainFromLocalStorage(): ChainIdentifier | null {
+    return localStorage.getItem(STORAGE_KEYS.SELECTED_CHAIN) as ChainIdentifier | null;
 }

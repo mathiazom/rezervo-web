@@ -1,23 +1,23 @@
 import { AppRouteHandlerFnContext, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 import {
-    doOperation,
-    integrationIdentifierFromContext,
     post,
-    respondNotFound,
-    respondUnauthorized,
     tryUseRefreshToken,
+    respondUnauthorized,
+    respondNotFound,
+    doOperation,
+    chainIdentifierFromContext,
 } from "@/lib/helpers/api";
 
 export const POST = withApiAuthRequired(async (req, ctx) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
 
-    const integrationIdentifier = integrationIdentifierFromContext(ctx as AppRouteHandlerFnContext);
-    if (integrationIdentifier === null) return respondNotFound();
+    const chainIdentifier = chainIdentifierFromContext(ctx as AppRouteHandlerFnContext);
+    if (chainIdentifier === null) return respondNotFound();
 
     const data = await req.text();
     return await doOperation(() =>
-        post(`${process.env["CONFIG_HOST"]}/${integrationIdentifier}/book`, accessToken, data),
+        post(`${process.env["CONFIG_HOST"]}/${chainIdentifier}/cancel-booking`, accessToken, data),
     );
 });

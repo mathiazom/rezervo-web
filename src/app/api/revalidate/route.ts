@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest } from "next/server";
 
-import activeIntegrations from "@/lib/activeIntegrations";
+import activeChains from "@/lib/activeChains";
 
 export const GET = async (req: NextRequest) => {
     const secret = req.nextUrl.searchParams.get("secret");
@@ -11,9 +11,9 @@ export const GET = async (req: NextRequest) => {
     }
 
     await Promise.all(
-        Object.keys(activeIntegrations).map((integration) => {
-            console.log(`Revalidating /${integration}`);
-            return revalidatePath(`/${integration}`);
+        Object.keys(activeChains).map((chain) => {
+            console.log(`Revalidating /${chain}`);
+            return revalidatePath(`/${chain}`);
         }),
     );
 

@@ -3,38 +3,36 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
+import ChainUserSettingsModal from "@/components/modals/ChainUser/ChainUserSettingsModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
-import IntegrationUserSettingsModal from "@/components/modals/IntegrationUser/IntegrationUserSettingsModal";
 import SettingsModal from "@/components/modals/Settings/SettingsModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
+import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
-import IntegrationSwitcher from "@/components/utils/IntegrationSwitcher";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { ChainProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
-import { IntegrationProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
 import { ClassPopularityIndex } from "@/types/popularity";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
 
-function Integration({
+function Chain({
     initialSchedule,
     classPopularityIndex,
-    integrationProfile,
+    chainProfile,
     error,
 }: {
     initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
-    integrationProfile: IntegrationProfile;
+    chainProfile: ChainProfile;
     error: RezervoError | undefined;
 }) {
-    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(
-        integrationProfile.identifier,
-    );
+    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(chainProfile.identifier);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -42,7 +40,7 @@ function Integration({
     const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isIntegrationUserSettingsOpen, setIsIntegrationUserSettingsOpen] = useState(false);
+    const [isChainUserSettingsOpen, setIsChainUserSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
 
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
@@ -89,14 +87,14 @@ function Integration({
 
     return (
         <>
-            <PageHead title={`${integrationProfile.identifier}-rezervo`} />
+            <PageHead title={`${chainProfile.identifier}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={<IntegrationSwitcher currentIntegrationProfile={integrationProfile} />}
+                        leftComponent={<ChainSwitcher currentChainProfile={chainProfile} />}
                         rightComponent={
                             <ConfigBar
-                                integration={integrationProfile.identifier}
+                                chain={chainProfile.identifier}
                                 classes={classes}
                                 selectedClassIds={selectedClassIds}
                                 originalSelectedClassIds={originalSelectedClassIds}
@@ -106,14 +104,14 @@ function Integration({
                                 isConfigError={userConfigError}
                                 onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
-                                onIntegrationUserSettingsOpen={() => setIsIntegrationUserSettingsOpen(true)}
+                                onChainUserSettingsOpen={() => setIsChainUserSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
                             />
                         }
                     />
                     {error === undefined && (
                         <WeekNavigator
-                            integration={integrationProfile.identifier}
+                            chain={chainProfile.identifier}
                             initialSchedule={initialSchedule}
                             setCurrentWeekSchedule={setCurrentWeekSchedule}
                             onGoToToday={scrollToToday}
@@ -123,7 +121,7 @@ function Integration({
                 </Box>
                 {error === undefined ? (
                     <WeekScheduleMemo
-                        integration={integrationProfile.identifier}
+                        chain={chainProfile.identifier}
                         weekSchedule={currentWeekSchedule}
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
@@ -134,11 +132,11 @@ function Integration({
                         todayRef={scrollToTodayRef}
                     />
                 ) : (
-                    <ErrorMessage error={error} integrationProfile={integrationProfile} />
+                    <ErrorMessage error={error} chainProfile={chainProfile} />
                 )}
             </Stack>
             <ClassInfoModal
-                integration={integrationProfile.identifier}
+                chain={chainProfile.identifier}
                 classInfoClass={classInfoClass}
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
@@ -156,19 +154,19 @@ function Integration({
             <SettingsModal
                 open={isSettingsOpen}
                 setOpen={setIsSettingsOpen}
-                integrationProfile={integrationProfile}
+                chainProfile={chainProfile}
                 bookingActive={userConfigActive}
                 setBookingActive={setUserConfigActive}
-                openIntegrationUserSettings={() => setIsIntegrationUserSettingsOpen(true)}
+                openChainUserSettings={() => setIsChainUserSettingsOpen(true)}
             />
-            <IntegrationUserSettingsModal
-                open={isIntegrationUserSettingsOpen}
-                setOpen={setIsIntegrationUserSettingsOpen}
-                integration={integrationProfile.identifier}
-                onSubmit={() => setIsIntegrationUserSettingsOpen(false)}
+            <ChainUserSettingsModal
+                open={isChainUserSettingsOpen}
+                setOpen={setIsChainUserSettingsOpen}
+                chain={chainProfile.identifier}
+                onSubmit={() => setIsChainUserSettingsOpen(false)}
             />
         </>
     );
 }
 
-export default Integration;
+export default Chain;
