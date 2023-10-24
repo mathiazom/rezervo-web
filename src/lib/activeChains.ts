@@ -33,7 +33,7 @@ const activeChains: {
                 },
             },
         },
-        businessUnits: [
+        branches: [
             {
                 name: "Trondheim",
             },
@@ -56,7 +56,7 @@ const activeChains: {
                 },
             },
         },
-        businessUnits: [
+        branches: [
             {
                 name: "Ski",
             },
@@ -79,7 +79,7 @@ const activeChains: {
                 },
             },
         },
-        businessUnits: [
+        branches: [
             {
                 name: "Rosten",
             },

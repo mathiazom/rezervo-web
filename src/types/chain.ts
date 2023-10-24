@@ -25,11 +25,11 @@ export type RezervoProvider<T> = {
 
 export type RezervoChain<T> = {
     profile: ChainProfile;
-    businessUnits: RezervoBusinessUnit[];
+    branches: RezervoBranch[];
     provider: RezervoProvider<T>;
 };
 
-export type RezervoBusinessUnit = {
+export type RezervoBranch = {
     name: string;
 };
 
