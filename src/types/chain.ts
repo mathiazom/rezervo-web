@@ -31,6 +31,11 @@ export type RezervoChain<T> = {
 
 export type RezervoBranch = {
     name: string;
+    locations: RezervoLocation[];
+};
+
+export type RezervoLocation = {
+    name: string;
 };
 
 export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };

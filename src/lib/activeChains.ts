@@ -36,6 +36,20 @@ const activeChains: {
         branches: [
             {
                 name: "Trondheim",
+                locations: [
+                    {
+                        name: "Gløshaugen",
+                    },
+                    {
+                        name: "Portalen",
+                    },
+                    {
+                        name: "Dragvoll",
+                    },
+                    {
+                        name: "DMMH",
+                    },
+                ],
             },
         ],
         provider: activeProviders[ProviderIdentifier.ibooking](IBookingDomain.sit),
@@ -59,6 +73,11 @@ const activeChains: {
         branches: [
             {
                 name: "Ski",
+                locations: [
+                    {
+                        name: "Ski",
+                    },
+                ],
             },
         ],
         provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.fsc, 8),
@@ -81,7 +100,15 @@ const activeChains: {
         },
         branches: [
             {
-                name: "Rosten",
+                name: "Trondheim",
+                locations: [
+                    {
+                        name: "Fossegrenda",
+                    },
+                    {
+                        name: "Rosten",
+                    },
+                ],
             },
         ],
         provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.ttt, 1),
