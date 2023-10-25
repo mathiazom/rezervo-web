@@ -28,6 +28,7 @@ import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { IntegrationConfigPayload, NotificationsConfig, PreferencesPayload } from "@/types/config";
+import { Features } from "@/types/features";
 import { IntegrationProfile } from "@/types/integration";
 
 // Fix track not visible with "system" color scheme
@@ -56,11 +57,13 @@ enum ReminderTimeBeforeInputUnit {
 export default function Settings({
     integrationProfile,
     bookingActive,
+    features,
     setBookingActive,
     openIntegrationUserSettings,
 }: {
     integrationProfile: IntegrationProfile;
     bookingActive: boolean;
+    features: Features | undefined;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
     openIntegrationUserSettings: () => void;
 }) {
@@ -308,80 +311,91 @@ export default function Settings({
                     </FormGroup>
                     <PushNotifications />
                     <Divider orientation="horizontal" />
-                    <FormGroup>
-                        <FormLabel>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
-                                <NotificationsActiveRoundedIcon />
-                                <Typography
-                                    sx={{
-                                        userSelect: "none",
-                                    }}
-                                >
-                                    Påminnelse om time
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "right",
-                                        flexGrow: 1,
-                                    }}
-                                >
-                                    {notificationsConfigLoading && <CircularProgress size="1rem" />}
-                                    <Switch
-                                        checked={reminderActive}
-                                        onChange={(_, checked) => handleReminderActiveChanged(checked)}
-                                        inputProps={{
-                                            "aria-label": "påminnelse-aktiv",
-                                        }}
-                                    />
+                    {features && features.class_reminder_notifications && (
+                        <>
+                            <FormGroup>
+                                <FormLabel>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
+                                        <NotificationsActiveRoundedIcon />
+                                        <Typography
+                                            sx={{
+                                                userSelect: "none",
+                                            }}
+                                        >
+                                            Påminnelse om time
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "right",
+                                                flexGrow: 1,
+                                            }}
+                                        >
+                                            {notificationsConfigLoading && <CircularProgress size="1rem" />}
+                                            <Switch
+                                                checked={reminderActive}
+                                                onChange={(_, checked) => handleReminderActiveChanged(checked)}
+                                                inputProps={{
+                                                    "aria-label": "påminnelse-aktiv",
+                                                }}
+                                            />
+                                        </Box>
+                                    </Box>
+                                </FormLabel>
+                                <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", ml: "33px", pb: 1 }}>
+                                    <FormControl>
+                                        <TextField
+                                            disabled={!reminderActive || reminderHoursBefore == null}
+                                            inputProps={{ inputMode: "numeric" }}
+                                            value={
+                                                reminderTimeBeforeInput ??
+                                                (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
+                                            }
+                                            onChange={({ target: { value } }) => setReminderTimeBeforeInput(value)}
+                                            onBlur={() =>
+                                                reminderTimeBeforeInput != null &&
+                                                reminderTimeBeforeInputUnit != null &&
+                                                handleReminderHoursChanged(
+                                                    reminderTimeBeforeInput,
+                                                    reminderTimeBeforeInputUnit,
+                                                )
+                                            }
+                                            sx={{ width: "4rem" }}
+                                            size={"small"}
+                                        />
+                                    </FormControl>
+                                    <FormLabel disabled={!reminderActive}>
+                                        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                                            <Select
+                                                disabled={!reminderActive || reminderHoursBefore == null}
+                                                value={
+                                                    reminderTimeBeforeInputUnit ??
+                                                    reminderTimeBeforeInputUnitFromHours(
+                                                        reminderHoursBefore ?? DEFAULT_REMINDER_HOURS,
+                                                    )
+                                                }
+                                                onChange={({ target: { value } }) => {
+                                                    handleReminderHoursUnitChanged(
+                                                        value as ReminderTimeBeforeInputUnit,
+                                                    );
+                                                }}
+                                                inputProps={{ "aria-label": "Without label" }}
+                                                size={"small"}
+                                            >
+                                                <MenuItem value={ReminderTimeBeforeInputUnit.HOURS}>timer</MenuItem>
+                                                <MenuItem value={ReminderTimeBeforeInputUnit.MINUTES}>
+                                                    minutter
+                                                </MenuItem>
+                                            </Select>
+                                            <Typography>før start</Typography>
+                                        </Box>
+                                    </FormLabel>
                                 </Box>
-                            </Box>
-                        </FormLabel>
-                        <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", ml: "33px", pb: 1 }}>
-                            <FormControl>
-                                <TextField
-                                    disabled={!reminderActive || reminderHoursBefore == null}
-                                    inputProps={{ inputMode: "numeric" }}
-                                    value={
-                                        reminderTimeBeforeInput ??
-                                        (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
-                                    }
-                                    onChange={({ target: { value } }) => setReminderTimeBeforeInput(value)}
-                                    onBlur={() =>
-                                        reminderTimeBeforeInput != null &&
-                                        reminderTimeBeforeInputUnit != null &&
-                                        handleReminderHoursChanged(reminderTimeBeforeInput, reminderTimeBeforeInputUnit)
-                                    }
-                                    sx={{ width: "4rem" }}
-                                    size={"small"}
-                                />
-                            </FormControl>
-                            <FormLabel disabled={!reminderActive}>
-                                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                                    <Select
-                                        disabled={!reminderActive || reminderHoursBefore == null}
-                                        value={
-                                            reminderTimeBeforeInputUnit ??
-                                            reminderTimeBeforeInputUnitFromHours(
-                                                reminderHoursBefore ?? DEFAULT_REMINDER_HOURS,
-                                            )
-                                        }
-                                        onChange={({ target: { value } }) => {
-                                            handleReminderHoursUnitChanged(value as ReminderTimeBeforeInputUnit);
-                                        }}
-                                        inputProps={{ "aria-label": "Without label" }}
-                                        size={"small"}
-                                    >
-                                        <MenuItem value={ReminderTimeBeforeInputUnit.HOURS}>timer</MenuItem>
-                                        <MenuItem value={ReminderTimeBeforeInputUnit.MINUTES}>minutter</MenuItem>
-                                    </Select>
-                                    <Typography>før start</Typography>
-                                </Box>
-                            </FormLabel>
-                        </Box>
-                    </FormGroup>
-                    <Divider />
+                            </FormGroup>
+                            <Divider />
+                        </>
+                    )}
                     <CalendarFeed />
                 </FormGroup>
             </Box>
