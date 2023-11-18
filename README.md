@@ -20,8 +20,6 @@ Web client for [`rezervo`](https://github.com/mathiazom/rezervo), including book
 
    > If you want [on-demand revalidation](https://nextjs.org/docs/basic-features/data-fetching/incremental-static-regeneration#on-demand-revalidation), make sure to define `REVALIDATION_SECRET_TOKEN` in `.env.local`
 
-   > [`.env`](.env) provides default dummy values as a workaround for [auth0/nextjs-auth0#1356](https://github.com/auth0/nextjs-auth0/issues/1356), and must be overridden with `.env.local`
-
 3. Setup and start the [rezervo](https://github.com/mathiazom/rezervo) backend
 
 #### 🧶 Run with Yarn

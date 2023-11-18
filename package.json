@@ -17,7 +17,7 @@
         "review": "run-s check prod"
     },
     "dependencies": {
-        "@auth0/nextjs-auth0": "^3.2.0",
+        "@auth0/nextjs-auth0": "^3.3.0",
         "@ducanh2912/next-pwa": "^9.7.2",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
