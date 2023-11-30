@@ -53,7 +53,7 @@ export type RezervoClassBase = {
     isCancelled: boolean;
     totalSlots: number;
     availableSlots: number;
-    waitingListCount: number;
+    waitingListCount: number | null;
     activity: RezervoActivity;
     instructors: string[];
 };

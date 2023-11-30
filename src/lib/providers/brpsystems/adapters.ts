@@ -18,7 +18,7 @@ function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
         isCancelled: brpClass.cancelled,
         totalSlots: brpClass.slots.total,
         availableSlots: brpClass.slots.leftToBook,
-        waitingListCount: brpClass.slots.inWaitingList,
+        waitingListCount: brpClass.slots.inWaitingList ?? null,
         activity: {
             id: brpClass.groupActivityProduct.id,
             name: brpClass.groupActivityProduct.name.replace(/\s\(\d+\)$/, ""),
