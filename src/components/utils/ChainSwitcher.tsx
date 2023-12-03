@@ -2,33 +2,33 @@ import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, Typograph
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-import IntegrationLogo from "@/components/utils/IntegrationLogo";
-import IntegrationLogoSpinner from "@/components/utils/IntegrationLogoSpinner";
-import activeIntegrations, { IntegrationIdentifier } from "@/lib/activeIntegrations";
-import { IntegrationProfile } from "@/types/integration";
+import ChainLogo from "@/components/utils/ChainLogo";
+import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import activeChains, { ChainIdentifier } from "@/lib/activeChains";
+import { ChainProfile } from "@/types/chain";
 
-function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationProfile: IntegrationProfile }) {
+function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProfile }) {
     const theme = useTheme();
 
     const [open, setOpen] = useState(false);
-    const [integrationLoading, setIntegrationLoading] = useState<IntegrationIdentifier | null>(null);
+    const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
 
     useEffect(() => {
         setOpen(false);
-        setTimeout(() => setIntegrationLoading(null), 250);
-    }, [currentIntegrationProfile]);
+        setTimeout(() => setChainLoading(null), 250);
+    }, [currentChainProfile]);
 
     return (
         <>
             <Button onClick={() => setOpen(true)} sx={{ paddingX: 0 }}>
                 <Box sx={{ height: 25, width: 75 }}>
-                    <IntegrationLogo integrationProfile={currentIntegrationProfile} />
+                    <ChainLogo chainProfile={currentChainProfile} />
                 </Box>
             </Button>
             <Drawer
                 anchor={"left"}
                 open={open}
-                onClose={() => integrationLoading == null && setOpen(false)}
+                onClose={() => chainLoading == null && setOpen(false)}
                 PaperProps={{ sx: { width: "75%", maxWidth: "18rem", background: theme.palette.background.default } }}
             >
                 <List>
@@ -36,25 +36,22 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                         Velg treningssenter
                     </Typography>
                     <Divider />
-                    {Object.values(activeIntegrations).map((integration) => {
-                        const isLoading = integrationLoading !== null;
-                        const isCurrentLoadingIntegration = integration.profile.identifier === integrationLoading;
-                        const isCurrentIntegration =
-                            integration.profile.identifier === currentIntegrationProfile.identifier;
+                    {Object.values(activeChains).map((chain) => {
+                        const isLoading = chainLoading !== null;
+                        const isCurrentLoadingChain = chain.profile.identifier === chainLoading;
+                        const isCurrentChain = chain.profile.identifier === currentChainProfile.identifier;
                         return (
                             <ListItem
-                                value={integration.profile.identifier}
-                                key={integration.profile.identifier}
+                                value={chain.profile.identifier}
+                                key={chain.profile.identifier}
                                 sx={{ margin: 0, padding: 0 }}
                                 onClick={() =>
                                     !isLoading &&
-                                    (isCurrentIntegration
-                                        ? setOpen(false)
-                                        : setIntegrationLoading(integration.profile.identifier))
+                                    (isCurrentChain ? setOpen(false) : setChainLoading(chain.profile.identifier))
                                 }
                             >
                                 <Link
-                                    href={`/${integration.profile.identifier}`}
+                                    href={`/${chain.profile.identifier}`}
                                     style={{ width: "100%" }}
                                     passHref
                                     legacyBehavior
@@ -66,7 +63,7 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                                             padding: "1.75rem",
                                             height: "6rem",
                                             width: "100%",
-                                            ...(isLoading || isCurrentIntegration
+                                            ...(isLoading || isCurrentChain
                                                 ? {
                                                       pointerEvents: "none",
                                                       touchEvents: "none",
@@ -74,14 +71,14 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
                                                 : {}),
                                         }}
                                         disableTouchRipple
-                                        disabled={isLoading && !isCurrentLoadingIntegration}
-                                        selected={isCurrentLoadingIntegration || (!isLoading && isCurrentIntegration)}
+                                        disabled={isLoading && !isCurrentLoadingChain}
+                                        selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}
                                         component={"a"}
                                     >
-                                        {!isLoading || integrationLoading !== integration.profile.identifier ? (
-                                            <IntegrationLogo integrationProfile={integration.profile} />
+                                        {!isLoading || chainLoading !== chain.profile.identifier ? (
+                                            <ChainLogo chainProfile={chain.profile} />
                                         ) : (
-                                            <IntegrationLogoSpinner integrationProfile={integration.profile} />
+                                            <ChainLogoSpinner chainProfile={chain.profile} />
                                         )}
                                     </ListItemButton>
                                 </Link>
@@ -94,4 +91,4 @@ function SelectIntegration({ currentIntegrationProfile }: { currentIntegrationPr
     );
 }
 
-export default SelectIntegration;
+export default ChainSwitcher;

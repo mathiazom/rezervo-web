@@ -1,9 +1,9 @@
 import { DateTime } from "luxon";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 
-export type IntegrationProfile = {
-    identifier: IntegrationIdentifier;
+export type ChainProfile = {
+    identifier: ChainIdentifier;
     name: string;
     images: {
         light: {
@@ -23,13 +23,18 @@ export type RezervoProvider<T> = {
     weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
 };
 
-export type RezervoIntegration<T> = {
-    profile: IntegrationProfile;
-    businessUnits: RezervoBusinessUnit[];
+export type RezervoChain<T> = {
+    profile: ChainProfile;
+    branches: RezervoBranch[];
     provider: RezervoProvider<T>;
 };
 
-export type RezervoBusinessUnit = {
+export type RezervoBranch = {
+    name: string;
+    locations: RezervoLocation[];
+};
+
+export type RezervoLocation = {
     name: string;
 };
 
@@ -72,6 +77,6 @@ export type RezervoActivity = {
     image: string | null;
 };
 
-export type IntegrationPageParams = {
-    integration: IntegrationIdentifier;
+export type ChainPageParams = {
+    chain: ChainIdentifier;
 };

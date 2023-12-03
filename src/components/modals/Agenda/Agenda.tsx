@@ -4,8 +4,8 @@ import React from "react";
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
+import { RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
-import { RezervoClass } from "@/types/integration";
 
 export default function Agenda({
     agendaClasses,

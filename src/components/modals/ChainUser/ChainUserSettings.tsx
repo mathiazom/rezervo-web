@@ -5,29 +5,29 @@ import { Box, Button, DialogActions, DialogContent, DialogTitle } from "@mui/mat
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
-import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
-import { IntegrationUserPayload } from "@/types/config";
+import { ChainIdentifier } from "@/lib/activeChains";
+import { useChainUser } from "@/lib/hooks/useChainUser";
+import { ChainUserPayload } from "@/types/config";
 
-export default function IntegrationUserSettings({
-    integration,
+export default function ChainUserSettings({
+    chain,
     submit,
     isSubmitting,
     onClose,
 }: {
-    integration: IntegrationIdentifier;
-    submit: (payload: IntegrationUserPayload) => void;
+    chain: ChainIdentifier;
+    submit: (payload: ChainUserPayload) => void;
     isSubmitting: boolean;
     onClose: () => void;
 }) {
-    const { integrationUser, integrationUserMissing } = useIntegrationUser(integration);
+    const { chainUser, chainUserMissing } = useChainUser(chain);
 
-    const [username, setUsername] = useState(integrationUser?.username ?? "");
+    const [username, setUsername] = useState(chainUser?.username ?? "");
     const [password, setPassword] = useState("");
 
     return (
         <>
-            <DialogTitle>Konfigurer {integration}-bruker</DialogTitle>
+            <DialogTitle>Konfigurer {chain}-bruker</DialogTitle>
             <DialogContent>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
@@ -36,7 +36,7 @@ export default function IntegrationUserSettings({
                             sx={{ width: "100%" }}
                             value={username}
                             label={"Brukernavn"}
-                            defaultValue={integrationUser?.username ?? ""}
+                            defaultValue={chainUser?.username ?? ""}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setUsername(event.target.value);
                             }}
@@ -49,7 +49,7 @@ export default function IntegrationUserSettings({
                             label={"Passord"}
                             value={password}
                             type={"password"}
-                            {...(!integrationUserMissing
+                            {...(!chainUserMissing
                                 ? {
                                       placeholder: "••••••••••••••••••••••••",
                                       InputLabelProps: { shrink: true },

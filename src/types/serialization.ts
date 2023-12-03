@@ -1,5 +1,5 @@
+import { ChainProfile, RezervoClassBase } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
-import { IntegrationProfile, RezervoClassBase } from "@/types/integration";
 import { ClassPopularityIndex } from "@/types/popularity";
 
 export type RezervoScheduleDTO = { [weekOffset: number]: RezervoWeekScheduleDTO };
@@ -13,8 +13,8 @@ export type RezervoClassDTO = RezervoClassBase & {
     endTime: string;
 };
 
-export type IntegrationPageProps = {
-    integrationProfile: IntegrationProfile;
+export type ChainPageProps = {
+    chainProfile: ChainProfile;
     initialSchedule: RezervoScheduleDTO;
     classPopularityIndex: ClassPopularityIndex;
     error?: RezervoError;

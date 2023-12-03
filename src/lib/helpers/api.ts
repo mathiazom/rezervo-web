@@ -3,17 +3,15 @@ import { constants } from "http2";
 import { AppRouteHandlerFnContext, getAccessToken } from "@auth0/nextjs-auth0";
 import { NextRequest, NextResponse } from "next/server";
 
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 
-export function integrationIdentifierFromContext(context: AppRouteHandlerFnContext): IntegrationIdentifier | null {
-    const integrationArg = context.params["integration"];
-    const integrationIdentifier = (
-        typeof integrationArg !== "string" ? integrationArg?.pop() : integrationArg
-    ) as IntegrationIdentifier;
-    if (!Object.values(IntegrationIdentifier).includes(integrationIdentifier)) {
+export function chainIdentifierFromContext(context: AppRouteHandlerFnContext): ChainIdentifier | null {
+    const chainArg = context.params["chain"];
+    const chainIdentifier = (typeof chainArg !== "string" ? chainArg?.pop() : chainArg) as ChainIdentifier;
+    if (!Object.values(ChainIdentifier).includes(chainIdentifier)) {
         return null;
     }
-    return integrationIdentifier;
+    return chainIdentifier;
 }
 
 export async function tryUseRefreshToken(req: NextRequest): Promise<string | undefined> {

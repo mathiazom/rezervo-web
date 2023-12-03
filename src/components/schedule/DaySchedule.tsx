@@ -2,15 +2,15 @@ import { Box, Chip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { getCapitalizedWeekday, isDayPassed, isToday } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { RezervoClass, RezervoDaySchedule } from "@/types/chain";
 import { AllConfigsIndex } from "@/types/config";
-import { RezervoClass, RezervoDaySchedule } from "@/types/integration";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({
-    integration,
+    chain,
     daySchedule,
     classPopularityIndex,
     selectable,
@@ -19,7 +19,7 @@ function DaySchedule({
     onSelectedChanged,
     onInfo,
 }: {
-    integration: IntegrationIdentifier;
+    chain: ChainIdentifier;
     daySchedule: RezervoDaySchedule;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
@@ -58,7 +58,7 @@ function DaySchedule({
                 daySchedule.classes.map((_class) => (
                     <Box key={_class.id} mb={1}>
                         <ClassCard
-                            integration={integration}
+                            chain={chain}
                             _class={_class}
                             popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
                             configUsers={allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : []}

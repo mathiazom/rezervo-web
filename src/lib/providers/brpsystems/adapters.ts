@@ -1,7 +1,7 @@
 import determineActivityCategory from "@/lib/helpers/activityCategorization";
 import { LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { DetailedBrpClass, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
-import { RezervoClass, RezervoWeekSchedule } from "@/types/integration";
+import { RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 
 function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
     const category = determineActivityCategory(brpClass.name);

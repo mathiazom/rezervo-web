@@ -4,7 +4,7 @@ import { DetailedBrpWeekSchedule, BrpSubdomain } from "@/lib/providers/brpsystem
 import { iBookingToRezervoWeekSchedule } from "@/lib/providers/ibooking/adapters";
 import { fetchIBookingWeekSchedule } from "@/lib/providers/ibooking/fetchers";
 import { IBookingDomain, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
-import { RezervoProvider } from "@/types/integration";
+import { RezervoProvider } from "@/types/chain";
 
 export enum ProviderIdentifier {
     ibooking = "ibooking",

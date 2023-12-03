@@ -6,17 +6,15 @@ import {
     respondUnauthorized,
     respondNotFound,
     doOperation,
-    integrationIdentifierFromContext,
+    chainIdentifierFromContext,
 } from "@/lib/helpers/api";
 
 export const GET = withApiAuthRequired(async (req, ctx) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
 
-    const integrationIdentifier = integrationIdentifierFromContext(ctx as AppRouteHandlerFnContext);
-    if (integrationIdentifier === null) return respondNotFound();
+    const chainIdentifier = chainIdentifierFromContext(ctx as AppRouteHandlerFnContext);
+    if (chainIdentifier === null) return respondNotFound();
 
-    return await doOperation(() =>
-        get(`${process.env["CONFIG_HOST"]}/${integrationIdentifier}/all-configs`, accessToken),
-    );
+    return await doOperation(() => get(`${process.env["CONFIG_HOST"]}/${chainIdentifier}/all-configs`, accessToken));
 });

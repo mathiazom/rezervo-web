@@ -1,6 +1,6 @@
 import { DateTime, Info, Settings } from "luxon";
 
-import { RezervoClass } from "@/types/integration";
+import { RezervoClass } from "@/types/chain";
 
 export const calculateMondayOffset = () => LocalizedDateTime.now().weekday - 1;
 

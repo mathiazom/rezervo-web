@@ -2,20 +2,20 @@ import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import ClassInfo from "@/components/modals/ClassInfo/ClassInfo";
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { RezervoClass } from "@/types/chain";
 import { AllConfigsIndex } from "@/types/config";
-import { RezervoClass } from "@/types/integration";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 const ClassInfoModal = ({
-    integration,
+    chain,
     classInfoClass,
     setClassInfoClass,
     classPopularityIndex,
     allConfigsIndex,
 }: {
-    integration: IntegrationIdentifier;
+    chain: ChainIdentifier;
     classInfoClass: RezervoClass | null;
     setClassInfoClass: Dispatch<SetStateAction<RezervoClass | null>>;
     classPopularityIndex: ClassPopularityIndex;
@@ -26,7 +26,7 @@ const ClassInfoModal = ({
             <>
                 {classInfoClass && (
                     <ClassInfo
-                        integration={integration}
+                        chain={chain}
                         _class={classInfoClass}
                         classPopularity={
                             classPopularityIndex[classRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown

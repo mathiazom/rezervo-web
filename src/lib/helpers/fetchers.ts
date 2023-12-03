@@ -1,28 +1,28 @@
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { serializeSchedule } from "@/lib/serialization/serializers";
+import { RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
-import { RezervoIntegration, RezervoSchedule, RezervoWeekSchedule } from "@/types/integration";
-import { IntegrationPageProps } from "@/types/serialization";
+import { ChainPageProps } from "@/types/serialization";
 
-export async function fetchIntegrationPageStaticProps<T>(integration: RezervoIntegration<T>): Promise<{
+export async function fetchChainPageStaticProps<T>(chain: RezervoChain<T>): Promise<{
     revalidate: number;
-    props: IntegrationPageProps;
+    props: ChainPageProps;
 }> {
     let initialSchedule;
     try {
         initialSchedule = await fetchRezervoSchedule(
             [-1, 0, 1, 2, 3],
-            integration.provider.weekScheduleFetcher,
-            integration.provider.weekScheduleAdapter,
+            chain.provider.weekScheduleFetcher,
+            chain.provider.weekScheduleAdapter,
         );
     } catch (e) {
         console.error(e);
         return {
             props: {
-                integrationProfile: integration.profile,
+                chainProfile: chain.profile,
                 initialSchedule: { 0: [] },
                 classPopularityIndex: {},
-                error: RezervoError.INTEGRATION_SCHEDULE_UNAVAILABLE,
+                error: RezervoError.CHAIN_SCHEDULE_UNAVAILABLE,
             },
             revalidate: 1,
         };
@@ -33,7 +33,7 @@ export async function fetchIntegrationPageStaticProps<T>(integration: RezervoInt
 
     return {
         props: {
-            integrationProfile: integration.profile,
+            chainProfile: chain.profile,
             initialSchedule: serializeSchedule(initialSchedule),
             classPopularityIndex,
         },

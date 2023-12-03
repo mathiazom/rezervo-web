@@ -3,22 +3,22 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import Settings from "@/components/modals/Settings/Settings";
 import { useFeatures } from "@/lib/hooks/useFeatures";
-import { IntegrationProfile } from "@/types/integration";
+import { ChainProfile } from "@/types/chain";
 
 const SettingsModal = ({
     open,
     setOpen,
-    integrationProfile,
+    chainProfile,
     bookingActive,
     setBookingActive,
-    openIntegrationUserSettings,
+    openChainUserSettings,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    integrationProfile: IntegrationProfile;
+    chainProfile: ChainProfile;
     bookingActive: boolean;
     setBookingActive: Dispatch<SetStateAction<boolean>>;
-    openIntegrationUserSettings: () => void;
+    openChainUserSettings: () => void;
 }) => {
     const { features } = useFeatures();
 
@@ -26,11 +26,11 @@ const SettingsModal = ({
         <Modal open={open} onClose={() => setOpen(false)}>
             <>
                 <Settings
-                    integrationProfile={integrationProfile}
+                    chainProfile={chainProfile}
                     bookingActive={bookingActive}
                     features={features}
                     setBookingActive={setBookingActive}
-                    openIntegrationUserSettings={openIntegrationUserSettings}
+                    openChainUserSettings={openChainUserSettings}
                 />
             </>
         </Modal>

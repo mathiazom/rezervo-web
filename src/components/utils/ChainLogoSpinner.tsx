@@ -1,9 +1,9 @@
 import { Avatar } from "@mui/material";
 import React from "react";
 
-import { IntegrationProfile } from "@/types/integration";
+import { ChainProfile } from "@/types/chain";
 
-export default function IntegrationLogoSpinner({ integrationProfile }: { integrationProfile: IntegrationProfile }) {
+export default function ChainLogoSpinner({ chainProfile }: { chainProfile: ChainProfile }) {
     return (
         <Avatar
             sx={{
@@ -19,9 +19,9 @@ export default function IntegrationLogoSpinner({ integrationProfile }: { integra
                     },
                 },
             }}
-            src={integrationProfile.images.common.smallLogo}
+            src={chainProfile.images.common.smallLogo}
         >
-            {integrationProfile.identifier}
+            {chainProfile.identifier}
         </Avatar>
     );
 }

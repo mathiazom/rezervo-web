@@ -2,9 +2,9 @@ import { Box, useTheme } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import { IntegrationProfile } from "@/types/integration";
+import { ChainProfile } from "@/types/chain";
 
-function IntegrationLogo({ integrationProfile }: { integrationProfile: IntegrationProfile }) {
+function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
     const [themeMode, setThemeMode] = useState<"dark" | "light" | null>(null);
     const theme = useTheme();
 
@@ -17,11 +17,9 @@ function IntegrationLogo({ integrationProfile }: { integrationProfile: Integrati
             {themeMode && (
                 <Image
                     src={
-                        themeMode === "dark"
-                            ? integrationProfile.images.dark.largeLogo
-                            : integrationProfile.images.light.largeLogo
+                        themeMode === "dark" ? chainProfile.images.dark.largeLogo : chainProfile.images.light.largeLogo
                     }
-                    alt={`${integrationProfile.identifier}-rezervo`}
+                    alt={`${chainProfile.identifier}-rezervo`}
                     fill={true}
                     style={{
                         objectFit: "contain",
@@ -33,4 +31,4 @@ function IntegrationLogo({ integrationProfile }: { integrationProfile: Integrati
     );
 }
 
-export default IntegrationLogo;
+export default ChainLogo;

@@ -49,6 +49,6 @@ yarn check
 yarn fix
 ```
 
-#### 🔌 Support new integration
+#### 🔌 Support new chain
 
-Add your own integration by adding it to [`activeIntegrations`](src/lib/activeIntegrations.ts).
+Add your own chain by adding it to [`activeChains`](src/lib/activeChains.ts).

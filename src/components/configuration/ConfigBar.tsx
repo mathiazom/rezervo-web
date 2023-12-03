@@ -14,18 +14,18 @@ import IconButton from "@mui/material/IconButton";
 import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
-import { IntegrationIdentifier } from "@/lib/activeIntegrations";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { zeroIndexedWeekday } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { useIntegrationUser } from "@/lib/hooks/useIntegrationUser";
+import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { ClassConfig, IntegrationConfig } from "@/types/config";
-import { RezervoClass } from "@/types/integration";
+import { RezervoClass } from "@/types/chain";
+import { ClassConfig, ChainConfig } from "@/types/config";
 
 function ConfigBar({
-    integration,
+    chain,
     classes,
     selectedClassIds,
     originalSelectedClassIds,
@@ -35,27 +35,27 @@ function ConfigBar({
     isConfigError,
     onUndoSelectionChanges,
     onSettingsOpen,
-    onIntegrationUserSettingsOpen,
+    onChainUserSettingsOpen,
     onAgendaOpen,
 }: {
-    integration: IntegrationIdentifier;
+    chain: ChainIdentifier;
     classes: RezervoClass[];
     selectedClassIds: string[] | null;
     originalSelectedClassIds: string[] | null;
-    userConfig: IntegrationConfig | undefined;
+    userConfig: ChainConfig | undefined;
     userConfigActive: boolean;
     isLoadingConfig: boolean;
     isConfigError: boolean;
     onUndoSelectionChanges: () => void;
     onSettingsOpen: () => void;
-    onIntegrationUserSettingsOpen: () => void;
+    onChainUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
 }) {
     const theme = useTheme();
 
     const { user, isLoading } = useUser();
-    const { integrationUserMissing } = useIntegrationUser(integration);
-    const { userConfigMissing, putUserConfig } = useUserConfig(integration);
+    const { chainUserMissing } = useChainUser(chain);
+    const { userConfigMissing, putUserConfig } = useUserConfig(chain);
 
     const selectionChanged = useMemo(
         () =>
@@ -118,10 +118,10 @@ function ConfigBar({
                         gap: { xs: 1, md: 1.5 },
                     }}
                 >
-                    {integrationUserMissing ? (
+                    {chainUserMissing ? (
                         <Box>
-                            <Tooltip title={`Konfigurer ${integration}-bruker`}>
-                                <IconButton onClick={() => onIntegrationUserSettingsOpen()}>
+                            <Tooltip title={`Konfigurer ${chain}-bruker`}>
+                                <IconButton onClick={() => onChainUserSettingsOpen()}>
                                     <RocketLaunchRounded />
                                 </IconButton>
                             </Tooltip>
