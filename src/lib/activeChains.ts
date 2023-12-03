@@ -88,10 +88,10 @@ const activeChains: {
             name: "3T",
             images: {
                 light: {
-                    largeLogo: `/chains/3t/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/3t/light/logo_large${isSantaTime ? "_santa" : ""}.png`,
                 },
                 dark: {
-                    largeLogo: `/chains/3t/dark/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
+                    largeLogo: `/chains/3t/dark/logo_large${isSantaTime ? "_santa" : ""}.png`,
                 },
                 common: {
                     smallLogo: `/chains/3t/common/logo_small${isSantaTime ? "_santa" : ""}.png`,
