@@ -32,7 +32,7 @@ function Chain({
     chainProfile: ChainProfile;
     error: RezervoError | undefined;
 }) {
-    const { userConfig, userConfigError, userConfigLoading, allConfigsIndex } = useUserConfig(chainProfile.identifier);
+    const { userConfig, userConfigError, userConfigLoading } = useUserConfig(chainProfile.identifier);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -126,7 +126,6 @@ function Chain({
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
-                        allConfigsIndex={allConfigsIndex ?? null}
                         onSelectedChanged={onSelectedChanged}
                         onInfo={setClassInfoClass}
                         todayRef={scrollToTodayRef}
@@ -140,7 +139,6 @@ function Chain({
                 classInfoClass={classInfoClass}
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
-                allConfigsIndex={allConfigsIndex}
             />
             <AgendaModal
                 open={isAgendaOpen}

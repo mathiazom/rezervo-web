@@ -6,7 +6,6 @@ import DaySchedule from "@/components/schedule/DaySchedule";
 import { ChainIdentifier } from "@/lib/activeChains";
 import { isToday } from "@/lib/helpers/date";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/chain";
-import { AllConfigsIndex } from "@/types/config";
 import { ClassPopularityIndex } from "@/types/popularity";
 
 function WeekSchedule({
@@ -15,7 +14,6 @@ function WeekSchedule({
     classPopularityIndex,
     selectable,
     selectedClassIds,
-    allConfigsIndex,
     todayRef,
     onSelectedChanged,
     onInfo,
@@ -25,7 +23,6 @@ function WeekSchedule({
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
-    allConfigsIndex: AllConfigsIndex | null;
     todayRef: React.MutableRefObject<HTMLDivElement | null>;
     onSelectedChanged: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
@@ -76,7 +73,6 @@ function WeekSchedule({
                                     classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}
                                     selectedClassIds={selectedClassIds}
-                                    allConfigsIndex={allConfigsIndex}
                                     onSelectedChanged={onSelectedChanged}
                                     onInfo={onInfo}
                                 />

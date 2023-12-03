@@ -15,12 +15,12 @@ import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
+import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { RezervoClass } from "@/types/chain";
-import { UserNameWithIsSelf } from "@/types/config";
 import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 
@@ -28,15 +28,14 @@ export default function ClassInfo({
     chain,
     _class,
     classPopularity,
-    configUsers,
 }: {
     chain: ChainIdentifier;
     _class: RezervoClass;
     classPopularity: ClassPopularity;
-    configUsers: UserNameWithIsSelf[];
 }) {
     const { user } = useUser();
-    const { userConfig, userConfigLoading, userConfigError } = useUserConfig(chain);
+    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
+    const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
     const { userSessionsIndex, mutateSessionsIndex } = useUserSessions(chain);
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>

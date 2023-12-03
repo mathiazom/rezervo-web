@@ -6,7 +6,6 @@ import { ChainIdentifier } from "@/lib/activeChains";
 import { getCapitalizedWeekday, isDayPassed, isToday } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { RezervoClass, RezervoDaySchedule } from "@/types/chain";
-import { AllConfigsIndex } from "@/types/config";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({
@@ -15,7 +14,6 @@ function DaySchedule({
     classPopularityIndex,
     selectable,
     selectedClassIds,
-    allConfigsIndex,
     onSelectedChanged,
     onInfo,
 }: {
@@ -24,7 +22,6 @@ function DaySchedule({
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
-    allConfigsIndex: AllConfigsIndex | null;
     onSelectedChanged: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {
@@ -61,7 +58,6 @@ function DaySchedule({
                             chain={chain}
                             _class={_class}
                             popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
-                            configUsers={allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : []}
                             selectable={selectable}
                             selected={selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))}
                             onSelectedChanged={(s) => onSelectedChanged(classRecurrentId(_class), s)}
