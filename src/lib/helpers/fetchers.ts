@@ -1,6 +1,12 @@
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { serializeSchedule } from "@/lib/serialization/serializers";
-import { RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
+import {
+    RezervoChain,
+    RezervoProviderAdapter,
+    RezervoProviderFetcher,
+    RezervoSchedule,
+    RezervoWeekSchedule,
+} from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { ChainPageProps } from "@/types/serialization";
 
@@ -43,10 +49,10 @@ export async function fetchChainPageStaticProps<T>(chain: RezervoChain<T>): Prom
 
 export async function fetchRezervoWeekSchedule<T>(
     weekOffset: number,
-    weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
+    weekScheduleFetcher: RezervoProviderFetcher<T>,
+    weekScheduleAdapter: RezervoProviderAdapter<T>,
 ): Promise<RezervoWeekSchedule> {
-    const weekSchedule = weekScheduleAdapter(await weekScheduleFetcher(weekOffset));
+    const weekSchedule = weekScheduleAdapter(await weekScheduleFetcher(weekOffset), weekOffset);
     if (
         weekSchedule.length !== 7 ||
         weekSchedule.some((daySchedule) => daySchedule === null || daySchedule === undefined)
@@ -58,8 +64,8 @@ export async function fetchRezervoWeekSchedule<T>(
 
 export async function fetchRezervoSchedule<T>(
     weekOffsets: number[],
-    weekScheduleFetcher: (weekOffset: number) => Promise<T>,
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule,
+    weekScheduleFetcher: RezervoProviderFetcher<T>,
+    weekScheduleAdapter: RezervoProviderAdapter<T>,
 ): Promise<RezervoSchedule> {
     const schedules = await Promise.all(
         weekOffsets.map(

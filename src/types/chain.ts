@@ -18,9 +18,13 @@ export type ChainProfile = {
     };
 };
 
+export type RezervoProviderFetcher<T> = (weekOffset: number) => Promise<T>;
+
+export type RezervoProviderAdapter<T> = (weekSchedule: T, weekOffset: number) => RezervoWeekSchedule;
+
 export type RezervoProvider<T> = {
-    weekScheduleFetcher: (weekNumber: number) => Promise<T>;
-    weekScheduleAdapter: (weekSchedule: T) => RezervoWeekSchedule;
+    weekScheduleFetcher: RezervoProviderFetcher<T>;
+    weekScheduleAdapter: RezervoProviderAdapter<T>;
 };
 
 export type RezervoChain<T> = {

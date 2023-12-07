@@ -24,6 +24,6 @@ export const activeProviders: {
     }),
     [ProviderIdentifier.brpsystems]: (subdomain, businessUnit) => ({
         weekScheduleFetcher: (weekOffset) => fetchBrpWeekSchedule(weekOffset, subdomain, businessUnit),
-        weekScheduleAdapter: (weekSchedule) => brpToRezervoWeekSchedule(weekSchedule),
+        weekScheduleAdapter: (weekSchedule, weekOffset) => brpToRezervoWeekSchedule(weekSchedule, weekOffset),
     }),
 };

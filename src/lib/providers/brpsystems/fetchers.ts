@@ -1,13 +1,13 @@
 import { DateTime } from "luxon";
 
-import { calculateMondayOffset, LocalizedDateTime } from "@/lib/helpers/date";
+import { firstDateOfWeekByOffset } from "@/lib/helpers/date";
 import {
-    DetailedBrpClass,
-    DetailedBrpWeekSchedule,
     BrpActivityDetail,
     BrpClass,
-    BrpWeekSchedule,
     BrpSubdomain,
+    BrpWeekSchedule,
+    DetailedBrpClass,
+    DetailedBrpWeekSchedule,
 } from "@/lib/providers/brpsystems/types";
 
 function brpWeekScheduleUrl(fromDate: DateTime, subdomain: BrpSubdomain, businessUnit: number) {
@@ -73,9 +73,7 @@ export async function fetchBrpWeekSchedule(
     subdomain: BrpSubdomain,
     businessUnit: number,
 ): Promise<DetailedBrpWeekSchedule> {
-    const startDate = LocalizedDateTime.now()
-        .startOf("day")
-        .plus({ day: weekOffset * 7 - calculateMondayOffset() });
+    const startDate = firstDateOfWeekByOffset(weekOffset);
     const response = await fetch(brpWeekScheduleUrl(startDate, subdomain, businessUnit));
     if (!response.ok) {
         throw new Error(`Failed to fetch schedule with startDate ${startDate}, received status ${response.status}`);

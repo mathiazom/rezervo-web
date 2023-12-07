@@ -1,7 +1,7 @@
 import determineActivityCategory from "@/lib/helpers/activityCategorization";
-import { LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { firstDateOfWeekByOffset, LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { DetailedBrpClass, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
-import { RezervoClass, RezervoWeekSchedule } from "@/types/chain";
+import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
 
 function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
     const category = determineActivityCategory(brpClass.name);
@@ -33,15 +33,18 @@ function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
     };
 }
 
-export function brpToRezervoWeekSchedule(brpWeekSchedule: DetailedBrpWeekSchedule): RezervoWeekSchedule {
-    const schedule: RezervoWeekSchedule = [];
+export function brpToRezervoWeekSchedule(
+    brpWeekSchedule: DetailedBrpWeekSchedule,
+    weekOffset: number,
+): RezervoWeekSchedule {
+    const firstDateOfWeek = firstDateOfWeekByOffset(weekOffset);
+    const weekMap: { [weekday: number]: RezervoDaySchedule } = {};
+    for (let i = 0; i < 7; i++) {
+        weekMap[i] = { date: firstDateOfWeek.plus({ day: i }), classes: [] };
+    }
     for (const brpClass of brpWeekSchedule) {
         const date = LocalizedDateTime.fromISO(brpClass.duration.start);
-        const weekday = zeroIndexedWeekday(date.weekday);
-        if (schedule[weekday] === undefined) {
-            schedule[weekday] = { date, classes: [] };
-        }
-        schedule[weekday]?.classes.push(brpToRezervoClass(brpClass));
+        weekMap[zeroIndexedWeekday(date.weekday)]?.classes.push(brpToRezervoClass(brpClass));
     }
-    return schedule;
+    return Object.values(weekMap) as RezervoWeekSchedule;
 }

@@ -38,6 +38,12 @@ export function isDayPassed(date: DateTime) {
     return date.endOf("day") > LocalizedDateTime.now();
 }
 
+export function firstDateOfWeekByOffset(weekOffset: number): DateTime {
+    return LocalizedDateTime.now()
+        .startOf("day")
+        .plus({ day: weekOffset * 7 - calculateMondayOffset() });
+}
+
 export const LocalizedDateTime: typeof DateTime = (() => {
     Settings.defaultLocale = "no";
     Settings.defaultZone = "Europe/Oslo";
