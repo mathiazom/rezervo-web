@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CancelRounded, Diversity3Rounded } from "@mui/icons-material";
+import { CancelRounded, Diversity3Rounded, EventAvailable, EventBusy, HourglassTop } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
@@ -345,6 +345,7 @@ export default function ClassInfo({
                 <>
                     {selfBooked || selfOnWaitlist ? (
                         <LoadingButton
+                            startIcon={<EventBusy />}
                             sx={{ mt: 2 }}
                             variant={"outlined"}
                             color={"error"}
@@ -356,6 +357,7 @@ export default function ClassInfo({
                         </LoadingButton>
                     ) : (
                         <LoadingButton
+                            startIcon={_class.availableSlots > 0 ? <EventAvailable /> : <HourglassTop />}
                             color={_class.availableSlots > 0 ? "primary" : "warning"}
                             sx={{ mt: 2 }}
                             variant={"outlined"}
