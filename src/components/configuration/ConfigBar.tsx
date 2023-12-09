@@ -1,10 +1,9 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
+import { EventRepeat, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
@@ -15,47 +14,42 @@ import React, { useMemo } from "react";
 
 import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
 import { ChainIdentifier } from "@/lib/activeChains";
-import { zeroIndexedWeekday } from "@/lib/helpers/date";
-import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { RezervoClass } from "@/types/chain";
-import { ClassConfig, ChainConfig } from "@/types/config";
+import { ChainConfig } from "@/types/config";
 
 function ConfigBar({
     chain,
-    classes,
     selectedClassIds,
     originalSelectedClassIds,
     userConfig,
-    userConfigActive,
     isLoadingConfig,
     isConfigError,
     onUndoSelectionChanges,
     onSettingsOpen,
     onChainUserSettingsOpen,
     onAgendaOpen,
+    onUpdateConfig,
 }: {
     chain: ChainIdentifier;
-    classes: RezervoClass[];
     selectedClassIds: string[] | null;
     originalSelectedClassIds: string[] | null;
     userConfig: ChainConfig | undefined;
-    userConfigActive: boolean;
     isLoadingConfig: boolean;
     isConfigError: boolean;
     onUndoSelectionChanges: () => void;
     onSettingsOpen: () => void;
     onChainUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
+    onUpdateConfig: () => Promise<ChainConfig> | undefined;
 }) {
     const theme = useTheme();
 
     const { user, isLoading } = useUser();
     const { chainUserMissing } = useChainUser(chain);
-    const { userConfigMissing, putUserConfig } = useUserConfig(chain);
+    const { userConfigMissing } = useUserConfig(chain);
 
     const selectionChanged = useMemo(
         () =>
@@ -64,45 +58,6 @@ function ConfigBar({
             !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
         [originalSelectedClassIds, selectedClassIds],
     );
-
-    // Pre-generate all class config strings
-    const allClassesConfigMap = useMemo(() => {
-        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
-            const { hour, minute, weekday } = c.startTime;
-            return {
-                ...o,
-                [classRecurrentId(c)]: {
-                    activity: c.activity.id,
-                    display_name: c.activity.name,
-                    weekday: zeroIndexedWeekday(weekday),
-                    studio: c.location.id,
-                    time: { hour, minute },
-                },
-            };
-        }, {});
-        // Locate any class configs from the user config that do not exist in the current schedule
-        const ghostClassesConfigs =
-            userConfig?.classes
-                ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
-                .reduce<{ [id: string]: ClassConfig }>(
-                    (o, c) => ({
-                        ...o,
-                        [classConfigRecurrentId(c)]: c,
-                    }),
-                    {},
-                ) ?? {};
-        return { ...classesConfigMap, ...ghostClassesConfigs };
-    }, [classes, userConfig?.classes]);
-
-    function onUpdateConfig() {
-        if (selectedClassIds == null) {
-            return;
-        }
-        return putUserConfig({
-            active: userConfigActive,
-            classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
-        });
-    }
 
     const agendaEnabled = userConfig?.classes != undefined && userConfig.classes.length > 0;
 
@@ -186,9 +141,9 @@ function ConfigBar({
                                     alignItems: "center",
                                 }}
                             >
-                                <Tooltip title={"Agenda"}>
+                                <Tooltip title={"Min timeplan"}>
                                     <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
-                                        <FormatListBulletedRoundedIcon />
+                                        <EventRepeat />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title={"Innstillinger"}>

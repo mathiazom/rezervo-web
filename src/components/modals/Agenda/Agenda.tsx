@@ -48,7 +48,7 @@ export default function Agenda({
                 }}
             >
                 <Typography variant="h6" component="h2">
-                    Agenda
+                    Min timeplan
                 </Typography>
             </Box>
             <Box pt={2}>

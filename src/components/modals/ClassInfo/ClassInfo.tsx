@@ -1,11 +1,20 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CancelRounded, Diversity3Rounded, EventAvailable, EventBusy, HourglassTop } from "@mui/icons-material";
+import {
+    CancelRounded,
+    Diversity3Rounded,
+    EventAvailable,
+    EventBusy,
+    EventRepeat,
+    HourglassTop,
+    Stop,
+} from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Alert, Box, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -15,7 +24,7 @@ import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
-import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
@@ -28,10 +37,12 @@ export default function ClassInfo({
     chain,
     _class,
     classPopularity,
+    updateConfigClass,
 }: {
     chain: ChainIdentifier;
     _class: RezervoClass;
     classPopularity: ClassPopularity;
+    updateConfigClass: (classId: string, selected: boolean) => void;
 }) {
     const { user } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
@@ -56,6 +67,8 @@ export default function ClassInfo({
     const usersPlanned = configUsers.filter(
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
+
+    const classInUserConfig = userConfig?.classes?.map(classConfigRecurrentId).includes(classRecurrentId(_class));
 
     const [bookingLoading, setBookingLoading] = useState(false);
 
@@ -346,7 +359,7 @@ export default function ClassInfo({
                     {selfBooked || selfOnWaitlist ? (
                         <LoadingButton
                             startIcon={<EventBusy />}
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 2, mr: 1 }}
                             variant={"outlined"}
                             color={"error"}
                             disabled={isInThePast || !_class.isBookable}
@@ -359,7 +372,7 @@ export default function ClassInfo({
                         <LoadingButton
                             startIcon={_class.availableSlots > 0 ? <EventAvailable /> : <HourglassTop />}
                             color={_class.availableSlots > 0 ? "primary" : "warning"}
-                            sx={{ mt: 2 }}
+                            sx={{ mt: 2, mr: 1 }}
                             variant={"outlined"}
                             disabled={isInThePast || !_class.isBookable}
                             onClick={() => book()}
@@ -368,9 +381,30 @@ export default function ClassInfo({
                             {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
                         </LoadingButton>
                     )}
+                    {classInUserConfig ? (
+                        <Button
+                            sx={{ mt: 2 }}
+                            variant={"outlined"}
+                            color={"error"}
+                            startIcon={<Stop />}
+                            onClick={() => updateConfigClass(classRecurrentId(_class), false)}
+                        >
+                            Fjern fra timeplan
+                        </Button>
+                    ) : (
+                        <Button
+                            sx={{ mt: 2 }}
+                            variant={"outlined"}
+                            startIcon={<EventRepeat />}
+                            onClick={() => updateConfigClass(classRecurrentId(_class), true)}
+                        >
+                            Legg til i timeplan
+                        </Button>
+                    )}
                     {!_class.isBookable && (
                         <Alert sx={{ mt: 1 }} severity="info">
                             Booking for denne timen har ikke åpnet enda
+                            {classInUserConfig && ", men den bli bli booket automatisk når bookingen åpner"}
                         </Alert>
                     )}
                 </>
