@@ -360,13 +360,14 @@ export default function ClassInfo({
                     </LoadingButton>
                 ) : (
                     <LoadingButton
+                        color={_class.availableSlots > 0 ? "primary" : "warning"}
                         sx={{ mt: 2 }}
                         variant={"outlined"}
                         disabled={isInThePast || !_class.isBookable}
                         onClick={() => book()}
                         loading={bookingLoading}
                     >
-                        Book nå
+                        {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
                     </LoadingButton>
                 ))}
             <ConfirmationDialog
