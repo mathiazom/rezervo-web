@@ -285,7 +285,7 @@ export default function Settings({
                                         userSelect: "none",
                                     }}
                                 >
-                                    Booking aktiv
+                                    Automatisk booking
                                 </Typography>
                                 <Box
                                     sx={{
