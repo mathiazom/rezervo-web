@@ -54,7 +54,7 @@ export default function MobileConfigUpdateBar({
                         </Fab>
                         <Fab color={"primary"} variant="extended" onClick={() => onUpdateConfig()}>
                             <CloudUploadIcon sx={{ mr: 1, color: "#fff" }} />
-                            <Typography color={"#fff"}>Oppdater</Typography>
+                            <Typography color={"#fff"}>Lagre timeplan</Typography>
                         </Fab>
                     </>
                 )}

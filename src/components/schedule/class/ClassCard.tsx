@@ -1,5 +1,4 @@
-import { CancelRounded } from "@mui/icons-material";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { CancelRounded, EventRepeat } from "@mui/icons-material";
 import { Avatar, AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useState } from "react";
@@ -50,7 +49,7 @@ const ClassCard = ({
         }
     }, [selected]);
 
-    function handleClick() {
+    function selectClass() {
         onSelectedChanged(!selected);
     }
 
@@ -105,8 +104,8 @@ const ClassCard = ({
                 )}
                 <CardContent
                     className={"unselectable"}
-                    onClick={selectable && !isInThePast && !_class.isCancelled ? handleClick : undefined}
-                    sx={{ paddingBottom: 1, zIndex: 1, position: "relative" }}
+                    onClick={onInfo}
+                    sx={{ paddingBottom: 1, zIndex: 1, position: "relative", cursor: "pointer" }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography
@@ -146,9 +145,19 @@ const ClassCard = ({
                 <CardActions sx={{ padding: 0, zIndex: 1, position: "relative" }} disableSpacing>
                     <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
                         <Box sx={{ display: "flex" }}>
-                            <IconButton onClick={onInfo} size={"small"} sx={{ padding: 0 }}>
-                                <InfoOutlinedIcon />
-                            </IconButton>
+                            {!isInThePast && selectable && !_class.isCancelled && (
+                                <Tooltip title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}>
+                                    <IconButton
+                                        onClick={selectClass}
+                                        size={"small"}
+                                        sx={{
+                                            padding: 0,
+                                        }}
+                                    >
+                                        <EventRepeat />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                             {/*{selected && (*/}
                             {/*    <IconButton onClick={onSettings} size={"small"}>*/}
                             {/*        <SettingsOutlinedIcon />*/}

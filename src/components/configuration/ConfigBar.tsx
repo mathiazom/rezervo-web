@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { EventRepeat, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
+import { CalendarMonth, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -127,7 +127,7 @@ function ConfigBar({
                                         startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
                                         onClick={() => onUpdateConfig()}
                                     >
-                                        <Typography color={"#fff"}>Oppdater</Typography>
+                                        <Typography color={"#fff"}>Lagre timeplan</Typography>
                                     </Button>
                                 </Box>
                             ) : (
@@ -143,7 +143,7 @@ function ConfigBar({
                             >
                                 <Tooltip title={"Min timeplan"}>
                                     <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
-                                        <EventRepeat />
+                                        <CalendarMonth />
                                     </IconButton>
                                 </Tooltip>
                                 <Tooltip title={"Innstillinger"}>
