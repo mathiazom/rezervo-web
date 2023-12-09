@@ -5,7 +5,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -341,35 +341,38 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.activity.description}</Typography>
-            {user &&
-                userConfig != undefined &&
-                !userConfigLoading &&
-                !userConfigError &&
-                !isInThePast &&
-                _class.isBookable &&
-                (selfBooked || selfOnWaitlist ? (
-                    <LoadingButton
-                        sx={{ mt: 2 }}
-                        variant={"outlined"}
-                        color={"error"}
-                        disabled={isInThePast || !_class.isBookable}
-                        onClick={() => setCancelBookingConfirmationOpen(true)}
-                        loading={bookingLoading}
-                    >
-                        Avbestill
-                    </LoadingButton>
-                ) : (
-                    <LoadingButton
-                        color={_class.availableSlots > 0 ? "primary" : "warning"}
-                        sx={{ mt: 2 }}
-                        variant={"outlined"}
-                        disabled={isInThePast || !_class.isBookable}
-                        onClick={() => book()}
-                        loading={bookingLoading}
-                    >
-                        {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
-                    </LoadingButton>
-                ))}
+            {user && userConfig != undefined && !userConfigLoading && !userConfigError && !isInThePast && (
+                <>
+                    {selfBooked || selfOnWaitlist ? (
+                        <LoadingButton
+                            sx={{ mt: 2 }}
+                            variant={"outlined"}
+                            color={"error"}
+                            disabled={isInThePast || !_class.isBookable}
+                            onClick={() => setCancelBookingConfirmationOpen(true)}
+                            loading={bookingLoading}
+                        >
+                            Avbestill
+                        </LoadingButton>
+                    ) : (
+                        <LoadingButton
+                            color={_class.availableSlots > 0 ? "primary" : "warning"}
+                            sx={{ mt: 2 }}
+                            variant={"outlined"}
+                            disabled={isInThePast || !_class.isBookable}
+                            onClick={() => book()}
+                            loading={bookingLoading}
+                        >
+                            {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
+                        </LoadingButton>
+                    )}
+                    {!_class.isBookable && (
+                        <Alert sx={{ mt: 1 }} severity="info">
+                            Booking for denne timen har ikke åpnet enda
+                        </Alert>
+                    )}
+                </>
+            )}
             <ConfirmationDialog
                 open={cancelBookingConfirmationOpen}
                 title={`Avbestille time?`}
