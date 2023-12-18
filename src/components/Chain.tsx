@@ -40,7 +40,6 @@ function Chain({
     const [userConfigActive, setUserConfigActive] = useState(true);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
-    const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isChainUserSettingsOpen, setIsChainUserSettingsOpen] = useState(false);
@@ -105,7 +104,6 @@ function Chain({
     useEffect(() => {
         const classIds = userConfig?.classes?.map(classConfigRecurrentId) ?? null;
         setSelectedClassIds(classIds);
-        setOriginalSelectedClassIds(classIds);
         setUserConfigActive(userConfig?.active ?? false);
     }, [userConfig]);
 
@@ -144,16 +142,12 @@ function Chain({
                         rightComponent={
                             <ConfigBar
                                 chain={chainProfile.identifier}
-                                selectedClassIds={selectedClassIds}
-                                originalSelectedClassIds={originalSelectedClassIds}
                                 userConfig={userConfig}
                                 isLoadingConfig={userConfig == null || userConfigLoading}
                                 isConfigError={userConfigError}
-                                onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onChainUserSettingsOpen={() => setIsChainUserSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
-                                onUpdateConfig={onUpdateConfig}
                             />
                         }
                     />
@@ -174,7 +168,10 @@ function Chain({
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
                         selectedClassIds={selectedClassIds}
-                        onSelectedChanged={onSelectedChanged}
+                        updateConfigClass={(classId, selected) => {
+                            onSelectedChanged(classId, selected);
+                            setShouldUpdateConfig(true);
+                        }}
                         onInfo={setClassInfoClass}
                         todayRef={scrollToTodayRef}
                     />
@@ -197,9 +194,11 @@ function Chain({
                 setOpen={setIsAgendaOpen}
                 userConfig={userConfig}
                 classes={classes}
-                selectedClassIds={selectedClassIds}
                 onInfo={setClassInfoClass}
-                onSelectedChanged={onSelectedChanged}
+                updateConfigClass={(classId, selected) => {
+                    onSelectedChanged(classId, selected);
+                    setShouldUpdateConfig(true);
+                }}
             />
             <SettingsModal
                 open={isSettingsOpen}

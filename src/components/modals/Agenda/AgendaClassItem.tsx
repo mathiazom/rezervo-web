@@ -1,6 +1,5 @@
 import { EventBusy } from "@mui/icons-material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React from "react";
@@ -12,29 +11,22 @@ import { ClassConfig } from "@/types/config";
 export type AgendaClass = {
     config: ClassConfig;
     _class: RezervoClass | undefined;
-    markedForDeletion: boolean;
 };
 
 export default function AgendaClassItem({
     agendaClass,
-    onSetToDelete,
+    onDelete,
     onInfo,
 }: {
     agendaClass: AgendaClass;
-    onSetToDelete: (toDelete: boolean) => void;
+    onDelete: (cc: ClassConfig) => void;
     onInfo: () => void;
 }) {
     const theme = useTheme();
 
     const classColorRGB = (dark: boolean) =>
         agendaClass._class
-            ? `rgb(${hexWithOpacityToRgb(
-                  agendaClass._class.activity.color,
-                  agendaClass.markedForDeletion ? 0.3 : 0.6,
-                  dark ? 0 : 255,
-              ).join(",")})`
-            : agendaClass.markedForDeletion
-            ? "#696969"
+            ? `rgb(${hexWithOpacityToRgb(agendaClass._class.activity.color, 0.6, dark ? 0 : 255).join(",")})`
             : "#111";
 
     const displayName = agendaClass._class?.activity.name ?? agendaClass.config.display_name;
@@ -77,10 +69,7 @@ export default function AgendaClassItem({
                             : undefined,
                 }}
             >
-                <CardContent
-                    className={"unselectable"}
-                    sx={{ paddingBottom: 2, opacity: agendaClass.markedForDeletion ? 0.3 : 1 }}
-                >
+                <CardContent className={"unselectable"} sx={{ paddingBottom: 2 }}>
                     <Box
                         sx={{
                             display: "flex",
@@ -125,17 +114,9 @@ export default function AgendaClassItem({
                             <InfoOutlinedIcon />
                         </IconButton>
                     )}
-                    {agendaClass.markedForDeletion ? (
-                        <Tooltip title={"Angre sletting"}>
-                            <IconButton onClick={() => onSetToDelete(false)} size={"small"}>
-                                <RestoreFromTrashIcon />
-                            </IconButton>
-                        </Tooltip>
-                    ) : (
-                        <IconButton onClick={() => onSetToDelete(true)} size={"small"}>
-                            <EventBusy />
-                        </IconButton>
-                    )}
+                    <IconButton onClick={() => onDelete(agendaClass.config)} size={"small"}>
+                        <EventBusy />
+                    </IconButton>
                     {/*<IconButton onClick={onSettings} size={"small"}>*/}
                     {/*    <SettingsOutlinedIcon/>*/}
                     {/*</IconButton>*/}

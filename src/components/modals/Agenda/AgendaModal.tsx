@@ -11,17 +11,15 @@ const AgendaModal = ({
     setOpen,
     userConfig,
     classes,
-    selectedClassIds,
     onInfo,
-    onSelectedChanged,
+    updateConfigClass,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     userConfig: ChainConfig | undefined;
     classes: RezervoClass[];
-    selectedClassIds: string[] | null;
     onInfo: Dispatch<SetStateAction<RezervoClass | null>>;
-    onSelectedChanged: (classId: string, selected: boolean) => void;
+    updateConfigClass: (classId: string, selected: boolean) => void;
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
@@ -31,11 +29,9 @@ const AgendaModal = ({
                         agendaClasses={userConfig.classes.map((c) => ({
                             config: c,
                             _class: classes.find((sc) => classRecurrentId(sc) === classConfigRecurrentId(c)),
-                            markedForDeletion:
-                                selectedClassIds != null && !selectedClassIds.includes(classConfigRecurrentId(c)),
                         }))}
                         onInfo={onInfo}
-                        onSetToDelete={(c, toDelete) => onSelectedChanged(classConfigRecurrentId(c), !toDelete)}
+                        onDelete={(c) => updateConfigClass(classConfigRecurrentId(c), false)}
                     />
                 )}
             </>

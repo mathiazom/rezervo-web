@@ -10,11 +10,11 @@ import { ClassConfig } from "@/types/config";
 export default function Agenda({
     agendaClasses,
     onInfo,
-    onSetToDelete,
+    onDelete,
 }: {
     agendaClasses: AgendaClass[];
     onInfo: (c: RezervoClass) => void;
-    onSetToDelete: (cc: ClassConfig, toDelete: boolean) => void;
+    onDelete: (cc: ClassConfig) => void;
 }) {
     const theme = useTheme();
 
@@ -75,9 +75,7 @@ export default function Agenda({
                                             <Box key={classConfigRecurrentId(cls.config)} py={0.5}>
                                                 <AgendaClassItem
                                                     agendaClass={cls}
-                                                    onSetToDelete={(toDelete: boolean) =>
-                                                        onSetToDelete(cls.config, toDelete)
-                                                    }
+                                                    onDelete={onDelete}
                                                     onInfo={() => cls._class && onInfo(cls._class)}
                                                     // onSettings={() =>
                                                     //     setSettingsClass(_class)

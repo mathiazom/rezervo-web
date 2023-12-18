@@ -15,7 +15,7 @@ function WeekSchedule({
     selectable,
     selectedClassIds,
     todayRef,
-    onSelectedChanged,
+    updateConfigClass,
     onInfo,
 }: {
     chain: ChainIdentifier;
@@ -24,7 +24,7 @@ function WeekSchedule({
     selectable: boolean;
     selectedClassIds: string[] | null;
     todayRef: React.MutableRefObject<HTMLDivElement | null>;
-    onSelectedChanged: (classId: string, selected: boolean) => void;
+    updateConfigClass: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
@@ -73,7 +73,7 @@ function WeekSchedule({
                                     classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}
                                     selectedClassIds={selectedClassIds}
-                                    onSelectedChanged={onSelectedChanged}
+                                    updateConfigClass={updateConfigClass}
                                     onInfo={onInfo}
                                 />
                             </Box>
