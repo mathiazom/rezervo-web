@@ -38,8 +38,6 @@ function ConfigBar({
     const { chainUserMissing } = useChainUser(chain);
     const { userConfigMissing } = useUserConfig(chain);
 
-    const agendaEnabled = userConfig?.classes != undefined && userConfig.classes.length > 0;
-
     return (
         <>
             {isLoading ? (
@@ -91,7 +89,7 @@ function ConfigBar({
                             }}
                         >
                             <Tooltip title={"Min timeplan"}>
-                                <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
+                                <IconButton onClick={() => onAgendaOpen()}>
                                     <CalendarMonth />
                                 </IconButton>
                             </Tooltip>

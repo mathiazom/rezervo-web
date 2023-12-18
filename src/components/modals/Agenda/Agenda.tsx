@@ -1,4 +1,5 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { EventRepeat } from "@mui/icons-material";
+import { Alert, Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
@@ -43,14 +44,21 @@ export default function Agenda({
                 sx={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 1,
-                    paddingBottom: 1,
                 }}
             >
                 <Typography variant="h6" component="h2">
                     Min timeplan
                 </Typography>
             </Box>
+            <Typography variant={"subtitle2"} sx={{ opacity: 0.5 }}>
+                Disse timene vil bli booket automatisk
+            </Typography>
+            {agendaClasses.length === 0 && (
+                <Alert severity={"info"} sx={{ mt: 1 }}>
+                    Timeplanen din er tom. Trykk på <EventRepeat fontSize={"small"} /> -ikonet i oversikten for å legge
+                    en time inn i timeplanen.
+                </Alert>
+            )}
             <Box pt={2}>
                 {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
                     const dayClasses = agendaClasses.filter((a) => a.config.weekday === weekday);

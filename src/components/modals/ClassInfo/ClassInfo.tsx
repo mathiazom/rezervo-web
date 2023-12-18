@@ -404,7 +404,7 @@ export default function ClassInfo({
                     {!_class.isBookable && (
                         <Alert sx={{ mt: 1 }} severity="info">
                             Booking for denne timen har ikke åpnet enda
-                            {classInUserConfig && ", men den vli bli booket automatisk når bookingen åpner"}
+                            {classInUserConfig && ", men den vil bli booket automatisk når bookingen åpner"}
                         </Alert>
                     )}
                 </>

@@ -114,9 +114,11 @@ export default function AgendaClassItem({
                             <InfoOutlinedIcon />
                         </IconButton>
                     )}
-                    <IconButton onClick={() => onDelete(agendaClass.config)} size={"small"}>
-                        <EventBusy />
-                    </IconButton>
+                    <Tooltip title={"Fjern fra timeplan"}>
+                        <IconButton onClick={() => onDelete(agendaClass.config)} size={"small"}>
+                            <EventBusy />
+                        </IconButton>
+                    </Tooltip>
                     {/*<IconButton onClick={onSettings} size={"small"}>*/}
                     {/*    <SettingsOutlinedIcon/>*/}
                     {/*</IconButton>*/}
