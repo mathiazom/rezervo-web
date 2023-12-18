@@ -24,7 +24,7 @@ const ClassCard = ({
     popularity,
     selectable,
     selected,
-    onSelectedChanged,
+    onUpdateConfig,
     onInfo,
 }: {
     chain: ChainIdentifier;
@@ -32,7 +32,7 @@ const ClassCard = ({
     popularity: ClassPopularity;
     selectable: boolean;
     selected: boolean;
-    onSelectedChanged: (selected: boolean) => void;
+    onUpdateConfig: (selected: boolean) => void;
     onInfo: () => void;
 }) => {
     const { userSessionsIndex } = useUserSessions(chain);
@@ -50,7 +50,7 @@ const ClassCard = ({
     }, [selected]);
 
     function selectClass() {
-        onSelectedChanged(!selected);
+        onUpdateConfig(!selected);
     }
 
     const classColorRGB = (dark: boolean) =>

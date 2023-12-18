@@ -12,13 +12,13 @@ const ClassInfoModal = ({
     classInfoClass,
     setClassInfoClass,
     classPopularityIndex,
-    updateConfigClass,
+    onUpdateConfig,
 }: {
     chain: ChainIdentifier;
     classInfoClass: RezervoClass | null;
     setClassInfoClass: Dispatch<SetStateAction<RezervoClass | null>>;
     classPopularityIndex: ClassPopularityIndex;
-    updateConfigClass: (classId: string, selected: boolean) => void;
+    onUpdateConfig: (classId: string, selected: boolean) => void;
 }) => {
     return (
         <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
@@ -30,7 +30,7 @@ const ClassInfoModal = ({
                         classPopularity={
                             classPopularityIndex[classRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
                         }
-                        updateConfigClass={updateConfigClass}
+                        onUpdateConfig={onUpdateConfig}
                     />
                 )}
             </>

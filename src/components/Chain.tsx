@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -35,7 +35,6 @@ function Chain({
     error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chainProfile.identifier);
-    const [shouldUpdateConfig, setShouldUpdateConfig] = useState(false);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -83,21 +82,16 @@ function Chain({
         return { ...classesConfigMap, ...ghostClassesConfigs };
     }, [classes, userConfig?.classes]);
 
-    const onUpdateConfig = useCallback(() => {
-        if (selectedClassIds == null) {
-            return;
-        }
+    const onUpdateConfig = (classId: string, selected: boolean) => {
+        const s = selectedClassIds;
+        const newSelectedClassIds =
+            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId);
+        setSelectedClassIds(newSelectedClassIds);
         return putUserConfig({
             active: userConfigActive,
-            classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
+            classes: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
         });
-    }, [allClassesConfigMap, putUserConfig, selectedClassIds, userConfigActive]);
-
-    const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
-        setSelectedClassIds((s) =>
-            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId),
-        );
-    }, []);
+    };
 
     const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -114,13 +108,6 @@ function Chain({
     useEffect(() => {
         scrollToToday();
     }, [scrollToTodayRef]);
-
-    useEffect(() => {
-        if (shouldUpdateConfig) {
-            onUpdateConfig();
-            setShouldUpdateConfig(false);
-        }
-    }, [onUpdateConfig, shouldUpdateConfig]);
 
     function scrollToToday() {
         const target = scrollToTodayRef.current;
@@ -168,10 +155,7 @@ function Chain({
                         classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
-                        updateConfigClass={(classId, selected) => {
-                            onSelectedChanged(classId, selected);
-                            setShouldUpdateConfig(true);
-                        }}
+                        onUpdateConfig={onUpdateConfig}
                         onInfo={setClassInfoClass}
                         todayRef={scrollToTodayRef}
                     />
@@ -184,10 +168,7 @@ function Chain({
                 classInfoClass={classInfoClass}
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
-                updateConfigClass={(classId, selected) => {
-                    onSelectedChanged(classId, selected);
-                    setShouldUpdateConfig(true);
-                }}
+                onUpdateConfig={onUpdateConfig}
             />
             <AgendaModal
                 open={isAgendaOpen}
@@ -195,10 +176,7 @@ function Chain({
                 userConfig={userConfig}
                 classes={classes}
                 onInfo={setClassInfoClass}
-                updateConfigClass={(classId, selected) => {
-                    onSelectedChanged(classId, selected);
-                    setShouldUpdateConfig(true);
-                }}
+                onUpdateConfig={onUpdateConfig}
             />
             <SettingsModal
                 open={isSettingsOpen}

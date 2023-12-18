@@ -37,12 +37,12 @@ export default function ClassInfo({
     chain,
     _class,
     classPopularity,
-    updateConfigClass,
+    onUpdateConfig,
 }: {
     chain: ChainIdentifier;
     _class: RezervoClass;
     classPopularity: ClassPopularity;
-    updateConfigClass: (classId: string, selected: boolean) => void;
+    onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
     const { user } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
@@ -387,7 +387,7 @@ export default function ClassInfo({
                             variant={"outlined"}
                             color={"error"}
                             startIcon={<EventBusy />}
-                            onClick={() => updateConfigClass(classRecurrentId(_class), false)}
+                            onClick={() => onUpdateConfig(classRecurrentId(_class), false)}
                         >
                             Fjern fra timeplan
                         </Button>
@@ -396,7 +396,7 @@ export default function ClassInfo({
                             sx={{ mt: 2 }}
                             variant={"outlined"}
                             startIcon={<EventRepeat />}
-                            onClick={() => updateConfigClass(classRecurrentId(_class), true)}
+                            onClick={() => onUpdateConfig(classRecurrentId(_class), true)}
                         >
                             Legg til i timeplan
                         </Button>
