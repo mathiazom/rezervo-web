@@ -166,7 +166,7 @@ function Chain({
                         chain={chainProfile.identifier}
                         weekSchedule={currentWeekSchedule}
                         classPopularityIndex={classPopularityIndex}
-                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                        selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         updateConfigClass={(classId, selected) => {
                             onSelectedChanged(classId, selected);
