@@ -1,4 +1,4 @@
-import { CancelRounded, EventRepeat } from "@mui/icons-material";
+import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
 import { Avatar, AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useState } from "react";
@@ -154,7 +154,7 @@ const ClassCard = ({
                                             padding: 0,
                                         }}
                                     >
-                                        <EventRepeat />
+                                        {selected ? <EventBusy /> : <EventRepeat />}
                                     </IconButton>
                                 </Tooltip>
                             )}

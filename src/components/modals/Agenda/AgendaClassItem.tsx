@@ -1,4 +1,4 @@
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import { EventBusy } from "@mui/icons-material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
 import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
@@ -133,7 +133,7 @@ export default function AgendaClassItem({
                         </Tooltip>
                     ) : (
                         <IconButton onClick={() => onSetToDelete(true)} size={"small"}>
-                            <DeleteRoundedIcon />
+                            <EventBusy />
                         </IconButton>
                     )}
                     {/*<IconButton onClick={onSettings} size={"small"}>*/}

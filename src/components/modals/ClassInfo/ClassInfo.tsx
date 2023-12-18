@@ -1,12 +1,12 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import {
+    Add,
     CancelRounded,
+    Clear,
     Diversity3Rounded,
-    EventAvailable,
     EventBusy,
     EventRepeat,
     HourglassTop,
-    Stop,
 } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -358,7 +358,7 @@ export default function ClassInfo({
                 <>
                     {selfBooked || selfOnWaitlist ? (
                         <LoadingButton
-                            startIcon={<EventBusy />}
+                            startIcon={<Clear />}
                             sx={{ mt: 2, mr: 1 }}
                             variant={"outlined"}
                             color={"error"}
@@ -370,7 +370,7 @@ export default function ClassInfo({
                         </LoadingButton>
                     ) : (
                         <LoadingButton
-                            startIcon={_class.availableSlots > 0 ? <EventAvailable /> : <HourglassTop />}
+                            startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
                             color={_class.availableSlots > 0 ? "primary" : "warning"}
                             sx={{ mt: 2, mr: 1 }}
                             variant={"outlined"}
@@ -386,7 +386,7 @@ export default function ClassInfo({
                             sx={{ mt: 2 }}
                             variant={"outlined"}
                             color={"error"}
-                            startIcon={<Stop />}
+                            startIcon={<EventBusy />}
                             onClick={() => updateConfigClass(classRecurrentId(_class), false)}
                         >
                             Fjern fra timeplan
