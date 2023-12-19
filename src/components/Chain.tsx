@@ -12,9 +12,9 @@ import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
-import { zeroIndexedWeekday } from "@/lib/helpers/date";
-import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
 import { ChainProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
@@ -53,21 +53,11 @@ function Chain({
         [currentWeekSchedule],
     );
 
-    // Pre-generate all class config strings
+    // Pre-generate all non-ghost class config strings
+    const classesConfigMap = useMemo(() => buildConfigMapFromClasses(classes), [classes]);
+
+    // Combine all class config strings
     const allClassesConfigMap = useMemo(() => {
-        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
-            const { hour, minute, weekday } = c.startTime;
-            return {
-                ...o,
-                [classRecurrentId(c)]: {
-                    activity: c.activity.id,
-                    display_name: c.activity.name,
-                    weekday: zeroIndexedWeekday(weekday),
-                    studio: c.location.id,
-                    time: { hour, minute },
-                },
-            };
-        }, {});
         // Locate any class configs from the user config that do not exist in the current schedule
         const ghostClassesConfigs =
             userConfig?.classes
@@ -80,7 +70,7 @@ function Chain({
                     {},
                 ) ?? {};
         return { ...classesConfigMap, ...ghostClassesConfigs };
-    }, [classes, userConfig?.classes]);
+    }, [classesConfigMap, userConfig?.classes]);
 
     const onUpdateConfig = (classId: string, selected: boolean) => {
         const s = selectedClassIds;
@@ -96,10 +86,9 @@ function Chain({
     const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        const classIds = userConfig?.classes?.map(classConfigRecurrentId) ?? null;
-        setSelectedClassIds(classIds);
+        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? null);
         setUserConfigActive(userConfig?.active ?? false);
-    }, [userConfig]);
+    }, [userConfig?.active, userConfig?.classes]);
 
     useEffect(() => {
         setCurrentWeekSchedule(initialSchedule[0]!);
