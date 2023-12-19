@@ -1,5 +1,5 @@
 import { EventRepeat } from "@mui/icons-material";
-import { Alert, Box, Typography, useTheme } from "@mui/material";
+import { Alert, AlertTitle, Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
@@ -50,13 +50,21 @@ export default function Agenda({
                     Min timeplan
                 </Typography>
             </Box>
-            <Typography variant={"subtitle2"} sx={{ opacity: 0.5 }}>
+            <Typography
+                variant="body2"
+                style={{
+                    color: theme.palette.grey[600],
+                    fontSize: 15,
+                }}
+                mb={1}
+            >
                 Disse timene vil bli booket automatisk
             </Typography>
             {agendaClasses.length === 0 && (
-                <Alert severity={"info"} sx={{ mt: 1 }}>
-                    Timeplanen din er tom. Trykk på <EventRepeat fontSize={"small"} /> -ikonet i oversikten for å legge
-                    en time inn i timeplanen.
+                <Alert severity={"info"} sx={{ mt: 4 }}>
+                    <AlertTitle>Ingen timer planlagt</AlertTitle>
+                    Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge til
+                    en time i timeplanen.
                 </Alert>
             )}
             <Box pt={2}>
