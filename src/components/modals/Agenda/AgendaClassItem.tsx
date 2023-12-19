@@ -1,5 +1,4 @@
 import { EventBusy } from "@mui/icons-material";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { Avatar, Box, Card, CardContent, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useState } from "react";
@@ -76,7 +75,7 @@ export default function AgendaClassItem({
                             : undefined,
                 }}
             >
-                <CardContent className={"unselectable"} sx={{ paddingBottom: 2 }}>
+                <CardContent onClick={onInfo} className={"unselectable"} sx={{ paddingBottom: 2, flexGrow: 1 }}>
                     <Box
                         sx={{
                             display: "flex",
@@ -116,11 +115,6 @@ export default function AgendaClassItem({
                     </Box>
                 </CardContent>
                 <Box sx={{ display: "flex", marginRight: 2, alignItems: "center" }}>
-                    {agendaClass._class && (
-                        <IconButton onClick={onInfo} size={"small"}>
-                            <InfoOutlinedIcon />
-                        </IconButton>
-                    )}
                     {isDeleteRequested ? (
                         <CircularProgress size={18} sx={{ marginX: "0.5rem" }} />
                     ) : (
