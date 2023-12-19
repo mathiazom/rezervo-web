@@ -1,9 +1,7 @@
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import RestoreFromTrashIcon from "@mui/icons-material/RestoreFromTrash";
-import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
+import { EventBusy } from "@mui/icons-material";
+import { Avatar, Box, Card, CardContent, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React from "react";
+import React, { useState } from "react";
 
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { RezervoClass } from "@/types/chain";
@@ -12,29 +10,24 @@ import { ClassConfig } from "@/types/config";
 export type AgendaClass = {
     config: ClassConfig;
     _class: RezervoClass | undefined;
-    markedForDeletion: boolean;
 };
 
 export default function AgendaClassItem({
     agendaClass,
-    onSetToDelete,
+    onDelete,
     onInfo,
 }: {
     agendaClass: AgendaClass;
-    onSetToDelete: (toDelete: boolean) => void;
+    onDelete: (cc: ClassConfig) => void;
     onInfo: () => void;
 }) {
     const theme = useTheme();
 
+    const [isDeleteRequested, setIsDeleteRequested] = useState(false);
+
     const classColorRGB = (dark: boolean) =>
         agendaClass._class
-            ? `rgb(${hexWithOpacityToRgb(
-                  agendaClass._class.activity.color,
-                  agendaClass.markedForDeletion ? 0.3 : 0.6,
-                  dark ? 0 : 255,
-              ).join(",")})`
-            : agendaClass.markedForDeletion
-            ? "#696969"
+            ? `rgb(${hexWithOpacityToRgb(agendaClass._class.activity.color, 0.6, dark ? 0 : 255).join(",")})`
             : "#111";
 
     const displayName = agendaClass._class?.activity.name ?? agendaClass.config.display_name;
@@ -48,6 +41,11 @@ export default function AgendaClassItem({
         : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
 
     const timeTo = agendaClass._class?.endTime ? agendaClass._class.endTime.toFormat("HH:mm") : null;
+
+    function handleOnDelete(classConfig: ClassConfig) {
+        onDelete(classConfig);
+        setIsDeleteRequested(true);
+    }
 
     return (
         <Card
@@ -77,10 +75,7 @@ export default function AgendaClassItem({
                             : undefined,
                 }}
             >
-                <CardContent
-                    className={"unselectable"}
-                    sx={{ paddingBottom: 2, opacity: agendaClass.markedForDeletion ? 0.3 : 1 }}
-                >
+                <CardContent onClick={onInfo} className={"unselectable"} sx={{ paddingBottom: 2, flexGrow: 1 }}>
                     <Box
                         sx={{
                             display: "flex",
@@ -119,26 +114,16 @@ export default function AgendaClassItem({
                         )}
                     </Box>
                 </CardContent>
-                <Box sx={{ display: "flex", marginRight: 2 }}>
-                    {agendaClass._class && (
-                        <IconButton onClick={onInfo} size={"small"}>
-                            <InfoOutlinedIcon />
-                        </IconButton>
-                    )}
-                    {agendaClass.markedForDeletion ? (
-                        <Tooltip title={"Angre sletting"}>
-                            <IconButton onClick={() => onSetToDelete(false)} size={"small"}>
-                                <RestoreFromTrashIcon />
+                <Box sx={{ display: "flex", marginRight: 2, alignItems: "center" }}>
+                    {isDeleteRequested ? (
+                        <CircularProgress size={18} sx={{ marginX: "0.5rem" }} />
+                    ) : (
+                        <Tooltip title={"Fjern fra timeplan"}>
+                            <IconButton onClick={() => handleOnDelete(agendaClass.config)} size={"small"}>
+                                <EventBusy />
                             </IconButton>
                         </Tooltip>
-                    ) : (
-                        <IconButton onClick={() => onSetToDelete(true)} size={"small"}>
-                            <DeleteRoundedIcon />
-                        </IconButton>
                     )}
-                    {/*<IconButton onClick={onSettings} size={"small"}>*/}
-                    {/*    <SettingsOutlinedIcon/>*/}
-                    {/*</IconButton>*/}
                 </Box>
             </Box>
             <Box

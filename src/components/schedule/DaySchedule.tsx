@@ -14,7 +14,7 @@ function DaySchedule({
     classPopularityIndex,
     selectable,
     selectedClassIds,
-    onSelectedChanged,
+    onUpdateConfig,
     onInfo,
 }: {
     chain: ChainIdentifier;
@@ -22,7 +22,7 @@ function DaySchedule({
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
-    onSelectedChanged: (classId: string, selected: boolean) => void;
+    onUpdateConfig: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
@@ -60,7 +60,7 @@ function DaySchedule({
                             popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
                             selectable={selectable}
                             selected={selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))}
-                            onSelectedChanged={(s) => onSelectedChanged(classRecurrentId(_class), s)}
+                            onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
                             onInfo={() => onInfo(_class)}
                         />
                     </Box>

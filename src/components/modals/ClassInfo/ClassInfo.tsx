@@ -1,11 +1,20 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CancelRounded, Diversity3Rounded } from "@mui/icons-material";
+import {
+    Add,
+    CancelRounded,
+    Clear,
+    Diversity3Rounded,
+    EventBusy,
+    EventRepeat,
+    HourglassTop,
+} from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -15,7 +24,7 @@ import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
-import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
@@ -28,10 +37,12 @@ export default function ClassInfo({
     chain,
     _class,
     classPopularity,
+    onUpdateConfig,
 }: {
     chain: ChainIdentifier;
     _class: RezervoClass;
     classPopularity: ClassPopularity;
+    onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
     const { user } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
@@ -56,6 +67,8 @@ export default function ClassInfo({
     const usersPlanned = configUsers.filter(
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
+
+    const classInUserConfig = userConfig?.classes?.map(classConfigRecurrentId).includes(classRecurrentId(_class));
 
     const [bookingLoading, setBookingLoading] = useState(false);
 
@@ -341,34 +354,61 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.activity.description}</Typography>
-            {user &&
-                userConfig != undefined &&
-                !userConfigLoading &&
-                !userConfigError &&
-                !isInThePast &&
-                _class.isBookable &&
-                (selfBooked || selfOnWaitlist ? (
-                    <LoadingButton
-                        sx={{ mt: 2 }}
-                        variant={"outlined"}
-                        color={"error"}
-                        disabled={isInThePast || !_class.isBookable}
-                        onClick={() => setCancelBookingConfirmationOpen(true)}
-                        loading={bookingLoading}
-                    >
-                        Avbestill
-                    </LoadingButton>
-                ) : (
-                    <LoadingButton
-                        sx={{ mt: 2 }}
-                        variant={"outlined"}
-                        disabled={isInThePast || !_class.isBookable}
-                        onClick={() => book()}
-                        loading={bookingLoading}
-                    >
-                        Book nå
-                    </LoadingButton>
-                ))}
+            {user && userConfig != undefined && !userConfigLoading && !userConfigError && !isInThePast && (
+                <>
+                    {selfBooked || selfOnWaitlist ? (
+                        <LoadingButton
+                            startIcon={<Clear />}
+                            sx={{ mt: 2, mr: 1 }}
+                            variant={"outlined"}
+                            color={"error"}
+                            disabled={isInThePast || !_class.isBookable}
+                            onClick={() => setCancelBookingConfirmationOpen(true)}
+                            loading={bookingLoading}
+                        >
+                            Avbestill
+                        </LoadingButton>
+                    ) : (
+                        <LoadingButton
+                            startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
+                            color={_class.availableSlots > 0 ? "primary" : "warning"}
+                            sx={{ mt: 2, mr: 1 }}
+                            variant={"outlined"}
+                            disabled={isInThePast || !_class.isBookable}
+                            onClick={() => book()}
+                            loading={bookingLoading}
+                        >
+                            {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
+                        </LoadingButton>
+                    )}
+                    {classInUserConfig ? (
+                        <Button
+                            sx={{ mt: 2 }}
+                            variant={"outlined"}
+                            color={"error"}
+                            startIcon={<EventBusy />}
+                            onClick={() => onUpdateConfig(classRecurrentId(_class), false)}
+                        >
+                            Fjern fra timeplan
+                        </Button>
+                    ) : (
+                        <Button
+                            sx={{ mt: 2 }}
+                            variant={"outlined"}
+                            startIcon={<EventRepeat />}
+                            onClick={() => onUpdateConfig(classRecurrentId(_class), true)}
+                        >
+                            Legg til i timeplan
+                        </Button>
+                    )}
+                    {!_class.isBookable && (
+                        <Alert sx={{ mt: 1 }} severity="info">
+                            Booking for denne timen har ikke åpnet enda
+                            {classInUserConfig && ", men den vil bli booket automatisk når bookingen åpner"}
+                        </Alert>
+                    )}
+                </>
+            )}
             <ConfirmationDialog
                 open={cancelBookingConfirmationOpen}
                 title={`Avbestille time?`}

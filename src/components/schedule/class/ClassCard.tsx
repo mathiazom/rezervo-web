@@ -1,5 +1,4 @@
-import { CancelRounded } from "@mui/icons-material";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
 import { Avatar, AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useState } from "react";
@@ -25,7 +24,7 @@ const ClassCard = ({
     popularity,
     selectable,
     selected,
-    onSelectedChanged,
+    onUpdateConfig,
     onInfo,
 }: {
     chain: ChainIdentifier;
@@ -33,7 +32,7 @@ const ClassCard = ({
     popularity: ClassPopularity;
     selectable: boolean;
     selected: boolean;
-    onSelectedChanged: (selected: boolean) => void;
+    onUpdateConfig: (selected: boolean) => void;
     onInfo: () => void;
 }) => {
     const { userSessionsIndex } = useUserSessions(chain);
@@ -50,8 +49,8 @@ const ClassCard = ({
         }
     }, [selected]);
 
-    function handleClick() {
-        onSelectedChanged(!selected);
+    function selectClass() {
+        onUpdateConfig(!selected);
     }
 
     const classColorRGB = (dark: boolean) =>
@@ -64,6 +63,10 @@ const ClassCard = ({
     const usersPlanned = configUsers.filter(
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
+
+    const showScheduleAction = !isInThePast && selectable && !_class.isCancelled;
+    const showUsersPlanned = userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0);
+    const showActions = showScheduleAction || showUsersPlanned;
 
     return (
         <Card
@@ -105,8 +108,8 @@ const ClassCard = ({
                 )}
                 <CardContent
                     className={"unselectable"}
-                    onClick={selectable && !isInThePast && !_class.isCancelled ? handleClick : undefined}
-                    sx={{ paddingBottom: 1, zIndex: 1, position: "relative" }}
+                    onClick={onInfo}
+                    sx={{ paddingBottom: 1, zIndex: 1, position: "relative", cursor: "pointer" }}
                 >
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                         <Typography
@@ -143,77 +146,86 @@ const ClassCard = ({
                         </Typography>
                     )}
                 </CardContent>
-                <CardActions sx={{ padding: 0, zIndex: 1, position: "relative" }} disableSpacing>
-                    <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
-                        <Box sx={{ display: "flex" }}>
-                            <IconButton onClick={onInfo} size={"small"} sx={{ padding: 0 }}>
-                                <InfoOutlinedIcon />
-                            </IconButton>
-                            {/*{selected && (*/}
-                            {/*    <IconButton onClick={onSettings} size={"small"}>*/}
-                            {/*        <SettingsOutlinedIcon />*/}
-                            {/*    </IconButton>*/}
-                            {/*)}*/}
-                            {(userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0)) && (
-                                <AvatarGroup
-                                    max={4}
-                                    sx={{
-                                        justifyContent: "start",
-                                        marginLeft: "auto",
-                                        "& .MuiAvatar-root": {
-                                            width: 24,
-                                            height: 24,
-                                            fontSize: 12,
-                                            borderColor: "white",
-                                            '[data-mui-color-scheme="dark"] &': {
-                                                borderColor: "#191919",
+                {showActions && (
+                    <CardActions sx={{ padding: 0, zIndex: 1, position: "relative" }} disableSpacing>
+                        <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
+                            <Box sx={{ display: "flex" }}>
+                                {showScheduleAction && (
+                                    <Tooltip title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}>
+                                        <IconButton
+                                            onClick={selectClass}
+                                            size={"small"}
+                                            sx={{
+                                                padding: 0,
+                                                height: 28, // to avoid jumping when avatars are displayed
+                                            }}
+                                        >
+                                            {selected ? <EventBusy /> : <EventRepeat />}
+                                        </IconButton>
+                                    </Tooltip>
+                                )}
+                                {showUsersPlanned && (
+                                    <AvatarGroup
+                                        max={4}
+                                        sx={{
+                                            justifyContent: "start",
+                                            marginLeft: "auto",
+                                            "& .MuiAvatar-root": {
+                                                width: 24,
+                                                height: 24,
+                                                fontSize: 12,
+                                                borderColor: "white",
+                                                '[data-mui-color-scheme="dark"] &': {
+                                                    borderColor: "#191919",
+                                                },
                                             },
-                                        },
-                                    }}
-                                >
-                                    {!isInThePast &&
-                                        usersPlanned.length > 0 &&
-                                        usersPlanned.map(({ user_name }) => (
-                                            <ClassUserAvatar
-                                                key={user_name}
-                                                username={user_name}
-                                                alert={_class.isBookable}
-                                            />
-                                        ))}
-                                    {userSessions.length > 0 &&
-                                        userSessions.map(({ user_name, status }) => {
-                                            const rippleColor =
-                                                status === SessionStatus.BOOKED || status === SessionStatus.CONFIRMED
-                                                    ? StatusColors.ACTIVE
-                                                    : StatusColors.WAITLIST;
-                                            return (
-                                                <RippleBadge
+                                        }}
+                                    >
+                                        {!isInThePast &&
+                                            usersPlanned.length > 0 &&
+                                            usersPlanned.map(({ user_name }) => (
+                                                <ClassUserAvatar
                                                     key={user_name}
-                                                    invisible={isInThePast}
-                                                    overlap="circular"
-                                                    anchorOrigin={{
-                                                        vertical: "bottom",
-                                                        horizontal: "right",
-                                                    }}
-                                                    variant={"dot"}
-                                                    rippleColor={rippleColor}
-                                                >
-                                                    <Avatar
-                                                        alt={user_name}
-                                                        sx={{
-                                                            backgroundColor: hexColorHash(user_name),
+                                                    username={user_name}
+                                                    alert={_class.isBookable}
+                                                />
+                                            ))}
+                                        {userSessions.length > 0 &&
+                                            userSessions.map(({ user_name, status }) => {
+                                                const rippleColor =
+                                                    status === SessionStatus.BOOKED ||
+                                                    status === SessionStatus.CONFIRMED
+                                                        ? StatusColors.ACTIVE
+                                                        : StatusColors.WAITLIST;
+                                                return (
+                                                    <RippleBadge
+                                                        key={user_name}
+                                                        invisible={isInThePast}
+                                                        overlap="circular"
+                                                        anchorOrigin={{
+                                                            vertical: "bottom",
+                                                            horizontal: "right",
                                                         }}
+                                                        variant={"dot"}
+                                                        rippleColor={rippleColor}
                                                     >
-                                                        {user_name[0]}
-                                                    </Avatar>
-                                                </RippleBadge>
-                                            );
-                                        })}
-                                </AvatarGroup>
-                            )}
+                                                        <Avatar
+                                                            alt={user_name}
+                                                            sx={{
+                                                                backgroundColor: hexColorHash(user_name),
+                                                            }}
+                                                        >
+                                                            {user_name[0]}
+                                                        </Avatar>
+                                                    </RippleBadge>
+                                                );
+                                            })}
+                                    </AvatarGroup>
+                                )}
+                            </Box>
                         </Box>
-                    </Box>
-                </CardActions>
+                    </CardActions>
+                )}
             </Box>
         </Card>
     );

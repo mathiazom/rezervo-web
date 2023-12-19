@@ -1,4 +1,5 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { EventRepeat } from "@mui/icons-material";
+import { Alert, AlertTitle, Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
@@ -10,11 +11,11 @@ import { ClassConfig } from "@/types/config";
 export default function Agenda({
     agendaClasses,
     onInfo,
-    onSetToDelete,
+    onDelete,
 }: {
     agendaClasses: AgendaClass[];
     onInfo: (c: RezervoClass) => void;
-    onSetToDelete: (cc: ClassConfig, toDelete: boolean) => void;
+    onDelete: (cc: ClassConfig) => void;
 }) {
     const theme = useTheme();
 
@@ -43,14 +44,29 @@ export default function Agenda({
                 sx={{
                     display: "flex",
                     alignItems: "center",
-                    gap: 1,
-                    paddingBottom: 1,
                 }}
             >
                 <Typography variant="h6" component="h2">
-                    Agenda
+                    Min timeplan
                 </Typography>
             </Box>
+            <Typography
+                variant="body2"
+                style={{
+                    color: theme.palette.grey[600],
+                    fontSize: 15,
+                }}
+                mb={1}
+            >
+                Disse timene vil bli booket automatisk
+            </Typography>
+            {agendaClasses.length === 0 && (
+                <Alert severity={"info"} sx={{ mt: 4 }}>
+                    <AlertTitle>Ingen timer planlagt</AlertTitle>
+                    Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge til
+                    en time i timeplanen.
+                </Alert>
+            )}
             <Box pt={2}>
                 {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
                     const dayClasses = agendaClasses.filter((a) => a.config.weekday === weekday);
@@ -75,9 +91,7 @@ export default function Agenda({
                                             <Box key={classConfigRecurrentId(cls.config)} py={0.5}>
                                                 <AgendaClassItem
                                                     agendaClass={cls}
-                                                    onSetToDelete={(toDelete: boolean) =>
-                                                        onSetToDelete(cls.config, toDelete)
-                                                    }
+                                                    onDelete={onDelete}
                                                     onInfo={() => cls._class && onInfo(cls._class)}
                                                     // onSettings={() =>
                                                     //     setSettingsClass(_class)

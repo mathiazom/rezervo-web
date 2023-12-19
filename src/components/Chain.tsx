@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -14,7 +14,9 @@ import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
 import { ChainProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
+import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
 
@@ -32,12 +34,11 @@ function Chain({
     chainProfile: ChainProfile;
     error: RezervoError | undefined;
 }) {
-    const { userConfig, userConfigError, userConfigLoading } = useUserConfig(chainProfile.identifier);
+    const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chainProfile.identifier);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
-    const [originalSelectedClassIds, setOriginalSelectedClassIds] = useState<string[] | null>(null);
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isChainUserSettingsOpen, setIsChainUserSettingsOpen] = useState(false);
@@ -52,20 +53,42 @@ function Chain({
         [currentWeekSchedule],
     );
 
-    const onSelectedChanged = useCallback((classId: string, selected: boolean) => {
-        setSelectedClassIds((s) =>
-            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId),
-        );
-    }, []);
+    // Pre-generate all non-ghost class config strings
+    const classesConfigMap = useMemo(() => buildConfigMapFromClasses(classes), [classes]);
+
+    // Combine all class config strings
+    const allClassesConfigMap = useMemo(() => {
+        // Locate any class configs from the user config that do not exist in the current schedule
+        const ghostClassesConfigs =
+            userConfig?.classes
+                ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
+                .reduce<{ [id: string]: ClassConfig }>(
+                    (o, c) => ({
+                        ...o,
+                        [classConfigRecurrentId(c)]: c,
+                    }),
+                    {},
+                ) ?? {};
+        return { ...classesConfigMap, ...ghostClassesConfigs };
+    }, [classesConfigMap, userConfig?.classes]);
+
+    const onUpdateConfig = (classId: string, selected: boolean) => {
+        const s = selectedClassIds;
+        const newSelectedClassIds =
+            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId);
+        setSelectedClassIds(newSelectedClassIds);
+        return putUserConfig({
+            active: userConfigActive,
+            classes: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
+        });
+    };
 
     const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        const classIds = userConfig?.classes?.map(classConfigRecurrentId) ?? null;
-        setSelectedClassIds(classIds);
-        setOriginalSelectedClassIds(classIds);
+        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? null);
         setUserConfigActive(userConfig?.active ?? false);
-    }, [userConfig]);
+    }, [userConfig?.active, userConfig?.classes]);
 
     useEffect(() => {
         setCurrentWeekSchedule(initialSchedule[0]!);
@@ -95,14 +118,9 @@ function Chain({
                         rightComponent={
                             <ConfigBar
                                 chain={chainProfile.identifier}
-                                classes={classes}
-                                selectedClassIds={selectedClassIds}
-                                originalSelectedClassIds={originalSelectedClassIds}
                                 userConfig={userConfig}
-                                userConfigActive={userConfigActive}
                                 isLoadingConfig={userConfig == null || userConfigLoading}
                                 isConfigError={userConfigError}
-                                onUndoSelectionChanges={() => setSelectedClassIds(originalSelectedClassIds)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onChainUserSettingsOpen={() => setIsChainUserSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
@@ -124,9 +142,9 @@ function Chain({
                         chain={chainProfile.identifier}
                         weekSchedule={currentWeekSchedule}
                         classPopularityIndex={classPopularityIndex}
-                        selectable={userConfig != undefined && !userConfigLoading && !userConfigError}
+                        selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
-                        onSelectedChanged={onSelectedChanged}
+                        onUpdateConfig={onUpdateConfig}
                         onInfo={setClassInfoClass}
                         todayRef={scrollToTodayRef}
                     />
@@ -139,15 +157,15 @@ function Chain({
                 classInfoClass={classInfoClass}
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
+                onUpdateConfig={onUpdateConfig}
             />
             <AgendaModal
                 open={isAgendaOpen}
                 setOpen={setIsAgendaOpen}
                 userConfig={userConfig}
                 classes={classes}
-                selectedClassIds={selectedClassIds}
                 onInfo={setClassInfoClass}
-                onSelectedChanged={onSelectedChanged}
+                onUpdateConfig={onUpdateConfig}
             />
             <SettingsModal
                 open={isSettingsOpen}

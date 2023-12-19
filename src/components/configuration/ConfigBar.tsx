@@ -1,52 +1,33 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
-import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import { CalendarMonth, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import FormatListBulletedRoundedIcon from "@mui/icons-material/FormatListBulletedRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import UndoIcon from "@mui/icons-material/Undo";
-import { Avatar, Badge, Box, Button, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
+import { Avatar, Badge, Box, CircularProgress, Tooltip, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { useMemo } from "react";
+import React from "react";
 
-import MobileConfigUpdateBar from "@/components/configuration/MobileConfigUpdateBar";
 import { ChainIdentifier } from "@/lib/activeChains";
-import { zeroIndexedWeekday } from "@/lib/helpers/date";
-import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { arraysAreEqual } from "@/lib/utils/arrayUtils";
 import { hexColorHash } from "@/lib/utils/colorUtils";
-import { RezervoClass } from "@/types/chain";
-import { ClassConfig, ChainConfig } from "@/types/config";
+import { ChainConfig } from "@/types/config";
 
 function ConfigBar({
     chain,
-    classes,
-    selectedClassIds,
-    originalSelectedClassIds,
     userConfig,
-    userConfigActive,
     isLoadingConfig,
     isConfigError,
-    onUndoSelectionChanges,
     onSettingsOpen,
     onChainUserSettingsOpen,
     onAgendaOpen,
 }: {
     chain: ChainIdentifier;
-    classes: RezervoClass[];
-    selectedClassIds: string[] | null;
-    originalSelectedClassIds: string[] | null;
     userConfig: ChainConfig | undefined;
-    userConfigActive: boolean;
     isLoadingConfig: boolean;
     isConfigError: boolean;
-    onUndoSelectionChanges: () => void;
     onSettingsOpen: () => void;
     onChainUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
@@ -55,56 +36,7 @@ function ConfigBar({
 
     const { user, isLoading } = useUser();
     const { chainUserMissing } = useChainUser(chain);
-    const { userConfigMissing, putUserConfig } = useUserConfig(chain);
-
-    const selectionChanged = useMemo(
-        () =>
-            selectedClassIds != null &&
-            originalSelectedClassIds != null &&
-            !arraysAreEqual(selectedClassIds.sort(), originalSelectedClassIds.sort()),
-        [originalSelectedClassIds, selectedClassIds],
-    );
-
-    // Pre-generate all class config strings
-    const allClassesConfigMap = useMemo(() => {
-        const classesConfigMap = classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
-            const { hour, minute, weekday } = c.startTime;
-            return {
-                ...o,
-                [classRecurrentId(c)]: {
-                    activity: c.activity.id,
-                    display_name: c.activity.name,
-                    weekday: zeroIndexedWeekday(weekday),
-                    studio: c.location.id,
-                    time: { hour, minute },
-                },
-            };
-        }, {});
-        // Locate any class configs from the user config that do not exist in the current schedule
-        const ghostClassesConfigs =
-            userConfig?.classes
-                ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
-                .reduce<{ [id: string]: ClassConfig }>(
-                    (o, c) => ({
-                        ...o,
-                        [classConfigRecurrentId(c)]: c,
-                    }),
-                    {},
-                ) ?? {};
-        return { ...classesConfigMap, ...ghostClassesConfigs };
-    }, [classes, userConfig?.classes]);
-
-    function onUpdateConfig() {
-        if (selectedClassIds == null) {
-            return;
-        }
-        return putUserConfig({
-            active: userConfigActive,
-            classes: selectedClassIds.flatMap((id) => allClassesConfigMap[id] ?? []),
-        });
-    }
-
-    const agendaEnabled = userConfig?.classes != undefined && userConfig.classes.length > 0;
+    const { userConfigMissing } = useUserConfig(chain);
 
     return (
         <>
@@ -150,54 +82,23 @@ function ConfigBar({
                             </Tooltip>
                         </Box>
                     ) : (
-                        <>
-                            {selectionChanged ? (
-                                <Box
-                                    sx={{
-                                        display: {
-                                            xs: "none",
-                                            sm: "flex",
-                                        },
-                                        alignItems: "center",
-                                        gap: 1,
-                                    }}
-                                >
-                                    <Tooltip title={"Angre"}>
-                                        <IconButton onClick={() => onUndoSelectionChanges()}>
-                                            <UndoIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                    <Button
-                                        variant={"contained"}
-                                        startIcon={<CloudUploadIcon sx={{ color: "#fff" }} />}
-                                        onClick={() => onUpdateConfig()}
-                                    >
-                                        <Typography color={"#fff"}>Oppdater</Typography>
-                                    </Button>
-                                </Box>
-                            ) : (
-                                <Tooltip title={"Lagret"}>
-                                    <CloudDoneIcon color={"disabled"} />
-                                </Tooltip>
-                            )}
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Tooltip title={"Agenda"}>
-                                    <IconButton onClick={() => onAgendaOpen()} disabled={!agendaEnabled}>
-                                        <FormatListBulletedRoundedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title={"Innstillinger"}>
-                                    <IconButton onClick={() => onSettingsOpen()}>
-                                        <SettingsRoundedIcon />
-                                    </IconButton>
-                                </Tooltip>
-                            </Box>
-                        </>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Tooltip title={"Min timeplan"}>
+                                <IconButton onClick={() => onAgendaOpen()}>
+                                    <CalendarMonth />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title={"Innstillinger"}>
+                                <IconButton onClick={() => onSettingsOpen()}>
+                                    <SettingsRoundedIcon />
+                                </IconButton>
+                            </Tooltip>
+                        </Box>
                     )}
                     {user.name && (
                         <Tooltip title={`${user.name}${userConfig?.active ? "" : " (pauset)"}`}>
@@ -241,12 +142,6 @@ function ConfigBar({
                     </Tooltip>
                 </Box>
             )}
-            <MobileConfigUpdateBar
-                visible={selectionChanged}
-                isLoadingConfig={isLoadingConfig}
-                onUpdateConfig={onUpdateConfig}
-                onUndoSelectionChanges={onUndoSelectionChanges}
-            />
         </>
     );
 }
