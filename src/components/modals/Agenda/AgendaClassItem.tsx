@@ -1,8 +1,8 @@
 import { EventBusy } from "@mui/icons-material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { Avatar, Box, Card, CardContent, Tooltip, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Card, CardContent, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React from "react";
+import React, { useState } from "react";
 
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { RezervoClass } from "@/types/chain";
@@ -24,6 +24,8 @@ export default function AgendaClassItem({
 }) {
     const theme = useTheme();
 
+    const [isDeleteRequested, setIsDeleteRequested] = useState(false);
+
     const classColorRGB = (dark: boolean) =>
         agendaClass._class
             ? `rgb(${hexWithOpacityToRgb(agendaClass._class.activity.color, 0.6, dark ? 0 : 255).join(",")})`
@@ -40,6 +42,11 @@ export default function AgendaClassItem({
         : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
 
     const timeTo = agendaClass._class?.endTime ? agendaClass._class.endTime.toFormat("HH:mm") : null;
+
+    function handleOnDelete(classConfig: ClassConfig) {
+        onDelete(classConfig);
+        setIsDeleteRequested(true);
+    }
 
     return (
         <Card
@@ -108,20 +115,21 @@ export default function AgendaClassItem({
                         )}
                     </Box>
                 </CardContent>
-                <Box sx={{ display: "flex", marginRight: 2 }}>
+                <Box sx={{ display: "flex", marginRight: 2, alignItems: "center" }}>
                     {agendaClass._class && (
                         <IconButton onClick={onInfo} size={"small"}>
                             <InfoOutlinedIcon />
                         </IconButton>
                     )}
-                    <Tooltip title={"Fjern fra timeplan"}>
-                        <IconButton onClick={() => onDelete(agendaClass.config)} size={"small"}>
-                            <EventBusy />
-                        </IconButton>
-                    </Tooltip>
-                    {/*<IconButton onClick={onSettings} size={"small"}>*/}
-                    {/*    <SettingsOutlinedIcon/>*/}
-                    {/*</IconButton>*/}
+                    {isDeleteRequested ? (
+                        <CircularProgress size={18} sx={{ marginX: "0.5rem" }} />
+                    ) : (
+                        <Tooltip title={"Fjern fra timeplan"}>
+                            <IconButton onClick={() => handleOnDelete(agendaClass.config)} size={"small"}>
+                                <EventBusy />
+                            </IconButton>
+                        </Tooltip>
+                    )}
                 </Box>
             </Box>
             <Box
