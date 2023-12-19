@@ -39,6 +39,9 @@ export default function ClassUserAvatar({
                     sx={{
                         backgroundColor: theme.palette.background.default,
                         borderRadius: "50%",
+                        fontSize: "1.1rem",
+                        marginTop: "-0.2rem",
+                        marginLeft: "-0.2rem",
                     }}
                 />
             }
