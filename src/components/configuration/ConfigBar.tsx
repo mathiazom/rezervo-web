@@ -139,7 +139,7 @@ function ConfigBar({
                 </Box>
             ) : (
                 <Box>
-                    <Button startIcon={<LoginIcon />} href={"/api/auth/login"}>
+                    <Button endIcon={<LoginIcon />} href={"/api/auth/login"}>
                         Logg inn
                     </Button>
                 </Box>
