@@ -355,16 +355,24 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.activity.description}</Typography>
-            {user === undefined && !isInThePast && (
-                <Alert severity="info" sx={{ mt: 1 }}>
-                    Du må logge inn for å kunne booke eller legge til timer i timeplanen
-                </Alert>
-            )}
-            {user !== undefined && userConfig === undefined && !isInThePast && (
-                <Alert severity="info" sx={{ mt: 1 }}>
-                    Du må konfigurere en {chain}-bruker for å booke eller legge til en time i timeplanen
-                </Alert>
-            )}
+
+            <Box
+                sx={{
+                    position: "sticky",
+                    bottom: 0,
+                }}
+            >
+                {user === undefined && !isInThePast && (
+                    <Alert severity="info" sx={{ mt: 1 }}>
+                        Du må logge inn for å kunne booke eller legge til timer i timeplanen
+                    </Alert>
+                )}
+                {user !== undefined && userConfig === undefined && !isInThePast && (
+                    <Alert severity="info" sx={{ mt: 1 }}>
+                        Du må konfigurere en {chain}-bruker for å booke eller legge til en time i timeplanen
+                    </Alert>
+                )}
+            </Box>
             {user && userConfig != undefined && !userConfigLoading && !userConfigError && !isInThePast && (
                 <>
                     {selfBooked || selfOnWaitlist ? (
