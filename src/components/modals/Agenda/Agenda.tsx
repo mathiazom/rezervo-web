@@ -1,10 +1,11 @@
-import { EventRepeat } from "@mui/icons-material";
+import { EventRepeat, PauseCircleRounded } from "@mui/icons-material";
 import { Alert, AlertTitle, Avatar, Box, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
+import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { ChainProfile, RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 
@@ -20,6 +21,7 @@ export default function Agenda({
     chainProfile: ChainProfile;
 }) {
     const theme = useTheme();
+    const { userConfig } = useUserConfig(chainProfile.identifier);
 
     // Establish sort order of config classes
     const configTimeMinutes = (cc: ClassConfig) => cc.time.hour * 60 + cc.time.minute;
@@ -68,6 +70,13 @@ export default function Agenda({
             >
                 Disse timene vil bli booket automatisk
             </Typography>
+            {userConfig?.active === false && (
+                <Alert severity={"info"} icon={<PauseCircleRounded />}>
+                    <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
+                    Du kan skru på automatisk booking i innstillinger, slik at timene i timeplanen blir booket
+                    automatisk
+                </Alert>
+            )}
             {agendaClasses.length === 0 && (
                 <Alert severity={"info"} sx={{ mt: 4 }}>
                     <AlertTitle>Ingen timer planlagt</AlertTitle>
@@ -101,6 +110,7 @@ export default function Agenda({
                                                     agendaClass={cls}
                                                     onDelete={onDelete}
                                                     onInfo={() => cls._class && onInfo(cls._class)}
+                                                    bookingActive={userConfig?.active === true}
                                                     // onSettings={() =>
                                                     //     setSettingsClass(_class)
                                                     // }
