@@ -16,12 +16,10 @@ export default function AgendaClassItem({
     agendaClass,
     onDelete,
     onInfo,
-    bookingActive,
 }: {
     agendaClass: AgendaClass;
     onDelete: (cc: ClassConfig) => void;
     onInfo: () => void;
-    bookingActive: boolean;
 }) {
     const theme = useTheme();
 
@@ -67,7 +65,7 @@ export default function AgendaClassItem({
                     alignItems: "center",
                     justifyContent: "space-between",
                     background:
-                        agendaClass._class === undefined || !bookingActive
+                        agendaClass._class === undefined
                             ? `repeating-linear-gradient(
                             -55deg,
                             ${theme.palette.background.default},

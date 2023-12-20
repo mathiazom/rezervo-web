@@ -123,7 +123,6 @@ export default function Agenda({
                                                     agendaClass={cls}
                                                     onDelete={onDelete}
                                                     onInfo={() => cls._class && onInfo(cls._class)}
-                                                    bookingActive={bookingActive}
                                                     // onSettings={() =>
                                                     //     setSettingsClass(_class)
                                                     // }
