@@ -1,7 +1,7 @@
 import { PasswordRounded } from "@mui/icons-material";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Button, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, Typography, useMediaQuery, useTheme } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
@@ -21,27 +21,39 @@ export default function ChainUserSettings({
     isSubmitting: boolean;
     onClose: () => void;
 }) {
+    const theme = useTheme();
+
     const { chainUser, chainUserMissing } = useChainUser(chainProfile.identifier);
 
     const [username, setUsername] = useState(chainUser?.username ?? "");
     const [password, setPassword] = useState("");
 
+    const shortDevice = useMediaQuery("(max-height: 380px)");
+
     return (
         <>
-            <DialogTitle>
-                <Box sx={{ height: 50 }}>
+            <DialogContent
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.5,
+                    marginTop: 1,
+                }}
+            >
+                <Box sx={{ height: 50, flexShrink: 0, marginY: 2, display: shortDevice ? "none" : undefined }}>
                     <ChainLogo chainProfile={chainProfile} />
                 </Box>
-            </DialogTitle>
-            <DialogContent>
-                <Typography variant={"h6"} textAlign={"center"} sx={{ mb: 1 }}>
-                    Koble til <b>{chainProfile.identifier}</b>-medlemskap
+                <Typography variant={"h6"} textAlign={"center"}>
+                    Koble til <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
                 </Typography>
-                <Typography variant={"subtitle2"} sx={{ opacity: 0.6, textAlign: "center" }}>
-                    Logg inn med <b>{chainProfile.name}</b>-brukeren din for å koble den til <b>rezervo</b>
+                <Typography
+                    variant={"subtitle2"}
+                    sx={{ color: theme.palette.grey[600], textAlign: "center", maxWidth: "18rem", margin: "0 auto" }}
+                >
+                    Logg inn med brukeren din fra <b>{chainProfile.name}</b> for å koble den til <b>rezervo</b>
                 </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: "2rem" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <PersonRoundedIcon />
                         <TextField
                             sx={{ width: "100%" }}
