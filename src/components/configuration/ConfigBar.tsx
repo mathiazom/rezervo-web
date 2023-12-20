@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CalendarMonth, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
+import { CalendarMonth, CalendarToday, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LoginIcon from "@mui/icons-material/Login";
@@ -106,7 +106,7 @@ function ConfigBar({
                                     }
                                 >
                                     <IconButton onClick={() => onAgendaOpen()}>
-                                        <CalendarMonth />
+                                        {userConfig?.classes.length === 0 ? <CalendarToday /> : <CalendarMonth />}
                                     </IconButton>
                                 </Badge>
                             </Tooltip>
