@@ -345,9 +345,9 @@ export default function ClassInfo({
                     <AlertTitle>
                         Koble til <b>{chain}</b>-medlemskap
                     </AlertTitle>
-                    Du må tilknytte <b>{chain}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller legge til
-                    timer i timeplanen. Trykk på rakettsymbolet <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} />{" "}
-                    øverst til høyre for å logge inn med {chain}
+                    Du må koble <b>{chain}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller legge til timer i
+                    timeplanen. Trykk på rakettsymbolet <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til
+                    høyre for å logge inn med {chain}
                     -brukeren din.
                 </Alert>
             )}
