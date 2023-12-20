@@ -7,7 +7,9 @@ import {
     EventBusy,
     EventRepeat,
     HourglassTop,
+    Login,
     PauseCircleRounded,
+    RocketLaunch,
 } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -333,6 +335,22 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
+            {user === undefined && !isInThePast && (
+                <Alert severity="info" sx={{ mt: 1 }} icon={<Login fontSize={"small"} />}>
+                    Du må logge inn for å kunne booke eller legge til timer i timeplanen
+                </Alert>
+            )}
+            {user !== undefined && userConfig === undefined && !isInThePast && (
+                <Alert severity="info" sx={{ mt: 1 }}>
+                    <AlertTitle>
+                        Registrer ditt <b>{chain}</b>-medlemskap
+                    </AlertTitle>
+                    Du må registrere medlemskapet ditt å kunne booke eller legge til timer i timeplanen. Trykk på
+                    rakettsymbolet <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til høyre for å logge
+                    inn med {chain}
+                    -brukeren din.
+                </Alert>
+            )}
             {_class.activity.image && (
                 <Box pt={2}>
                     <Image
@@ -355,24 +373,6 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.activity.description}</Typography>
-
-            <Box
-                sx={{
-                    position: "sticky",
-                    bottom: 0,
-                }}
-            >
-                {user === undefined && !isInThePast && (
-                    <Alert severity="info" sx={{ mt: 1 }}>
-                        Du må logge inn for å kunne booke eller legge til timer i timeplanen
-                    </Alert>
-                )}
-                {user !== undefined && userConfig === undefined && !isInThePast && (
-                    <Alert severity="info" sx={{ mt: 1 }}>
-                        Du må konfigurere en {chain}-bruker for å booke eller legge til en time i timeplanen
-                    </Alert>
-                )}
-            </Box>
             {user && userConfig != undefined && !userConfigLoading && !userConfigError && !isInThePast && (
                 <>
                     {selfBooked || selfOnWaitlist ? (

@@ -178,7 +178,7 @@ function Chain({
             <ChainUserSettingsModal
                 open={isChainUserSettingsOpen}
                 setOpen={setIsChainUserSettingsOpen}
-                chain={chainProfile.identifier}
+                chainProfile={chainProfile}
                 onSubmit={() => setIsChainUserSettingsOpen(false)}
             />
         </>

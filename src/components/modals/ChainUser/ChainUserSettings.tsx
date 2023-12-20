@@ -1,34 +1,45 @@
 import { PasswordRounded } from "@mui/icons-material";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Button, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
-import { ChainIdentifier } from "@/lib/activeChains";
+import ChainLogo from "@/components/utils/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";
+import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
 export default function ChainUserSettings({
-    chain,
+    chainProfile,
     submit,
     isSubmitting,
     onClose,
 }: {
-    chain: ChainIdentifier;
+    chainProfile: ChainProfile;
     submit: (payload: ChainUserPayload) => void;
     isSubmitting: boolean;
     onClose: () => void;
 }) {
-    const { chainUser, chainUserMissing } = useChainUser(chain);
+    const { chainUser, chainUserMissing } = useChainUser(chainProfile.identifier);
 
     const [username, setUsername] = useState(chainUser?.username ?? "");
     const [password, setPassword] = useState("");
 
     return (
         <>
-            <DialogTitle>Konfigurer {chain}-bruker</DialogTitle>
+            <DialogTitle>
+                <Box sx={{ height: 50 }}>
+                    <ChainLogo chainProfile={chainProfile} />
+                </Box>
+            </DialogTitle>
             <DialogContent>
+                <Typography variant={"h6"} textAlign={"center"} sx={{ mb: 1 }}>
+                    Registrer <b>{chainProfile.identifier}</b>-medlemskap
+                </Typography>
+                <Typography variant={"subtitle2"} sx={{ opacity: 0.6, textAlign: "center" }}>
+                    Logg inn med <b>{chainProfile.name}</b>-brukeren din for å aktivere <b>rezervo</b>
+                </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                         <PersonRoundedIcon />
@@ -76,7 +87,7 @@ export default function ChainUserSettings({
                         })
                     }
                 >
-                    Lagre
+                    Logg inn
                 </LoadingButton>
             </DialogActions>
         </>

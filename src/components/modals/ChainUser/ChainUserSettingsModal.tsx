@@ -2,22 +2,22 @@ import { Dialog } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import ChainUserSettings from "@/components/modals/ChainUser/ChainUserSettings";
-import { ChainIdentifier } from "@/lib/activeChains";
 import { useChainUser } from "@/lib/hooks/useChainUser";
+import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
 const ChainUserSettingsModal = ({
     open,
     setOpen,
-    chain,
+    chainProfile,
     onSubmit,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    chain: ChainIdentifier;
+    chainProfile: ChainProfile;
     onSubmit: () => void;
 }) => {
-    const { putChainUser, putChainUserIsMutating } = useChainUser(chain);
+    const { putChainUser, putChainUserIsMutating } = useChainUser(chainProfile.identifier);
 
     function submit(payload: ChainUserPayload) {
         putChainUser(payload).then(() => {
@@ -37,7 +37,7 @@ const ChainUserSettingsModal = ({
             fullWidth={true}
         >
             <ChainUserSettings
-                chain={chain}
+                chainProfile={chainProfile}
                 submit={submit}
                 isSubmitting={putChainUserIsMutating}
                 onClose={() => setOpen(false)}
