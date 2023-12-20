@@ -35,10 +35,10 @@ export default function ChainUserSettings({
             </DialogTitle>
             <DialogContent>
                 <Typography variant={"h6"} textAlign={"center"} sx={{ mb: 1 }}>
-                    Registrer <b>{chainProfile.identifier}</b>-medlemskap
+                    Koble til <b>{chainProfile.identifier}</b>-medlemskap
                 </Typography>
                 <Typography variant={"subtitle2"} sx={{ opacity: 0.6, textAlign: "center" }}>
-                    Logg inn med <b>{chainProfile.name}</b>-brukeren din for å aktivere <b>rezervo</b>
+                    Logg inn med <b>{chainProfile.name}</b>-brukeren din knytte den til <b>rezervo</b>
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>

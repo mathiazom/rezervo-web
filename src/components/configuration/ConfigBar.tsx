@@ -53,7 +53,7 @@ function ConfigBar({
                 >
                     {chainUserMissing ? (
                         <Box>
-                            <Tooltip title={`Registrer ${chain}-medlemskap`}>
+                            <Tooltip title={`Koble til ${chain}-medlemskap`}>
                                 <IconButton onClick={() => onChainUserSettingsOpen()}>
                                     <RocketLaunchRounded />
                                 </IconButton>

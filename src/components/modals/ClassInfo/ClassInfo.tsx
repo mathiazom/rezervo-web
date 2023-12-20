@@ -343,11 +343,11 @@ export default function ClassInfo({
             {user !== undefined && userConfig === undefined && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1 }}>
                     <AlertTitle>
-                        Registrer ditt <b>{chain}</b>-medlemskap
+                        Koble til <b>{chain}</b>-medlemskap
                     </AlertTitle>
-                    Du må registrere medlemskapet ditt å kunne booke eller legge til timer i timeplanen. Trykk på
-                    rakettsymbolet <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til høyre for å logge
-                    inn med {chain}
+                    Du må tilknytte <b>{chain}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller legge til
+                    timer i timeplanen. Trykk på rakettsymbolet <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} />{" "}
+                    øverst til høyre for å logge inn med {chain}
                     -brukeren din.
                 </Alert>
             )}
