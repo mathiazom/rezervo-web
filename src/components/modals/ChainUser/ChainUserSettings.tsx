@@ -1,36 +1,59 @@
 import { PasswordRounded } from "@mui/icons-material";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Button, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, DialogActions, DialogContent, Typography, useMediaQuery, useTheme } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
-import { ChainIdentifier } from "@/lib/activeChains";
+import ChainLogo from "@/components/utils/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";
+import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
 export default function ChainUserSettings({
-    chain,
+    chainProfile,
     submit,
     isSubmitting,
     onClose,
 }: {
-    chain: ChainIdentifier;
+    chainProfile: ChainProfile;
     submit: (payload: ChainUserPayload) => void;
     isSubmitting: boolean;
     onClose: () => void;
 }) {
-    const { chainUser, chainUserMissing } = useChainUser(chain);
+    const theme = useTheme();
+
+    const { chainUser, chainUserMissing } = useChainUser(chainProfile.identifier);
 
     const [username, setUsername] = useState(chainUser?.username ?? "");
     const [password, setPassword] = useState("");
 
+    const shortDevice = useMediaQuery("(max-height: 380px)");
+
     return (
         <>
-            <DialogTitle>Konfigurer {chain}-bruker</DialogTitle>
-            <DialogContent>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem", marginTop: "0.5rem" }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+            <DialogContent
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.5,
+                    marginTop: 1,
+                }}
+            >
+                <Box sx={{ height: 50, flexShrink: 0, marginY: 2, display: shortDevice ? "none" : undefined }}>
+                    <ChainLogo chainProfile={chainProfile} />
+                </Box>
+                <Typography variant={"h6"} textAlign={"center"}>
+                    Koble til <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
+                </Typography>
+                <Typography
+                    variant={"subtitle2"}
+                    sx={{ color: theme.palette.grey[600], textAlign: "center", maxWidth: "18rem", margin: "0 auto" }}
+                >
+                    Logg inn med brukeren din fra <b>{chainProfile.name}</b> for å koble den til <b>rezervo</b>
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: "2rem" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <PersonRoundedIcon />
                         <TextField
                             sx={{ width: "100%" }}
@@ -76,7 +99,7 @@ export default function ChainUserSettings({
                         })
                     }
                 >
-                    Lagre
+                    Logg inn
                 </LoadingButton>
             </DialogActions>
         </>

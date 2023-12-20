@@ -32,6 +32,7 @@ const AgendaModal = ({
                         }))}
                         onInfo={onInfo}
                         onDelete={(c) => onUpdateConfig(classConfigRecurrentId(c), false)}
+                        bookingActive={userConfig?.active === true}
                     />
                 )}
             </>

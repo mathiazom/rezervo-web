@@ -1,5 +1,5 @@
-import { EventRepeat } from "@mui/icons-material";
-import { Alert, AlertTitle, Box, Typography, useTheme } from "@mui/material";
+import { CalendarToday, EventRepeat, PauseCircleRounded } from "@mui/icons-material";
+import { Alert, AlertTitle, Avatar, Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
@@ -12,12 +12,15 @@ export default function Agenda({
     agendaClasses,
     onInfo,
     onDelete,
+    bookingActive,
 }: {
     agendaClasses: AgendaClass[];
     onInfo: (c: RezervoClass) => void;
     onDelete: (cc: ClassConfig) => void;
+    bookingActive: boolean;
 }) {
     const theme = useTheme();
+    const hasGhostClasses = agendaClasses.some((agendaClass) => agendaClass._class === undefined);
 
     // Establish sort order of config classes
     const configTimeMinutes = (cc: ClassConfig) => cc.time.hour * 60 + cc.time.minute;
@@ -34,16 +37,20 @@ export default function Agenda({
                 maxWidth: 500,
                 minHeight: 300,
                 transform: "translate(-50%, -50%)",
-                backgroundColor: theme.palette.background.paper,
                 borderRadius: "0.25em",
                 boxShadow: 24,
                 p: 4,
+                backgroundColor: "white",
+                '[data-mui-color-scheme="dark"] &': {
+                    backgroundColor: "#181818",
+                },
             }}
         >
             <Box
                 sx={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                 }}
             >
                 <Typography variant="h6" component="h2">
@@ -56,17 +63,51 @@ export default function Agenda({
                     color: theme.palette.grey[600],
                     fontSize: 15,
                 }}
-                mb={1}
+                mb={2.5}
             >
                 Disse timene vil bli booket automatisk
             </Typography>
-            {agendaClasses.length === 0 && (
-                <Alert severity={"info"} sx={{ mt: 4 }}>
-                    <AlertTitle>Ingen timer planlagt</AlertTitle>
-                    Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge til
-                    en time i timeplanen.
-                </Alert>
-            )}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1.5,
+                }}
+            >
+                {!bookingActive && (
+                    <Alert severity={"info"} icon={<PauseCircleRounded />}>
+                        <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
+                        Du kan skru på automatisk booking i Innstillinger, slik at timene i timeplanen blir booket
+                        automatisk
+                    </Alert>
+                )}
+                {hasGhostClasses && bookingActive && (
+                    <Alert
+                        severity={"error"}
+                        icon={
+                            <Avatar
+                                alt={"Ghost class"}
+                                src={"/ghost.png"}
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                }}
+                            />
+                        }
+                    >
+                        <AlertTitle>Utdatert timeplan</AlertTitle>
+                        En eller flere av timene i planen din går ikke denne uka. Kontroller at planen din stemmer
+                        overens med ukas gruppetimer.
+                    </Alert>
+                )}
+                {agendaClasses.length === 0 && (
+                    <Alert severity={"info"} icon={<CalendarToday fontSize={"small"} />}>
+                        <AlertTitle>Ingen timer planlagt</AlertTitle>
+                        Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge
+                        til en time i timeplanen.
+                    </Alert>
+                )}
+            </Box>
             <Box pt={2}>
                 {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
                     const dayClasses = agendaClasses.filter((a) => a.config.weekday === weekday);

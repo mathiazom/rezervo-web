@@ -75,7 +75,15 @@ export default function AgendaClassItem({
                             : undefined,
                 }}
             >
-                <CardContent onClick={onInfo} className={"unselectable"} sx={{ paddingBottom: 2, flexGrow: 1 }}>
+                <CardContent
+                    onClick={onInfo}
+                    className={"unselectable"}
+                    sx={{
+                        paddingBottom: 2,
+                        flexGrow: 1,
+                        cursor: agendaClass._class === undefined ? "auto" : "pointer",
+                    }}
+                >
                     <Box
                         sx={{
                             display: "flex",
@@ -100,7 +108,7 @@ export default function AgendaClassItem({
                             )}
                         </Box>
                         {agendaClass._class === undefined && (
-                            <Tooltip title={"Spøkelsestime"}>
+                            <Tooltip title={"Denne timen går ikke denne uka"}>
                                 <Avatar
                                     alt={"Ghost class"}
                                     src={"/ghost.png"}

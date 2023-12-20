@@ -1,11 +1,12 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CalendarMonth, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
+import { CalendarMonth, CalendarToday, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Avatar, Badge, Box, CircularProgress, Tooltip, useTheme } from "@mui/material";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import React from "react";
 
@@ -52,7 +53,7 @@ function ConfigBar({
                 >
                     {chainUserMissing ? (
                         <Box>
-                            <Tooltip title={`Konfigurer ${chain}-bruker`}>
+                            <Tooltip title={`Koble til ${chain}-medlemskap`}>
                                 <IconButton onClick={() => onChainUserSettingsOpen()}>
                                     <RocketLaunchRounded />
                                 </IconButton>
@@ -88,10 +89,30 @@ function ConfigBar({
                                 alignItems: "center",
                             }}
                         >
-                            <Tooltip title={"Min timeplan"}>
-                                <IconButton onClick={() => onAgendaOpen()}>
-                                    <CalendarMonth />
-                                </IconButton>
+                            <Tooltip title={`Min timeplan${userConfig?.active ? "" : " (pauset)"}`}>
+                                <Badge
+                                    onClick={() => onAgendaOpen()}
+                                    invisible={userConfig?.active ?? true}
+                                    overlap={"circular"}
+                                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                                    badgeContent={
+                                        <PauseCircleRounded
+                                            fontSize={"small"}
+                                            color={"disabled"}
+                                            sx={{
+                                                cursor: "pointer",
+                                                backgroundColor: theme.palette.background.default,
+                                                borderRadius: "50%",
+                                                marginTop: "-0.5rem",
+                                                marginLeft: "-0.5rem",
+                                            }}
+                                        />
+                                    }
+                                >
+                                    <IconButton>
+                                        {userConfig?.classes.length === 0 ? <CalendarToday /> : <CalendarMonth />}
+                                    </IconButton>
+                                </Badge>
                             </Tooltip>
                             <Tooltip title={"Innstillinger"}>
                                 <IconButton onClick={() => onSettingsOpen()}>
@@ -101,30 +122,17 @@ function ConfigBar({
                         </Box>
                     )}
                     {user.name && (
-                        <Tooltip title={`${user.name}${userConfig?.active ? "" : " (pauset)"}`}>
-                            <Badge
-                                invisible={userConfig?.active ?? true}
-                                overlap={"circular"}
-                                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                                badgeContent={
-                                    <PauseCircleRounded
-                                        fontSize={"small"}
-                                        color={"disabled"}
-                                        sx={{ backgroundColor: theme.palette.background.default, borderRadius: "50%" }}
-                                    />
-                                }
+                        <Tooltip title={user.name}>
+                            <Avatar
+                                sx={{
+                                    width: 32,
+                                    height: 32,
+                                    fontSize: 18,
+                                    backgroundColor: hexColorHash(user.name),
+                                }}
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 32,
-                                        height: 32,
-                                        fontSize: 18,
-                                        backgroundColor: hexColorHash(user.name),
-                                    }}
-                                >
-                                    {user.name[0]}
-                                </Avatar>
-                            </Badge>
+                                {user.name[0]}
+                            </Avatar>
                         </Tooltip>
                     )}
                     <Tooltip title={"Logg ut"}>
@@ -135,11 +143,9 @@ function ConfigBar({
                 </Box>
             ) : (
                 <Box>
-                    <Tooltip title={"Logg inn"}>
-                        <IconButton color={"primary"} href={"/api/auth/login"}>
-                            <LoginIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <Button endIcon={<LoginIcon />} href={"/api/auth/login"}>
+                        Logg inn
+                    </Button>
                 </Box>
             )}
         </>

@@ -7,13 +7,16 @@ import {
     EventBusy,
     EventRepeat,
     HourglassTop,
+    Login,
+    PauseCircleRounded,
+    RocketLaunch,
 } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Alert, Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -332,6 +335,21 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
+            {user === undefined && !isInThePast && (
+                <Alert severity="info" sx={{ mt: 1.5 }} icon={<Login fontSize={"small"} />}>
+                    Du må logge inn for å kunne booke eller legge til timer i timeplanen
+                </Alert>
+            )}
+            {user !== undefined && userConfig === undefined && !isInThePast && (
+                <Alert severity="info" sx={{ mt: 1.5 }}>
+                    <AlertTitle>
+                        Koble til <b>{chain.toUpperCase()}</b>-medlemskap
+                    </AlertTitle>
+                    Du må koble <b>{chain.toUpperCase()}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller
+                    legge til timer i timeplanen. Trykk på rakettsymbolet{" "}
+                    <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til høyre for å koble til.
+                </Alert>
+            )}
             {_class.activity.image && (
                 <Box pt={2}>
                     <Image
@@ -401,12 +419,21 @@ export default function ClassInfo({
                             Legg til i timeplan
                         </Button>
                     )}
-                    {!_class.isBookable && (
-                        <Alert sx={{ mt: 1 }} severity="info">
-                            Booking for denne timen har ikke åpnet enda
-                            {classInUserConfig && ", men den vil bli booket automatisk når bookingen åpner"}
-                        </Alert>
-                    )}
+                    {!_class.isBookable &&
+                        (userConfig?.active === false && classInUserConfig ? (
+                            <Alert severity={"info"} sx={{ mt: 1 }} icon={<PauseCircleRounded />}>
+                                <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
+                                Denne timen vil ikke bli booket automatisk. Du kan skru på automatisk booking i
+                                innstillinger, slik at timene i timeplanen blir booket automatisk
+                            </Alert>
+                        ) : (
+                            <Alert sx={{ mt: 1 }} severity="info">
+                                Booking for denne timen har ikke åpnet enda
+                                {classInUserConfig &&
+                                    userConfig?.active &&
+                                    ", men den vil bli booket automatisk når bookingen åpner"}
+                            </Alert>
+                        ))}
                 </>
             )}
             <ConfirmationDialog
