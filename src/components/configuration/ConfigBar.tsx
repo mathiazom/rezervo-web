@@ -6,6 +6,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Avatar, Badge, Box, CircularProgress, Tooltip, useTheme } from "@mui/material";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import React from "react";
 
@@ -135,11 +136,9 @@ function ConfigBar({
                 </Box>
             ) : (
                 <Box>
-                    <Tooltip title={"Logg inn"}>
-                        <IconButton color={"primary"} href={"/api/auth/login"}>
-                            <LoginIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <Button startIcon={<LoginIcon />} href={"/api/auth/login"}>
+                        Logg inn
+                    </Button>
                 </Box>
             )}
         </>
