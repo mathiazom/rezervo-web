@@ -89,10 +89,26 @@ function ConfigBar({
                                 alignItems: "center",
                             }}
                         >
-                            <Tooltip title={"Min timeplan"}>
-                                <IconButton onClick={() => onAgendaOpen()}>
-                                    <CalendarMonth />
-                                </IconButton>
+                            <Tooltip title={`Min timeplan${userConfig?.active ? "" : " (pauset)"}`}>
+                                <Badge
+                                    invisible={userConfig?.active ?? true}
+                                    overlap={"circular"}
+                                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                                    badgeContent={
+                                        <PauseCircleRounded
+                                            fontSize={"small"}
+                                            color={"disabled"}
+                                            sx={{
+                                                backgroundColor: theme.palette.background.default,
+                                                borderRadius: "50%",
+                                            }}
+                                        />
+                                    }
+                                >
+                                    <IconButton onClick={() => onAgendaOpen()}>
+                                        <CalendarMonth />
+                                    </IconButton>
+                                </Badge>
                             </Tooltip>
                             <Tooltip title={"Innstillinger"}>
                                 <IconButton onClick={() => onSettingsOpen()}>
@@ -102,30 +118,17 @@ function ConfigBar({
                         </Box>
                     )}
                     {user.name && (
-                        <Tooltip title={`${user.name}${userConfig?.active ? "" : " (pauset)"}`}>
-                            <Badge
-                                invisible={userConfig?.active ?? true}
-                                overlap={"circular"}
-                                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                                badgeContent={
-                                    <PauseCircleRounded
-                                        fontSize={"small"}
-                                        color={"disabled"}
-                                        sx={{ backgroundColor: theme.palette.background.default, borderRadius: "50%" }}
-                                    />
-                                }
+                        <Tooltip title={user.name}>
+                            <Avatar
+                                sx={{
+                                    width: 32,
+                                    height: 32,
+                                    fontSize: 18,
+                                    backgroundColor: hexColorHash(user.name),
+                                }}
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 32,
-                                        height: 32,
-                                        fontSize: 18,
-                                        backgroundColor: hexColorHash(user.name),
-                                    }}
-                                >
-                                    {user.name[0]}
-                                </Avatar>
-                            </Badge>
+                                {user.name[0]}
+                            </Avatar>
                         </Tooltip>
                     )}
                     <Tooltip title={"Logg ut"}>
