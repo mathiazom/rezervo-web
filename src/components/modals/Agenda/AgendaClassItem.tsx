@@ -110,7 +110,7 @@ export default function AgendaClassItem({
                             )}
                         </Box>
                         {agendaClass._class === undefined && (
-                            <Tooltip title={"Spøkelsestime"}>
+                            <Tooltip title={"Denne timen er ikke satt opp denne uka"}>
                                 <Avatar
                                     alt={"Ghost class"}
                                     src={"/ghost.png"}

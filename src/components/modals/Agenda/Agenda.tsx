@@ -22,6 +22,7 @@ export default function Agenda({
 }) {
     const theme = useTheme();
     const { userConfig } = useUserConfig(chainProfile.identifier);
+    const hasGhostClasses = agendaClasses.some((agendaClass) => agendaClass._class === undefined);
 
     // Establish sort order of config classes
     const configTimeMinutes = (cc: ClassConfig) => cc.time.hour * 60 + cc.time.minute;
@@ -75,6 +76,25 @@ export default function Agenda({
                     <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
                     Du kan skru på automatisk booking i innstillinger, slik at timene i timeplanen blir booket
                     automatisk
+                </Alert>
+            )}
+            {hasGhostClasses && userConfig?.active && (
+                <Alert
+                    severity={"error"}
+                    icon={
+                        <Avatar
+                            alt={"Ghost class"}
+                            src={"/ghost.png"}
+                            sx={{
+                                width: 20,
+                                height: 20,
+                            }}
+                        />
+                    }
+                >
+                    <AlertTitle>Utdatert timeplan</AlertTitle>
+                    En eller flere av timene i timeplanen din er ikke satt opp denne uka. Kontroller at timeplanen din
+                    stemmer overens med ukas gruppetimer.
                 </Alert>
             )}
             {agendaClasses.length === 0 && (
