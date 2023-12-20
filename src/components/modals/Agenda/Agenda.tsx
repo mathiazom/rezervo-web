@@ -1,4 +1,4 @@
-import { EventRepeat, PauseCircleRounded } from "@mui/icons-material";
+import { CalendarToday, EventRepeat, PauseCircleRounded } from "@mui/icons-material";
 import { Alert, AlertTitle, Avatar, Box, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
@@ -78,7 +78,11 @@ export default function Agenda({
                 </Alert>
             )}
             {agendaClasses.length === 0 && (
-                <Alert severity={"info"} sx={{ mt: 4 }}>
+                <Alert
+                    severity={"info"}
+                    sx={{ mt: userConfig?.active ? 4 : 1 }}
+                    icon={<CalendarToday fontSize={"small"} />}
+                >
                     <AlertTitle>Ingen timer planlagt</AlertTitle>
                     Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge til
                     en time i timeplanen.
