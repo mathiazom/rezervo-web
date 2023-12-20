@@ -35,6 +35,14 @@ const ChainUserSettingsModal = ({
             }}
             maxWidth={"xs"}
             fullWidth={true}
+            PaperProps={{
+                sx: {
+                    backgroundColor: "white",
+                    '[data-mui-color-scheme="dark"] &': {
+                        backgroundColor: "#181818",
+                    },
+                },
+            }}
         >
             <ChainUserSettings
                 chainProfile={chainProfile}
