@@ -336,19 +336,18 @@ export default function ClassInfo({
                 </Box>
             )}
             {user === undefined && !isInThePast && (
-                <Alert severity="info" sx={{ mt: 1 }} icon={<Login fontSize={"small"} />}>
+                <Alert severity="info" sx={{ mt: 1.5 }} icon={<Login fontSize={"small"} />}>
                     Du må logge inn for å kunne booke eller legge til timer i timeplanen
                 </Alert>
             )}
             {user !== undefined && userConfig === undefined && !isInThePast && (
-                <Alert severity="info" sx={{ mt: 1 }}>
+                <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>
-                        Koble til <b>{chain}</b>-medlemskap
+                        Koble til <b>{chain.toUpperCase()}</b>-medlemskap
                     </AlertTitle>
-                    Du må koble <b>{chain}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller legge til timer i
-                    timeplanen. Trykk på rakettsymbolet <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til
-                    høyre for å logge inn med {chain}
-                    -brukeren din.
+                    Du må koble <b>{chain.toUpperCase()}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller
+                    legge til timer i timeplanen. Trykk på rakettsymbolet{" "}
+                    <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til høyre for å koble til.
                 </Alert>
             )}
             {_class.activity.image && (
