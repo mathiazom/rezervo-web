@@ -166,7 +166,6 @@ function Chain({
                 classes={classes}
                 onInfo={setClassInfoClass}
                 onUpdateConfig={onUpdateConfig}
-                chainProfile={chainProfile}
             />
             <SettingsModal
                 open={isSettingsOpen}

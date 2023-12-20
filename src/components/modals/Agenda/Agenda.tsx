@@ -1,27 +1,25 @@
 import { CalendarToday, EventRepeat, PauseCircleRounded } from "@mui/icons-material";
-import { Alert, AlertTitle, Avatar, Box, Tooltip, Typography, useTheme } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
-import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { ChainProfile, RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 
 export default function Agenda({
     agendaClasses,
     onInfo,
     onDelete,
-    chainProfile,
+    bookingActive,
 }: {
     agendaClasses: AgendaClass[];
     onInfo: (c: RezervoClass) => void;
     onDelete: (cc: ClassConfig) => void;
-    chainProfile: ChainProfile;
+    bookingActive: boolean;
 }) {
     const theme = useTheme();
-    const { userConfig } = useUserConfig(chainProfile.identifier);
     const hasGhostClasses = agendaClasses.some((agendaClass) => agendaClass._class === undefined);
 
     // Establish sort order of config classes
@@ -55,11 +53,6 @@ export default function Agenda({
                 <Typography variant="h6" component="h2">
                     Min timeplan
                 </Typography>
-                <Tooltip title={chainProfile.name}>
-                    <Avatar sx={{ width: 22, height: 22 }} src={chainProfile.images.common.smallLogo ?? ""}>
-                        {chainProfile.identifier}
-                    </Avatar>
-                </Tooltip>
             </Box>
             <Typography
                 variant="body2"
@@ -71,14 +64,14 @@ export default function Agenda({
             >
                 Disse timene vil bli booket automatisk
             </Typography>
-            {userConfig?.active === false && (
+            {!bookingActive && (
                 <Alert severity={"info"} icon={<PauseCircleRounded />}>
                     <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
                     Du kan skru på automatisk booking i innstillinger, slik at timene i timeplanen blir booket
                     automatisk
                 </Alert>
             )}
-            {hasGhostClasses && userConfig?.active && (
+            {hasGhostClasses && bookingActive && (
                 <Alert
                     severity={"error"}
                     icon={
@@ -98,11 +91,7 @@ export default function Agenda({
                 </Alert>
             )}
             {agendaClasses.length === 0 && (
-                <Alert
-                    severity={"info"}
-                    sx={{ mt: userConfig?.active ? 4 : 1 }}
-                    icon={<CalendarToday fontSize={"small"} />}
-                >
+                <Alert severity={"info"} sx={{ mt: bookingActive ? 4 : 1 }} icon={<CalendarToday fontSize={"small"} />}>
                     <AlertTitle>Ingen timer planlagt</AlertTitle>
                     Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge til
                     en time i timeplanen.
@@ -134,7 +123,7 @@ export default function Agenda({
                                                     agendaClass={cls}
                                                     onDelete={onDelete}
                                                     onInfo={() => cls._class && onInfo(cls._class)}
-                                                    bookingActive={userConfig?.active === true}
+                                                    bookingActive={bookingActive}
                                                     // onSettings={() =>
                                                     //     setSettingsClass(_class)
                                                     // }
