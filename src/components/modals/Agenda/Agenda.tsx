@@ -37,10 +37,13 @@ export default function Agenda({
                 maxWidth: 500,
                 minHeight: 300,
                 transform: "translate(-50%, -50%)",
-                backgroundColor: theme.palette.background.paper,
                 borderRadius: "0.25em",
                 boxShadow: 24,
                 p: 4,
+                backgroundColor: "white",
+                '[data-mui-color-scheme="dark"] &': {
+                    backgroundColor: "#181818",
+                },
             }}
         >
             <Box
@@ -60,43 +63,51 @@ export default function Agenda({
                     color: theme.palette.grey[600],
                     fontSize: 15,
                 }}
-                mb={1}
+                mb={2.5}
             >
                 Disse timene vil bli booket automatisk
             </Typography>
-            {!bookingActive && (
-                <Alert severity={"info"} icon={<PauseCircleRounded />}>
-                    <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
-                    Du kan skru på automatisk booking i innstillinger, slik at timene i timeplanen blir booket
-                    automatisk
-                </Alert>
-            )}
-            {hasGhostClasses && bookingActive && (
-                <Alert
-                    severity={"error"}
-                    icon={
-                        <Avatar
-                            alt={"Ghost class"}
-                            src={"/ghost.png"}
-                            sx={{
-                                width: 20,
-                                height: 20,
-                            }}
-                        />
-                    }
-                >
-                    <AlertTitle>Utdatert timeplan</AlertTitle>
-                    En eller flere av timene i planen din går ikke denne uka. Kontroller at planen din stemmer overens
-                    med ukas gruppetimer.
-                </Alert>
-            )}
-            {agendaClasses.length === 0 && (
-                <Alert severity={"info"} sx={{ mt: bookingActive ? 4 : 1 }} icon={<CalendarToday fontSize={"small"} />}>
-                    <AlertTitle>Ingen timer planlagt</AlertTitle>
-                    Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge til
-                    en time i timeplanen.
-                </Alert>
-            )}
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1.5,
+                }}
+            >
+                {!bookingActive && (
+                    <Alert severity={"info"} icon={<PauseCircleRounded />}>
+                        <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
+                        Du kan skru på automatisk booking i Innstillinger, slik at timene i timeplanen blir booket
+                        automatisk
+                    </Alert>
+                )}
+                {hasGhostClasses && bookingActive && (
+                    <Alert
+                        severity={"error"}
+                        icon={
+                            <Avatar
+                                alt={"Ghost class"}
+                                src={"/ghost.png"}
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                }}
+                            />
+                        }
+                    >
+                        <AlertTitle>Utdatert timeplan</AlertTitle>
+                        En eller flere av timene i planen din går ikke denne uka. Kontroller at planen din stemmer
+                        overens med ukas gruppetimer.
+                    </Alert>
+                )}
+                {agendaClasses.length === 0 && (
+                    <Alert severity={"info"} icon={<CalendarToday fontSize={"small"} />}>
+                        <AlertTitle>Ingen timer planlagt</AlertTitle>
+                        Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å legge
+                        til en time i timeplanen.
+                    </Alert>
+                )}
+            </Box>
             <Box pt={2}>
                 {[0, 1, 2, 3, 4, 5, 6].map((weekday) => {
                     const dayClasses = agendaClasses.filter((a) => a.config.weekday === weekday);

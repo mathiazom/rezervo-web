@@ -91,21 +91,25 @@ function ConfigBar({
                         >
                             <Tooltip title={`Min timeplan${userConfig?.active ? "" : " (pauset)"}`}>
                                 <Badge
+                                    onClick={() => onAgendaOpen()}
                                     invisible={userConfig?.active ?? true}
                                     overlap={"circular"}
-                                    anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                                     badgeContent={
                                         <PauseCircleRounded
                                             fontSize={"small"}
                                             color={"disabled"}
                                             sx={{
+                                                cursor: "pointer",
                                                 backgroundColor: theme.palette.background.default,
                                                 borderRadius: "50%",
+                                                marginTop: "-0.5rem",
+                                                marginLeft: "-0.5rem",
                                             }}
                                         />
                                     }
                                 >
-                                    <IconButton onClick={() => onAgendaOpen()}>
+                                    <IconButton>
                                         {userConfig?.classes.length === 0 ? <CalendarToday /> : <CalendarMonth />}
                                     </IconButton>
                                 </Badge>
