@@ -441,9 +441,10 @@ export default function ClassInfo({
                 title={`Avbestille time?`}
                 description={
                     <>
-                        <Typography>{`Du er i ferd med å avbestille ${_class.activity.name} (${getCapitalizedWeekday(
-                            _class.startTime,
-                        )}, ${_class.startTime.toFormat("HH:mm")}).`}</Typography>
+                        <Typography>
+                            Du er i ferd med å avbestille <b>{_class.activity.name}</b> (
+                            {getCapitalizedWeekday(_class.startTime)}, {_class.startTime.toFormat("HH:mm")}).
+                        </Typography>
                         <Typography>Dette kan ikke angres!</Typography>
                     </>
                 }

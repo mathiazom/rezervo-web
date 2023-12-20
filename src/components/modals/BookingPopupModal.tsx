@@ -47,31 +47,26 @@ const BookingPopupModal = ({
     }
 
     return (
-        <Dialog
-            open={action !== null}
-            onClose={() => {
-                if (!bookingLoading) {
-                    onClose();
-                }
-            }}
-            maxWidth={"xs"}
-            fullWidth={true}
-        >
-            {_class !== null && (
+        <Dialog open={action !== null} maxWidth={"xs"} fullWidth={true}>
+            {_class !== null && action !== null && (
                 <>
-                    <DialogTitle>
-                        {isCancellation ? "Vil du avbestille timen?" : "Vil du booke førstkommende time?"}
-                    </DialogTitle>
+                    <DialogTitle>{isCancellation ? "Avbestille timen?" : "Booke førstkommende time?"}</DialogTitle>
                     <DialogContent>
                         <Typography>
-                            {isCancellation
-                                ? `Du har allerede booket ${classDescription}. Vil du avbestille denne nå?`
-                                : `Booking for ${classDescription} har allerede åpnet. Vil du booke nå?`}
+                            {isCancellation ? (
+                                <>
+                                    Du har allerede booket <b>{classDescription}</b>. Vil du avbestille denne nå?
+                                </>
+                            ) : (
+                                <>
+                                    Booking for <b>{classDescription}</b> har allerede åpnet. Vil du booke timen nå?
+                                </>
+                            )}
                         </Typography>
                     </DialogContent>
                     <DialogActions>
-                        <Button disabled={bookingLoading} onClick={onClose} variant={"outlined"} color={"inherit"}>
-                            Lukk
+                        <Button disabled={bookingLoading} onClick={onClose} color={"inherit"}>
+                            Nei takk
                         </Button>
                         <LoadingButton
                             startIcon={
