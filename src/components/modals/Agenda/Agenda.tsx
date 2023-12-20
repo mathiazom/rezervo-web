@@ -1,21 +1,23 @@
 import { EventRepeat } from "@mui/icons-material";
-import { Alert, AlertTitle, Box, Typography, useTheme } from "@mui/material";
+import { Alert, AlertTitle, Avatar, Box, Tooltip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaClassItem, { AgendaClass } from "@/components/modals/Agenda/AgendaClassItem";
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass } from "@/types/chain";
+import { ChainProfile, RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 
 export default function Agenda({
     agendaClasses,
     onInfo,
     onDelete,
+    chainProfile,
 }: {
     agendaClasses: AgendaClass[];
     onInfo: (c: RezervoClass) => void;
     onDelete: (cc: ClassConfig) => void;
+    chainProfile: ChainProfile;
 }) {
     const theme = useTheme();
 
@@ -44,11 +46,17 @@ export default function Agenda({
                 sx={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                 }}
             >
                 <Typography variant="h6" component="h2">
                     Min timeplan
                 </Typography>
+                <Tooltip title={chainProfile.name}>
+                    <Avatar sx={{ width: 22, height: 22 }} src={chainProfile.images.common.smallLogo ?? ""}>
+                        {chainProfile.identifier}
+                    </Avatar>
+                </Tooltip>
             </Box>
             <Typography
                 variant="body2"

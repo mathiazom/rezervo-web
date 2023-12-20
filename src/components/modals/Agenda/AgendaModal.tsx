@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass } from "@/types/chain";
+import { ChainProfile, RezervoClass } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
 
 const AgendaModal = ({
@@ -13,6 +13,7 @@ const AgendaModal = ({
     classes,
     onInfo,
     onUpdateConfig,
+    chainProfile,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
@@ -20,6 +21,7 @@ const AgendaModal = ({
     classes: RezervoClass[];
     onInfo: Dispatch<SetStateAction<RezervoClass | null>>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
+    chainProfile: ChainProfile;
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
@@ -32,6 +34,7 @@ const AgendaModal = ({
                         }))}
                         onInfo={onInfo}
                         onDelete={(c) => onUpdateConfig(classConfigRecurrentId(c), false)}
+                        chainProfile={chainProfile}
                     />
                 )}
             </>
