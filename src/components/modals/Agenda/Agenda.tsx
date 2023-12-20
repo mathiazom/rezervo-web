@@ -86,8 +86,8 @@ export default function Agenda({
                     }
                 >
                     <AlertTitle>Utdatert timeplan</AlertTitle>
-                    En eller flere av timene i timeplanen din er ikke satt opp denne uka. Kontroller at timeplanen din
-                    stemmer overens med ukas gruppetimer.
+                    En eller flere av timene i planen din går ikke denne uka. Kontroller at planen din stemmer overens
+                    med ukas gruppetimer.
                 </Alert>
             )}
             {agendaClasses.length === 0 && (
