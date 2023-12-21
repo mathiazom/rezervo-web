@@ -3,6 +3,7 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
+import BookingPopupModal from "@/components/modals/BookingPopupModal";
 import ChainUserSettingsModal from "@/components/modals/ChainUser/ChainUserSettingsModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
 import SettingsModal from "@/components/modals/Settings/SettingsModal";
@@ -12,8 +13,9 @@ import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
-import { classConfigRecurrentId } from "@/lib/helpers/recurrentId";
+import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
 import { ChainProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
@@ -35,6 +37,7 @@ function Chain({
     error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chainProfile.identifier);
+    const { userSessionsIndex } = useUserSessions(chainProfile.identifier);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -43,6 +46,8 @@ function Chain({
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isChainUserSettingsOpen, setIsChainUserSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
+    const [bookingPopupClass, setBookingPopupClass] = useState<RezervoClass | null>(null);
+    const [bookingPopupAction, setBookingPopupAction] = useState<"book" | "cancel" | null>(null);
 
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
 
@@ -73,6 +78,16 @@ function Chain({
     }, [classesConfigMap, userConfig?.classes]);
 
     const onUpdateConfig = (classId: string, selected: boolean) => {
+        const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
+        if (selectedClass?.isBookable) {
+            setBookingPopupClass(selectedClass);
+            const isBooked = userSessionsIndex?.[selectedClass.id] !== undefined;
+            if (selected && !isBooked) {
+                setBookingPopupAction("book");
+            } else if (!selected && isBooked) {
+                setBookingPopupAction("cancel");
+            }
+        }
         const s = selectedClassIds;
         const newSelectedClassIds =
             s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId);
@@ -180,6 +195,12 @@ function Chain({
                 setOpen={setIsChainUserSettingsOpen}
                 chainProfile={chainProfile}
                 onSubmit={() => setIsChainUserSettingsOpen(false)}
+            />
+            <BookingPopupModal
+                onClose={() => setBookingPopupAction(null)}
+                chain={chainProfile.identifier}
+                _class={bookingPopupClass}
+                action={bookingPopupAction}
             />
         </>
     );
