@@ -2,6 +2,7 @@ import { Add, Clear, HourglassTop } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
 import { ChainIdentifier } from "@/lib/activeChains";
@@ -22,7 +23,9 @@ const BookingPopupModal = ({
     const { mutateSessionsIndex } = useUserSessions(chain);
     const [bookingLoading, setBookingLoading] = useState(false);
     const isCancellation = action === "cancel";
-    const classDescription = `${_class?.activity.name} (${_class?.startTime.toFormat("DD kl. HH:mm")})`;
+    const classDescription = _class
+        ? `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat("HH:mm")})`
+        : "";
 
     async function book() {
         setBookingLoading(true);
@@ -52,17 +55,20 @@ const BookingPopupModal = ({
                 <>
                     <DialogTitle>{isCancellation ? "Avbestille timen?" : "Booke førstkommende time?"}</DialogTitle>
                     <DialogContent>
-                        <Typography>
-                            {isCancellation ? (
-                                <>
-                                    Du har allerede booket <b>{classDescription}</b>. Vil du avbestille denne nå?
-                                </>
-                            ) : (
-                                <>
-                                    Booking for <b>{classDescription}</b> har allerede åpnet. Vil du booke timen nå?
-                                </>
-                            )}
-                        </Typography>
+                        <DialogContentText>
+                            <Typography>
+                                {isCancellation ? (
+                                    <>
+                                        Du har allerede booket <b>{classDescription}</b>. Vil du avbestille denne nå?
+                                    </>
+                                ) : (
+                                    <>
+                                        Booking for <b>{classDescription}</b> har allerede åpnet. Vil du{" "}
+                                        {_class.availableSlots > 0 ? "booke timen nå" : "sette deg på venteliste"}?
+                                    </>
+                                )}
+                            </Typography>
+                        </DialogContentText>
                     </DialogContent>
                     <DialogActions>
                         <Button disabled={bookingLoading} onClick={onClose} color={"inherit"}>
@@ -81,7 +87,7 @@ const BookingPopupModal = ({
                                 ? "Avbestill"
                                 : _class.availableSlots > 0
                                 ? "Book nå"
-                                : "Sett meg på venteliste"}
+                                : "Sett på venteliste"}
                         </LoadingButton>
                     </DialogActions>
                 </>

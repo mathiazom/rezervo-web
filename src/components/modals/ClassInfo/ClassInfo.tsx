@@ -25,7 +25,7 @@ import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMet
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ChainIdentifier } from "@/lib/activeChains";
-import { isClassInThePast, getCapitalizedWeekday } from "@/lib/helpers/date";
+import { isClassInThePast } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -76,6 +76,10 @@ export default function ClassInfo({
     const [bookingLoading, setBookingLoading] = useState(false);
 
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
+
+    const classDescription = _class
+        ? `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat("HH:mm")})`
+        : "";
 
     async function book() {
         setBookingLoading(true);
@@ -442,8 +446,7 @@ export default function ClassInfo({
                 description={
                     <>
                         <Typography>
-                            Du er i ferd med å avbestille <b>{_class.activity.name}</b> (
-                            {getCapitalizedWeekday(_class.startTime)}, {_class.startTime.toFormat("HH:mm")}).
+                            Du er i ferd med å avbestille <b>{classDescription}</b>.
                         </Typography>
                         <Typography>Dette kan ikke angres!</Typography>
                     </>

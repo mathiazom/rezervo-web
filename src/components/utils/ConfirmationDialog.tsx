@@ -31,7 +31,9 @@ export default function ConfirmationDialog({
                 <DialogContentText>{description}</DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>{cancelText}</Button>
+                <Button onClick={onCancel} color={"inherit"}>
+                    {cancelText}
+                </Button>
                 <Button color={"error"} onClick={onConfirm}>
                     {confirmText}
                 </Button>
