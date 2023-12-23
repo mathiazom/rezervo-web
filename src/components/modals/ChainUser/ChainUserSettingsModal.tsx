@@ -1,5 +1,5 @@
 import { Dialog } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 
 import ChainUserSettings from "@/components/modals/ChainUser/ChainUserSettings";
 import { useChainUser } from "@/lib/hooks/useChainUser";
@@ -18,21 +18,28 @@ const ChainUserSettingsModal = ({
     onSubmit: () => void;
 }) => {
     const { putChainUser, putChainUserIsMutating } = useChainUser(chainProfile.identifier);
+    const [authenticationFailed, setAuthenticationFailed] = useState(false);
 
-    function submit(payload: ChainUserPayload) {
-        putChainUser(payload).then(() => {
+    async function submit(payload: ChainUserPayload) {
+        setAuthenticationFailed(false);
+        const chainUser = await putChainUser(payload);
+        if (chainUser.username) {
             onSubmit();
-        });
+        } else {
+            setAuthenticationFailed(true);
+        }
+    }
+    function onClose() {
+        if (!putChainUserIsMutating) {
+            setOpen(false);
+            setAuthenticationFailed(false);
+        }
     }
 
     return (
         <Dialog
             open={open}
-            onClose={() => {
-                if (!putChainUserIsMutating) {
-                    setOpen(false);
-                }
-            }}
+            onClose={onClose}
             maxWidth={"xs"}
             fullWidth={true}
             PaperProps={{
@@ -48,7 +55,8 @@ const ChainUserSettingsModal = ({
                 chainProfile={chainProfile}
                 submit={submit}
                 isSubmitting={putChainUserIsMutating}
-                onClose={() => setOpen(false)}
+                onClose={onClose}
+                authenticationFailed={authenticationFailed}
             />
         </Dialog>
     );

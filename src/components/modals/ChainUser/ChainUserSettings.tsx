@@ -1,7 +1,17 @@
 import { PasswordRounded } from "@mui/icons-material";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Button, DialogActions, DialogContent, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+    Alert,
+    AlertTitle,
+    Box,
+    Button,
+    DialogActions,
+    DialogContent,
+    Typography,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import TextField from "@mui/material/TextField";
 import React, { useState } from "react";
 
@@ -15,11 +25,13 @@ export default function ChainUserSettings({
     submit,
     isSubmitting,
     onClose,
+    authenticationFailed,
 }: {
     chainProfile: ChainProfile;
     submit: (payload: ChainUserPayload) => void;
     isSubmitting: boolean;
     onClose: () => void;
+    authenticationFailed: boolean;
 }) {
     const theme = useTheme();
 
@@ -52,7 +64,16 @@ export default function ChainUserSettings({
                 >
                     Logg inn med brukeren din fra <b>{chainProfile.name}</b> for å koble den til <b>rezervo</b>
                 </Typography>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, marginTop: "2rem" }}>
+                {authenticationFailed && (
+                    <Alert severity={"error"} sx={{ my: 1 }}>
+                        <AlertTitle>Feil brukernavn eller passord</AlertTitle>
+                        <Typography>
+                            Klarte ikke koble til {chainProfile.name}-brukeren din. Kontroller at du har skrevet inn
+                            riktig brukernavn og passord.
+                        </Typography>
+                    </Alert>
+                )}
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: authenticationFailed ? 0 : "2rem" }}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                         <PersonRoundedIcon />
                         <TextField
