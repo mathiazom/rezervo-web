@@ -77,7 +77,9 @@ const activityCategorization: RezervoCategory[] = [
     },
 ];
 
-export default function determineActivityCategory(activityName: string): RezervoCategory {
+export default function determineActivityCategory(activityName: string, isSpecial: boolean): RezervoCategory {
+    if (isSpecial) return activityCategorization[0]!;
+
     return (
         activityCategorization.find((category) =>
             category.keywords.some((keyword) => activityName.toLowerCase().includes(keyword)),

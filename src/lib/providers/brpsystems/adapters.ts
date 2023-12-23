@@ -4,7 +4,7 @@ import { DetailedBrpClass, DetailedBrpWeekSchedule } from "@/lib/providers/brpsy
 import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
 
 function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
-    const category = determineActivityCategory(brpClass.name);
+    const category = determineActivityCategory(brpClass.name, brpClass.externalMessage !== null);
     return {
         id: brpClass.id,
         location: {
@@ -24,7 +24,7 @@ function brpToRezervoClass(brpClass: DetailedBrpClass): RezervoClass {
             name: brpClass.groupActivityProduct.name.replace(/\s\(\d+\)$/, ""),
             category: category.name,
             color: category.color,
-            description: brpClass.description,
+            description: brpClass.externalMessage === null ? brpClass.description : brpClass.externalMessage,
             image: brpClass.image,
         },
         instructors: brpClass.instructors.map((instructor) => instructor.name) || [],
