@@ -271,8 +271,8 @@ export default function ClassInfo({
                             _class.isBookable
                                 ? "har planlagt denne timen, men ikke booket plass!"
                                 : _class.isCancelled
-                                ? "skulle på denne timen"
-                                : "skal på denne timen"
+                                  ? "skulle på denne timen"
+                                  : "skal på denne timen"
                         }
                     />
                     <ClassInfoUsersGroup
@@ -298,8 +298,8 @@ export default function ClassInfo({
                     _class.isCancelled
                         ? "hadde booket denne timen"
                         : isInThePast
-                        ? "var på denne timen"
-                        : "har booket denne timen"
+                          ? "var på denne timen"
+                          : "har booket denne timen"
                 }
             />
             <ClassInfoUsersGroup
