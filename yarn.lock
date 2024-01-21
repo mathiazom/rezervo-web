@@ -955,6 +955,13 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
+"@babel/runtime@7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0.tgz#adeb78fedfc855aa05bc041640f3f6f98e85424c"
+  integrity sha512-7hGhzlcmg01CvH1EHdSPVXYX1aJ8KCEyz6I9xYIi/asDtzBPMyMhVibhM/K6g/5qnKBwjZtp10bNZIEFTRW1MA==
+  dependencies:
+    regenerator-runtime "^0.12.0"
+
 "@babel/runtime@^7.11.2", "@babel/runtime@^7.8.4":
   version "7.22.11"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.11.tgz#7a9ba3bbe406ad6f9e8dd4da2ece453eb23a77a4"
@@ -968,6 +975,13 @@
   integrity sha512-8jI69toZqqcsnqGGqwGS4Qb1VwLOEp4hz+CXPywcvjs60u3B4Pom/U/7rm4W8tMOYEB+E9wgD0mW1l3r8qlI9Q==
   dependencies:
     regenerator-runtime "^0.13.11"
+
+"@babel/runtime@^7.2.0":
+  version "7.23.7"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.7.tgz#dd7c88deeb218a0f8bd34d5db1aa242e0f203193"
+  integrity sha512-w06OXVOFso7LcbzMiDGt+3X7Rh7Ho8MmgPoWU3rarH+8upf+wSU/grlGbWzQyr3DkdN6ZeuMFjpdwW0Q+HxobA==
+  dependencies:
+    regenerator-runtime "^0.14.0"
 
 "@babel/runtime@^7.22.6":
   version "7.22.10"
@@ -1626,6 +1640,13 @@
   version "18.2.1"
   resolved "https://registry.yarnpkg.com/@types/react-is/-/react-is-18.2.1.tgz#61d01c2a6fc089a53520c0b66996d458fdc46863"
   integrity sha512-wyUkmaaSZEzFZivD8F2ftSyAfk6L+DfFliVj/mYdOXbVjRcS87fQJLTnhk6dRZPuJjI+9g6RZJO4PNCngUrmyw==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react-swipeable-views@^0.13.5":
+  version "0.13.5"
+  resolved "https://registry.yarnpkg.com/@types/react-swipeable-views/-/react-swipeable-views-0.13.5.tgz#f9dc947b7424d34cade864185bfa831a818a45f6"
+  integrity sha512-ni6WjO7gBq2xB2Y/ZiRdQOgjGOxIik5ow2s7xKieDq8DxsXTdV46jJslSBVK2yoIJHf6mG3uqNTwxwgzbXRRzg==
   dependencies:
     "@types/react" "*"
 
@@ -4068,6 +4089,11 @@ jsonpointer@^5.0.0:
     array-includes "^3.1.5"
     object.assign "^4.1.3"
 
+keycode@^2.1.7:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/keycode/-/keycode-2.2.1.tgz#09c23b2be0611d26117ea2501c2c391a01f39eff"
+  integrity sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==
+
 language-subtag-registry@~0.3.2:
   version "0.3.22"
   resolved "https://registry.yarnpkg.com/language-subtag-registry/-/language-subtag-registry-0.3.22.tgz#2e1500861b2e457eba7e7ae86877cbd08fa1fd1d"
@@ -4140,7 +4166,7 @@ lodash@^4.17.20:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loose-envify@^1.1.0, loose-envify@^1.4.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -4682,7 +4708,7 @@ pretty-bytes@^5.3.0, pretty-bytes@^5.4.1:
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-5.6.0.tgz#356256f643804773c82f64723fe78c92c62beaeb"
   integrity sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==
 
-prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@^15.5.4, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -4731,6 +4757,13 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-device-detect@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/react-device-detect/-/react-device-detect-2.2.3.tgz#97a7ae767cdd004e7c3578260f48cf70c036e7ca"
+  integrity sha512-buYY3qrCnQVlIFHrC5UcUoAj7iANs/+srdkwsnNjI7anr3Tt7UY6MqNxtMLlr0tMBied0O49UZVK8XKs3ZIiPw==
+  dependencies:
+    ua-parser-js "^1.0.33"
+
 react-dom@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.2.0.tgz#22aaf38708db2674ed9ada224ca4aa708d821e3d"
@@ -4738,6 +4771,15 @@ react-dom@^18.2.0:
   dependencies:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
+
+react-event-listener@^0.6.0:
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/react-event-listener/-/react-event-listener-0.6.6.tgz#758f7b991cad9086dd39fd29fad72127e1d8962a"
+  integrity sha512-+hCNqfy7o9wvO6UgjqFmBzARJS7qrNoda0VqzvOuioEpoEXKutiKuv92dSz6kP7rYLmyHPyYNLesi5t/aH1gfw==
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    prop-types "^15.6.0"
+    warning "^4.0.1"
 
 react-fast-compare@^3.2.0:
   version "3.2.2"
@@ -4760,6 +4802,37 @@ react-snowfall@^1.2.1:
   integrity sha512-d2UR3nDq3F0DJGaTfJ0QNbBo76UZHtT9wHFj+ePxAl4FgSxWBhxB/Bjn06f5iDBwhgwiZ7CZmv3lwfNvjo6a+w==
   dependencies:
     react-fast-compare "^3.2.0"
+
+react-swipeable-views-core@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/react-swipeable-views-core/-/react-swipeable-views-core-0.14.0.tgz#6ac443a7cc7bc5ea022fbd549292bb5fff361cce"
+  integrity sha512-0W/e9uPweNEOSPjmYtuKSC/SvKKg1sfo+WtPdnxeLF3t2L82h7jjszuOHz9C23fzkvLfdgkaOmcbAxE9w2GEjA==
+  dependencies:
+    "@babel/runtime" "7.0.0"
+    warning "^4.0.1"
+
+react-swipeable-views-utils@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/react-swipeable-views-utils/-/react-swipeable-views-utils-0.14.0.tgz#6b76e251906747482730c22002fe47ab1014ba32"
+  integrity sha512-W+fXBOsDqgFK1/g7MzRMVcDurp3LqO3ksC8UgInh2P/tKgb5DusuuB1geKHFc6o1wKl+4oyER4Zh3Lxmr8xbXA==
+  dependencies:
+    "@babel/runtime" "7.0.0"
+    keycode "^2.1.7"
+    prop-types "^15.6.0"
+    react-event-listener "^0.6.0"
+    react-swipeable-views-core "^0.14.0"
+    shallow-equal "^1.2.1"
+
+react-swipeable-views@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/react-swipeable-views/-/react-swipeable-views-0.14.0.tgz#149c0df3d92220cc89e3f6d5c04a78dfe46f9b54"
+  integrity sha512-wrTT6bi2nC3JbmyNAsPXffUXLn0DVT9SbbcFr36gKpbaCgEp7rX/OFxsu5hPc/NBsUhHyoSRGvwqJNNrWTwCww==
+  dependencies:
+    "@babel/runtime" "7.0.0"
+    prop-types "^15.5.4"
+    react-swipeable-views-core "^0.14.0"
+    react-swipeable-views-utils "^0.14.0"
+    warning "^4.0.1"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
@@ -4819,6 +4892,11 @@ regenerate@^1.4.2:
   version "1.4.2"
   resolved "https://registry.yarnpkg.com/regenerate/-/regenerate-1.4.2.tgz#b9346d8827e8f5a32f7ba29637d398b69014848a"
   integrity sha512-zrceR/XhGYU/d/opr2EKO7aRHUeiBI8qjtfHqADTwZd6Szfy16la6kqD0MIUs5z5hx6AaKa+PixpPrR289+I0A==
+
+regenerator-runtime@^0.12.0:
+  version "0.12.1"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
+  integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
 
 regenerator-runtime@^0.13.11:
   version "0.13.11"
@@ -5071,6 +5149,11 @@ set-function-name@^2.0.0, set-function-name@^2.0.1:
     define-data-property "^1.0.1"
     functions-have-names "^1.2.3"
     has-property-descriptors "^1.0.0"
+
+shallow-equal@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/shallow-equal/-/shallow-equal-1.2.1.tgz#4c16abfa56043aa20d050324efa68940b0da79da"
+  integrity sha512-S4vJDjHHMBaiZuT9NPb616CSmLf618jawtv3sufLl6ivK8WocjAo58cXwbRV1cgqxH0Qbv+iUt6m05eqEa2IRA==
 
 sharp@^0.32.6:
   version "0.32.6"
@@ -5644,6 +5727,11 @@ typescript@^5.2.2:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
   integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
 
+ua-parser-js@^1.0.33:
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.37.tgz#b5dc7b163a5c1f0c510b08446aed4da92c46373f"
+  integrity sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==
+
 unbox-primitive@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/unbox-primitive/-/unbox-primitive-1.0.2.tgz#29032021057d5e6cdbd08c5129c226dff8ed6f9e"
@@ -5744,6 +5832,13 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+warning@^4.0.1:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/warning/-/warning-4.0.3.tgz#16e9e077eb8a86d6af7d64aa1e05fd85b4678ca3"
+  integrity sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==
+  dependencies:
+    loose-envify "^1.0.0"
 
 watchpack@2.4.0, watchpack@^2.4.0:
   version "2.4.0"

@@ -30,7 +30,7 @@ export default function AgendaClassItem({
             ? `rgb(${hexWithOpacityToRgb(agendaClass._class.activity.color, 0.6, dark ? 0 : 255).join(",")})`
             : "#111";
 
-    const displayName = agendaClass._class?.activity.name ?? agendaClass.config.display_name;
+    const displayName = agendaClass._class?.activity.name ?? agendaClass.config.displayName;
 
     function hoursAndMinutesToClockString(hours: number, minutes: number) {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
@@ -38,7 +38,7 @@ export default function AgendaClassItem({
 
     const timeFrom = agendaClass._class?.startTime
         ? agendaClass._class.startTime.toFormat("HH:mm")
-        : hoursAndMinutesToClockString(agendaClass.config.time.hour, agendaClass.config.time.minute);
+        : hoursAndMinutesToClockString(agendaClass.config.startTime.hour, agendaClass.config.startTime.minute);
 
     const timeTo = agendaClass._class?.endTime ? agendaClass._class.endTime.toFormat("HH:mm") : null;
 
@@ -103,7 +103,7 @@ export default function AgendaClassItem({
                             )}
                             {agendaClass._class && (
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                    {agendaClass._class.instructors.join(", ")}
+                                    {agendaClass._class.instructors.map((i) => i.name).join(", ")}
                                 </Typography>
                             )}
                         </Box>

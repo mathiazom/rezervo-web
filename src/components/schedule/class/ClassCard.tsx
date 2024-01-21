@@ -142,7 +142,7 @@ const ClassCard = ({
                     </Typography>
                     {_class.instructors.length > 0 && (
                         <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                            {_class.instructors.join(", ")}
+                            {_class.instructors.map((i) => i.name).join(", ")}
                         </Typography>
                     )}
                 </CardContent>

@@ -2,49 +2,62 @@ import { DateTime } from "luxon";
 
 import { ChainIdentifier } from "@/lib/activeChains";
 
-export type ChainProfile = {
-    identifier: ChainIdentifier;
-    name: string;
-    images: {
-        light: {
-            largeLogo: string;
-        };
-        dark: {
-            largeLogo: string;
-        };
-        common: {
-            smallLogo: string;
-        };
+export type ChainProfileImages = {
+    light: {
+        largeLogo: string;
+    };
+    dark: {
+        largeLogo: string;
+    };
+    common: {
+        smallLogo: string;
     };
 };
 
-export type RezervoProviderFetcher<T> = (weekOffset: number) => Promise<T>;
-
-export type RezervoProviderAdapter<T> = (weekSchedule: T, weekOffset: number) => RezervoWeekSchedule;
-
-export type RezervoProvider<T> = {
-    weekScheduleFetcher: RezervoProviderFetcher<T>;
-    weekScheduleAdapter: RezervoProviderAdapter<T>;
+export type BaseChainProfile = {
+    identifier: ChainIdentifier;
+    name: string;
 };
 
-export type RezervoChain<T> = {
+export type ChainProfileExtras = {
+    images: ChainProfileImages;
+};
+
+export type ChainProfile = BaseChainProfile & ChainProfileExtras;
+
+export type BaseRezervoChain = {
+    profile: BaseChainProfile;
+    branches: RezervoBranch[];
+};
+
+export type RezervoChainExtras = {
+    profile: ChainProfileExtras;
+};
+
+export type RezervoChain = {
     profile: ChainProfile;
     branches: RezervoBranch[];
-    provider: RezervoProvider<T>;
 };
 
 export type RezervoBranch = {
+    identifier: string;
     name: string;
     locations: RezervoLocation[];
 };
 
 export type RezervoLocation = {
+    identifier: string;
     name: string;
 };
 
-export type RezervoSchedule = { [weekOffset: number]: RezervoWeekSchedule };
+export type RezervoSchedule = {
+    [weekOffset: number]: RezervoWeekSchedule;
+};
 
-export type RezervoWeekSchedule = RezervoDaySchedule[];
+export type RezervoWeekSchedule = {
+    locationIds: string[];
+    days: RezervoDaySchedule[];
+};
 
 export type RezervoDaySchedule = {
     date: DateTime;
@@ -54,7 +67,7 @@ export type RezervoDaySchedule = {
 export type RezervoClassBase = {
     id: number;
     location: {
-        id: number;
+        id: string;
         studio: string;
         room: string;
     };
@@ -64,7 +77,9 @@ export type RezervoClassBase = {
     availableSlots: number;
     waitingListCount: number | null;
     activity: RezervoActivity;
-    instructors: string[];
+    instructors: {
+        name: string;
+    }[];
 };
 
 export type RezervoClass = RezervoClassBase & {

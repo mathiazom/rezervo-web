@@ -1,4 +1,5 @@
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
+import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -6,10 +7,23 @@ import React, { useEffect, useState } from "react";
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
-import activeChains, { ChainIdentifier } from "@/lib/activeChains";
+import { ChainIdentifier, getChains } from "@/lib/activeChains";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
+import { IndexPageProps } from "@/types/serialization";
 
-function IndexPage() {
+export async function getStaticProps(): Promise<{
+    revalidate: number;
+    props: IndexPageProps;
+}> {
+    return {
+        revalidate: 60,
+        props: {
+            chainProfiles: (await getChains()).map((chain) => chain.profile),
+        },
+    };
+}
+
+const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
     const theme = useTheme();
     const router = useRouter();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
@@ -62,11 +76,11 @@ function IndexPage() {
                         flexWrap: "wrap",
                     }}
                 >
-                    {Object.values(activeChains).map((chain) => {
+                    {chainProfiles.map((chainProfile) => {
                         return (
                             <Link
-                                key={chain.profile.identifier}
-                                href={`/${chain.profile.identifier}`}
+                                key={chainProfile.identifier}
+                                href={`/${chainProfile.identifier}`}
                                 style={{ width: "100%" }}
                                 passHref
                                 legacyBehavior
@@ -81,12 +95,12 @@ function IndexPage() {
                                     }}
                                     disableTouchRipple
                                     component={"a"}
-                                    onClick={() => setChainLoading(chain.profile.identifier)}
+                                    onClick={() => setChainLoading(chainProfile.identifier)}
                                 >
-                                    {chainLoading !== chain.profile.identifier ? (
-                                        <ChainLogo chainProfile={chain.profile} />
+                                    {chainLoading !== chainProfile.identifier ? (
+                                        <ChainLogo chainProfile={chainProfile} />
                                     ) : (
-                                        <ChainLogoSpinner chainProfile={chain.profile} />
+                                        <ChainLogoSpinner chainProfile={chainProfile} />
                                     )}
                                 </Button>
                             </Link>
@@ -96,6 +110,6 @@ function IndexPage() {
             </Box>
         </>
     );
-}
+};
 
 export default IndexPage;

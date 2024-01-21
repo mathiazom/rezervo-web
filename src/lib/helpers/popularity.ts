@@ -10,8 +10,9 @@ export function determineClassPopularity(_class: RezervoClass) {
     return ClassPopularity.Low;
 }
 
+// TODO: move popularity logic to backend
 export function createClassPopularityIndex(previousWeekSchedule: RezervoWeekSchedule): ClassPopularityIndex {
-    return previousWeekSchedule
+    return previousWeekSchedule.days
         .flatMap((d) => d.classes)
         .reduce(
             (popularityIndex, _class) => ({

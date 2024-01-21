@@ -23,8 +23,12 @@ function deserializeDaySchedule(dayScheduleDTO: RezervoDayScheduleDTO): RezervoD
 }
 
 export function deserializeWeekSchedule(weekScheduleDTO: RezervoWeekScheduleDTO): RezervoWeekSchedule {
-    return weekScheduleDTO.map(deserializeDaySchedule);
+    return {
+        locationIds: weekScheduleDTO.locationIds,
+        days: weekScheduleDTO.days.map(deserializeDaySchedule),
+    };
 }
+
 export function deserializeSchedule(scheduleDTO: RezervoScheduleDTO): RezervoSchedule {
     return Object.keys(scheduleDTO)
         .map((weekOffset) => {

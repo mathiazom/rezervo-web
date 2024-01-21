@@ -4,10 +4,16 @@ import React, { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
-import activeChains, { ChainIdentifier } from "@/lib/activeChains";
+import { ChainIdentifier } from "@/lib/activeChains";
 import { ChainProfile } from "@/types/chain";
 
-function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProfile }) {
+function ChainSwitcher({
+    currentChainProfile,
+    chainProfiles,
+}: {
+    currentChainProfile: ChainProfile;
+    chainProfiles: ChainProfile[];
+}) {
     const theme = useTheme();
 
     const [open, setOpen] = useState(false);
@@ -16,7 +22,7 @@ function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProf
     useEffect(() => {
         setOpen(false);
         setTimeout(() => setChainLoading(null), 250);
-    }, [currentChainProfile]);
+    }, [currentChainProfile.identifier]);
 
     return (
         <>
@@ -36,22 +42,22 @@ function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProf
                         Velg treningssenter
                     </Typography>
                     <Divider />
-                    {Object.values(activeChains).map((chain) => {
+                    {chainProfiles.map((chainProfile) => {
                         const isLoading = chainLoading !== null;
-                        const isCurrentLoadingChain = chain.profile.identifier === chainLoading;
-                        const isCurrentChain = chain.profile.identifier === currentChainProfile.identifier;
+                        const isCurrentLoadingChain = chainProfile.identifier === chainLoading;
+                        const isCurrentChain = chainProfile.identifier === currentChainProfile.identifier;
                         return (
                             <ListItem
-                                value={chain.profile.identifier}
-                                key={chain.profile.identifier}
+                                value={chainProfile.identifier}
+                                key={chainProfile.identifier}
                                 sx={{ margin: 0, padding: 0 }}
                                 onClick={() =>
                                     !isLoading &&
-                                    (isCurrentChain ? setOpen(false) : setChainLoading(chain.profile.identifier))
+                                    (isCurrentChain ? setOpen(false) : setChainLoading(chainProfile.identifier))
                                 }
                             >
                                 <Link
-                                    href={`/${chain.profile.identifier}`}
+                                    href={`/${chainProfile.identifier}`}
                                     style={{ width: "100%" }}
                                     passHref
                                     legacyBehavior
@@ -75,10 +81,10 @@ function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProf
                                         selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}
                                         component={"a"}
                                     >
-                                        {!isLoading || chainLoading !== chain.profile.identifier ? (
-                                            <ChainLogo chainProfile={chain.profile} />
+                                        {!isLoading || chainLoading !== chainProfile.identifier ? (
+                                            <ChainLogo chainProfile={chainProfile} />
                                         ) : (
-                                            <ChainLogoSpinner chainProfile={chain.profile} />
+                                            <ChainLogoSpinner chainProfile={chainProfile} />
                                         )}
                                     </ListItemButton>
                                 </Link>

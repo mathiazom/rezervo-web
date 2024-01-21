@@ -23,7 +23,7 @@ export default function Agenda({
     const hasGhostClasses = agendaClasses.some((agendaClass) => agendaClass._class === undefined);
 
     // Establish sort order of config classes
-    const configTimeMinutes = (cc: ClassConfig) => cc.time.hour * 60 + cc.time.minute;
+    const configTimeMinutes = (cc: ClassConfig) => cc.startTime.hour * 60 + cc.startTime.minute;
 
     return (
         <Box

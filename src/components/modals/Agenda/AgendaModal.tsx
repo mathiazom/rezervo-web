@@ -24,9 +24,9 @@ const AgendaModal = ({
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
             <>
-                {userConfig?.classes && (
+                {userConfig?.recurringBookings && (
                     <Agenda
-                        agendaClasses={userConfig.classes.map((c) => ({
+                        agendaClasses={userConfig.recurringBookings.map((c) => ({
                             config: c,
                             _class: classes.find((sc) => classRecurrentId(sc) === classConfigRecurrentId(c)),
                         }))}

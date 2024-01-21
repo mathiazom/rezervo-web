@@ -71,7 +71,9 @@ export default function ClassInfo({
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
 
-    const classInUserConfig = userConfig?.classes?.map(classConfigRecurrentId).includes(classRecurrentId(_class));
+    const classInUserConfig = userConfig?.recurringBookings
+        ?.map(classConfigRecurrentId)
+        .includes(classRecurrentId(_class));
 
     const [bookingLoading, setBookingLoading] = useState(false);
 
@@ -229,7 +231,7 @@ export default function ClassInfo({
                 >
                     <PersonRoundedIcon />
                     <Typography variant="body2" color="text.secondary">
-                        {_class.instructors.join(", ")}
+                        {_class.instructors.map((i) => i.name).join(", ")}
                     </Typography>
                 </Box>
             )}

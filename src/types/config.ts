@@ -4,16 +4,16 @@ export type ClassTimeConfig = {
 };
 
 export type ClassConfig = {
-    activity: number;
-    display_name: string;
+    activityId: string;
+    locationId: string;
     weekday: number;
-    studio: number;
-    time: ClassTimeConfig;
+    startTime: ClassTimeConfig;
+    displayName: string;
 };
 
 export type ChainConfig = {
     active: boolean;
-    classes: ClassConfig[];
+    recurringBookings: ClassConfig[];
 };
 export type ChainConfigPayload = ChainConfig;
 

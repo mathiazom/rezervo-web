@@ -13,6 +13,7 @@ function serializeClass(_class: RezervoClass): RezervoClassDTO {
         endTime: _class.endTime.toISO() ?? "",
     };
 }
+
 function serializeDaySchedule(daySchedule: RezervoDaySchedule): RezervoDayScheduleDTO {
     return {
         date: daySchedule.date.toISO() ?? "",
@@ -21,8 +22,12 @@ function serializeDaySchedule(daySchedule: RezervoDaySchedule): RezervoDaySchedu
 }
 
 export function serializeWeekSchedule(weekSchedule: RezervoWeekSchedule): RezervoWeekScheduleDTO {
-    return weekSchedule.map((daySchedule) => serializeDaySchedule(daySchedule));
+    return {
+        locationIds: weekSchedule.locationIds,
+        days: weekSchedule.days.map((daySchedule) => serializeDaySchedule(daySchedule)),
+    };
 }
+
 export function serializeSchedule(schedule: RezervoSchedule): RezervoScheduleDTO {
     return Object.keys(schedule)
         .map((weekOffset) => {

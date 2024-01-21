@@ -6,6 +6,7 @@ const withPWA = require("@ducanh2912/next-pwa").default({
 /** @type {import('next').NextConfig} */
 const nextConfig = withPWA({
     reactStrictMode: true,
+    staticPageGenerationTimeout: 120,
     output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,
     async redirects() {
         return [

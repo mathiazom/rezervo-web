@@ -1,107 +1,133 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
+import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Button, Stack, Typography } from "@mui/material";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 
-import { ChainIdentifier } from "@/lib/activeChains";
-import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
-import { RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
-
-function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
-    const firstDay = weekSchedule[0];
-    if (firstDay === undefined) {
-        throw new Error("Week schedule is empty (missing first day)");
-    }
-    return firstDay.date.weekNumber;
-}
+import ScheduleFiltersDialog, { CATEGORIES_COLOR, LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
+import { RezervoChain } from "@/types/chain";
 
 export default function WeekNavigator({
     chain,
-    initialSchedule,
-    setCurrentWeekSchedule,
+    setCurrentWeekOffset,
+    isLoadingPreviousWeek,
+    isLoadingNextWeek,
+    weekNumber,
     onGoToToday,
+    selectedLocationIds,
+    setSelectedLocationIds,
+    allCategories,
+    selectedCategories,
+    setSelectedCategories,
 }: {
-    chain: ChainIdentifier;
-    initialSchedule: RezervoSchedule;
-    setCurrentWeekSchedule: Dispatch<SetStateAction<RezervoWeekSchedule>>;
+    chain: RezervoChain;
+    setCurrentWeekOffset: Dispatch<SetStateAction<number>>;
+    isLoadingPreviousWeek: boolean;
+    isLoadingNextWeek: boolean;
+    weekNumber: number;
     onGoToToday: () => void;
+    selectedLocationIds: string[];
+    setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
+    allCategories: string[];
+    selectedCategories: string[];
+    setSelectedCategories: Dispatch<SetStateAction<string[]>>;
 }) {
-    const [weekOffset, setWeekOffset] = useState(0);
-    const [weekNumber, setWeekNumber] = useState(getWeekNumber(initialSchedule[0]!));
-    const [loadingNextWeek, setLoadingNextWeek] = useState(false);
-    const [loadingPreviousWeek, setLoadingPreviousWeek] = useState(false);
-    const [schedule, setSchedule] = useState<RezervoSchedule>(initialSchedule);
+    const isLocationFiltered = useMemo(() => {
+        const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
+        return selectedLocationIds.length < totalLocations;
+    }, [selectedLocationIds, chain]);
 
-    useEffect(() => {
-        setWeekOffset(0);
-        setWeekNumber(getWeekNumber(initialSchedule[0]!));
-        setSchedule(initialSchedule);
-    }, [initialSchedule]);
+    const isCategoryFiltered = useMemo(() => {
+        return selectedCategories.length < allCategories.length;
+    }, [selectedCategories, allCategories]);
 
-    async function updateWeekOffset(modifier: number) {
-        switch (modifier) {
-            case -1:
-                setLoadingPreviousWeek(true);
-                break;
-            case 1:
-                setLoadingNextWeek(true);
-                break;
-        }
-        const currentWeekOffset = modifier === 0 ? 0 : weekOffset + modifier;
-        let currentWeekSchedule = schedule[currentWeekOffset];
-        if (currentWeekSchedule === undefined) {
-            currentWeekSchedule = deserializeWeekSchedule(
-                await fetch(`api/${chain}/schedule`, {
-                    method: "POST",
-                    body: JSON.stringify({ weekOffset: currentWeekOffset }),
-                }).then((r) => r.json()),
-            );
-            if (currentWeekSchedule === undefined) {
-                setLoadingPreviousWeek(false);
-                setLoadingNextWeek(false);
-                throw new Error("Failed to fetch schedule");
-            }
-            setSchedule({ ...schedule, [currentWeekOffset]: currentWeekSchedule });
-        }
-        setWeekOffset(currentWeekOffset);
-        setCurrentWeekSchedule(currentWeekSchedule);
-        setWeekNumber(getWeekNumber(currentWeekSchedule));
-        setLoadingPreviousWeek(false);
-        setLoadingNextWeek(false);
-        // Pre-fetch next schedule (in same direction) if not in cache
-        const nextWeekOffset = currentWeekOffset + modifier;
-        if (nextWeekOffset in schedule) {
-            return;
-        }
-        const nextWeekSchedule = deserializeWeekSchedule(
-            await fetch(`api/${chain}/schedule`, {
-                method: "POST",
-                body: JSON.stringify({ weekOffset: nextWeekOffset }),
-            }).then((r) => r.json()),
-        );
-        if (nextWeekSchedule != undefined) {
-            setSchedule({ ...schedule, [nextWeekOffset]: nextWeekSchedule });
-        }
-    }
+    const isFiltered = isLocationFiltered || isCategoryFiltered;
+
+    const [isScheduleFiltersOpen, setIsScheduleFiltersOpen] = useState(false);
 
     return (
         <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
+            <Button
+                startIcon={<FilterAltRoundedIcon />}
+                sx={{
+                    mr: 1,
+                    position: { xs: "absolute", md: "inherit" },
+                    left: { xs: 10, md: "inherit" },
+                    height: "100%",
+                    ...(isFiltered
+                        ? {}
+                        : {
+                              minWidth: 0,
+                              ".MuiButton-startIcon": {
+                                  margin: 0,
+                              },
+                          }),
+                }}
+                variant={"outlined"}
+                size={"small"}
+                onClick={() => setIsScheduleFiltersOpen(true)}
+            >
+                {isFiltered && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 0.5,
+                            alignItems: "center",
+                        }}
+                    >
+                        {isLocationFiltered && (
+                            <Avatar
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                    fontSize: 12,
+                                    backgroundColor: LOCATIONS_COLOR[500],
+                                }}
+                            >
+                                {selectedLocationIds.length}
+                            </Avatar>
+                        )}
+                        {isCategoryFiltered && (
+                            <Avatar
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                    fontSize: 12,
+                                    backgroundColor: CATEGORIES_COLOR[500],
+                                }}
+                            >
+                                {selectedCategories.length}
+                            </Avatar>
+                        )}
+                    </Box>
+                )}
+            </Button>
+            <ScheduleFiltersDialog
+                chain={chain}
+                open={isScheduleFiltersOpen}
+                setOpen={setIsScheduleFiltersOpen}
+                selectedLocationIds={selectedLocationIds}
+                setSelectedLocationIds={setSelectedLocationIds}
+                allCategories={allCategories}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+            />
             <LoadingButton
-                loading={loadingPreviousWeek}
+                loading={isLoadingPreviousWeek}
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
                 size={"small"}
-                onClick={() => updateWeekOffset(-1)}
+                onClick={() => setCurrentWeekOffset((o) => o - 1)}
             >
                 <ArrowBack />
             </LoadingButton>
             <Typography sx={{ opacity: 0.7 }} mx={2} variant={"subtitle2"}>{`UKE ${weekNumber}`}</Typography>
             <LoadingButton
-                loading={loadingNextWeek}
+                loading={isLoadingNextWeek}
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
                 size={"small"}
-                onClick={() => updateWeekOffset(1)}
+                onClick={() => setCurrentWeekOffset((o) => o + 1)}
             >
                 <ArrowForward />
             </LoadingButton>
@@ -113,7 +139,10 @@ export default function WeekNavigator({
                 }}
                 variant={"outlined"}
                 size={"small"}
-                onClick={() => updateWeekOffset(0).then(() => onGoToToday())}
+                onClick={() => {
+                    setCurrentWeekOffset(0);
+                    onGoToToday();
+                }}
             >
                 I dag
             </Button>

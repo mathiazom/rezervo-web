@@ -14,10 +14,12 @@ import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { getStoredSelectedCategories, getStoredSelectedLocations } from "@/lib/helpers/storage";
+import { useSchedule } from "@/lib/hooks/useSchedule";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
-import { ChainProfile, RezervoClass, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
+import { ChainProfile, RezervoChain, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
@@ -26,18 +28,22 @@ import { ClassPopularityIndex } from "@/types/popularity";
 const WeekScheduleMemo = memo(WeekSchedule);
 
 function Chain({
-    initialSchedule,
     classPopularityIndex,
-    chainProfile,
+    chain,
+    chainProfiles,
+    initialLocationIds,
+    activityCategories,
     error,
 }: {
-    initialSchedule: RezervoSchedule;
     classPopularityIndex: ClassPopularityIndex;
-    chainProfile: ChainProfile;
+    chain: RezervoChain;
+    chainProfiles: ChainProfile[];
+    initialLocationIds: string[];
+    activityCategories: string[];
     error: RezervoError | undefined;
 }) {
-    const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chainProfile.identifier);
-    const { userSessionsIndex } = useUserSessions(chainProfile.identifier);
+    const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chain.profile.identifier);
+    const { userSessionsIndex } = useUserSessions(chain.profile.identifier);
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -51,11 +57,32 @@ function Chain({
 
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
 
-    const [currentWeekSchedule, setCurrentWeekSchedule] = useState<RezervoWeekSchedule>(initialSchedule[0]!);
+    const [weekOffset, setWeekOffset] = useState(0);
+
+    const defaultLocationIds = useMemo(() => {
+        return chain.branches.length > 0 ? chain.branches[0]!.locations.map(({ identifier }) => identifier) : [];
+    }, [chain.branches]);
+
+    const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories);
+    const [selectedChain, setSelectedChain] = useState<string | null>(null);
+
+    useEffect(() => {
+        const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
+        setSelectedLocationIds(locationIds);
+        setSelectedCategories(getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories);
+        setSelectedChain(chain.profile.identifier);
+    }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
+
+    const {
+        latestLoadedWeekOffset,
+        weekSchedule: currentWeekSchedule,
+        weekScheduleLoading,
+    } = useSchedule(selectedChain, weekOffset, selectedLocationIds);
 
     const classes = useMemo(
-        () => currentWeekSchedule.flatMap((daySchedule) => daySchedule.classes) ?? [],
-        [currentWeekSchedule],
+        () => currentWeekSchedule?.days.flatMap((daySchedule) => daySchedule.classes) ?? [],
+        [currentWeekSchedule?.days],
     );
 
     // Pre-generate all non-ghost class config strings
@@ -65,7 +92,7 @@ function Chain({
     const allClassesConfigMap = useMemo(() => {
         // Locate any class configs from the user config that do not exist in the current schedule
         const ghostClassesConfigs =
-            userConfig?.classes
+            userConfig?.recurringBookings
                 ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
                 .reduce<{ [id: string]: ClassConfig }>(
                     (o, c) => ({
@@ -75,7 +102,7 @@ function Chain({
                     {},
                 ) ?? {};
         return { ...classesConfigMap, ...ghostClassesConfigs };
-    }, [classesConfigMap, userConfig?.classes]);
+    }, [classesConfigMap, userConfig?.recurringBookings]);
 
     const onUpdateConfig = (classId: string, selected: boolean) => {
         const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
@@ -94,20 +121,16 @@ function Chain({
         setSelectedClassIds(newSelectedClassIds);
         return putUserConfig({
             active: userConfigActive,
-            classes: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
+            recurringBookings: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
         });
     };
 
     const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        setSelectedClassIds(userConfig?.classes?.map(classConfigRecurrentId) ?? null);
+        setSelectedClassIds(userConfig?.recurringBookings?.map(classConfigRecurrentId) ?? null);
         setUserConfigActive(userConfig?.active ?? false);
-    }, [userConfig?.active, userConfig?.classes]);
-
-    useEffect(() => {
-        setCurrentWeekSchedule(initialSchedule[0]!);
-    }, [initialSchedule]);
+    }, [userConfig?.active, userConfig?.recurringBookings]);
 
     useEffect(() => {
         scrollToToday();
@@ -123,16 +146,23 @@ function Chain({
         }
     }
 
+    const isLoadingPreviousWeek =
+        weekScheduleLoading && latestLoadedWeekOffset != null && latestLoadedWeekOffset > weekOffset;
+    const isLoadingNextWeek =
+        weekScheduleLoading && latestLoadedWeekOffset != null && latestLoadedWeekOffset < weekOffset;
+
     return (
         <>
-            <PageHead title={`${chainProfile.identifier}-rezervo`} />
+            <PageHead title={`${chain.profile.identifier}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={<ChainSwitcher currentChainProfile={chainProfile} />}
+                        leftComponent={
+                            <ChainSwitcher currentChainProfile={chain.profile} chainProfiles={chainProfiles} />
+                        }
                         rightComponent={
                             <ConfigBar
-                                chain={chainProfile.identifier}
+                                chain={chain.profile.identifier}
                                 userConfig={userConfig}
                                 isLoadingConfig={userConfig == null || userConfigLoading}
                                 isConfigError={userConfigError}
@@ -142,33 +172,44 @@ function Chain({
                             />
                         }
                     />
-                    {error === undefined && (
+                    {error === undefined && currentWeekSchedule != null && (
                         <WeekNavigator
-                            chain={chainProfile.identifier}
-                            initialSchedule={initialSchedule}
-                            setCurrentWeekSchedule={setCurrentWeekSchedule}
+                            chain={chain}
+                            setCurrentWeekOffset={setWeekOffset}
+                            isLoadingPreviousWeek={isLoadingPreviousWeek}
+                            isLoadingNextWeek={isLoadingNextWeek}
+                            weekNumber={getWeekNumber(currentWeekSchedule)}
                             onGoToToday={scrollToToday}
+                            selectedLocationIds={selectedLocationIds}
+                            setSelectedLocationIds={setSelectedLocationIds}
+                            allCategories={activityCategories}
+                            selectedCategories={selectedCategories}
+                            setSelectedCategories={setSelectedCategories}
                         />
                     )}
                     <Divider orientation="horizontal" />
                 </Box>
                 {error === undefined ? (
-                    <WeekScheduleMemo
-                        chain={chainProfile.identifier}
-                        weekSchedule={currentWeekSchedule}
-                        classPopularityIndex={classPopularityIndex}
-                        selectable={userConfig != undefined && !userConfigError}
-                        selectedClassIds={selectedClassIds}
-                        onUpdateConfig={onUpdateConfig}
-                        onInfo={setClassInfoClass}
-                        todayRef={scrollToTodayRef}
-                    />
+                    currentWeekSchedule != null && (
+                        <WeekScheduleMemo
+                            chain={chain.profile.identifier}
+                            weekSchedule={currentWeekSchedule}
+                            selectedLocationIds={selectedLocationIds}
+                            selectedCategories={selectedCategories}
+                            classPopularityIndex={classPopularityIndex}
+                            selectable={userConfig != undefined && !userConfigError}
+                            selectedClassIds={selectedClassIds}
+                            onUpdateConfig={onUpdateConfig}
+                            onInfo={setClassInfoClass}
+                            todayRef={scrollToTodayRef}
+                        />
+                    )
                 ) : (
-                    <ErrorMessage error={error} chainProfile={chainProfile} />
+                    <ErrorMessage error={error} chainProfile={chain.profile} />
                 )}
             </Stack>
             <ClassInfoModal
-                chain={chainProfile.identifier}
+                chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
                 setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
@@ -185,7 +226,7 @@ function Chain({
             <SettingsModal
                 open={isSettingsOpen}
                 setOpen={setIsSettingsOpen}
-                chainProfile={chainProfile}
+                chainProfile={chain.profile}
                 bookingActive={userConfigActive}
                 setBookingActive={setUserConfigActive}
                 openChainUserSettings={() => setIsChainUserSettingsOpen(true)}
@@ -193,12 +234,12 @@ function Chain({
             <ChainUserSettingsModal
                 open={isChainUserSettingsOpen}
                 setOpen={setIsChainUserSettingsOpen}
-                chainProfile={chainProfile}
+                chainProfile={chain.profile}
                 onSubmit={() => setIsChainUserSettingsOpen(false)}
             />
             <BookingPopupModal
                 onClose={() => setBookingPopupAction(null)}
-                chain={chainProfile.identifier}
+                chain={chain.profile.identifier}
                 _class={bookingPopupClass}
                 action={bookingPopupAction}
             />
@@ -207,3 +248,11 @@ function Chain({
 }
 
 export default Chain;
+
+function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
+    const firstDay = weekSchedule.days[0];
+    if (firstDay === undefined) {
+        throw new Error("Week schedule is empty (missing first day)");
+    }
+    return firstDay.date.weekNumber;
+}

@@ -9,12 +9,12 @@ export function buildConfigMapFromClasses(classes: RezervoClass[]) {
         return {
             ...o,
             [classRecurrentId(c)]: {
-                activity: c.activity.id,
-                display_name: c.activity.name,
+                activityId: c.activity.id.toString(),
                 weekday: zeroIndexedWeekday(weekday),
-                studio: c.location.id,
-                time: { hour, minute },
-            },
+                locationId: c.location.id,
+                startTime: { hour, minute },
+                displayName: c.activity.name,
+            } as ClassConfig,
         };
     }, {});
 }

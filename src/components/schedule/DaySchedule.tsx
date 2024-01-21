@@ -11,6 +11,8 @@ import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 function DaySchedule({
     chain,
     daySchedule,
+    selectedLocationIds,
+    selectedCategories,
     classPopularityIndex,
     selectable,
     selectedClassIds,
@@ -19,6 +21,8 @@ function DaySchedule({
 }: {
     chain: ChainIdentifier;
     daySchedule: RezervoDaySchedule;
+    selectedLocationIds: string[];
+    selectedCategories: string[];
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -26,6 +30,10 @@ function DaySchedule({
     onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
+
+    const filteredClasses = daySchedule.classes.filter(
+        (c) => selectedLocationIds.includes(c.location.id) && selectedCategories.includes(c.activity.category),
+    );
 
     return (
         <Box key={daySchedule.date.toString()} width={180}>
@@ -51,8 +59,8 @@ function DaySchedule({
                     {daySchedule.date.toFormat("yyyy-MM-dd")}
                 </Typography>
             </Box>
-            {daySchedule.classes.length > 0 ? (
-                daySchedule.classes.map((_class) => (
+            {filteredClasses.length > 0 ? (
+                filteredClasses.map((_class) => (
                     <Box key={_class.id} mb={1}>
                         <ClassCard
                             chain={chain}
@@ -66,7 +74,9 @@ function DaySchedule({
                     </Box>
                 ))
             ) : (
-                <p>Ingen gruppetimer</p>
+                <>
+                    <p>Ingen gruppetimer</p>
+                </>
             )}
         </Box>
     );

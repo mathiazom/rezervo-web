@@ -110,7 +110,11 @@ function ConfigBar({
                                     }
                                 >
                                     <IconButton>
-                                        {userConfig?.classes.length === 0 ? <CalendarToday /> : <CalendarMonth />}
+                                        {userConfig?.recurringBookings.length === 0 ? (
+                                            <CalendarToday />
+                                        ) : (
+                                            <CalendarMonth />
+                                        )}
                                     </IconButton>
                                 </Badge>
                             </Tooltip>

@@ -1,6 +1,5 @@
 import { experimental_extendTheme } from "@mui/material";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// @ts-expect-error: undetected usage below
 import { TypeBackground } from "@mui/material/styles/createPalette";
 
 declare module "@mui/material/styles/createPalette" {

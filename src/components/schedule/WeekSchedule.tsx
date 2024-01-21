@@ -11,6 +11,8 @@ import { ClassPopularityIndex } from "@/types/popularity";
 function WeekSchedule({
     chain,
     weekSchedule,
+    selectedLocationIds,
+    selectedCategories,
     classPopularityIndex,
     selectable,
     selectedClassIds,
@@ -20,6 +22,8 @@ function WeekSchedule({
 }: {
     chain: ChainIdentifier;
     weekSchedule: RezervoWeekSchedule;
+    selectedLocationIds: string[];
+    selectedCategories: string[];
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -35,7 +39,7 @@ function WeekSchedule({
         if (classId === undefined) {
             return;
         }
-        const linkedClass = weekSchedule
+        const linkedClass = weekSchedule.days
             .flatMap((daySchedule) => daySchedule.classes)
             .find((_class) => _class.id === Number(classId));
         if (linkedClass) {
@@ -45,10 +49,10 @@ function WeekSchedule({
     }, [onInfo, router, weekSchedule]);
 
     return (
-        <Box sx={{ flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>
-            <Stack direction={"column"}>
-                <Stack direction={"row"} margin={"auto"} paddingX={"0.5rem"}>
-                    {weekSchedule.map((daySchedule) => {
+        <Box sx={{ display: "flex", flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>
+            <Stack direction={"column"} sx={{ flexGrow: "1" }}>
+                <Stack direction={"row"} margin={"auto"} paddingX={"0.5rem"} sx={{ flexGrow: "1" }}>
+                    {weekSchedule.days.map((daySchedule) => {
                         const dayIsToday = isToday(daySchedule.date);
                         return (
                             <Box
@@ -56,6 +60,7 @@ function WeekSchedule({
                                 ref={dayIsToday ? todayRef : null}
                                 paddingX={dayIsToday ? "0.9rem" : "0.5rem"}
                                 marginX={dayIsToday ? "0.1rem" : "0rem"}
+                                paddingBottom={"2rem"}
                                 sx={{
                                     ...(dayIsToday
                                         ? {
@@ -70,6 +75,8 @@ function WeekSchedule({
                                 <DaySchedule
                                     chain={chain}
                                     daySchedule={daySchedule}
+                                    selectedLocationIds={selectedLocationIds}
+                                    selectedCategories={selectedCategories}
                                     classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}
                                     selectedClassIds={selectedClassIds}

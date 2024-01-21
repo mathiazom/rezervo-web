@@ -1,8 +1,6 @@
-import { activeProviders, ProviderIdentifier } from "@/lib/providers/active";
-import { BrpSubdomain, DetailedBrpWeekSchedule } from "@/lib/providers/brpsystems/types";
-import { IBookingDomain, IBookingWeekSchedule } from "@/lib/providers/ibooking/types";
+import { fetchActiveChains } from "@/lib/helpers/fetchers";
 import { checkSantaTime } from "@/lib/utils/santaUtils";
-import { RezervoChain } from "@/types/chain";
+import { BaseRezervoChain, RezervoChain, RezervoChainExtras } from "@/types/chain";
 
 const isSantaTime = checkSantaTime();
 
@@ -12,15 +10,11 @@ export enum ChainIdentifier {
     ttt = "3t",
 }
 
-const activeChains: {
-    [ChainIdentifier.sit]: RezervoChain<IBookingWeekSchedule>;
-    [ChainIdentifier.fsc]: RezervoChain<DetailedBrpWeekSchedule>;
-    [ChainIdentifier.ttt]: RezervoChain<DetailedBrpWeekSchedule>;
-} = {
+let baseActiveChains: BaseRezervoChain[] | undefined = undefined;
+
+const chainExtras: { [identifier in ChainIdentifier]: RezervoChainExtras } = {
     [ChainIdentifier.sit]: {
         profile: {
-            identifier: ChainIdentifier.sit,
-            name: "Sit Trening",
             images: {
                 light: {
                     largeLogo: `/chains/sit/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
@@ -33,31 +27,9 @@ const activeChains: {
                 },
             },
         },
-        branches: [
-            {
-                name: "Trondheim",
-                locations: [
-                    {
-                        name: "Gløshaugen",
-                    },
-                    {
-                        name: "Portalen",
-                    },
-                    {
-                        name: "Dragvoll",
-                    },
-                    {
-                        name: "DMMH",
-                    },
-                ],
-            },
-        ],
-        provider: activeProviders[ProviderIdentifier.ibooking](IBookingDomain.sit),
     },
     [ChainIdentifier.fsc]: {
         profile: {
-            identifier: ChainIdentifier.fsc,
-            name: "Family Sports Club",
             images: {
                 light: {
                     largeLogo: `/chains/fsc/light/logo_large${isSantaTime ? "_santa.png" : ".svg"}`,
@@ -70,22 +42,9 @@ const activeChains: {
                 },
             },
         },
-        branches: [
-            {
-                name: "Ski",
-                locations: [
-                    {
-                        name: "Ski",
-                    },
-                ],
-            },
-        ],
-        provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.fsc, 8),
     },
     [ChainIdentifier.ttt]: {
         profile: {
-            identifier: ChainIdentifier.ttt,
-            name: "3T",
             images: {
                 light: {
                     largeLogo: `/chains/3t/light/logo_large${isSantaTime ? "_santa" : ""}.png`,
@@ -98,21 +57,42 @@ const activeChains: {
                 },
             },
         },
-        branches: [
-            {
-                name: "Trondheim",
-                locations: [
-                    {
-                        name: "Fossegrenda",
-                    },
-                    {
-                        name: "Rosten",
-                    },
-                ],
-            },
-        ],
-        provider: activeProviders[ProviderIdentifier.brpsystems](BrpSubdomain.ttt, 1),
     },
 };
 
-export default activeChains;
+async function getBaseActiveChains(): Promise<BaseRezervoChain[]> {
+    if (baseActiveChains == undefined) {
+        baseActiveChains = await fetchActiveChains();
+    }
+    return baseActiveChains;
+}
+
+export async function getChains(): Promise<RezervoChain[]> {
+    return (await getBaseActiveChains()).map((chain) => ({
+        ...chain,
+        profile: {
+            ...chain.profile,
+            ...chainExtras[chain.profile.identifier].profile,
+        },
+    }));
+}
+
+export async function getChainIdentifiers(): Promise<ChainIdentifier[]> {
+    return (await getBaseActiveChains()).map((chain) => chain.profile.identifier);
+}
+
+let activeChainsMap: Map<ChainIdentifier, RezervoChain> | undefined = undefined;
+
+export async function getActiveChainsMap(): Promise<Map<ChainIdentifier, RezervoChain>> {
+    if (activeChainsMap == undefined) {
+        const chains = await getChains();
+        activeChainsMap = new Map(chains.map((chain) => [chain.profile.identifier, chain]));
+    }
+    return activeChainsMap;
+}
+
+export async function getChain(identifier: ChainIdentifier): Promise<RezervoChain> {
+    const chain = (await getActiveChainsMap()).get(identifier);
+    if (chain == undefined) throw new Error(`Chain ${identifier} not found`);
+    return chain;
+}
