@@ -23,6 +23,7 @@ import { ChainProfile, RezervoChain, RezervoClass, RezervoWeekSchedule } from "@
 import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
+import { SessionStatus } from "@/types/userSessions";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
@@ -108,7 +109,10 @@ function Chain({
         const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
         if (selectedClass?.isBookable) {
             setBookingPopupClass(selectedClass);
-            const isBooked = userSessionsIndex?.[selectedClass.id] !== undefined;
+            const isBooked =
+                userSessionsIndex?.[selectedClass.id]?.some(
+                    (userSession) => userSession.is_self && userSession.status === SessionStatus.BOOKED,
+                ) ?? false;
             if (selected && !isBooked) {
                 setBookingPopupAction("book");
             } else if (!selected && isBooked) {
