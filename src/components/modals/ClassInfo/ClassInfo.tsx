@@ -356,6 +356,11 @@ export default function ClassInfo({
                     <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til høyre for å koble til.
                 </Alert>
             )}
+            {_class.activity.additionalInformation && (
+                <Alert sx={{ mt: 1.5 }} severity={"info"}>
+                    {_class.activity.additionalInformation}
+                </Alert>
+            )}
             {_class.activity.image && (
                 <Box pt={2}>
                     <Image

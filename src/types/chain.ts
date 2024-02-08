@@ -92,6 +92,7 @@ export type RezervoActivity = {
     name: string;
     category: string;
     description: string;
+    additionalInformation: string | null;
     color: string;
     image: string | null;
 };
