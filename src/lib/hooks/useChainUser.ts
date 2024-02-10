@@ -7,11 +7,16 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { ChainUser, ChainUserPayload } from "@/types/config";
 
-function putChainUser(url: string, { arg: chainUser }: { arg: ChainUserPayload }) {
-    return fetch(url, {
+async function putChainUser(url: string, { arg: chainUser }: { arg: ChainUserPayload }) {
+    const res = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(chainUser, null, 2),
-    }).then((r) => r.json());
+    });
+    const data = await res.json();
+    if (!res.ok || data?.username == undefined) {
+        throw new Error("An error occurred while updating chain user");
+    }
+    return data;
 }
 
 export function useChainUser(chain: ChainIdentifier) {

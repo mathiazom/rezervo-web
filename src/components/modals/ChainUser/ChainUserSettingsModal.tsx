@@ -22,12 +22,9 @@ const ChainUserSettingsModal = ({
 
     async function submit(payload: ChainUserPayload) {
         setAuthenticationFailed(false);
-        const chainUser = await putChainUser(payload);
-        if (chainUser.username) {
-            onSubmit();
-        } else {
-            setAuthenticationFailed(true);
-        }
+        putChainUser(payload)
+            .then(() => onSubmit())
+            .catch(() => setAuthenticationFailed(true));
     }
     function onClose() {
         if (!putChainUserIsMutating) {
