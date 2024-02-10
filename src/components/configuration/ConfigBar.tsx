@@ -1,5 +1,5 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CalendarMonth, CalendarToday, PauseCircleRounded, RocketLaunchRounded } from "@mui/icons-material";
+import { CalendarMonth, CalendarToday, PauseCircleRounded, People, RocketLaunchRounded } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LoginIcon from "@mui/icons-material/Login";
@@ -12,8 +12,10 @@ import React, { useEffect } from "react";
 
 import { ChainIdentifier } from "@/lib/activeChains";
 import { useChainUser } from "@/lib/hooks/useChainUser";
+import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexColorHash } from "@/lib/utils/colorUtils";
+import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
 
 function ConfigBar({
@@ -21,6 +23,7 @@ function ConfigBar({
     userConfig,
     isLoadingConfig,
     isConfigError,
+    onCommunityOpen,
     onSettingsOpen,
     onChainUserSettingsOpen,
     onAgendaOpen,
@@ -29,6 +32,7 @@ function ConfigBar({
     userConfig: ChainConfig | undefined;
     isLoadingConfig: boolean;
     isConfigError: boolean;
+    onCommunityOpen: () => void;
     onSettingsOpen: () => void;
     onChainUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
@@ -38,6 +42,9 @@ function ConfigBar({
     const { user, isLoading } = useUser();
     const { chainUserMissing } = useChainUser(chain);
     const { userConfigMissing } = useUserConfig(chain);
+    const { community } = useCommunity();
+    const friendRequestCount =
+        community?.users.filter((cu) => cu.relationship === UserRelationship.REQUEST_RECEIVED).length ?? 0;
 
     useEffect(() => {
         fetch("/api/user", {
@@ -95,6 +102,23 @@ function ConfigBar({
                                 alignItems: "center",
                             }}
                         >
+                            <Tooltip
+                                title={
+                                    friendRequestCount > 0
+                                        ? `Du har ${friendRequestCount} ubesvarte venneforespørsler`
+                                        : "Venner"
+                                }
+                            >
+                                <IconButton onClick={() => onCommunityOpen()}>
+                                    {friendRequestCount > 0 ? (
+                                        <Badge badgeContent={friendRequestCount} color={"error"}>
+                                            <People />
+                                        </Badge>
+                                    ) : (
+                                        <People />
+                                    )}
+                                </IconButton>
+                            </Tooltip>
                             <Tooltip title={`Min timeplan${userConfig?.active ? "" : " (pauset)"}`}>
                                 <Badge
                                     onClick={() => onAgendaOpen()}

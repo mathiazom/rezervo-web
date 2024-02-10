@@ -30,7 +30,7 @@ const theme = experimental_extendTheme({
                 },
                 background: {
                     default: "#fff",
-                    paper: "#eee",
+                    paper: "#fbfbfb",
                 },
                 secondaryBackground: {
                     default: "#eee",
