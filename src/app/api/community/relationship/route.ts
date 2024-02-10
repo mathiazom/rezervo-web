@@ -7,7 +7,5 @@ export const PUT = withApiAuthRequired(async (req) => {
     if (!accessToken) return respondUnauthorized();
 
     const data = await req.text();
-    return await doOperation(() =>
-        put(`${process.env["CONFIG_HOST"]}/community/update-relationship`, accessToken, data),
-    );
+    return await doOperation(() => put(`${process.env["CONFIG_HOST"]}/community/relationship`, accessToken, data));
 });

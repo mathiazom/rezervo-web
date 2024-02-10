@@ -19,7 +19,7 @@ const CommunityUserCard = ({
     const { mutateCommunity } = useCommunity();
     async function updateRelationship(action: UserRelationshipAction) {
         setIsLoading(true);
-        await fetch(`/api/community/update-relationship`, {
+        await fetch(`/api/community/relationship`, {
             method: "PUT",
             body: JSON.stringify({ userId: communityUser.userId, action }, null, 2),
         });
