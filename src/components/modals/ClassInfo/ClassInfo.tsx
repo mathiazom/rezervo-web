@@ -172,7 +172,7 @@ export default function ClassInfo({
                 >
                     <CancelRounded color={"error"} />
                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "medium" }}>
-                        Timen er avlyst!
+                        Timen {isInThePast ? "ble" : "er"} avlyst!
                     </Typography>
                 </Box>
             )}
@@ -235,7 +235,7 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {!_class.isBookable && !isClassInThePast(_class) && (
+            {!_class.isBookable && !isInThePast && (
                 <Box
                     sx={{
                         display: "flex",
@@ -398,17 +398,19 @@ export default function ClassInfo({
                             Avbestill
                         </LoadingButton>
                     ) : (
-                        <LoadingButton
-                            startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
-                            color={_class.availableSlots > 0 ? "primary" : "warning"}
-                            sx={{ mt: 2, mr: 1 }}
-                            variant={"outlined"}
-                            disabled={isInThePast || !_class.isBookable}
-                            onClick={() => book()}
-                            loading={bookingLoading}
-                        >
-                            {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
-                        </LoadingButton>
+                        !_class.isCancelled && (
+                            <LoadingButton
+                                startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
+                                color={_class.availableSlots > 0 ? "primary" : "warning"}
+                                sx={{ mt: 2, mr: 1 }}
+                                variant={"outlined"}
+                                disabled={isInThePast || !_class.isBookable}
+                                onClick={() => book()}
+                                loading={bookingLoading}
+                            >
+                                {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
+                            </LoadingButton>
+                        )
                     )}
                     {classInUserConfig ? (
                         <Button
@@ -438,12 +440,14 @@ export default function ClassInfo({
                                 innstillinger, slik at timene i timeplanen blir booket automatisk
                             </Alert>
                         ) : (
-                            <Alert sx={{ mt: 1 }} severity="info">
-                                Booking for denne timen har ikke åpnet enda
-                                {classInUserConfig &&
-                                    userConfig?.active &&
-                                    ", men den vil bli booket automatisk når bookingen åpner"}
-                            </Alert>
+                            !_class.isCancelled && (
+                                <Alert sx={{ mt: 1 }} severity="info">
+                                    Booking for denne timen har ikke åpnet enda
+                                    {classInUserConfig &&
+                                        userConfig?.active &&
+                                        ", men den vil bli booket automatisk når bookingen åpner"}
+                                </Alert>
+                            )
                         ))}
                 </>
             )}
