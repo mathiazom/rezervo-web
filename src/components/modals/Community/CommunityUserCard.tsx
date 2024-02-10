@@ -1,7 +1,8 @@
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { Avatar, Box, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import React from "react";
+import React, { useState } from "react";
 
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { hexColorHash } from "@/lib/utils/colorUtils";
@@ -17,41 +18,48 @@ const CommunityUserCard = ({
 }) => {
     const { mutateCommunity } = useCommunity();
     async function updateRelationship(action: UserRelationshipAction) {
+        setIsLoading(true);
         await fetch(`/api/community/update-relationship`, {
             method: "PUT",
             body: JSON.stringify({ userId: communityUser.userId, action }, null, 2),
         });
         await mutateCommunity();
+        setIsLoading(false);
     }
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const renderRelationshipActions = (relationship: UserRelationship) => {
         switch (relationship) {
             case UserRelationship.FRIEND:
                 return (
-                    <Button
+                    <LoadingButton
+                        loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
                         onClick={() => updateRelationship(UserRelationshipAction.REMOVE_FRIEND)}
                     >
                         Fjern venn
-                    </Button>
+                    </LoadingButton>
                 );
             case UserRelationship.REQUEST_RECEIVED:
                 return (
                     <Box>
-                        <Button
+                        <LoadingButton
+                            loading={isLoading}
                             startIcon={<PersonRemove />}
                             color={"error"}
                             onClick={() => updateRelationship(UserRelationshipAction.DENY_FRIEND)}
                         >
                             Avslå
-                        </Button>
-                        <Button
+                        </LoadingButton>
+                        <LoadingButton
+                            loading={isLoading}
                             startIcon={<PersonAdd />}
                             onClick={() => updateRelationship(UserRelationshipAction.ACCEPT_FRIEND)}
                         >
                             Godta
-                        </Button>
+                        </LoadingButton>
                     </Box>
                 );
             case UserRelationship.REQUEST_SENT:
@@ -59,12 +67,13 @@ const CommunityUserCard = ({
             case UserRelationship.UNKNOWN:
             default:
                 return (
-                    <Button
+                    <LoadingButton
+                        loading={isLoading}
                         startIcon={<PersonAdd />}
                         onClick={() => updateRelationship(UserRelationshipAction.ADD_FRIEND)}
                     >
                         Legg til venn
-                    </Button>
+                    </LoadingButton>
                 );
         }
     };
