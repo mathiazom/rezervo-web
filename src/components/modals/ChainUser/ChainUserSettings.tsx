@@ -64,17 +64,17 @@ export default function ChainUserSettings({
                 >
                     Logg inn med brukeren din fra <b>{chainProfile.name}</b> for å koble den til <b>rezervo</b>
                 </Typography>
-                {authenticationFailed && (
-                    <Alert severity={"error"} sx={{ my: 1 }}>
-                        <AlertTitle>Feil brukernavn eller passord</AlertTitle>
-                        <Typography>
-                            Klarte ikke koble til {chainProfile.name}-brukeren din. Kontroller at du har skrevet inn
-                            riktig brukernavn og passord.
-                        </Typography>
-                    </Alert>
-                )}
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: authenticationFailed ? 0 : "2rem" }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+                    {authenticationFailed && (
+                        <Alert severity={"error"}>
+                            <AlertTitle>Feil brukernavn eller passord</AlertTitle>
+                            <Typography>
+                                Klarte ikke koble til {chainProfile.name}-brukeren din. Sjekk at du har skrevet inn
+                                riktig brukernavn og passord.
+                            </Typography>
+                        </Alert>
+                    )}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
                         <PersonRoundedIcon />
                         <TextField
                             sx={{ width: "100%" }}
