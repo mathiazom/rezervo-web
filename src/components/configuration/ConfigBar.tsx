@@ -8,7 +8,7 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Avatar, Badge, Box, CircularProgress, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { ChainIdentifier } from "@/lib/activeChains";
 import { useChainUser } from "@/lib/hooks/useChainUser";
@@ -38,6 +38,12 @@ function ConfigBar({
     const { user, isLoading } = useUser();
     const { chainUserMissing } = useChainUser(chain);
     const { userConfigMissing } = useUserConfig(chain);
+
+    useEffect(() => {
+        fetch("/api/user", {
+            method: "PUT",
+        });
+    }, []);
 
     return (
         <>
