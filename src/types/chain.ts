@@ -73,6 +73,7 @@ export type RezervoClassBase = {
     };
     isBookable: boolean;
     isCancelled: boolean;
+    cancelText: string | null;
     totalSlots: number;
     availableSlots: number;
     waitingListCount: number | null;

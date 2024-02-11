@@ -162,19 +162,16 @@ export default function ClassInfo({
                 {/*)}*/}
             </Box>
             {_class.isCancelled && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        paddingTop: 1,
-                        gap: 1,
-                        alignItems: "center",
-                    }}
-                >
-                    <CancelRounded color={"error"} />
-                    <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "medium" }}>
-                        Timen {isInThePast ? "ble" : "er"} avlyst!
-                    </Typography>
-                </Box>
+                <Alert severity={"error"} icon={<CancelRounded />}>
+                    {_class.cancelText ? (
+                        <>
+                            <AlertTitle>Timen {isInThePast ? "ble" : "er"} avlyst!</AlertTitle>
+                            {_class.cancelText}
+                        </>
+                    ) : (
+                        `Timen ${isInThePast ? "ble" : "er"} avlyst!`
+                    )}
+                </Alert>
             )}
             <Box
                 sx={{
