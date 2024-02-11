@@ -172,7 +172,7 @@ export default function ClassInfo({
                 >
                     <CancelRounded color={"error"} />
                     <Typography variant="body2" color="text.secondary" sx={{ fontWeight: "medium" }}>
-                        Timen {isInThePast ? "ble" : "er"} avlyst!
+                        Timen {isInThePast ? "ble" : "er"} avlyst! {_class.cancelText && `(${_class.cancelText})`}
                     </Typography>
                 </Box>
             )}
