@@ -3,7 +3,7 @@ import { firstDateOfWeekByOffset } from "@/lib/helpers/date";
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { serializeWeekSchedule } from "@/lib/serialization/serializers";
-import { BaseRezervoChain, RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
+import { ActivityCategory, BaseRezervoChain, RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { ChainPageProps, RezervoWeekScheduleDTO, SWRPrefetchedCacheData } from "@/types/serialization";
 
@@ -123,15 +123,13 @@ export async function fetchRezervoSchedule(
     ).reduce((acc, next) => ({ ...acc, ...next }), {});
 }
 
-export async function fetchActivityCategories(): Promise<string[]> {
-    return fetch(`${process.env["CONFIG_HOST"]}/categories`)
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
-            }
-            return res.json();
-        })
-        .then((categories) => categories.map(({ name }: { name: string }) => name));
+export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
+    return fetch(`${process.env["CONFIG_HOST"]}/categories`).then((res) => {
+        if (!res.ok) {
+            throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
+        }
+        return res.json();
+    });
 }
 
 export function scheduleUrlKey(chainIdentifier: string, weekOffset: number, locationIds: string[]) {

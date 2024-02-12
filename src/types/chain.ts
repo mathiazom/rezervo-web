@@ -101,3 +101,8 @@ export type RezervoActivity = {
 export type ChainPageParams = {
     chain: ChainIdentifier;
 };
+
+export type ActivityCategory = {
+    name: string;
+    color: string;
+};

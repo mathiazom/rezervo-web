@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction } from "react";
 
 import { CATEGORIES_COLOR } from "@/components/modals/ScheduleFiltersDialog";
 import { storeSelectedCategories } from "@/lib/helpers/storage";
-import { RezervoChain } from "@/types/chain";
+import { ActivityCategory, RezervoChain } from "@/types/chain";
 
 export default function CategoryFilters({
     chain,
@@ -12,12 +12,13 @@ export default function CategoryFilters({
     setSelectedCategories,
 }: {
     chain: RezervoChain;
-    allCategories: string[];
+    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
 }) {
-    const allChecked = allCategories.every((category) => selectedCategories.includes(category));
-    const allIndeterminate = !allChecked && allCategories.some((category) => selectedCategories.includes(category));
+    const allChecked = allCategories.every((category) => selectedCategories.includes(category.name));
+    const allIndeterminate =
+        !allChecked && allCategories.some((category) => selectedCategories.includes(category.name));
 
     return (
         <Box px={2} sx={{ display: "flex", alignItems: "flex-start" }}>
@@ -34,7 +35,7 @@ export default function CategoryFilters({
                                     indeterminate={allIndeterminate}
                                     onChange={({ target: { checked } }) =>
                                         setSelectedCategories(() => {
-                                            const newSelection = checked ? allCategories : [];
+                                            const newSelection = checked ? allCategories.map((ac) => ac.name) : [];
                                             storeSelectedCategories(chain.profile.identifier, newSelection);
                                             return newSelection;
                                         })
@@ -55,30 +56,30 @@ export default function CategoryFilters({
                         />
                         {allCategories.map((category) => (
                             <FormControlLabel
-                                key={category}
+                                key={category.name}
                                 sx={{ ml: 3 }}
                                 control={
                                     <Checkbox
-                                        checked={selectedCategories.includes(category)}
+                                        checked={selectedCategories.includes(category.name)}
                                         onChange={({ target: { checked } }) =>
                                             setSelectedCategories((selected) => {
                                                 const newSelection = checked
-                                                    ? [...selected, category]
-                                                    : selected.filter((id) => id !== category);
+                                                    ? [...selected, category.name]
+                                                    : selected.filter((id) => id !== category.name);
                                                 storeSelectedCategories(chain.profile.identifier, newSelection);
                                                 return newSelection;
                                             })
                                         }
-                                        value={category}
+                                        value={category.name}
                                         sx={{
-                                            color: CATEGORIES_COLOR[800],
+                                            color: category.color,
                                             "&.Mui-checked": {
-                                                color: CATEGORIES_COLOR[600],
+                                                color: category.color,
                                             },
                                         }}
                                     />
                                 }
-                                label={category}
+                                label={category.name}
                             />
                         ))}
                     </>
