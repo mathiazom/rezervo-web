@@ -1,25 +1,67 @@
 import { Alert, Badge, Box, Divider, Tooltip, Typography, useTheme } from "@mui/material";
-import React from "react";
+import React, { ReactNode } from "react";
 
 import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { ChainProfile } from "@/types/chain";
-import { UserRelationship } from "@/types/community";
+import { CommunityUser, UserRelationship } from "@/types/community";
+
+const CommunityUserList = ({
+    title,
+    defaultText,
+    communityUsers,
+    chainProfiles,
+    badge,
+}: {
+    title: string;
+    defaultText: string;
+    communityUsers: CommunityUser[];
+    chainProfiles: ChainProfile[];
+    badge?: ReactNode;
+}) => {
+    return (
+        <Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Typography variant="h6" component="h3">
+                    {title}
+                </Typography>
+                {badge}
+            </Box>
+            {communityUsers.length === 0 && (
+                <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
+                    {defaultText}
+                </Typography>
+            )}
+            {communityUsers.length > 0 && <Divider sx={{ mt: 1 }} />}
+            {communityUsers.map((cu) => (
+                <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
+            ))}
+        </Box>
+    );
+};
 
 const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
     const { community, communityLoading, communityError } = useCommunity();
     const theme = useTheme();
 
-    const communityUsers = {
-        friends: community?.users.filter((user) => user.relationship === UserRelationship.FRIEND) ?? [],
-        request_received:
-            community?.users.filter((user) => user.relationship === UserRelationship.REQUEST_RECEIVED) ?? [],
-        strangers:
-            community?.users.filter(
-                (user) =>
-                    user.relationship === UserRelationship.REQUEST_SENT ||
-                    user.relationship === UserRelationship.UNKNOWN,
-            ) ?? [],
+    const friendRequests =
+        community?.users.filter((user) => user.relationship === UserRelationship.REQUEST_RECEIVED) ?? [];
+    const FriendRequests = () => {
+        return (
+            <CommunityUserList
+                title={"Venneforespørsler"}
+                defaultText={"Du har ingen ubesvarte venneforespørsler"}
+                communityUsers={friendRequests}
+                chainProfiles={chainProfiles}
+                badge={
+                    friendRequests.length > 0 && (
+                        <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
+                            <Badge sx={{ ml: 2 }} badgeContent={friendRequests.length} color={"error"} />
+                        </Tooltip>
+                    )
+                }
+            />
+        );
     };
 
     return (
@@ -74,62 +116,29 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
                     {community && !communityLoading && (
                         <>
-                            <Box>
-                                <Box sx={{ display: "flex", alignItems: "center" }}>
-                                    <Typography variant="h6" component="h3">
-                                        Venneforespørsler
-                                    </Typography>
-                                    {communityUsers.request_received.length > 0 && (
-                                        <Tooltip
-                                            title={`Du har ${communityUsers.request_received.length} ubesvarte venneforespørsler`}
-                                        >
-                                            <Badge
-                                                sx={{ ml: 2 }}
-                                                badgeContent={communityUsers.request_received.length}
-                                                color={"error"}
-                                            />
-                                        </Tooltip>
-                                    )}
-                                </Box>
-                                {communityUsers.request_received.length === 0 && (
-                                    <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
-                                        Du har ingen ubesvarte venneforespørsler
-                                    </Typography>
-                                )}
-                                {communityUsers.request_received.length > 0 && <Divider sx={{ mt: 1 }} />}
-                                {communityUsers.request_received.map((cu) => (
-                                    <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
-                                ))}
-                            </Box>
-                            <Box>
-                                <Typography variant="h6" component="h3">
-                                    Dine venner
-                                </Typography>
-                                {communityUsers.friends.length === 0 && (
-                                    <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
-                                        Du har ingen venner
-                                    </Typography>
-                                )}
-                                {communityUsers.friends.length > 0 && <Divider sx={{ mt: 1 }} />}
-                                {communityUsers.friends.map((cu) => (
-                                    <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
-                                ))}
-                            </Box>
-                            <Box>
-                                <Typography variant="h6" component="h3">
-                                    Personer du kanskje kjenner
-                                </Typography>
-                                {communityUsers.strangers.length === 0 && (
-                                    <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
-                                        Du har ingen venneforslag
-                                    </Typography>
-                                )}
-
-                                {communityUsers.strangers.length > 0 && <Divider sx={{ mt: 1 }} />}
-                                {communityUsers.strangers.map((cu) => (
-                                    <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
-                                ))}
-                            </Box>
+                            {friendRequests.length > 0 && <FriendRequests />}
+                            <CommunityUserList
+                                title={"Dine venner"}
+                                defaultText={"Du har ingen venner"}
+                                communityUsers={
+                                    community?.users.filter((user) => user.relationship === UserRelationship.FRIEND) ??
+                                    []
+                                }
+                                chainProfiles={chainProfiles}
+                            />
+                            <CommunityUserList
+                                title={"Personer du kanskje kjenner"}
+                                defaultText={"Du har ingen venneforslag"}
+                                communityUsers={
+                                    community?.users.filter(
+                                        (user) =>
+                                            user.relationship === UserRelationship.REQUEST_SENT ||
+                                            user.relationship === UserRelationship.UNKNOWN,
+                                    ) ?? []
+                                }
+                                chainProfiles={chainProfiles}
+                            />
+                            {friendRequests.length === 0 && <FriendRequests />}
                         </>
                     )}
                 </Box>
