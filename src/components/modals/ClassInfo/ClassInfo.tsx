@@ -232,7 +232,7 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {!_class.isBookable && !isInThePast && (
+            {((!_class.isBookable && !isInThePast) || _class.isCancelled) && (
                 <Box
                     sx={{
                         display: "flex",
@@ -248,20 +248,22 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            <Box
-                sx={{
-                    display: "flex",
-                    paddingTop: 1,
-                    gap: 1,
-                    alignItems: "center",
-                    opacity: _class.isCancelled ? cancelledOpacity : 1,
-                }}
-            >
-                <ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />
-                <Typography variant="body2" color="text.secondary">
-                    {stringifyClassPopularity(_class, classPopularity)}
-                </Typography>
-            </Box>
+            {!_class.isCancelled && (
+                <Box
+                    sx={{
+                        display: "flex",
+                        paddingTop: 1,
+                        gap: 1,
+                        alignItems: "center",
+                        opacity: _class.isCancelled ? cancelledOpacity : 1,
+                    }}
+                >
+                    <ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />
+                    <Typography variant="body2" color="text.secondary">
+                        {stringifyClassPopularity(_class, classPopularity)}
+                    </Typography>
+                </Box>
+            )}
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1.5 }}>
                     <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.isBookable} />
@@ -380,74 +382,79 @@ export default function ClassInfo({
                 </Box>
             )}
             <Typography pt={2}>{_class.activity.description}</Typography>
-            {user && userConfig != undefined && !userConfigLoading && !userConfigError && !isInThePast && (
-                <>
-                    {selfBooked || selfOnWaitlist ? (
-                        <LoadingButton
-                            startIcon={<Clear />}
-                            sx={{ mt: 2, mr: 1 }}
-                            variant={"outlined"}
-                            color={"error"}
-                            disabled={isInThePast || !_class.isBookable}
-                            onClick={() => setCancelBookingConfirmationOpen(true)}
-                            loading={bookingLoading}
-                        >
-                            Avbestill
-                        </LoadingButton>
-                    ) : (
-                        !_class.isCancelled && (
+            {user &&
+                userConfig != undefined &&
+                !userConfigLoading &&
+                !userConfigError &&
+                !isInThePast &&
+                !_class.isCancelled && (
+                    <>
+                        {selfBooked || selfOnWaitlist ? (
                             <LoadingButton
-                                startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
-                                color={_class.availableSlots > 0 ? "primary" : "warning"}
+                                startIcon={<Clear />}
                                 sx={{ mt: 2, mr: 1 }}
                                 variant={"outlined"}
+                                color={"error"}
                                 disabled={isInThePast || !_class.isBookable}
-                                onClick={() => book()}
+                                onClick={() => setCancelBookingConfirmationOpen(true)}
                                 loading={bookingLoading}
                             >
-                                {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
+                                Avbestill
                             </LoadingButton>
-                        )
-                    )}
-                    {classInUserConfig ? (
-                        <Button
-                            sx={{ mt: 2 }}
-                            variant={"outlined"}
-                            color={"error"}
-                            startIcon={<EventBusy />}
-                            onClick={() => onUpdateConfig(classRecurrentId(_class), false)}
-                        >
-                            Fjern fra timeplan
-                        </Button>
-                    ) : (
-                        <Button
-                            sx={{ mt: 2 }}
-                            variant={"outlined"}
-                            startIcon={<EventRepeat />}
-                            onClick={() => onUpdateConfig(classRecurrentId(_class), true)}
-                        >
-                            Legg til i timeplan
-                        </Button>
-                    )}
-                    {!_class.isBookable &&
-                        (userConfig?.active === false && classInUserConfig ? (
-                            <Alert severity={"info"} sx={{ mt: 1 }} icon={<PauseCircleRounded />}>
-                                <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
-                                Denne timen vil ikke bli booket automatisk. Du kan skru på automatisk booking i
-                                innstillinger, slik at timene i timeplanen blir booket automatisk
-                            </Alert>
                         ) : (
                             !_class.isCancelled && (
-                                <Alert sx={{ mt: 1 }} severity="info">
-                                    Booking for denne timen har ikke åpnet enda
-                                    {classInUserConfig &&
-                                        userConfig?.active &&
-                                        ", men den vil bli booket automatisk når bookingen åpner"}
-                                </Alert>
+                                <LoadingButton
+                                    startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
+                                    color={_class.availableSlots > 0 ? "primary" : "warning"}
+                                    sx={{ mt: 2, mr: 1 }}
+                                    variant={"outlined"}
+                                    disabled={isInThePast || !_class.isBookable}
+                                    onClick={() => book()}
+                                    loading={bookingLoading}
+                                >
+                                    {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
+                                </LoadingButton>
                             )
-                        ))}
-                </>
-            )}
+                        )}
+                        {classInUserConfig ? (
+                            <Button
+                                sx={{ mt: 2 }}
+                                variant={"outlined"}
+                                color={"error"}
+                                startIcon={<EventBusy />}
+                                onClick={() => onUpdateConfig(classRecurrentId(_class), false)}
+                            >
+                                Fjern fra timeplan
+                            </Button>
+                        ) : (
+                            <Button
+                                sx={{ mt: 2 }}
+                                variant={"outlined"}
+                                startIcon={<EventRepeat />}
+                                onClick={() => onUpdateConfig(classRecurrentId(_class), true)}
+                            >
+                                Legg til i timeplan
+                            </Button>
+                        )}
+                        {!_class.isBookable &&
+                            (userConfig?.active === false && classInUserConfig ? (
+                                <Alert severity={"info"} sx={{ mt: 1 }} icon={<PauseCircleRounded />}>
+                                    <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
+                                    Denne timen vil ikke bli booket automatisk. Du kan skru på automatisk booking i
+                                    innstillinger, slik at timene i timeplanen blir booket automatisk
+                                </Alert>
+                            ) : (
+                                !_class.isCancelled && (
+                                    <Alert sx={{ mt: 1 }} severity="info">
+                                        Booking for denne timen har ikke åpnet enda
+                                        {classInUserConfig &&
+                                            userConfig?.active &&
+                                            ", men den vil bli booket automatisk når bookingen åpner"}
+                                    </Alert>
+                                )
+                            ))}
+                    </>
+                )}
             <ConfirmationDialog
                 open={cancelBookingConfirmationOpen}
                 title={`Avbestille time?`}
