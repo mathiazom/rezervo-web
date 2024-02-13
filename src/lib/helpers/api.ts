@@ -60,8 +60,7 @@ export function get(path: string, accessToken: string): Promise<Response> {
     });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function put(path: string, accessToken: string, body: any): Promise<Response> {
+export function put(path: string, accessToken: string, body: BodyInit): Promise<Response> {
     return fetch(path, {
         method: "PUT",
         headers: {
@@ -72,8 +71,7 @@ export function put(path: string, accessToken: string, body: any): Promise<Respo
     });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function post(path: string, accessToken: string, body: any): Promise<Response> {
+export function post(path: string, accessToken: string, body: BodyInit): Promise<Response> {
     return fetch(path, {
         method: "POST",
         headers: {
@@ -83,8 +81,7 @@ export function post(path: string, accessToken: string, body: any): Promise<Resp
         body: body,
     });
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function destroy(path: string, accessToken: string, body: any): Promise<Response> {
+export function destroy(path: string, accessToken: string, body: BodyInit): Promise<Response> {
     return fetch(path, {
         method: "DELETE",
         headers: {
