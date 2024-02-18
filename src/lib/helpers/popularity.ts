@@ -41,3 +41,7 @@ export function stringifyClassPopularity(_class: RezervoClass, historicPopularit
     }
     return classPopularityInfo;
 }
+
+export function hasWaitingList(_class: RezervoClass): boolean {
+    return _class.availableSlots === null ? (_class?.waitingListCount ?? 0) > 0 : _class.availableSlots <= 0;
+}

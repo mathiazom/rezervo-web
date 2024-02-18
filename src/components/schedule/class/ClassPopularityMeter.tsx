@@ -5,7 +5,7 @@ import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { isClassInThePast } from "@/lib/helpers/date";
-import { determineClassPopularity, stringifyClassPopularity } from "@/lib/helpers/popularity";
+import { determineClassPopularity, hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { RezervoClass } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
 import { StatusColors } from "@/types/userSessions";
@@ -48,7 +48,7 @@ const ClassPopularityMeter = ({
                         horizontal: "right",
                     }}
                     variant={"dot"}
-                    rippleColor={_class.availableSlots > 0 ? StatusColors.ACTIVE : StatusColors.WAITLIST}
+                    rippleColor={hasWaitingList(_class) ? StatusColors.WAITLIST : StatusColors.ACTIVE}
                 >
                     {popularityIcon}
                 </RippleBadge>

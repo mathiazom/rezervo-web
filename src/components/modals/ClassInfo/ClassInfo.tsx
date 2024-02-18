@@ -27,7 +27,7 @@ import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { isClassInThePast } from "@/lib/helpers/date";
-import { stringifyClassPopularity } from "@/lib/helpers/popularity";
+import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
@@ -206,7 +206,7 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {((!_class.isBookable && !isInThePast) || _class.isCancelled) && (
+            {_class.totalSlots !== null && ((!_class.isBookable && !isInThePast) || _class.isCancelled) && (
                 <Box
                     sx={{
                         display: "flex",
@@ -222,7 +222,7 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {!_class.isCancelled && (
+            {!_class.isCancelled && _class.totalSlots !== null && _class.availableSlots !== null && (
                 <Box
                     sx={{
                         display: "flex",
@@ -346,15 +346,15 @@ export default function ClassInfo({
                         ) : (
                             !_class.isCancelled && (
                                 <LoadingButton
-                                    startIcon={_class.availableSlots > 0 ? <Add /> : <HourglassTop />}
-                                    color={_class.availableSlots > 0 ? "primary" : "warning"}
+                                    startIcon={hasWaitingList(_class) ? <HourglassTop /> : <Add />}
+                                    color={hasWaitingList(_class) ? "warning" : "primary"}
                                     sx={{ mt: 2, mr: 1 }}
                                     variant={"outlined"}
                                     disabled={isInThePast || !_class.isBookable}
                                     onClick={() => book()}
                                     loading={bookingLoading}
                                 >
-                                    {_class.availableSlots > 0 ? "Book nå" : "Sett meg på venteliste"}
+                                    {hasWaitingList(_class) ? "Sett meg på venteliste" : "Book nå"}
                                 </LoadingButton>
                             )
                         )}
