@@ -6,6 +6,7 @@ import AgendaModal from "@/components/modals/Agenda/AgendaModal";
 import BookingPopupModal from "@/components/modals/BookingPopupModal";
 import ChainUserSettingsModal from "@/components/modals/ChainUser/ChainUserSettingsModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
+import CommunityModal from "@/components/modals/Community/CommunityModal";
 import SettingsModal from "@/components/modals/Settings/SettingsModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
@@ -50,6 +51,7 @@ function Chain({
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
 
+    const [isCommunityOpen, setIsCommunityOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isChainUserSettingsOpen, setIsChainUserSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
@@ -170,6 +172,7 @@ function Chain({
                                 userConfig={userConfig}
                                 isLoadingConfig={userConfig == null || userConfigLoading}
                                 isConfigError={userConfigError}
+                                onCommunityOpen={() => setIsCommunityOpen(true)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onChainUserSettingsOpen={() => setIsChainUserSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
@@ -219,6 +222,7 @@ function Chain({
                 classPopularityIndex={classPopularityIndex}
                 onUpdateConfig={onUpdateConfig}
             />
+            <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
             <AgendaModal
                 open={isAgendaOpen}
                 setOpen={setIsAgendaOpen}
