@@ -63,7 +63,7 @@ const CommunityUserCard = ({
                     </Box>
                 );
             case UserRelationship.REQUEST_SENT:
-                return <Button disabled={true}>Forespørsel sendt</Button>;
+                return <Button disabled={true} sx={{fontSize: {xs: 12, sm: 14}}}>Forespørsel sendt</Button>;
             case UserRelationship.UNKNOWN:
             default:
                 return (
@@ -88,15 +88,16 @@ const CommunityUserCard = ({
                         alt={communityUser.name}
                         sx={{
                             backgroundColor: hexColorHash(communityUser.name),
-                            width: 50,
-                            height: 50,
-                            mr: 1.2,
+                            width: 36,
+                            height: 36,
+                            fontSize: 18,
+                            mr: 1.5,
                         }}
                     >
-                        <Typography variant={"h6"}>{communityUser.name[0]}</Typography>
+                        {communityUser.name[0]}
                     </Avatar>
                     <Box>
-                        <Typography variant={"subtitle1"} fontWeight={"bold"}>
+                        <Typography variant={"subtitle2"} fontWeight={"bold"}>
                             {communityUser.name}
                         </Typography>
                         <Box sx={{ display: "flex", gap: 0.5 }}>

@@ -1,3 +1,4 @@
+import { People } from "@mui/icons-material";
 import { Alert, Badge, Box, Divider, Tooltip, Typography, useTheme } from "@mui/material";
 import React, { ReactNode } from "react";
 
@@ -22,7 +23,7 @@ const CommunityUserList = ({
     return (
         <Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="h6" component="h3">
+                <Typography variant="h6" sx={{ fontSize: 18 }}>
                     {title}
                 </Typography>
                 {badge}
@@ -93,9 +94,12 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                     paddingBottom: 1,
                 }}
             >
-                <Typography variant="h6" component="h2">
-                    Venner
-                </Typography>
+                <Box display={"flex"} alignItems={"center"} gap={1}>
+                    <People />
+                    <Typography variant="h6" component="h2">
+                        Venner
+                    </Typography>
+                </Box>
                 <Typography
                     variant="body2"
                     style={{
