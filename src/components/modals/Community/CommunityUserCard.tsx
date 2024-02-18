@@ -1,6 +1,6 @@
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Avatar, Box, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import React from "react";
 
@@ -42,21 +42,29 @@ const CommunityUserCard = ({
             case UserRelationship.REQUEST_RECEIVED:
                 return (
                     <Box>
-                        <LoadingButton
-                            loading={isLoading}
-                            startIcon={<PersonRemove />}
-                            color={"error"}
-                            onClick={() => updateUserRelationship(UserRelationshipAction.DENY_FRIEND)}
-                        >
-                            Avslå
-                        </LoadingButton>
-                        <LoadingButton
-                            loading={isLoading}
-                            startIcon={<PersonAdd />}
-                            onClick={() => updateUserRelationship(UserRelationshipAction.ACCEPT_FRIEND)}
-                        >
-                            Godta
-                        </LoadingButton>
+                        {isLoading ? (
+                            <CircularProgress size={22} thickness={4} sx={{ mr: "1rem" }} />
+                        ) : (
+                            <Box
+                                display={"flex"}
+                                alignItems={"center"}
+                                sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                            >
+                                <Button
+                                    startIcon={<PersonRemove />}
+                                    color={"error"}
+                                    onClick={() => updateUserRelationship(UserRelationshipAction.DENY_FRIEND)}
+                                >
+                                    Avslå
+                                </Button>
+                                <Button
+                                    startIcon={<PersonAdd />}
+                                    onClick={() => updateUserRelationship(UserRelationshipAction.ACCEPT_FRIEND)}
+                                >
+                                    Godta
+                                </Button>
+                            </Box>
+                        )}
                     </Box>
                 );
             case UserRelationship.REQUEST_SENT:
