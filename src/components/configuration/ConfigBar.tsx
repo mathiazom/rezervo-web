@@ -111,7 +111,11 @@ function ConfigBar({
                             >
                                 <IconButton onClick={() => onCommunityOpen()}>
                                     {friendRequestCount > 0 ? (
-                                        <Badge badgeContent={friendRequestCount} color={"error"}>
+                                        <Badge
+                                            badgeContent={friendRequestCount}
+                                            color={"error"}
+                                            sx={{ "& .MuiBadge-badge": { fontSize: 10, height: 18, minWidth: 18 } }}
+                                        >
                                             <People />
                                         </Badge>
                                     ) : (
