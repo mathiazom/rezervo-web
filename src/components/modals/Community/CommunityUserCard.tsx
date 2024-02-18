@@ -2,7 +2,7 @@ import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Avatar, Box, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import React from "react";
 
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { hexColorHash } from "@/lib/utils/colorUtils";
@@ -16,18 +16,15 @@ const CommunityUserCard = ({
     communityUser: CommunityUser;
     chainProfiles: ChainProfile[];
 }) => {
-    const { mutateCommunity } = useCommunity();
-    async function updateRelationship(action: UserRelationshipAction) {
-        setIsLoading(true);
-        await fetch(`/api/community/relationship`, {
-            method: "PUT",
-            body: JSON.stringify({ userId: communityUser.userId, action }, null, 2),
+    const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
+    const updateUserRelationship = (action: UserRelationshipAction) => {
+        return updateRelationship({
+            userId: communityUser.userId,
+            action,
         });
-        await mutateCommunity();
-        setIsLoading(false);
-    }
+    };
 
-    const [isLoading, setIsLoading] = useState(false);
+    const isLoading = communityLoading || isUpdatingRelationship;
 
     const renderRelationshipActions = (relationship: UserRelationship) => {
         switch (relationship) {
@@ -37,7 +34,7 @@ const CommunityUserCard = ({
                         loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
-                        onClick={() => updateRelationship(UserRelationshipAction.REMOVE_FRIEND)}
+                        onClick={() => updateUserRelationship(UserRelationshipAction.REMOVE_FRIEND)}
                     >
                         Fjern venn
                     </LoadingButton>
@@ -49,28 +46,32 @@ const CommunityUserCard = ({
                             loading={isLoading}
                             startIcon={<PersonRemove />}
                             color={"error"}
-                            onClick={() => updateRelationship(UserRelationshipAction.DENY_FRIEND)}
+                            onClick={() => updateUserRelationship(UserRelationshipAction.DENY_FRIEND)}
                         >
                             Avslå
                         </LoadingButton>
                         <LoadingButton
                             loading={isLoading}
                             startIcon={<PersonAdd />}
-                            onClick={() => updateRelationship(UserRelationshipAction.ACCEPT_FRIEND)}
+                            onClick={() => updateUserRelationship(UserRelationshipAction.ACCEPT_FRIEND)}
                         >
                             Godta
                         </LoadingButton>
                     </Box>
                 );
             case UserRelationship.REQUEST_SENT:
-                return <Button disabled={true} sx={{fontSize: {xs: 12, sm: 14}}}>Forespørsel sendt</Button>;
+                return (
+                    <Button disabled={true} sx={{ fontSize: { xs: 12, sm: 14 } }}>
+                        Forespørsel sendt
+                    </Button>
+                );
             case UserRelationship.UNKNOWN:
             default:
                 return (
                     <LoadingButton
                         loading={isLoading}
                         startIcon={<PersonAdd />}
-                        onClick={() => updateRelationship(UserRelationshipAction.ADD_FRIEND)}
+                        onClick={() => updateUserRelationship(UserRelationshipAction.ADD_FRIEND)}
                     >
                         Legg til venn
                     </LoadingButton>
