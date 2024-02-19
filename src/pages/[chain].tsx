@@ -37,7 +37,6 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
         return useSWRNext(key, fetcher, config);
     }
     const { cache } = useSWRConfig();
-    console.log("cache", cache.keys());
     // quick check for existing keys
     if (cache.get(key) !== undefined) {
         return useSWRNext(key, fetcher, config);
