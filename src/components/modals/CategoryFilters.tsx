@@ -72,14 +72,26 @@ export default function CategoryFilters({
                                         }
                                         value={category.name}
                                         sx={{
-                                            color: category.color,
+                                            color: CATEGORIES_COLOR[800],
                                             "&.Mui-checked": {
-                                                color: category.color,
+                                                color: CATEGORIES_COLOR[600],
                                             },
                                         }}
                                     />
                                 }
-                                label={category.name}
+                                label={
+                                    <Box sx={{ display: "flex", gap: 0.4, alignItems: "center" }}>
+                                        {category.name}
+                                        <Box
+                                            sx={{
+                                                borderRadius: "50%",
+                                                height: ".8rem",
+                                                width: ".8rem",
+                                                backgroundColor: category.color,
+                                            }}
+                                        />
+                                    </Box>
+                                }
                             />
                         ))}
                     </>
