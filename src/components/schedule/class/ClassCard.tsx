@@ -35,7 +35,8 @@ const ClassCard = ({
     onUpdateConfig: (selected: boolean) => void;
     onInfo: () => void;
 }) => {
-    const { userSessionsIndex, userSessionsIndexLoading } = useUserSessions(chain);
+    const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessions(chain);
+    const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const { allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
@@ -188,7 +189,7 @@ const ClassCard = ({
                                                     key={user_name}
                                                     username={user_name}
                                                     alert={_class.isBookable}
-                                                    loading={userSessionsIndexLoading}
+                                                    loading={userSessionsLoading}
                                                 />
                                             ))}
                                         {userSessions.length > 0 &&

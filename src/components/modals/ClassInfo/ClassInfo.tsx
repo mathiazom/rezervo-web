@@ -50,7 +50,9 @@ export default function ClassInfo({
     const { user } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
-    const { userSessionsIndex, userSessionsIndexLoading, mutateSessionsIndex } = useUserSessions(chain);
+    const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
+        useUserSessions(chain);
+    const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>
         `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -269,10 +271,10 @@ export default function ClassInfo({
                     <ClassUsersAvatarGroup
                         users={usersPlanned.map((u) => u.user_name)}
                         alert={_class.isBookable}
-                        loading={userSessionsIndexLoading}
+                        loading={userSessionsLoading}
                     />
-                    <Typography variant="body2" color={userSessionsIndexLoading ? "text.disabled" : "text.secondary"}>
-                        {userSessionsIndexLoading
+                    <Typography variant="body2" color={userSessionsLoading ? "text.disabled" : "text.secondary"}>
+                        {userSessionsLoading
                             ? "henter bookingstatus ..."
                             : `${formatNameArray(
                                   usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
