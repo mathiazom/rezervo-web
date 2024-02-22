@@ -7,11 +7,13 @@ export default function ClassUsersAvatarGroup({
     users,
     rippleColor,
     alert = false,
+    loading = false,
     invisibleBadges = false,
 }: {
     users: string[];
     rippleColor?: string | undefined;
     alert?: boolean;
+    loading?: boolean;
     invisibleBadges?: boolean;
 }) {
     return (
@@ -38,6 +40,7 @@ export default function ClassUsersAvatarGroup({
                     rippleColor={rippleColor}
                     invisibleBadge={invisibleBadges}
                     alert={alert}
+                    loading={loading}
                 />
             ))}
         </AvatarGroup>

@@ -50,7 +50,7 @@ export default function ClassInfo({
     const { user } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
-    const { userSessionsIndex, mutateSessionsIndex } = useUserSessions(chain);
+    const { userSessionsIndex, userSessionsIndexLoading, mutateSessionsIndex } = useUserSessions(chain);
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>
         `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
@@ -266,19 +266,25 @@ export default function ClassInfo({
             )}
             {!isInThePast && usersPlanned.length > 0 && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1.5 }}>
-                    <ClassUsersAvatarGroup users={usersPlanned.map((u) => u.user_name)} alert={_class.isBookable} />
-                    <Typography variant="body2" color="text.secondary">
-                        {`${formatNameArray(
-                            usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
-                            4,
-                            usersPlanned.some((u) => u.is_self),
-                        )} ${
-                            _class.isBookable
-                                ? "har planlagt denne timen, men ikke booket plass!"
-                                : _class.isCancelled
-                                ? "skulle på denne timen"
-                                : "skal på denne timen"
-                        }`}
+                    <ClassUsersAvatarGroup
+                        users={usersPlanned.map((u) => u.user_name)}
+                        alert={_class.isBookable}
+                        loading={userSessionsIndexLoading}
+                    />
+                    <Typography variant="body2" color={userSessionsIndexLoading ? "text.disabled" : "text.secondary"}>
+                        {userSessionsIndexLoading
+                            ? "henter bookingstatus ..."
+                            : `${formatNameArray(
+                                  usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
+                                  4,
+                                  usersPlanned.some((u) => u.is_self),
+                              )} ${
+                                  _class.isBookable
+                                      ? "har planlagt denne timen, men ikke booket plass!"
+                                      : _class.isCancelled
+                                      ? "skulle på denne timen"
+                                      : "skal på denne timen"
+                              }`}
                     </Typography>
                 </Box>
             )}
