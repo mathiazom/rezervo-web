@@ -156,19 +156,6 @@ export default function ClassInfo({
                 <Typography variant="h6" component="h2">
                     {_class.activity.name}
                 </Typography>
-                {/*{selectedClassIds.includes(*/}
-                {/*    modalClass.id.toString()*/}
-                {/*) && (*/}
-                {/*    <IconButton*/}
-                {/*        onClick={() => {*/}
-                {/*            setModalClass(null);*/}
-                {/*            setSettingsClass(modalClass);*/}
-                {/*        }}*/}
-                {/*        size={"small"}*/}
-                {/*    >*/}
-                {/*        <SettingsOutlinedIcon />*/}
-                {/*    </IconButton>*/}
-                {/*)}*/}
             </Box>
             {_class.isCancelled && (
                 <Alert severity={"error"} icon={<CancelRounded />}>
