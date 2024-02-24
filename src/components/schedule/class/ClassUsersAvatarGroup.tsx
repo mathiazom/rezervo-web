@@ -6,13 +6,13 @@ import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 export default function ClassUsersAvatarGroup({
     users,
     rippleColor,
-    alert = false,
+    badgeIcon,
     loading = false,
     invisibleBadges = false,
 }: {
     users: string[];
     rippleColor?: string | undefined;
-    alert?: boolean;
+    badgeIcon?: React.ReactNode | undefined;
     loading?: boolean;
     invisibleBadges?: boolean;
 }) {
@@ -39,7 +39,7 @@ export default function ClassUsersAvatarGroup({
                     username={username}
                     rippleColor={rippleColor}
                     invisibleBadge={invisibleBadges}
-                    alert={alert}
+                    badgeIcon={badgeIcon}
                     loading={loading}
                 />
             ))}

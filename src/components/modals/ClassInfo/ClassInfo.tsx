@@ -21,16 +21,17 @@ import Button from "@mui/material/Button";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
-import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
+import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { RezervoClass } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
@@ -69,9 +70,15 @@ export default function ClassInfo({
 
     const selfOnWaitlist = usersOnWaitlist.some((u) => u.is_self);
 
+    const noShowUsers = userSessions.filter(({ status }) => status === SessionStatus.NOSHOW);
+
+    const selfNoShow = noShowUsers.some((u) => u.is_self);
+
     const usersPlanned = configUsers.filter(
         ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
     );
+
+    const selfPlanned = usersPlanned.some((u) => u.is_self);
 
     const classInUserConfig = userConfig?.recurringBookings
         ?.map(classConfigRecurrentId)
@@ -266,88 +273,48 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            {!isInThePast && usersPlanned.length > 0 && (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mt: 1.5 }}>
-                    <ClassUsersAvatarGroup
-                        users={usersPlanned.map((u) => u.user_name)}
-                        alert={_class.isBookable}
-                        loading={userSessionsLoading}
-                    />
-                    <Typography variant="body2" color={userSessionsLoading ? "text.disabled" : "text.secondary"}>
-                        {userSessionsLoading
-                            ? "henter bookingstatus ..."
-                            : `${formatNameArray(
-                                  usersPlanned.filter((u) => !u.is_self).map((u) => u.user_name),
-                                  4,
-                                  usersPlanned.some((u) => u.is_self),
-                              )} ${
-                                  _class.isBookable
-                                      ? "har planlagt denne timen, men ikke booket plass!"
-                                      : _class.isCancelled
-                                      ? "skulle på denne timen"
-                                      : "skal på denne timen"
-                              }`}
-                    </Typography>
-                </Box>
+            <ClassInfoUsersGroup
+                users={usersPlanned}
+                includeSelf={selfPlanned}
+                badgeIcon={_class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined}
+                loading={userSessionsLoading}
+                text={
+                    _class.isBookable
+                        ? "har planlagt denne timen, men ikke booket plass!"
+                        : _class.isCancelled
+                        ? "skulle på denne timen"
+                        : "skal på denne timen"
+                }
+            />
+            {!isInThePast && (
+                <ClassInfoUsersGroup
+                    users={usersOnWaitlist}
+                    includeSelf={selfOnWaitlist}
+                    rippleColor={StatusColors.WAITLIST}
+                    isCancelled={_class.isCancelled}
+                    text={_class.isCancelled ? "var på venteliste for denne timen" : "er på venteliste for denne timen"}
+                />
             )}
-            {!isInThePast && usersOnWaitlist.length > 0 && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.25,
-                        mt: 1.5,
-                        opacity: _class.isCancelled ? cancelledOpacity : 1,
-                    }}
-                >
-                    <ClassUsersAvatarGroup
-                        users={usersOnWaitlist.map((u) => u.user_name)}
-                        rippleColor={StatusColors.WAITLIST}
-                        invisibleBadges={isInThePast}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                        {`${formatNameArray(
-                            usersOnWaitlist.filter((u) => !u.is_self).map((u) => u.user_name),
-                            4,
-                            usersOnWaitlist.some((u) => u.is_self),
-                        )} ${
-                            _class.isCancelled
-                                ? "var på venteliste for denne timen"
-                                : "er på venteliste for denne timen"
-                        }`}
-                    </Typography>
-                </Box>
-            )}
-            {usersBooked.length > 0 && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.25,
-                        mt: 1.5,
-                        opacity: _class.isCancelled ? cancelledOpacity : 1,
-                    }}
-                >
-                    <ClassUsersAvatarGroup
-                        users={usersBooked.map((u) => u.user_name)}
-                        rippleColor={StatusColors.ACTIVE}
-                        invisibleBadges={isInThePast}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                        {`${formatNameArray(
-                            usersBooked.filter((u) => !u.is_self).map((u) => u.user_name),
-                            4,
-                            selfBooked,
-                        )} ${
-                            _class.isCancelled
-                                ? "hadde booket denne timen"
-                                : isInThePast
-                                ? "var på denne timen"
-                                : "har booket denne timen"
-                        }`}
-                    </Typography>
-                </Box>
-            )}
+            <ClassInfoUsersGroup
+                users={usersBooked}
+                includeSelf={selfBooked}
+                rippleColor={StatusColors.ACTIVE}
+                invisibleBadges={isInThePast}
+                isCancelled={_class.isCancelled}
+                text={
+                    _class.isCancelled
+                        ? "hadde booket denne timen"
+                        : isInThePast
+                        ? "var på denne timen"
+                        : "har booket denne timen"
+                }
+            />
+            <ClassInfoUsersGroup
+                users={noShowUsers}
+                includeSelf={selfNoShow}
+                badgeIcon={<NoShowBadgeIcon />}
+                text={"booket plass, men møtte ikke opp!"}
+            />
             {user === undefined && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1.5 }} icon={<Login fontSize={"small"} />}>
                     Du må logge inn for å kunne booke eller legge til timer i timeplanen

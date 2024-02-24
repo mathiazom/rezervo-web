@@ -1,18 +1,19 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
-import { Avatar, AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
+import { AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
-import RippleBadge from "@/components/utils/RippleBadge";
+import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
+import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
-import { hexColorHash, hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
 import { RezervoClass } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
@@ -188,40 +189,34 @@ const ClassCard = ({
                                                 <ClassUserAvatar
                                                     key={user_name}
                                                     username={user_name}
-                                                    alert={_class.isBookable}
+                                                    badgeIcon={
+                                                        _class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined
+                                                    }
                                                     loading={userSessionsLoading}
                                                 />
                                             ))}
                                         {userSessions.length > 0 &&
-                                            userSessions.map(({ user_name, status }) => {
-                                                const rippleColor =
-                                                    status === SessionStatus.BOOKED ||
-                                                    status === SessionStatus.CONFIRMED
-                                                        ? StatusColors.ACTIVE
-                                                        : StatusColors.WAITLIST;
-                                                return (
-                                                    <RippleBadge
-                                                        key={user_name}
-                                                        invisible={isInThePast}
-                                                        overlap="circular"
-                                                        anchorOrigin={{
-                                                            vertical: "bottom",
-                                                            horizontal: "right",
-                                                        }}
-                                                        variant={"dot"}
-                                                        rippleColor={rippleColor}
-                                                    >
-                                                        <Avatar
-                                                            alt={user_name}
-                                                            sx={{
-                                                                backgroundColor: hexColorHash(user_name),
-                                                            }}
-                                                        >
-                                                            {user_name[0]}
-                                                        </Avatar>
-                                                    </RippleBadge>
-                                                );
-                                            })}
+                                            userSessions.map(({ user_name, status }) => (
+                                                <Fragment key={user_name}>
+                                                    <ClassUserAvatar
+                                                        username={user_name}
+                                                        invisibleBadge={isInThePast}
+                                                        badgeIcon={
+                                                            status === SessionStatus.NOSHOW ? (
+                                                                <NoShowBadgeIcon />
+                                                            ) : undefined
+                                                        }
+                                                        rippleColor={
+                                                            status === SessionStatus.BOOKED ||
+                                                            status === SessionStatus.CONFIRMED
+                                                                ? StatusColors.ACTIVE
+                                                                : status === SessionStatus.WAITLIST
+                                                                ? StatusColors.WAITLIST
+                                                                : undefined
+                                                        }
+                                                    />
+                                                </Fragment>
+                                            ))}
                                     </AvatarGroup>
                                 )}
                             </Box>

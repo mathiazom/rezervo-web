@@ -1,6 +1,9 @@
+import { UserNameWithIsSelf } from "@/types/config";
+
 export enum SessionStatus {
     BOOKED = "BOOKED",
     CONFIRMED = "CONFIRMED",
+    NOSHOW = "NOSHOW",
     WAITLIST = "WAITLIST",
     UNKNOWN = "UNKNOWN",
 }
@@ -11,9 +14,7 @@ export enum StatusColors {
     UNKNOWN = "#000",
 }
 
-export type UserNameSessionStatus = {
-    is_self: boolean;
-    user_name: string;
+export type UserNameSessionStatus = UserNameWithIsSelf & {
     status: SessionStatus;
 };
 export type UserSessionsIndex = {
