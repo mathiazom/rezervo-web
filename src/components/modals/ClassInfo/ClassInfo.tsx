@@ -260,27 +260,33 @@ export default function ClassInfo({
                     </Typography>
                 </Box>
             )}
-            <ClassInfoUsersGroup
-                users={usersPlanned}
-                includeSelf={selfPlanned}
-                badgeIcon={_class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined}
-                loading={userSessionsLoading}
-                text={
-                    _class.isBookable
-                        ? "har planlagt denne timen, men ikke booket plass!"
-                        : _class.isCancelled
-                        ? "skulle på denne timen"
-                        : "skal på denne timen"
-                }
-            />
             {!isInThePast && (
-                <ClassInfoUsersGroup
-                    users={usersOnWaitlist}
-                    includeSelf={selfOnWaitlist}
-                    rippleColor={StatusColors.WAITLIST}
-                    isCancelled={_class.isCancelled}
-                    text={_class.isCancelled ? "var på venteliste for denne timen" : "er på venteliste for denne timen"}
-                />
+                <>
+                    <ClassInfoUsersGroup
+                        users={usersPlanned}
+                        includeSelf={selfPlanned}
+                        badgeIcon={_class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined}
+                        loading={userSessionsLoading}
+                        text={
+                            _class.isBookable
+                                ? "har planlagt denne timen, men ikke booket plass!"
+                                : _class.isCancelled
+                                ? "skulle på denne timen"
+                                : "skal på denne timen"
+                        }
+                    />
+                    <ClassInfoUsersGroup
+                        users={usersOnWaitlist}
+                        includeSelf={selfOnWaitlist}
+                        rippleColor={StatusColors.WAITLIST}
+                        isCancelled={_class.isCancelled}
+                        text={
+                            _class.isCancelled
+                                ? "var på venteliste for denne timen"
+                                : "er på venteliste for denne timen"
+                        }
+                    />
+                </>
             )}
             <ClassInfoUsersGroup
                 users={usersBooked}
