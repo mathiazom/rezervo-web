@@ -198,7 +198,7 @@ export default function Settings({
                 left: "50%",
                 width: "90%",
                 maxHeight: "80%",
-                overflowY: "scroll",
+                overflowY: "auto",
                 maxWidth: 520,
                 transform: "translate(-50%, -50%)",
                 borderRadius: "0.25em",

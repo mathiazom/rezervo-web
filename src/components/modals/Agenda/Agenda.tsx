@@ -33,7 +33,7 @@ export default function Agenda({
                 left: "50%",
                 width: "95%",
                 maxHeight: "80%",
-                overflowY: "scroll",
+                overflowY: "auto",
                 maxWidth: 500,
                 minHeight: 300,
                 transform: "translate(-50%, -50%)",

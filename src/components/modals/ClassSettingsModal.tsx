@@ -14,7 +14,7 @@ export default function ClassSettingsModal() {
             {/*                    left: "50%",*/}
             {/*                    width: "95%",*/}
             {/*                    maxHeight: "80%",*/}
-            {/*                    overflowY: "scroll",*/}
+            {/*                    overflowY: "auto",*/}
             {/*                    maxWidth: 600,*/}
             {/*                    transform: "translate(-50%, -50%)",*/}
             {/*                    backgroundColor:*/}
