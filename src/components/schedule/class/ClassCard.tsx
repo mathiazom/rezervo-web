@@ -44,6 +44,7 @@ const ClassCard = ({
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
     );
+    const [showSelectClassTooltip, setShowSelectClassTooltip] = useState(false);
 
     useEffect(() => {
         if (selected) {
@@ -230,12 +231,20 @@ const ClassCard = ({
                             <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                         )}
                         {showScheduleAction && (
-                            <Tooltip title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}>
+                            <Tooltip
+                                title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}
+                                // Hide the tooltip when clicked
+                                open={showSelectClassTooltip}
+                                disableHoverListener
+                                onMouseEnter={() => setShowSelectClassTooltip(true)}
+                                onMouseLeave={() => setShowSelectClassTooltip(false)}
+                            >
                                 <IconButton
                                     onClick={(event) => {
                                         // Prevent onInfo()
                                         event.stopPropagation();
                                         selectClass();
+                                        setShowSelectClassTooltip(false);
                                     }}
                                     size={"small"}
                                     sx={{
