@@ -50,6 +50,10 @@ export type RezervoLocation = {
     name: string;
 };
 
+export type RezervoInstructor = {
+    name: string;
+};
+
 export type RezervoSchedule = {
     [weekOffset: number]: RezervoWeekSchedule;
 };
@@ -78,9 +82,7 @@ export type RezervoClassBase = {
     availableSlots: number;
     waitingListCount: number | null;
     activity: RezervoActivity;
-    instructors: {
-        name: string;
-    }[];
+    instructors: RezervoInstructor[];
 };
 
 export type RezervoClass = RezervoClassBase & {
