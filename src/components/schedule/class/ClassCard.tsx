@@ -1,5 +1,5 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
-import { AvatarGroup, Badge, Box, Card, CardContent, Tooltip, Typography } from "@mui/material";
+import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { Fragment, useEffect, useState } from "react";
 
@@ -160,7 +160,7 @@ const ClassCard = ({
                                 {formatInstructorNames(_class.instructors)}
                             </Typography>
                         )}
-                        {showUsersPlanned && (
+                        <Collapse in={showUsersPlanned}>
                             <Box pl={0.75} pt={1}>
                                 <AvatarGroup
                                     max={4}
@@ -214,7 +214,7 @@ const ClassCard = ({
                                         ))}
                                 </AvatarGroup>
                             </Box>
-                        )}
+                        </Collapse>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", ml: 0.5 }}>
                         {_class.isCancelled ? (
