@@ -14,6 +14,7 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { shortenMiddleNames } from "@/lib/utils/textUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
 import { RezervoClass, RezervoInstructor } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
@@ -55,14 +56,6 @@ const ClassCard = ({
     function selectClass() {
         onUpdateConfig(!selected);
     }
-
-    const shortenMiddleNames = (name: string): string =>
-        name
-            .split(/\s+/)
-            .map((part, index, parts) =>
-                index > 0 && index < parts.length - 1 && part.length > 1 ? `${part.charAt(0).toUpperCase()}.` : part,
-            )
-            .join(" ");
 
     function formatInstructorNames(instructors: RezervoInstructor[]): string {
         const namesToShow = 2;
