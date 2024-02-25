@@ -13,8 +13,7 @@ export function usePushNotificationSubscription() {
 
     const { trigger: triggerSubscribe, isMutating: isSubscribing } = useSWRMutation<
         PushSubscription,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        any,
+        unknown,
         string,
         PushSubscription
     >(subscriptionApiUrl, subscribe);
@@ -28,8 +27,7 @@ export function usePushNotificationSubscription() {
 
     const { trigger: triggerUnsubscribe, isMutating: isUnsubscribing } = useSWRMutation<
         boolean,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        any,
+        unknown,
         string,
         PushSubscription
     >(subscriptionApiUrl, unsubscribe);
@@ -41,13 +39,10 @@ export function usePushNotificationSubscription() {
         }).then((r) => r.json());
     }
 
-    const { trigger: triggerVerify } = useSWRMutation<
-        boolean,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        any,
-        string,
-        PushSubscription
-    >(subscriptionVerifyApiUrl, verify);
+    const { trigger: triggerVerify } = useSWRMutation<boolean, unknown, string, PushSubscription>(
+        subscriptionVerifyApiUrl,
+        verify,
+    );
 
     return {
         subscribeToPush: triggerSubscribe,

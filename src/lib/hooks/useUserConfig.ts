@@ -23,8 +23,7 @@ export function useUserConfig(chain: ChainIdentifier) {
 
     const { data, error, isLoading, mutate } = useSWR<ChainConfig>(user && chain ? configApiUrl : null, fetcher);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { trigger, isMutating } = useSWRMutation<ChainConfig, any, string, ChainConfigPayload>(
+    const { trigger, isMutating } = useSWRMutation<ChainConfig, unknown, string, ChainConfigPayload>(
         configApiUrl,
         putConfig,
         {

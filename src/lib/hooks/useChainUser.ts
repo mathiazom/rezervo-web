@@ -28,8 +28,7 @@ export function useChainUser(chain: ChainIdentifier) {
 
     const { mutateUserConfig } = useUserConfig(chain);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { trigger, isMutating } = useSWRMutation<ChainUser, any, string, ChainUserPayload>(
+    const { trigger, isMutating } = useSWRMutation<ChainUser, unknown, string, ChainUserPayload>(
         chainUserApiUrl,
         putChainUser,
         {
