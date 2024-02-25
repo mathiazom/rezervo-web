@@ -6,5 +6,5 @@ export const PUT = withApiAuthRequired(async (req) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
 
-    return await doOperation(() => put(`${process.env["CONFIG_HOST"]}/user`, accessToken, ""));
+    return await doOperation(() => put(`${process.env["CONFIG_HOST"]}/user`, accessToken));
 });

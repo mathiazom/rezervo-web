@@ -60,34 +60,43 @@ export function get(path: string, accessToken: string): Promise<Response> {
     });
 }
 
-export function put(path: string, accessToken: string, body: BodyInit): Promise<Response> {
-    return fetch(path, {
+export function put(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
+    const requestInit: RequestInit = {
         method: "PUT",
         headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
-        body,
-    });
+    };
+    if (body) {
+        requestInit.body = body;
+    }
+    return fetch(path, requestInit);
 }
 
-export function post(path: string, accessToken: string, body: BodyInit): Promise<Response> {
-    return fetch(path, {
+export function post(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
+    const requestInit: RequestInit = {
         method: "POST",
         headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
-        body: body,
-    });
+    };
+    if (body) {
+        requestInit.body = body;
+    }
+    return fetch(path, requestInit);
 }
-export function destroy(path: string, accessToken: string, body: BodyInit): Promise<Response> {
-    return fetch(path, {
+export function destroy(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
+    const requestInit: RequestInit = {
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
         },
-        body: body,
-    });
+    };
+    if (body) {
+        requestInit.body = body;
+    }
+    return fetch(path, requestInit);
 }
