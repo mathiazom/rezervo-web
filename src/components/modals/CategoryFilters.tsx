@@ -23,14 +23,11 @@ export default function CategoryFilters({
     return (
         <Box
             sx={{
-                px: { xs: 0, sm: 2 },
+                px: { xs: 0.5, sm: 2 },
                 display: "flex",
                 alignItems: "flex-start",
             }}
         >
-            {/*<Avatar sx={{ bgcolor: CATEGORIES_COLOR[500] }}>*/}
-            {/*    <CategoryIcon fontSize="small" />*/}
-            {/*</Avatar>*/}
             <FormControl sx={{ mx: 3 }} component="fieldset" variant="standard">
                 <FormGroup sx={{ mt: 1 }}>
                     <>
@@ -86,7 +83,7 @@ export default function CategoryFilters({
                                     />
                                 }
                                 label={
-                                    <Box sx={{ display: "flex", gap: 0.4, alignItems: "center", whiteSpace: "nowrap" }}>
+                                    <Box sx={{ display: "flex", gap: 1, alignItems: "center", whiteSpace: "nowrap" }}>
                                         {category.name}
                                         <Box
                                             sx={{
@@ -94,6 +91,7 @@ export default function CategoryFilters({
                                                 height: ".8rem",
                                                 width: ".8rem",
                                                 backgroundColor: category.color,
+                                                flexShrink: 0,
                                             }}
                                         />
                                     </Box>

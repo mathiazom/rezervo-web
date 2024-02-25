@@ -25,10 +25,7 @@ export default function LocationFilters({
         );
 
     return (
-        <Box px={2} sx={{ display: "flex", alignItems: "flex-start" }}>
-            {/*<Avatar sx={{ bgcolor: LOCATIONS_COLOR[500] }}>*/}
-            {/*    <ApartmentIcon fontSize="small" />*/}
-            {/*</Avatar>*/}
+        <Box sx={{ px: { xs: 0.5, sm: 2 }, display: "flex", alignItems: "flex-start" }}>
             <FormControl sx={{ mx: 3 }} component="fieldset" variant="standard">
                 <FormGroup sx={{ mt: 1 }}>
                     <FormControlLabel
