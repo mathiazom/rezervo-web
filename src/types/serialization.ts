@@ -1,4 +1,4 @@
-import { ChainProfile, RezervoChain, RezervoClassBase } from "@/types/chain";
+import { ActivityCategory, ChainProfile, RezervoChain, RezervoClassBase } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
 
@@ -26,7 +26,7 @@ export type ChainPageProps = {
     chain: RezervoChain;
     chainProfiles: ChainProfile[];
     swrPrefetched: SWRPrefetchedCacheData<RezervoWeekScheduleDTO>;
-    activityCategories: string[];
+    activityCategories: ActivityCategory[];
     classPopularityIndex: ClassPopularityIndex;
     error?: RezervoError;
 };

@@ -20,7 +20,7 @@ import { useSchedule } from "@/lib/hooks/useSchedule";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
-import { ChainProfile, RezervoChain, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
+import { ActivityCategory, ChainProfile, RezervoChain, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
@@ -41,7 +41,7 @@ function Chain({
     chain: RezervoChain;
     chainProfiles: ChainProfile[];
     initialLocationIds: string[];
-    activityCategories: string[];
+    activityCategories: ActivityCategory[];
     error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chain.profile.identifier);
@@ -67,13 +67,15 @@ function Chain({
     }, [chain.branches]);
 
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories);
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
     const [selectedChain, setSelectedChain] = useState<string | null>(null);
 
     useEffect(() => {
         const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
         setSelectedLocationIds(locationIds);
-        setSelectedCategories(getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories);
+        setSelectedCategories(
+            getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories.map((ac) => ac.name),
+        );
         setSelectedChain(chain.profile.identifier);
     }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
 

@@ -9,7 +9,7 @@ import SwipeableViews from "react-swipeable-views";
 
 import CategoryFilters from "@/components/modals/CategoryFilters";
 import LocationFilters from "@/components/modals/LocationFilters";
-import { RezervoChain } from "@/types/chain";
+import { ActivityCategory, RezervoChain } from "@/types/chain";
 
 function a11yProps(index: number) {
     return {
@@ -64,7 +64,7 @@ export default function ScheduleFiltersDialog({
     chain: RezervoChain;
     selectedLocationIds: string[];
     setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
-    allCategories: string[];
+    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
 }) {

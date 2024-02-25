@@ -5,7 +5,7 @@ import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 import ScheduleFiltersDialog, { CATEGORIES_COLOR, LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
-import { RezervoChain } from "@/types/chain";
+import { ActivityCategory, RezervoChain } from "@/types/chain";
 
 export default function WeekNavigator({
     chain,
@@ -28,7 +28,7 @@ export default function WeekNavigator({
     onGoToToday: () => void;
     selectedLocationIds: string[];
     setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
-    allCategories: string[];
+    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
 }) {
