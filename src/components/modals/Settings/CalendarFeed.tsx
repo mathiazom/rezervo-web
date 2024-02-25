@@ -45,8 +45,8 @@ export default function CalendarFeed() {
                             userCalendarFeedUrlLoading
                                 ? "⏳    Laster ..."
                                 : !userCalendarFeedUrlError
-                                ? userCalendarFeedUrl
-                                : "❌    Klarte ikke å hente URL"
+                                  ? userCalendarFeedUrl
+                                  : "❌    Klarte ikke å hente URL"
                         }
                         disabled={userCalendarFeedUrlLoading || userCalendarFeedUrlError}
                         sx={{ width: "100%" }}

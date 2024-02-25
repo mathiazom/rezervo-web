@@ -86,8 +86,8 @@ const BookingPopupModal = ({
                             {isCancellation
                                 ? "Avbestill"
                                 : _class.availableSlots > 0
-                                ? "Book nå"
-                                : "Sett på venteliste"}
+                                  ? "Book nå"
+                                  : "Sett på venteliste"}
                         </LoadingButton>
                     </DialogActions>
                 </>

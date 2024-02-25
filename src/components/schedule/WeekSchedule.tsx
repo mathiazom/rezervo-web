@@ -1,6 +1,6 @@
 import { alpha, Box, Stack, useTheme } from "@mui/material";
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { ChainIdentifier } from "@/lib/activeChains";
@@ -33,20 +33,19 @@ function WeekSchedule({
 }) {
     const theme = useTheme();
     const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-    useEffect(() => {
-        const { classId, ...queryWithoutParam } = router.query;
-        if (classId === undefined) {
-            return;
-        }
+    const classId = searchParams?.get("classId");
+    if (classId) {
         const linkedClass = weekSchedule.days
             .flatMap((daySchedule) => daySchedule.classes)
             .find((_class) => _class.id === Number(classId));
         if (linkedClass) {
             onInfo(linkedClass);
         }
-        router.replace({ query: queryWithoutParam });
-    }, [onInfo, router, weekSchedule]);
+        router.replace(pathname ?? "");
+    }
 
     return (
         <Box sx={{ display: "flex", flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>

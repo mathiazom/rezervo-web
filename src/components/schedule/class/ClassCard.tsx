@@ -211,8 +211,8 @@ const ClassCard = ({
                                                             status === SessionStatus.CONFIRMED
                                                                 ? StatusColors.ACTIVE
                                                                 : status === SessionStatus.WAITLIST
-                                                                ? StatusColors.WAITLIST
-                                                                : undefined
+                                                                  ? StatusColors.WAITLIST
+                                                                  : undefined
                                                         }
                                                     />
                                                 </Fragment>
