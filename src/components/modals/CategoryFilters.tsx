@@ -21,7 +21,13 @@ export default function CategoryFilters({
         !allChecked && allCategories.some((category) => selectedCategories.includes(category.name));
 
     return (
-        <Box px={2} sx={{ display: "flex", alignItems: "flex-start" }}>
+        <Box
+            sx={{
+                px: { xs: 0, sm: 2 },
+                display: "flex",
+                alignItems: "flex-start",
+            }}
+        >
             {/*<Avatar sx={{ bgcolor: CATEGORIES_COLOR[500] }}>*/}
             {/*    <CategoryIcon fontSize="small" />*/}
             {/*</Avatar>*/}
@@ -80,7 +86,7 @@ export default function CategoryFilters({
                                     />
                                 }
                                 label={
-                                    <Box sx={{ display: "flex", gap: 0.4, alignItems: "center" }}>
+                                    <Box sx={{ display: "flex", gap: 0.4, alignItems: "center", whiteSpace: "nowrap" }}>
                                         {category.name}
                                         <Box
                                             sx={{
