@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -18,15 +19,15 @@ function ClassLinkingProvider({
     const [checkedWeekOffset, setCheckedWeekOffset] = useState(false);
 
     const classIdParam = searchParams?.get("classId");
-    const weekOffsetParam = searchParams?.get("weekOffset");
+    const startTimeParam = searchParams?.get("startTime");
 
-    if (!checkedWeekOffset && classIdParam !== null && weekOffsetParam !== null) {
+    if (!checkedWeekOffset && classIdParam !== null && startTimeParam !== null) {
         setCheckedWeekOffset(true);
-        setWeekOffset(Number(weekOffsetParam));
+        setWeekOffset(Math.floor(DateTime.fromISO(startTimeParam ?? "").diff(DateTime.now(), "weeks").weeks));
         router.replace(`${pathname}?classId=${classIdParam}`);
     }
 
-    if (checkedWeekOffset && weekOffsetParam === null) {
+    if (checkedWeekOffset && startTimeParam === null) {
         setCheckedWeekOffset(false);
         const linkedClass = classes.find((_class) => _class.id === classIdParam);
         if (linkedClass) {

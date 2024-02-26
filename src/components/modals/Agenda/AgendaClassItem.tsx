@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
-import { getCapitalizedWeekdays, LocalizedDateTime, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
@@ -64,10 +64,9 @@ export default function AgendaClassItem({
                     if (!agendaClass) {
                         return;
                     }
-                    const weekOffset = Math.floor(
-                        agendaClass.class_data.startTime.diff(LocalizedDateTime.now(), "weeks").weeks,
+                    router.push(
+                        `/${chain}?classId=${agendaClass.class_data.id}&startTime=${agendaClass.class_data.startTime.toUTC().toISO()}`,
                     );
-                    router.push(`/${chain}?weekOffset=${weekOffset}&classId=${agendaClass.class_data.id}`);
                 }}
             >
                 <Box
