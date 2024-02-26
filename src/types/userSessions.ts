@@ -1,6 +1,8 @@
+import { ChainIdentifier, RezervoClass } from "@/types/chain";
 import { UserNameWithIsSelf } from "@/types/config";
 
 export enum SessionStatus {
+    PLANNED = "PLANNED",
     BOOKED = "BOOKED",
     CONFIRMED = "CONFIRMED",
     NOSHOW = "NOSHOW",
@@ -19,4 +21,10 @@ export type UserNameSessionStatus = UserNameWithIsSelf & {
 };
 export type UserSessionsIndex = {
     [classId: string]: UserNameSessionStatus[];
+};
+
+export type UserAgendaClass = {
+    chain: ChainIdentifier;
+    status: SessionStatus;
+    class_data: RezervoClass;
 };

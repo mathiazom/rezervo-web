@@ -1,34 +1,33 @@
 import { Dialog } from "@mui/material";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 
-import ChainUserSettings from "@/components/modals/ChainUser/ChainUserSettings";
+import MembershipLogin from "@/components/modals/Settings/Memberships/MembershipLogin";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
-const ChainUserSettingsModal = ({
+const MembershipLoginModal = ({
     open,
-    setOpen,
+    close,
     chainProfile,
-    onSubmit,
 }: {
     open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>;
+    close: () => void;
     chainProfile: ChainProfile;
-    onSubmit: () => void;
 }) => {
     const { putChainUser, putChainUserIsMutating } = useChainUser(chainProfile.identifier);
     const [authenticationFailed, setAuthenticationFailed] = useState(false);
 
-    async function submit(payload: ChainUserPayload) {
+    async function onSubmit(payload: ChainUserPayload) {
         setAuthenticationFailed(false);
         putChainUser(payload)
-            .then(() => onSubmit())
+            .then(() => close())
             .catch(() => setAuthenticationFailed(true));
     }
+
     function onClose() {
         if (!putChainUserIsMutating) {
-            setOpen(false);
+            close();
             setAuthenticationFailed(false);
         }
     }
@@ -48,9 +47,9 @@ const ChainUserSettingsModal = ({
                 },
             }}
         >
-            <ChainUserSettings
+            <MembershipLogin
                 chainProfile={chainProfile}
-                submit={submit}
+                submit={onSubmit}
                 isSubmitting={putChainUserIsMutating}
                 onClose={onClose}
                 authenticationFailed={authenticationFailed}
@@ -59,4 +58,4 @@ const ChainUserSettingsModal = ({
     );
 };
 
-export default ChainUserSettingsModal;
+export default MembershipLoginModal;

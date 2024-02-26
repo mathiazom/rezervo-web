@@ -20,7 +20,7 @@ import { useChainUser } from "@/lib/hooks/useChainUser";
 import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
-export default function ChainUserSettings({
+export default function MembershipLogin({
     chainProfile,
     submit,
     isSubmitting,

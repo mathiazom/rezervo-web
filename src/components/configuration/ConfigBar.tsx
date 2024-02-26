@@ -1,50 +1,54 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { CalendarMonth, CalendarToday, PauseCircleRounded, People, RocketLaunchRounded } from "@mui/icons-material";
+import { CalendarMonth, CalendarToday, PauseCircleRounded, People } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import { Avatar, Badge, Box, CircularProgress, Tooltip, useTheme } from "@mui/material";
+import { Avatar, Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
+import { UserAgendaClass } from "@/types/userSessions";
 
 function ConfigBar({
-    chain,
-    userConfig,
+    chainConfigs,
+    agenda,
     isLoadingConfig,
     isConfigError,
     onCommunityOpen,
     onSettingsOpen,
-    onChainUserSettingsOpen,
     onAgendaOpen,
 }: {
-    chain: ChainIdentifier;
-    userConfig: ChainConfig | undefined;
+    chainConfigs: Record<ChainIdentifier, ChainConfig> | null;
+    agenda: UserAgendaClass[] | null;
     isLoadingConfig: boolean;
     isConfigError: boolean;
     onCommunityOpen: () => void;
     onSettingsOpen: () => void;
-    onChainUserSettingsOpen: () => void;
     onAgendaOpen: () => void;
 }) {
     const theme = useTheme();
-
     const { user, isLoading } = useUser();
-    const { chainUserMissing } = useChainUser(chain);
-    const { userConfigMissing } = useUserConfig(chain);
     const { community } = useCommunity();
     const friendRequestCount =
         community?.users.filter((cu) => cu.relationship === UserRelationship.REQUEST_RECEIVED).length ?? 0;
+    const [bookingPaused, setBookingPaused] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (chainConfigs !== null) {
+            const inactiveChains = Object.keys(chainConfigs).filter(
+                (chain) => !chainConfigs[chain as ChainIdentifier]?.active,
+            ) as ChainIdentifier[];
+            setBookingPaused(inactiveChains.length > 0 && Object.keys(chainConfigs).length === inactiveChains.length);
+        }
+    }, [chainConfigs]);
 
     useEffect(() => {
         fetch("/api/user", {
@@ -54,9 +58,12 @@ function ConfigBar({
 
     return (
         <>
-            {isLoading ? (
-                <CircularProgress size={26} thickness={6} />
-            ) : user ? (
+            {!isLoading && !user && (
+                <Button endIcon={<LoginIcon />} href={"/api/auth/login"}>
+                    Logg inn
+                </Button>
+            )}
+            {!isLoading && user && (
                 <Box
                     sx={{
                         display: "flex",
@@ -64,27 +71,7 @@ function ConfigBar({
                         gap: { xs: 1, md: 1.5 },
                     }}
                 >
-                    {chainUserMissing ? (
-                        <Box>
-                            <Tooltip title={`Koble til ${chain}-medlemskap`}>
-                                <IconButton onClick={() => onChainUserSettingsOpen()}>
-                                    <RocketLaunchRounded />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
-                    ) : isLoadingConfig || userConfigMissing ? (
-                        <CircularProgress
-                            sx={{
-                                mr: 1,
-                                display: {
-                                    xs: "none",
-                                    sm: "flex",
-                                },
-                            }}
-                            size={26}
-                            thickness={6}
-                        />
-                    ) : isConfigError ? (
+                    {!isLoadingConfig && isConfigError && (
                         <Box mr={1.5}>
                             <Tooltip title={"Feilet"}>
                                 <Badge
@@ -95,69 +82,74 @@ function ConfigBar({
                                 </Badge>
                             </Tooltip>
                         </Box>
-                    ) : (
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Tooltip
-                                title={
-                                    friendRequestCount > 0
-                                        ? `Du har ${friendRequestCount} ubesvarte venneforespørsler`
-                                        : "Venner"
-                                }
+                    )}
+                    {!isConfigError && (
+                        <>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                }}
                             >
-                                <IconButton onClick={() => onCommunityOpen()}>
-                                    {friendRequestCount > 0 ? (
-                                        <Badge
-                                            badgeContent={friendRequestCount}
-                                            color={"error"}
-                                            sx={{ "& .MuiBadge-badge": { fontSize: 10, height: 18, minWidth: 18 } }}
-                                        >
-                                            <People />
-                                        </Badge>
-                                    ) : (
-                                        <People />
-                                    )}
-                                </IconButton>
-                            </Tooltip>
-                            <Tooltip title={`Min timeplan${userConfig?.active ? "" : " (pauset)"}`}>
-                                <Badge
-                                    onClick={() => onAgendaOpen()}
-                                    invisible={userConfig?.active ?? true}
-                                    overlap={"circular"}
-                                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                                    badgeContent={
-                                        <PauseCircleRounded
-                                            fontSize={"small"}
-                                            color={"disabled"}
-                                            sx={{
-                                                cursor: "pointer",
-                                                backgroundColor: theme.palette.background.default,
-                                                borderRadius: "50%",
-                                                marginTop: "-0.5rem",
-                                                marginLeft: "-0.5rem",
-                                            }}
-                                        />
+                                <Tooltip
+                                    title={
+                                        friendRequestCount > 0
+                                            ? `Du har ${friendRequestCount} ubesvarte venneforespørsler`
+                                            : "Venner"
                                     }
                                 >
-                                    <IconButton>
-                                        {userConfig?.recurringBookings.length === 0 ? (
-                                            <CalendarToday />
+                                    <IconButton onClick={() => onCommunityOpen()}>
+                                        {friendRequestCount > 0 ? (
+                                            <Badge
+                                                badgeContent={friendRequestCount}
+                                                color={"error"}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        fontSize: 10,
+                                                        height: 18,
+                                                        minWidth: 18,
+                                                    },
+                                                }}
+                                            >
+                                                <People />
+                                            </Badge>
                                         ) : (
-                                            <CalendarMonth />
+                                            <People />
                                         )}
                                     </IconButton>
-                                </Badge>
-                            </Tooltip>
-                            <Tooltip title={"Innstillinger"}>
-                                <IconButton onClick={() => onSettingsOpen()}>
-                                    <SettingsRoundedIcon />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
+                                </Tooltip>
+                                <Tooltip title={`Min timeplan${bookingPaused ? " (pauset)" : ""}`}>
+                                    <Badge
+                                        onClick={() => onAgendaOpen()}
+                                        invisible={!bookingPaused}
+                                        overlap={"circular"}
+                                        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                                        badgeContent={
+                                            <PauseCircleRounded
+                                                fontSize={"small"}
+                                                color={"disabled"}
+                                                sx={{
+                                                    cursor: "pointer",
+                                                    backgroundColor: theme.palette.background.default,
+                                                    borderRadius: "50%",
+                                                    marginTop: "-0.5rem",
+                                                    marginLeft: "-0.5rem",
+                                                }}
+                                            />
+                                        }
+                                    >
+                                        <IconButton onClick={() => onAgendaOpen()}>
+                                            {(agenda?.length ?? 0) > 0 ? <CalendarMonth /> : <CalendarToday />}
+                                        </IconButton>
+                                    </Badge>
+                                </Tooltip>
+                                <Tooltip title={"Innstillinger"}>
+                                    <IconButton onClick={() => onSettingsOpen()}>
+                                        <SettingsRoundedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </>
                     )}
                     {user.name && (
                         <Tooltip title={user.name}>
@@ -178,12 +170,6 @@ function ConfigBar({
                             <LogoutRoundedIcon />
                         </IconButton>
                     </Tooltip>
-                </Box>
-            ) : (
-                <Box>
-                    <Button endIcon={<LoginIcon />} href={"/api/auth/login"}>
-                        Logg inn
-                    </Button>
                 </Box>
             )}
         </>

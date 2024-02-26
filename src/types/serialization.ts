@@ -1,6 +1,7 @@
-import { ActivityCategory, ChainProfile, RezervoChain, RezervoClassBase } from "@/types/chain";
+import { ActivityCategory, ChainIdentifier, ChainProfile, RezervoChain, RezervoClassBase } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
+import { SessionStatus } from "@/types/userSessions";
 
 export type RezervoScheduleDTO = {
     [weekOffset: number]: RezervoWeekScheduleDTO;
@@ -33,4 +34,10 @@ export type ChainPageProps = {
 
 export type IndexPageProps = {
     chainProfiles: ChainProfile[];
+};
+
+export type UserAgendaClassDTO = {
+    chain: ChainIdentifier;
+    status: SessionStatus;
+    class_data: RezervoClassDTO;
 };

@@ -1,5 +1,4 @@
 import { alpha, Box, Stack, useTheme } from "@mui/material";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
@@ -31,20 +30,6 @@ function WeekSchedule({
     onInfo: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
-    const router = useRouter();
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-
-    const classId = searchParams?.get("classId");
-    if (classId) {
-        const linkedClass = weekSchedule.days
-            .flatMap((daySchedule) => daySchedule.classes)
-            .find((_class) => _class.id === Number(classId));
-        if (linkedClass) {
-            onInfo(linkedClass);
-        }
-        router.replace(pathname ?? "");
-    }
 
     return (
         <Box sx={{ display: "flex", flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>

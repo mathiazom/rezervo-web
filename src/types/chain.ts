@@ -55,7 +55,7 @@ export type RezervoDaySchedule = {
 };
 
 export type RezervoClassBase = {
-    id: number;
+    id: string;
     location: {
         id: string;
         studio: string;
@@ -93,4 +93,15 @@ export type ChainPageParams = {
 export type ActivityCategory = {
     name: string;
     color: string;
+};
+
+export enum BookingPopupAction {
+    BOOK = "BOOK",
+    CANCEL = "CANCEL",
+}
+
+export type BookingPopupState = {
+    chain: ChainIdentifier;
+    _class: RezervoClass;
+    action: BookingPopupAction;
 };

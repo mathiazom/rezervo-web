@@ -9,7 +9,7 @@ import {
     HourglassTop,
     Login,
     PauseCircleRounded,
-    RocketLaunch,
+    SettingsRounded,
 } from "@mui/icons-material";
 import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -23,12 +23,13 @@ import React, { useState } from "react";
 
 import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
-import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { useUserAgenda } from "@/lib/hooks/useUserAgenda";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
@@ -52,6 +53,7 @@ export default function ClassInfo({
     const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
         useUserSessions(chain);
+    const { mutateUserAgenda } = useUserAgenda();
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>
@@ -87,10 +89,6 @@ export default function ClassInfo({
 
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
-    const classDescription = _class
-        ? `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat("HH:mm")})`
-        : "";
-
     async function book() {
         setBookingLoading(true);
         await fetch(`/api/${chain}/book`, {
@@ -98,16 +96,7 @@ export default function ClassInfo({
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
-        setBookingLoading(false);
-    }
-
-    async function cancelBooking() {
-        setBookingLoading(true);
-        await fetch(`/api/${chain}/cancel-booking`, {
-            method: "POST",
-            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
-        });
-        await mutateSessionsIndex();
+        await mutateUserAgenda();
         setBookingLoading(false);
     }
 
@@ -317,9 +306,9 @@ export default function ClassInfo({
                     <AlertTitle>
                         Koble til <b>{chain.toUpperCase()}</b>-medlemskap
                     </AlertTitle>
-                    Du må koble <b>{chain.toUpperCase()}</b>-medlemskapet til <b>rezervo</b> for å kunne booke eller
-                    legge til timer i timeplanen. Trykk på rakettsymbolet{" "}
-                    <RocketLaunch fontSize={"small"} sx={{ mb: -0.7 }} /> øverst til høyre for å koble til.
+                    Du må koble <b>{chain.toUpperCase()}</b>-medlemskapet ditt til <b>rezervo</b> for å kunne booke
+                    eller legge til timer i timeplanen. Trykk på Innstillinger{" "}
+                    <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> for å komme i gang.
                 </Alert>
             )}
             {_class.activity.additionalInformation && (
@@ -422,23 +411,12 @@ export default function ClassInfo({
                             ))}
                     </>
                 )}
-            <ConfirmationDialog
+            <ConfirmCancellation
                 open={cancelBookingConfirmationOpen}
-                title={`Avbestille time?`}
-                description={
-                    <>
-                        <Typography>
-                            Du er i ferd med å avbestille <b>{classDescription}</b>.
-                        </Typography>
-                        <Typography>Dette kan ikke angres!</Typography>
-                    </>
-                }
-                confirmText={"Avbestill"}
-                onCancel={() => setCancelBookingConfirmationOpen(false)}
-                onConfirm={() => {
-                    setCancelBookingConfirmationOpen(false);
-                    cancelBooking();
-                }}
+                setOpen={setCancelBookingConfirmationOpen}
+                setLoading={setBookingLoading}
+                chain={chain}
+                _class={_class}
             />
         </Box>
     );

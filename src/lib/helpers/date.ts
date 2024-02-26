@@ -6,7 +6,7 @@ export const calculateMondayOffset = () => LocalizedDateTime.now().weekday - 1;
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
-const capitalizeFirstCharacter = (text: string) => {
+export const capitalizeFirstCharacter = (text: string) => {
     return `${text[0]!.toUpperCase()}${text.slice(1)}`;
 };
 
