@@ -50,7 +50,6 @@ function ChainMembership({
         <FormGroup sx={{ gap: "1rem" }}>
             <FormGroup
                 sx={{
-                    maxWidth: "100%",
                     paddingBottom: "0.75rem",
                     backgroundColor: theme.palette.secondaryBackground.default,
                     padding: "1rem 1.25rem",
@@ -58,7 +57,11 @@ function ChainMembership({
                     width: "100%",
                 }}
             >
-                <Box>
+                <Box
+                    sx={{
+                        maxWidth: "100%",
+                    }}
+                >
                     <Box
                         sx={{
                             display: "flex",
