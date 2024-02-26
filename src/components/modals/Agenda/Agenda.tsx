@@ -97,9 +97,6 @@ export default function Agenda({
         (chain) => !chainConfigs[chain as ChainIdentifier]?.active,
     ) as ChainIdentifier[];
 
-    // TODO: handle on info, see TODO in component - need to link
-    // TODO: use new linking capabilities for the Slack notifs (må hente slack deets fra rezervo-secrets)
-
     return (
         <Box
             sx={{

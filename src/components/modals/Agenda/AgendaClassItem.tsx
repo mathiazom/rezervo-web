@@ -87,7 +87,6 @@ export default function AgendaClassItem({
                     }}
                 >
                     <CardContent
-                        onClick={() => {}} // TODO: on info
                         className={"unselectable"}
                         sx={{
                             paddingBottom: 2,
