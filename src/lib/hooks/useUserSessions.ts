@@ -1,24 +1,19 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
+import { deserializeUserSessions } from "@/lib/serialization/deserializers";
 import { fetcher } from "@/lib/utils/fetchUtils";
-import { ChainIdentifier } from "@/types/chain";
-import { UserSessionsIndex } from "@/types/userSessions";
+import { BaseUserSessionDTO } from "@/types/serialization";
 
-export function useUserSessions(chain: ChainIdentifier) {
+export function useUserSessions() {
     const { user } = useUser();
 
-    const userSessionsApiUrl = `/api/${chain}/sessions`;
+    const userSessionsApiUrl = `/api/user/sessions`;
 
-    const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(
-        user && chain ? userSessionsApiUrl : null,
-        fetcher,
-    );
+    const { data, mutate } = useSWR<BaseUserSessionDTO[]>(user ? userSessionsApiUrl : null, fetcher);
 
     return {
-        userSessionsIndex: data,
-        userSessionsIndexError: error,
-        userSessionsIndexLoading: isLoading,
-        mutateSessionsIndex: mutate,
+        userSessions: data ? deserializeUserSessions(data) : null,
+        mutateUserSessions: mutate,
     };
 }

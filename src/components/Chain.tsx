@@ -17,10 +17,10 @@ import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { getStoredSelectedCategories, getStoredSelectedLocations } from "@/lib/helpers/storage";
 import { useSchedule } from "@/lib/hooks/useSchedule";
-import { useUserAgenda } from "@/lib/hooks/useUserAgenda";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
 import {
     ActivityCategory,
@@ -55,8 +55,8 @@ function Chain({
     error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chain.profile.identifier);
-    const { userSessionsIndex } = useUserSessions(chain.profile.identifier);
-    const { userAgenda } = useUserAgenda();
+    const { userSessionsIndex } = useUserSessionsIndex(chain.profile.identifier);
+    const { userSessions } = useUserSessions();
     const { userChainConfigs } = useUserChainConfigs();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
@@ -193,7 +193,7 @@ function Chain({
                         rightComponent={
                             <ConfigBar
                                 chainConfigs={userChainConfigs}
-                                agenda={userAgenda}
+                                userSessions={userSessions}
                                 isLoadingConfig={userConfigLoading}
                                 isConfigError={userConfigError}
                                 onCommunityOpen={() => setIsCommunityOpen(true)}
@@ -246,9 +246,9 @@ function Chain({
                 onUpdateConfig={onUpdateConfig}
             />
             <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
-            {userAgenda !== null && userChainConfigs !== null && (
+            {userSessions !== null && userChainConfigs !== null && (
                 <AgendaModal
-                    agenda={userAgenda}
+                    userSession={userSessions}
                     chainConfigs={userChainConfigs}
                     chainProfiles={chainProfiles}
                     open={isAgendaOpen}

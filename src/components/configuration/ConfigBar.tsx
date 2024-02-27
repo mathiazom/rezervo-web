@@ -15,11 +15,11 @@ import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
-import { UserAgendaClass } from "@/types/userSessions";
+import { BaseUserSession } from "@/types/userSessions";
 
 function ConfigBar({
     chainConfigs,
-    agenda,
+    userSessions,
     isLoadingConfig,
     isConfigError,
     onCommunityOpen,
@@ -27,7 +27,7 @@ function ConfigBar({
     onAgendaOpen,
 }: {
     chainConfigs: Record<ChainIdentifier, ChainConfig> | null;
-    agenda: UserAgendaClass[] | null;
+    userSessions: BaseUserSession[] | null;
     isLoadingConfig: boolean;
     isConfigError: boolean;
     onCommunityOpen: () => void;
@@ -139,7 +139,7 @@ function ConfigBar({
                                         }
                                     >
                                         <IconButton onClick={() => onAgendaOpen()}>
-                                            {(agenda?.length ?? 0) > 0 ? <CalendarMonth /> : <CalendarToday />}
+                                            {(userSessions?.length ?? 0) > 0 ? <CalendarMonth /> : <CalendarToday />}
                                         </IconButton>
                                     </Badge>
                                 </Tooltip>

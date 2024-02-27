@@ -5,8 +5,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
-import { useUserAgenda } from "@/lib/hooks/useUserAgenda";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
 
 const BookingPopupModal = ({
@@ -20,8 +20,8 @@ const BookingPopupModal = ({
     _class: RezervoClass;
     action: BookingPopupAction;
 }) => {
-    const { mutateSessionsIndex } = useUserSessions(chain);
-    const { mutateUserAgenda } = useUserAgenda();
+    const { mutateSessionsIndex } = useUserSessionsIndex(chain);
+    const { mutateUserSessions } = useUserSessions();
     const [bookingLoading, setBookingLoading] = useState(false);
     const isCancellation = action === BookingPopupAction.CANCEL;
     const classDescription = `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat(
@@ -35,7 +35,7 @@ const BookingPopupModal = ({
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
-        await mutateUserAgenda();
+        await mutateUserSessions();
         setBookingLoading(false);
         onClose();
     }
@@ -47,7 +47,7 @@ const BookingPopupModal = ({
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
-        await mutateUserAgenda();
+        await mutateUserSessions();
         setBookingLoading(false);
         onClose();
     }

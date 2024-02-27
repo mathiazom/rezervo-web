@@ -4,16 +4,16 @@ import React, { Dispatch, SetStateAction } from "react";
 import Agenda from "@/components/modals/Agenda/Agenda";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
-import { UserAgendaClass } from "@/types/userSessions";
+import { BaseUserSession } from "@/types/userSessions";
 
 const AgendaModal = ({
-    agenda,
+    userSession,
     chainConfigs,
     chainProfiles,
     open,
     setOpen,
 }: {
-    agenda: UserAgendaClass[];
+    userSession: BaseUserSession[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     chainProfiles: ChainProfile[];
     open: boolean;
@@ -21,7 +21,7 @@ const AgendaModal = ({
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <Agenda agenda={agenda} chainConfigs={chainConfigs} chainProfiles={chainProfiles} />
+            <Agenda userSessions={userSession} chainConfigs={chainConfigs} chainProfiles={chainProfiles} />
         </Modal>
     );
 };

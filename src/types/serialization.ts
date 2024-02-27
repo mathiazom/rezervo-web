@@ -36,7 +36,7 @@ export type IndexPageProps = {
     chainProfiles: ChainProfile[];
 };
 
-export type UserAgendaClassDTO = {
+export type BaseUserSessionDTO = {
     chain: ChainIdentifier;
     status: SessionStatus;
     class_data: RezervoClassDTO;

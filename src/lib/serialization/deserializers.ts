@@ -5,9 +5,9 @@ import {
     RezervoDayScheduleDTO,
     RezervoScheduleDTO,
     RezervoWeekScheduleDTO,
-    UserAgendaClassDTO,
+    BaseUserSessionDTO,
 } from "@/types/serialization";
-import { UserAgendaClass } from "@/types/userSessions";
+import { BaseUserSession } from "@/types/userSessions";
 
 function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
     return {
@@ -45,9 +45,9 @@ export function deserializeSchedule(scheduleDTO: RezervoScheduleDTO): RezervoSch
         .reduce((acc, next) => ({ ...acc, ...next }), {});
 }
 
-export function deserializeUserAgenda(userAgendaDTO: UserAgendaClassDTO[]): UserAgendaClass[] {
-    return userAgendaDTO.map((userAgendaClass) => ({
-        ...userAgendaClass,
-        class_data: deserializeClass(userAgendaClass.class_data),
+export function deserializeUserSessions(userSessionsDTO: BaseUserSessionDTO[]): BaseUserSession[] {
+    return userSessionsDTO.map((userSessionDTO) => ({
+        ...userSessionDTO,
+        class_data: deserializeClass(userSessionDTO.class_data),
     }));
 }

@@ -3,8 +3,8 @@ import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
-import { useUserAgenda } from "@/lib/hooks/useUserAgenda";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
+import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { ChainConfigPayload, ChainConfig } from "@/types/config";
@@ -28,10 +28,10 @@ export function useUserConfig(chain: ChainIdentifier) {
     const configApiUrl = `/api/${chain}/config`;
 
     const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(chain);
-    const { mutateUserAgenda } = useUserAgenda();
+    const { mutateUserSessions } = useUserSessions();
     const { mutateUserChainConfigs } = useUserChainConfigs();
 
-    const blockingMutations = async () => Promise.all([mutateUserAgenda(), mutateUserChainConfigs()]);
+    const blockingMutations = async () => Promise.all([mutateUserSessions(), mutateUserChainConfigs()]);
 
     const { data, error, isLoading, mutate } = useSWR<ChainConfig>(user && chain ? configApiUrl : null, fetcher);
 

@@ -11,15 +11,15 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
-import { SessionStatus, UserAgendaClass } from "@/types/userSessions";
+import { SessionStatus, BaseUserSession } from "@/types/userSessions";
 
-export default function AgendaClassItem({
+export default function AgendaSession({
     chain,
     classConfig,
-    agendaClass,
+    userSession,
 }: { chain: ChainIdentifier } & (
-    | { classConfig: ClassConfig; agendaClass?: never }
-    | { classConfig?: never; agendaClass: UserAgendaClass }
+    | { classConfig: ClassConfig; userSession?: never }
+    | { classConfig?: never; userSession: BaseUserSession }
 )) {
     const theme = useTheme();
     const router = useRouter();
@@ -29,24 +29,24 @@ export default function AgendaClassItem({
     const [isLoading, setIsLoading] = useState(false);
 
     const classColorRGB = (dark: boolean) =>
-        agendaClass?.class_data
-            ? `rgb(${hexWithOpacityToRgb(agendaClass?.class_data.activity.color, 0.6, dark ? 0 : 255).join(",")})`
+        userSession?.class_data
+            ? `rgb(${hexWithOpacityToRgb(userSession?.class_data.activity.color, 0.6, dark ? 0 : 255).join(",")})`
             : "#111";
 
-    const displayName = agendaClass?.class_data.activity.name ?? classConfig!.displayName;
+    const displayName = userSession?.class_data.activity.name ?? classConfig!.displayName;
 
     function hoursAndMinutesToClockString(hours: number, minutes: number) {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     }
 
-    const timeFrom = agendaClass?.class_data.startTime
-        ? agendaClass?.class_data.startTime.toFormat("HH:mm")
+    const timeFrom = userSession?.class_data.startTime
+        ? userSession?.class_data.startTime.toFormat("HH:mm")
         : `${getCapitalizedWeekdays()[classConfig!.weekday]}er\n${hoursAndMinutesToClockString(
               classConfig!.startTime.hour,
               classConfig!.startTime.minute,
           )}`;
 
-    const timeTo = agendaClass?.class_data?.endTime ? agendaClass?.class_data.endTime.toFormat("HH:mm") : null;
+    const timeTo = userSession?.class_data?.endTime ? userSession?.class_data.endTime.toFormat("HH:mm") : null;
 
     return (
         <>
@@ -61,11 +61,11 @@ export default function AgendaClassItem({
                     },
                 }}
                 onClick={() => {
-                    if (!agendaClass) {
+                    if (!userSession) {
                         return;
                     }
                     router.push(
-                        `/${chain}?classId=${agendaClass.class_data.id}&startTime=${agendaClass.class_data.startTime.toUTC().toISO()}`,
+                        `/${chain}?classId=${userSession.class_data.id}&startTime=${userSession.class_data.startTime.toUTC().toISO()}`,
                     );
                 }}
             >
@@ -75,7 +75,7 @@ export default function AgendaClassItem({
                         alignItems: "center",
                         justifyContent: "space-between",
                         background:
-                            agendaClass === undefined
+                            userSession === undefined
                                 ? `repeating-linear-gradient(
                             -55deg,
                             ${theme.palette.background.default},
@@ -90,7 +90,7 @@ export default function AgendaClassItem({
                         sx={{
                             paddingBottom: 2,
                             flexGrow: 1,
-                            cursor: agendaClass?.class_data === undefined ? "auto" : "pointer",
+                            cursor: userSession?.class_data === undefined ? "auto" : "pointer",
                         }}
                     >
                         <Box
@@ -103,7 +103,7 @@ export default function AgendaClassItem({
                             <Box>
                                 <Box sx={{ display: "flex", gap: 1 }}>
                                     <Typography sx={{ fontSize: "1.05rem" }}>{displayName} </Typography>
-                                    {agendaClass?.status === SessionStatus.WAITLIST && (
+                                    {userSession?.status === SessionStatus.WAITLIST && (
                                         <Tooltip title={"Du er på venteliste for denne timen"}>
                                             <Chip size={"small"} color={"warning"} label={"Venteliste"} />
                                         </Tooltip>
@@ -112,18 +112,18 @@ export default function AgendaClassItem({
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                                     {`${timeFrom}${timeTo ? ` - ${timeTo}` : ""}`}
                                 </Typography>
-                                {agendaClass?.class_data && (
+                                {userSession?.class_data && (
                                     <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                        {agendaClass?.class_data.location.studio}
+                                        {userSession?.class_data.location.studio}
                                     </Typography>
                                 )}
-                                {agendaClass?.class_data && (
+                                {userSession?.class_data && (
                                     <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                                        {agendaClass?.class_data.instructors.map((i) => i.name).join(", ")}
+                                        {userSession?.class_data.instructors.map((i) => i.name).join(", ")}
                                     </Typography>
                                 )}
                             </Box>
-                            {agendaClass?.class_data === undefined && (
+                            {userSession?.class_data === undefined && (
                                 <Tooltip
                                     title={`Denne timen går ikke de neste ${PLANNED_SESSIONS_NEXT_WHOLE_WEEKS} ukene`}
                                 >
@@ -145,8 +145,8 @@ export default function AgendaClassItem({
                             <CircularProgress size={18} sx={{ marginX: "0.5rem" }} />
                         ) : (
                             <>
-                                {agendaClass?.status === SessionStatus.BOOKED ||
-                                agendaClass?.status === SessionStatus.WAITLIST ? (
+                                {userSession?.status === SessionStatus.BOOKED ||
+                                userSession?.status === SessionStatus.WAITLIST ? (
                                     <Tooltip title={"Avbestill"}>
                                         <IconButton
                                             color={"error"}
@@ -165,8 +165,8 @@ export default function AgendaClassItem({
                                             onClick={async (event) => {
                                                 event.stopPropagation();
                                                 setIsLoading(true);
-                                                const weekday = agendaClass
-                                                    ? zeroIndexedWeekday(agendaClass?.class_data.startTime.weekday)
+                                                const weekday = userSession
+                                                    ? zeroIndexedWeekday(userSession?.class_data.startTime.weekday)
                                                     : classConfig?.weekday;
                                                 await putUserConfig({
                                                     active: userConfig!.active,
@@ -175,18 +175,18 @@ export default function AgendaClassItem({
                                                             !(
                                                                 cc.weekday === weekday &&
                                                                 cc.startTime.hour ===
-                                                                    (agendaClass?.class_data.startTime.hour ??
+                                                                    (userSession?.class_data.startTime.hour ??
                                                                         classConfig!.startTime.hour) &&
                                                                 cc.startTime.minute ===
-                                                                    (agendaClass?.class_data.startTime.minute ??
+                                                                    (userSession?.class_data.startTime.minute ??
                                                                         classConfig!.startTime.minute) &&
                                                                 cc.activityId ===
                                                                     String(
-                                                                        agendaClass?.class_data.activity.id ??
+                                                                        userSession?.class_data.activity.id ??
                                                                             classConfig!.activityId,
                                                                     ) &&
                                                                 cc.locationId ===
-                                                                    (agendaClass?.class_data.location.id ??
+                                                                    (userSession?.class_data.location.id ??
                                                                         classConfig!.locationId)
                                                             ),
                                                     ),
@@ -218,13 +218,13 @@ export default function AgendaClassItem({
                     }}
                 />
             </Card>
-            {(agendaClass?.status == SessionStatus.WAITLIST || agendaClass?.status === SessionStatus.BOOKED) && (
+            {(userSession?.status == SessionStatus.WAITLIST || userSession?.status === SessionStatus.BOOKED) && (
                 <ConfirmCancellation
                     open={showCancelConfirmation}
                     setOpen={setShowCancelConfirmation}
                     setLoading={setIsLoading}
                     chain={chain}
-                    _class={agendaClass.class_data}
+                    _class={userSession.class_data}
                 />
             )}
         </>

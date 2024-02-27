@@ -29,9 +29,9 @@ import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBa
 import { isClassInThePast } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { useUserAgenda } from "@/lib/hooks/useUserAgenda";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier, RezervoClass } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
@@ -52,8 +52,8 @@ export default function ClassInfo({
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
-        useUserSessions(chain);
-    const { mutateUserAgenda } = useUserAgenda();
+        useUserSessionsIndex(chain);
+    const { mutateUserSessions } = useUserSessions();
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) =>
@@ -96,7 +96,7 @@ export default function ClassInfo({
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
-        await mutateUserAgenda();
+        await mutateUserSessions();
         setBookingLoading(false);
     }
 

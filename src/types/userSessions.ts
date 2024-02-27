@@ -23,7 +23,7 @@ export type UserSessionsIndex = {
     [classId: string]: UserNameSessionStatus[];
 };
 
-export type UserAgendaClass = {
+export type BaseUserSession = {
     chain: ChainIdentifier;
     status: SessionStatus;
     class_data: RezervoClass;

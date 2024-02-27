@@ -2,16 +2,16 @@ import { CalendarMonth, CalendarToday, EventRepeat, PauseCircleRounded, Settings
 import { Alert, AlertTitle, Avatar, Box, Typography, useTheme } from "@mui/material";
 import React from "react";
 
-import AgendaClassItem from "@/components/modals/Agenda/AgendaClassItem";
+import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig, ClassConfig } from "@/types/config";
-import { SessionStatus, UserAgendaClass } from "@/types/userSessions";
+import { SessionStatus, BaseUserSession } from "@/types/userSessions";
 
-function mapClassesByStartTime(classes: UserAgendaClass[]): Record<string, UserAgendaClass[]> {
-    return classes.reduce<Record<string, UserAgendaClass[]>>((acc, next) => {
+function mapClassesByStartTime(classes: BaseUserSession[]): Record<string, BaseUserSession[]> {
+    return classes.reduce<Record<string, BaseUserSession[]>>((acc, next) => {
         const prettyStartTime = capitalizeFirstCharacter(next.class_data.startTime.toFormat("cccc d. LLLL") ?? "");
         const dayEntry = acc[prettyStartTime] ?? [];
         dayEntry.push(next);
@@ -20,7 +20,7 @@ function mapClassesByStartTime(classes: UserAgendaClass[]): Record<string, UserA
     }, {});
 }
 
-function AgendaDays({ dayMap }: { dayMap: Record<string, UserAgendaClass[]> }) {
+function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
     const theme = useTheme();
     return (
         <>
@@ -37,9 +37,9 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, UserAgendaClass[]> }) {
                         >
                             {prettyDate}
                         </Typography>
-                        {dayMap[prettyDate]!.map((agendaClass) => (
-                            <Box key={agendaClass.class_data.id} py={0.5}>
-                                <AgendaClassItem agendaClass={agendaClass} chain={agendaClass.chain} />
+                        {dayMap[prettyDate]!.map((userSession) => (
+                            <Box key={userSession.class_data.id} py={0.5}>
+                                <AgendaEntry userSession={userSession} chain={userSession.chain} />
                             </Box>
                         ))}
                     </Box>
@@ -50,10 +50,10 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, UserAgendaClass[]> }) {
 }
 
 function searchForGhosts(
-    agenda: UserAgendaClass[],
+    userSessions: BaseUserSession[],
     chainConfigs: Record<ChainIdentifier, ChainConfig>,
 ): Record<ChainIdentifier, ClassConfig[]> {
-    const classRecurrentIds = agenda.map((_class) => classRecurrentId(_class.class_data));
+    const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.class_data));
 
     return Object.entries(chainConfigs).reduce(
         (acc, [chainIdentifier, config]) => {
@@ -76,22 +76,24 @@ function searchForGhosts(
 }
 
 export default function Agenda({
-    agenda,
+    userSessions,
     chainConfigs,
     chainProfiles,
 }: {
-    agenda: UserAgendaClass[];
+    userSessions: BaseUserSession[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     chainProfiles: ChainProfile[];
 }) {
     const theme = useTheme();
-    const plannedClassesDayMap = mapClassesByStartTime(
-        agenda.filter((_class) => _class.status === SessionStatus.PLANNED),
+    const plannedSessionsDayMap = mapClassesByStartTime(
+        userSessions.filter((_class) => _class.status === SessionStatus.PLANNED),
     );
-    const bookedClassesDayMap = mapClassesByStartTime(
-        agenda.filter((_class) => _class.status === SessionStatus.WAITLIST || _class.status === SessionStatus.BOOKED),
+    const bookedSessionsDayMap = mapClassesByStartTime(
+        userSessions.filter(
+            (_class) => _class.status === SessionStatus.WAITLIST || _class.status === SessionStatus.BOOKED,
+        ),
     );
-    const missingClassConfigs = searchForGhosts(agenda, chainConfigs);
+    const missingClassConfigs = searchForGhosts(userSessions, chainConfigs);
 
     const inactiveChains = Object.keys(chainConfigs).filter(
         (chain) => !chainConfigs[chain as ChainIdentifier]?.active,
@@ -119,7 +121,7 @@ export default function Agenda({
             }}
         >
             <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
-                {agenda.length > 0 ? <CalendarMonth /> : <CalendarToday />}
+                {userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}
                 <Typography variant="h6" component="h2">
                     Min timeplan
                 </Typography>
@@ -164,7 +166,7 @@ export default function Agenda({
                             </Typography>
                             {Object.entries(missingClassConfigs).flatMap(([chain, classConfigs]) =>
                                 classConfigs.map((classConfig) => (
-                                    <AgendaClassItem
+                                    <AgendaEntry
                                         key={classConfigRecurrentId(classConfig)}
                                         classConfig={classConfig}
                                         chain={chain as ChainIdentifier}
@@ -177,13 +179,13 @@ export default function Agenda({
                         <Typography variant="h6" sx={{ fontSize: 18 }}>
                             Mine bookinger
                         </Typography>
-                        {Object.keys(bookedClassesDayMap).length === 0 && (
+                        {Object.keys(bookedSessionsDayMap).length === 0 && (
                             <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
                                 Du har ingen bookinger
                             </Typography>
                         )}
                     </Box>
-                    <AgendaDays dayMap={bookedClassesDayMap} />
+                    <AgendaDays dayMap={bookedSessionsDayMap} />
                     <Box>
                         <Typography variant="h6" sx={{ fontSize: 18, pt: 2 }}>
                             Planlagte timer
@@ -217,14 +219,14 @@ export default function Agenda({
                                 booket automatisk
                             </Alert>
                         ))}
-                    {Object.values(plannedClassesDayMap).length === 0 && inactiveChains.length === 0 && (
+                    {Object.values(plannedSessionsDayMap).length === 0 && inactiveChains.length === 0 && (
                         <Alert severity={"info"} icon={<CalendarToday fontSize={"small"} />}>
                             <AlertTitle>Ingen timer planlagt</AlertTitle>
                             Trykk på <EventRepeat fontSize={"small"} sx={{ mb: -0.5 }} /> -ikonet i oversikten for å
                             legge til en time i timeplanen.
                         </Alert>
                     )}
-                    <AgendaDays dayMap={plannedClassesDayMap} />
+                    <AgendaDays dayMap={plannedSessionsDayMap} />
                 </Box>
             )}
         </Box>

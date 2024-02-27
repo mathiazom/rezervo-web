@@ -2,8 +2,8 @@ import { Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
-import { useUserAgenda } from "@/lib/hooks/useUserAgenda";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { ChainIdentifier, RezervoClass } from "@/types/chain";
 
 function ConfirmCancellation({
@@ -19,8 +19,8 @@ function ConfirmCancellation({
     chain: ChainIdentifier;
     _class: RezervoClass;
 }) {
-    const { mutateSessionsIndex } = useUserSessions(chain);
-    const { mutateUserAgenda } = useUserAgenda();
+    const { mutateSessionsIndex } = useUserSessionsIndex(chain);
+    const { mutateUserSessions } = useUserSessions();
     async function cancelBooking() {
         setOpen(false);
         setLoading(true);
@@ -29,7 +29,7 @@ function ConfirmCancellation({
             body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
-        await mutateUserAgenda();
+        await mutateUserSessions();
         setLoading(false);
         setOpen(false);
     }
