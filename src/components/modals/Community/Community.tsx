@@ -1,26 +1,23 @@
 import { People } from "@mui/icons-material";
 import { Alert, Badge, Box, Divider, Tooltip, Typography, useTheme } from "@mui/material";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 
 import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
-import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { ChainProfile } from "@/types/chain";
-import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
+import { CommunityUser, UserRelationship } from "@/types/community";
 
 const CommunityUserList = ({
     title,
     defaultText,
     communityUsers,
     chainProfiles,
-    onRemoveFriend,
     badge,
 }: {
     title: string;
     defaultText: string;
     communityUsers: CommunityUser[];
     chainProfiles: ChainProfile[];
-    onRemoveFriend?: (communityUser: CommunityUser) => void;
     badge?: ReactNode;
 }) => {
     return (
@@ -38,21 +35,15 @@ const CommunityUserList = ({
             )}
             {communityUsers.length > 0 && <Divider sx={{ mt: 1 }} />}
             {communityUsers.map((cu) => (
-                <CommunityUserCard
-                    key={cu.name}
-                    communityUser={cu}
-                    chainProfiles={chainProfiles}
-                    onRemoveFriend={onRemoveFriend}
-                />
+                <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
             ))}
         </Box>
     );
 };
 
 const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
-    const { community, communityLoading, communityError, updateRelationship } = useCommunity();
+    const { community, communityLoading, communityError } = useCommunity();
     const theme = useTheme();
-    const [friendUpForRemoval, setFriendUpForRemoval] = useState<CommunityUser | null>(null);
 
     const friendRequests =
         community?.users.filter((user) => user.relationship === UserRelationship.REQUEST_RECEIVED) ?? [];
@@ -138,9 +129,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                                     []
                                 }
                                 chainProfiles={chainProfiles}
-                                onRemoveFriend={(communityUser) => {
-                                    setFriendUpForRemoval(communityUser);
-                                }}
                             />
                             <CommunityUserList
                                 title={"Personer du kanskje kjenner"}
@@ -157,29 +145,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                             {friendRequests.length === 0 && <FriendRequests />}
                         </>
                     )}
-                    <ConfirmationDialog
-                        open={friendUpForRemoval !== null}
-                        title={`Fjerne venn?`}
-                        description={
-                            <>
-                                <Typography>
-                                    Du er i ferd med å fjerne <b>{friendUpForRemoval?.name}</b> som venn.
-                                </Typography>
-                                <Typography>Dette kan ikke angres!</Typography>
-                            </>
-                        }
-                        confirmText={"Fjern venn"}
-                        onCancel={() => setFriendUpForRemoval(null)}
-                        onConfirm={() => {
-                            if (friendUpForRemoval !== null) {
-                                updateRelationship({
-                                    userId: friendUpForRemoval.userId,
-                                    action: UserRelationshipAction.REMOVE_FRIEND,
-                                });
-                            }
-                            setFriendUpForRemoval(null);
-                        }}
-                    />
                 </Box>
             )}
         </Box>

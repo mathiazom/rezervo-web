@@ -2,8 +2,9 @@ import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Avatar, Box, CircularProgress, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import React from "react";
+import React, { useState } from "react";
 
+import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ChainProfile } from "@/types/chain";
@@ -12,13 +13,15 @@ import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types
 const CommunityUserCard = ({
     communityUser,
     chainProfiles,
-    onRemoveFriend,
 }: {
     communityUser: CommunityUser;
     chainProfiles: ChainProfile[];
-    onRemoveFriend: ((communityUser: CommunityUser) => void) | undefined;
 }) => {
     const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
+    const [confirmDialogState, setConfirmDialogState] = useState<
+        UserRelationshipAction.REMOVE_FRIEND | UserRelationshipAction.DENY_FRIEND | null
+    >(null);
+
     const updateUserRelationship = (action: UserRelationshipAction) => {
         return updateRelationship({
             userId: communityUser.userId,
@@ -36,7 +39,7 @@ const CommunityUserCard = ({
                         loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
-                        onClick={() => onRemoveFriend !== undefined && onRemoveFriend(communityUser)}
+                        onClick={() => setConfirmDialogState(UserRelationshipAction.REMOVE_FRIEND)}
                     >
                         Fjern venn
                     </LoadingButton>
@@ -55,7 +58,7 @@ const CommunityUserCard = ({
                                 <Button
                                     startIcon={<PersonRemove />}
                                     color={"error"}
-                                    onClick={() => updateUserRelationship(UserRelationshipAction.DENY_FRIEND)}
+                                    onClick={() => setConfirmDialogState(UserRelationshipAction.DENY_FRIEND)}
                                 >
                                     Avslå
                                 </Button>
@@ -90,52 +93,104 @@ const CommunityUserCard = ({
     };
 
     return (
-        <TableRow sx={{ display: "flex" }}>
-            <TableCell
-                sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", px: 0 }}
-            >
-                <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Avatar
-                        alt={communityUser.name}
-                        sx={{
-                            backgroundColor: hexColorHash(communityUser.name),
-                            width: 36,
-                            height: 36,
-                            fontSize: 18,
-                            mr: 1.5,
-                        }}
-                    >
-                        {communityUser.name[0]}
-                    </Avatar>
-                    <Box>
-                        <Typography variant={"subtitle2"} fontWeight={"bold"}>
-                            {communityUser.name}
-                        </Typography>
-                        <Box sx={{ display: "flex", gap: 0.5 }}>
-                            {communityUser.chains
-                                .sort((a, b) => a.localeCompare(b))
-                                .map((chain) => {
-                                    const chainProfile = chainProfiles.find(
-                                        (chainProfile) => chainProfile.identifier === chain,
-                                    );
-                                    if (chainProfile === undefined) return <></>;
-                                    return (
-                                        <Tooltip title={chainProfile.name} key={chain}>
-                                            <Avatar
-                                                sx={{ width: 16, height: 16 }}
-                                                src={chainProfile.images.common.smallLogo ?? ""}
-                                            >
-                                                {chain}
-                                            </Avatar>
-                                        </Tooltip>
-                                    );
-                                })}
+        <>
+            <TableRow sx={{ display: "flex" }}>
+                <TableCell
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                        px: 0,
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Avatar
+                            alt={communityUser.name}
+                            sx={{
+                                backgroundColor: hexColorHash(communityUser.name),
+                                width: 36,
+                                height: 36,
+                                fontSize: 18,
+                                mr: 1.5,
+                            }}
+                        >
+                            {communityUser.name[0]}
+                        </Avatar>
+                        <Box>
+                            <Typography variant={"subtitle2"} fontWeight={"bold"}>
+                                {communityUser.name}
+                            </Typography>
+                            <Box sx={{ display: "flex", gap: 0.5 }}>
+                                {communityUser.chains
+                                    .sort((a, b) => a.localeCompare(b))
+                                    .map((chain) => {
+                                        const chainProfile = chainProfiles.find(
+                                            (chainProfile) => chainProfile.identifier === chain,
+                                        );
+                                        if (chainProfile === undefined) return <></>;
+                                        return (
+                                            <Tooltip title={chainProfile.name} key={chain}>
+                                                <Avatar
+                                                    sx={{ width: 16, height: 16 }}
+                                                    src={chainProfile.images.common.smallLogo ?? ""}
+                                                >
+                                                    {chain}
+                                                </Avatar>
+                                            </Tooltip>
+                                        );
+                                    })}
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
-                {renderRelationshipActions(communityUser.relationship)}
-            </TableCell>
-        </TableRow>
+                    {renderRelationshipActions(communityUser.relationship)}
+                </TableCell>
+            </TableRow>
+            {confirmDialogState !== null &&
+                (confirmDialogState === UserRelationshipAction.REMOVE_FRIEND ? (
+                    <ConfirmationDialog
+                        open={true}
+                        title={"Fjerne venn?"}
+                        description={
+                            <>
+                                <Typography>
+                                    Du er i ferd med å fjerne <b>{communityUser.name}</b> som venn.
+                                </Typography>
+                                <Typography>Dette kan ikke angres!</Typography>
+                            </>
+                        }
+                        confirmText={"Fjern venn"}
+                        onCancel={() => setConfirmDialogState(null)}
+                        onConfirm={() => {
+                            if (confirmDialogState !== null) {
+                                updateUserRelationship(confirmDialogState);
+                            }
+                            setConfirmDialogState(null);
+                        }}
+                    />
+                ) : (
+                    <ConfirmationDialog
+                        open={true}
+                        title={"Avslå venenforespørsel?"}
+                        description={
+                            <>
+                                <Typography>
+                                    Du er i ferd med å avslå <b>{communityUser.name}</b> sin venneforespørsel.
+                                </Typography>
+                                <Typography>Dette kan ikke angres!</Typography>
+                            </>
+                        }
+                        confirmText={"Avslå forespørsel"}
+                        onCancel={() => setConfirmDialogState(null)}
+                        onConfirm={() => {
+                            if (confirmDialogState !== null) {
+                                updateUserRelationship(confirmDialogState);
+                            }
+                            setConfirmDialogState(null);
+                        }}
+                    />
+                ))}
+        </>
     );
 };
 
