@@ -171,7 +171,7 @@ const CommunityUserCard = ({
                 ) : (
                     <ConfirmationDialog
                         open={true}
-                        title={"Avslå venenforespørsel?"}
+                        title={"Avslå venneforespørsel?"}
                         description={
                             <>
                                 <Typography>
