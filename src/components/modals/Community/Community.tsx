@@ -20,7 +20,7 @@ const CommunityUserList = ({
     defaultText: string;
     communityUsers: CommunityUser[];
     chainProfiles: ChainProfile[];
-    onRemoveFriend: (communityUser: CommunityUser) => void;
+    onRemoveFriend?: (communityUser: CommunityUser) => void;
     badge?: ReactNode;
 }) => {
     return (
@@ -63,7 +63,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                 defaultText={"Du har ingen ubesvarte venneforespørsler"}
                 communityUsers={friendRequests}
                 chainProfiles={chainProfiles}
-                onRemoveFriend={() => {}}
                 badge={
                     friendRequests.length > 0 && (
                         <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
@@ -154,7 +153,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                                     ) ?? []
                                 }
                                 chainProfiles={chainProfiles}
-                                onRemoveFriend={() => {}}
                             />
                             {friendRequests.length === 0 && <FriendRequests />}
                         </>

@@ -16,7 +16,7 @@ const CommunityUserCard = ({
 }: {
     communityUser: CommunityUser;
     chainProfiles: ChainProfile[];
-    onRemoveFriend: (communityUser: CommunityUser) => void;
+    onRemoveFriend: ((communityUser: CommunityUser) => void) | undefined;
 }) => {
     const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
     const updateUserRelationship = (action: UserRelationshipAction) => {
@@ -36,7 +36,7 @@ const CommunityUserCard = ({
                         loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
-                        onClick={() => onRemoveFriend(communityUser)}
+                        onClick={() => onRemoveFriend !== undefined && onRemoveFriend(communityUser)}
                     >
                         Fjern venn
                     </LoadingButton>
