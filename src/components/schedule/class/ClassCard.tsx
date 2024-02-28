@@ -1,5 +1,5 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
-import { AvatarGroup, Badge, Box, Card, CardActions, CardContent, Tooltip, Typography } from "@mui/material";
+import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import React, { Fragment, useEffect, useState } from "react";
 
@@ -14,8 +14,9 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { shortenMiddleNames } from "@/lib/utils/textUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
-import { RezervoClass } from "@/types/chain";
+import { RezervoClass, RezervoInstructor } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 
@@ -44,6 +45,7 @@ const ClassCard = ({
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
     );
+    const [showSelectClassTooltip, setShowSelectClassTooltip] = useState(false);
 
     useEffect(() => {
         if (selected) {
@@ -53,6 +55,16 @@ const ClassCard = ({
 
     function selectClass() {
         onUpdateConfig(!selected);
+    }
+
+    function formatInstructorNames(instructors: RezervoInstructor[]): string {
+        const namesToShow = 2;
+        const formattedNames = instructors
+            .slice(0, namesToShow)
+            .map((instructor) => shortenMiddleNames(instructor.name))
+            .join(", ");
+
+        return formattedNames + (instructors.length > namesToShow ? `, +${instructors.length - namesToShow}` : "");
     }
 
     const classColorRGB = (dark: boolean) =>
@@ -68,7 +80,6 @@ const ClassCard = ({
 
     const showScheduleAction = !isInThePast && selectable && !_class.isCancelled;
     const showUsersPlanned = userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0);
-    const showActions = showScheduleAction || showUsersPlanned;
 
     return (
         <Card
@@ -111,9 +122,18 @@ const ClassCard = ({
                 <CardContent
                     className={"unselectable"}
                     onClick={onInfo}
-                    sx={{ paddingBottom: 1, zIndex: 1, position: "relative", cursor: "pointer" }}
+                    sx={{
+                        zIndex: 1,
+                        position: "relative",
+                        cursor: "pointer",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        "&:last-child": {
+                            paddingBottom: 2,
+                        },
+                    }}
                 >
-                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <Box>
                         <Typography
                             sx={{
                                 textDecoration: isInThePast || _class.isCancelled ? "line-through" : "none",
@@ -123,6 +143,74 @@ const ClassCard = ({
                         >
                             {_class.activity.name}
                         </Typography>
+                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                            {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
+                        </Typography>
+                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                            {_class.location.studio}
+                        </Typography>
+                        {_class.instructors.length > 0 && (
+                            <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                {formatInstructorNames(_class.instructors)}
+                            </Typography>
+                        )}
+                        <Collapse in={showUsersPlanned}>
+                            <Box pl={0.75} pt={1}>
+                                <AvatarGroup
+                                    max={4}
+                                    sx={{
+                                        justifyContent: "start",
+                                        marginLeft: "auto",
+                                        "& .MuiAvatar-root": {
+                                            width: 24,
+                                            height: 24,
+                                            fontSize: 12,
+                                            borderColor: "white",
+                                            '[data-mui-color-scheme="dark"] &': {
+                                                borderColor: "#191919",
+                                            },
+                                        },
+                                    }}
+                                >
+                                    {!isInThePast &&
+                                        usersPlanned.length > 0 &&
+                                        usersPlanned.map(({ user_name }) => (
+                                            <ClassUserAvatar
+                                                key={user_name}
+                                                username={user_name}
+                                                badgeIcon={
+                                                    _class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined
+                                                }
+                                                loading={userSessionsLoading}
+                                            />
+                                        ))}
+                                    {userSessions.length > 0 &&
+                                        userSessions.map(({ user_name, status }) => (
+                                            <Fragment key={user_name}>
+                                                <ClassUserAvatar
+                                                    username={user_name}
+                                                    invisibleBadge={isInThePast}
+                                                    badgeIcon={
+                                                        status === SessionStatus.NOSHOW ? (
+                                                            <NoShowBadgeIcon />
+                                                        ) : undefined
+                                                    }
+                                                    rippleColor={
+                                                        status === SessionStatus.BOOKED ||
+                                                        status === SessionStatus.CONFIRMED
+                                                            ? StatusColors.ACTIVE
+                                                            : status === SessionStatus.WAITLIST
+                                                              ? StatusColors.WAITLIST
+                                                              : undefined
+                                                    }
+                                                />
+                                            </Fragment>
+                                        ))}
+                                </AvatarGroup>
+                            </Box>
+                        </Collapse>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", ml: 0.5 }}>
                         {_class.isCancelled ? (
                             <Tooltip title={"Timen er avlyst"}>
                                 <Badge
@@ -135,94 +223,34 @@ const ClassCard = ({
                         ) : (
                             <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                         )}
+                        {showScheduleAction && (
+                            <Tooltip
+                                title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}
+                                // Hide the tooltip when clicked
+                                open={showSelectClassTooltip}
+                                disableHoverListener
+                                onMouseEnter={() => setShowSelectClassTooltip(true)}
+                                onMouseLeave={() => setShowSelectClassTooltip(false)}
+                            >
+                                <IconButton
+                                    onClick={(event) => {
+                                        // Prevent onInfo()
+                                        event.stopPropagation();
+                                        selectClass();
+                                        setShowSelectClassTooltip(false);
+                                    }}
+                                    size={"small"}
+                                    sx={{
+                                        padding: 0,
+                                        height: 28, // to avoid jumping when avatars are displayed
+                                    }}
+                                >
+                                    {selected ? <EventBusy /> : <EventRepeat />}
+                                </IconButton>
+                            </Tooltip>
+                        )}
                     </Box>
-                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                        {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
-                    </Typography>
-                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                        {_class.location.studio}
-                    </Typography>
-                    {_class.instructors.length > 0 && (
-                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
-                            {_class.instructors.map((i) => i.name).join(", ")}
-                        </Typography>
-                    )}
                 </CardContent>
-                {showActions && (
-                    <CardActions sx={{ padding: 0, zIndex: 1, position: "relative" }} disableSpacing>
-                        <Box px={1.75} pt={0.5} pb={2} sx={{ width: "100%" }}>
-                            <Box sx={{ display: "flex" }}>
-                                {showScheduleAction && (
-                                    <Tooltip title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}>
-                                        <IconButton
-                                            onClick={selectClass}
-                                            size={"small"}
-                                            sx={{
-                                                padding: 0,
-                                                height: 28, // to avoid jumping when avatars are displayed
-                                            }}
-                                        >
-                                            {selected ? <EventBusy /> : <EventRepeat />}
-                                        </IconButton>
-                                    </Tooltip>
-                                )}
-                                {showUsersPlanned && (
-                                    <AvatarGroup
-                                        max={4}
-                                        sx={{
-                                            justifyContent: "start",
-                                            marginLeft: "auto",
-                                            "& .MuiAvatar-root": {
-                                                width: 24,
-                                                height: 24,
-                                                fontSize: 12,
-                                                borderColor: "white",
-                                                '[data-mui-color-scheme="dark"] &': {
-                                                    borderColor: "#191919",
-                                                },
-                                            },
-                                        }}
-                                    >
-                                        {!isInThePast &&
-                                            usersPlanned.length > 0 &&
-                                            usersPlanned.map(({ user_name }) => (
-                                                <ClassUserAvatar
-                                                    key={user_name}
-                                                    username={user_name}
-                                                    badgeIcon={
-                                                        _class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined
-                                                    }
-                                                    loading={userSessionsLoading}
-                                                />
-                                            ))}
-                                        {userSessions.length > 0 &&
-                                            userSessions.map(({ user_name, status }) => (
-                                                <Fragment key={user_name}>
-                                                    <ClassUserAvatar
-                                                        username={user_name}
-                                                        invisibleBadge={isInThePast}
-                                                        badgeIcon={
-                                                            status === SessionStatus.NOSHOW ? (
-                                                                <NoShowBadgeIcon />
-                                                            ) : undefined
-                                                        }
-                                                        rippleColor={
-                                                            status === SessionStatus.BOOKED ||
-                                                            status === SessionStatus.CONFIRMED
-                                                                ? StatusColors.ACTIVE
-                                                                : status === SessionStatus.WAITLIST
-                                                                  ? StatusColors.WAITLIST
-                                                                  : undefined
-                                                        }
-                                                    />
-                                                </Fragment>
-                                            ))}
-                                    </AvatarGroup>
-                                )}
-                            </Box>
-                        </Box>
-                    </CardActions>
-                )}
             </Box>
         </Card>
     );
