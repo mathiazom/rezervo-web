@@ -12,9 +12,11 @@ import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types
 const CommunityUserCard = ({
     communityUser,
     chainProfiles,
+    onRemoveFriend,
 }: {
     communityUser: CommunityUser;
     chainProfiles: ChainProfile[];
+    onRemoveFriend: (communityUser: CommunityUser) => void;
 }) => {
     const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
     const updateUserRelationship = (action: UserRelationshipAction) => {
@@ -34,7 +36,7 @@ const CommunityUserCard = ({
                         loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
-                        onClick={() => updateUserRelationship(UserRelationshipAction.REMOVE_FRIEND)}
+                        onClick={() => onRemoveFriend(communityUser)}
                     >
                         Fjern venn
                     </LoadingButton>
