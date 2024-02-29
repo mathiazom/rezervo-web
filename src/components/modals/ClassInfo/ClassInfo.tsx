@@ -114,7 +114,7 @@ export default function ClassInfo({
                 transform: "translate(-50%, -50%)",
                 borderRadius: "0.25em",
                 boxShadow: 24,
-                pb: 4,
+                pb: 2,
                 backgroundColor: "white",
                 '[data-mui-color-scheme="dark"] &': {
                     backgroundColor: "#181818",
