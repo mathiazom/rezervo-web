@@ -336,7 +336,10 @@ export default function ClassInfo({
                         {_class.activity.additionalInformation}
                     </Alert>
                 )}
-                <ExpandableText text={_class.activity.description} shouldCollapse={!isInThePast} />
+                <ExpandableText
+                    text={_class.activity.description}
+                    shouldCollapse={!isInThePast && userConfig != undefined}
+                />
                 {user &&
                     userConfig != undefined &&
                     !userConfigLoading &&
