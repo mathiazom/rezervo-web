@@ -215,7 +215,9 @@ export default function ClassInfo({
                                         color: "#fff",
                                         backgroundColor:
                                             getClassPopularityColors(theme)[
-                                                _class.isBookable ? determineClassPopularity(_class) : classPopularity
+                                                _class.isBookable || isInThePast
+                                                    ? determineClassPopularity(_class)
+                                                    : classPopularity
                                             ],
                                         height: "auto",
                                         py: 0.3,
@@ -227,7 +229,7 @@ export default function ClassInfo({
                                         <Box pl={0.1} mt={0.3} color={"#fff"}>
                                             <ClassPopularityIcon
                                                 popularity={
-                                                    _class.isBookable
+                                                    _class.isBookable || isInThePast
                                                         ? determineClassPopularity(_class)
                                                         : classPopularity
                                                 }
