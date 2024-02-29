@@ -33,7 +33,6 @@ export default function ClassInfoUsersGroup({
                     display: "flex",
                     alignItems: "center",
                     gap: badgeIcon ? 1.5 : 1.25,
-                    mt: 1.5,
                     opacity: isCancelled ? cancelledOpacity : 1,
                 }}
             >
@@ -44,7 +43,7 @@ export default function ClassInfoUsersGroup({
                     badgeIcon={badgeIcon}
                     loading={loading}
                 />
-                <Typography variant="body2" color={loading ? "text.disabled" : "text.secondary"}>
+                <Typography variant="body2" color={loading ? "text.disabled" : "#fff"}>
                     {loading
                         ? "henter bookingstatus ..."
                         : `${formatNameArray(
