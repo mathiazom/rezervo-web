@@ -226,7 +226,7 @@ export default function ClassInfo({
                                         },
                                     }}
                                     icon={
-                                        <Box pl={0.1} mt={0.3} color={"#fff"}>
+                                        <Box height={24} ml={0.5} mt={-0.1}>
                                             <ClassPopularityIcon
                                                 popularity={
                                                     _class.isBookable || isInThePast
