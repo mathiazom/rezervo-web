@@ -10,7 +10,7 @@ import { getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
-import { ClassConfig } from "@/types/config";
+import { ChainConfig, ClassConfig } from "@/types/config";
 import { SessionStatus, BaseUserSession } from "@/types/userSessions";
 
 export default function AgendaSession({
@@ -47,6 +47,35 @@ export default function AgendaSession({
           )}`;
 
     const timeTo = userSession?.class_data?.endTime ? userSession?.class_data.endTime.toFormat("HH:mm") : null;
+
+    async function removeFromAgenda() {
+        if (userConfig == undefined) {
+            return;
+        }
+        const config: ChainConfig = userConfig;
+        setIsLoading(true);
+        const weekday = userSession
+            ? zeroIndexedWeekday(userSession.class_data.startTime.weekday)
+            : classConfig?.weekday;
+        const startTimeHour = userSession?.class_data.startTime.hour ?? classConfig!.startTime.hour;
+        const startTimeMinute = userSession?.class_data.startTime.minute ?? classConfig!.startTime.minute;
+        const activityId = userSession?.class_data.activity.id.toString() ?? classConfig!.activityId;
+        const locationId = userSession?.class_data.location.id ?? classConfig!.locationId;
+        await putUserConfig({
+            active: config.active,
+            recurringBookings: config.recurringBookings.filter(
+                (cc) =>
+                    !(
+                        cc.weekday === weekday &&
+                        cc.startTime.hour === startTimeHour &&
+                        cc.startTime.minute === startTimeMinute &&
+                        cc.activityId === activityId &&
+                        cc.locationId === locationId
+                    ),
+            ),
+        });
+        setIsLoading(false);
+    }
 
     return (
         <>
@@ -176,34 +205,7 @@ export default function AgendaSession({
                                         <IconButton
                                             onClick={async (event) => {
                                                 event.stopPropagation();
-                                                setIsLoading(true);
-                                                const weekday = userSession
-                                                    ? zeroIndexedWeekday(userSession?.class_data.startTime.weekday)
-                                                    : classConfig?.weekday;
-                                                await putUserConfig({
-                                                    active: userConfig!.active,
-                                                    recurringBookings: userConfig!.recurringBookings.filter(
-                                                        (cc) =>
-                                                            !(
-                                                                cc.weekday === weekday &&
-                                                                cc.startTime.hour ===
-                                                                    (userSession?.class_data.startTime.hour ??
-                                                                        classConfig!.startTime.hour) &&
-                                                                cc.startTime.minute ===
-                                                                    (userSession?.class_data.startTime.minute ??
-                                                                        classConfig!.startTime.minute) &&
-                                                                cc.activityId ===
-                                                                    String(
-                                                                        userSession?.class_data.activity.id ??
-                                                                            classConfig!.activityId,
-                                                                    ) &&
-                                                                cc.locationId ===
-                                                                    (userSession?.class_data.location.id ??
-                                                                        classConfig!.locationId)
-                                                            ),
-                                                    ),
-                                                });
-                                                setIsLoading(false);
+                                                await removeFromAgenda();
                                             }}
                                             size={"small"}
                                         >

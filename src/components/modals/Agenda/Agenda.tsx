@@ -6,6 +6,7 @@ import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig, ClassConfig } from "@/types/config";
 import { SessionStatus, BaseUserSession } from "@/types/userSessions";
@@ -13,10 +14,10 @@ import { SessionStatus, BaseUserSession } from "@/types/userSessions";
 function mapClassesByStartTime(classes: BaseUserSession[]): Record<string, BaseUserSession[]> {
     return classes.reduce<Record<string, BaseUserSession[]>>((acc, next) => {
         const prettyStartTime = capitalizeFirstCharacter(next.class_data.startTime.toFormat("cccc d. LLLL") ?? "");
-        const dayEntry = acc[prettyStartTime] ?? [];
-        dayEntry.push(next);
-        acc[prettyStartTime] = dayEntry;
-        return acc;
+        return {
+            ...acc,
+            [prettyStartTime]: [...(acc[prettyStartTime] ?? []), next],
+        };
     }, {});
 }
 
@@ -24,27 +25,25 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
     const theme = useTheme();
     return (
         <>
-            {Object.keys(dayMap).map((prettyDate) => {
-                return (
-                    <Box key={prettyDate}>
-                        <Typography
-                            variant="h6"
-                            style={{
-                                color: theme.palette.grey[600],
-                                fontSize: 15,
-                            }}
-                            mb={0.5}
-                        >
-                            {prettyDate}
-                        </Typography>
-                        {dayMap[prettyDate]!.map((userSession) => (
-                            <Box key={userSession.class_data.id} py={0.5}>
-                                <AgendaEntry userSession={userSession} chain={userSession.chain} />
-                            </Box>
-                        ))}
-                    </Box>
-                );
-            })}
+            {Object.keys(dayMap).map((prettyDate) => (
+                <Box key={prettyDate}>
+                    <Typography
+                        variant="h6"
+                        style={{
+                            color: theme.palette.grey[600],
+                            fontSize: 15,
+                        }}
+                        mb={0.5}
+                    >
+                        {prettyDate}
+                    </Typography>
+                    {dayMap[prettyDate]!.map((userSession) => (
+                        <Box key={userSession.class_data.id} py={0.5}>
+                            <AgendaEntry userSession={userSession} chain={userSession.chain} />
+                        </Box>
+                    ))}
+                </Box>
+            ))}
         </>
     );
 }
@@ -54,8 +53,7 @@ function searchForGhosts(
     chainConfigs: Record<ChainIdentifier, ChainConfig>,
 ): Record<ChainIdentifier, ClassConfig[]> {
     const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.class_data));
-
-    return Object.entries(chainConfigs).reduce(
+    return Object.entries(chainConfigs).reduce<Record<ChainIdentifier, ClassConfig[]>>(
         (acc, [chainIdentifier, config]) => {
             if (!config.active) {
                 return acc;
@@ -66,12 +64,12 @@ function searchForGhosts(
             );
 
             if (ghostClasses.length > 0) {
-                acc[chainIdentifier as ChainIdentifier] = ghostClasses;
+                acc[chainIdentifier] = ghostClasses;
             }
 
             return acc;
         },
-        {} as Record<ChainIdentifier, ClassConfig[]>,
+        {},
     );
 }
 
@@ -94,10 +92,7 @@ export default function Agenda({
         ),
     );
     const missingClassConfigs = searchForGhosts(userSessions, chainConfigs);
-
-    const inactiveChains = Object.keys(chainConfigs).filter(
-        (chain) => !chainConfigs[chain as ChainIdentifier]?.active,
-    ) as ChainIdentifier[];
+    const inactiveChains = Object.keys(chainConfigs).filter((chain) => !chainConfigs[chain]?.active);
 
     return (
         <Box
@@ -128,10 +123,9 @@ export default function Agenda({
             </Box>
             {Object.keys(chainConfigs).length === 0 ? (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
-                    <AlertTitle>Koble til treningssenter-medlemskap</AlertTitle>
-                    Du må koble et treningssenter-medlemskap til <b>rezervo</b> for å kunne se bookinger og planlagte
-                    timer. Trykk på Innstillinger <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> for å komme i
-                    gang.
+                    <AlertTitle>Mangler medlemskap</AlertTitle>
+                    Du må koble til et treningsmedlemskap for å kunne se bookinger og planlagte timer. Trykk på{" "}
+                    <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger for å komme i gang.
                 </Alert>
             ) : (
                 <Box
@@ -169,7 +163,7 @@ export default function Agenda({
                                     <AgendaEntry
                                         key={classConfigRecurrentId(classConfig)}
                                         classConfig={classConfig}
-                                        chain={chain as ChainIdentifier}
+                                        chain={chain}
                                     />
                                 )),
                             )}
@@ -204,19 +198,24 @@ export default function Agenda({
                         (inactiveChains.length === Object.keys(chainConfigs).length ? (
                             <Alert severity={"info"} icon={<PauseCircleRounded />}>
                                 <AlertTitle>Automatisk booking er satt på pause</AlertTitle>
-                                Du kan skru på automatisk booking i Innstillinger, slik at timene i timeplanen blir
-                                booket automatisk
+                                Du kan skru på automatisk booking i{" "}
+                                <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger, slik at timene i
+                                timeplanen blir booket automatisk
                             </Alert>
                         ) : (
                             <Alert severity={"info"} icon={<PauseCircleRounded />}>
                                 <AlertTitle>Automatisk booking er delvis pauset</AlertTitle>
                                 Booking er pauset for{" "}
-                                {chainProfiles
-                                    .filter((cp) => inactiveChains.includes(cp.identifier))
-                                    .map((cp) => cp.name)
-                                    .join(" og ")}
-                                . Du kan skru på automatisk booking i Innstillinger, slik at timene i timeplanen blir
-                                booket automatisk
+                                <b>
+                                    {formatNameArray(
+                                        chainProfiles
+                                            .filter((cp) => inactiveChains.includes(cp.identifier))
+                                            .map((cp) => cp.name),
+                                    )}
+                                </b>
+                                . Du kan skru på automatisk booking i{" "}
+                                <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger, slik at timene i
+                                timeplanen blir booket automatisk
                             </Alert>
                         ))}
                     {Object.values(plannedSessionsDayMap).length === 0 && inactiveChains.length === 0 && (

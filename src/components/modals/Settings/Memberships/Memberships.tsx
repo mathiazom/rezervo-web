@@ -53,7 +53,7 @@ function Memberships({
                         />
                     );
                 })}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Button
                     startIcon={<Add />}
                     variant={"outlined"}

@@ -307,8 +307,8 @@ export default function ClassInfo({
                         Koble til <b>{chain.toUpperCase()}</b>-medlemskap
                     </AlertTitle>
                     Du må koble <b>{chain.toUpperCase()}</b>-medlemskapet ditt til <b>rezervo</b> for å kunne booke
-                    eller legge til timer i timeplanen. Trykk på Innstillinger{" "}
-                    <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> for å komme i gang.
+                    eller legge til timer i timeplanen. Trykk på{" "}
+                    <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger for å komme i gang.
                 </Alert>
             )}
             {_class.activity.additionalInformation && (

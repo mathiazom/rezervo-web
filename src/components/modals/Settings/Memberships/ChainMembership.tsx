@@ -110,6 +110,10 @@ function ChainMembership({
                         <Typography
                             sx={{
                                 userSelect: "none",
+                                fontSize: {
+                                    xs: "0.85rem",
+                                    sm: "1rem",
+                                },
                             }}
                         >
                             Automatisk booking
