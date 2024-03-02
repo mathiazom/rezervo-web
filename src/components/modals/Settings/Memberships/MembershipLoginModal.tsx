@@ -42,7 +42,7 @@ const MembershipLoginModal = ({
                 sx: {
                     backgroundColor: "white",
                     '[data-mui-color-scheme="dark"] &': {
-                        backgroundColor: "#181818",
+                        backgroundColor: "black",
                     },
                 },
             }}

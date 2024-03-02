@@ -1,4 +1,4 @@
-import { Dialog, List, ListItem, ListItemButton } from "@mui/material";
+import { Box, Dialog, List, ListItem, ListItemButton } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
 
@@ -17,13 +17,28 @@ function AddMembershipDialog({
     onAdd: (chainProfile: ChainProfile) => void;
 }) {
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog
+            open={open}
+            onClose={onClose}
+            maxWidth={"xs"}
+            fullWidth={true}
+            PaperProps={{
+                sx: {
+                    backgroundColor: "white",
+                    '[data-mui-color-scheme="dark"] &': {
+                        backgroundColor: "black",
+                    },
+                },
+            }}
+        >
             <DialogTitle>Velg treningssenter</DialogTitle>
-            <List>
+            <List sx={{ marginBottom: "1rem", padding: 0 }}>
                 {availableChainProfiles.map((cp) => (
-                    <ListItem key={cp.identifier}>
+                    <ListItem key={cp.identifier} sx={{ padding: 0 }}>
                         <ListItemButton sx={{ height: "6rem", width: "100%" }} onClick={() => onAdd(cp)}>
-                            <ChainLogo chainProfile={cp} />
+                            <Box sx={{ height: "3rem", width: "100%" }}>
+                                <ChainLogo chainProfile={cp} />
+                            </Box>
                         </ListItemButton>
                     </ListItem>
                 ))}
