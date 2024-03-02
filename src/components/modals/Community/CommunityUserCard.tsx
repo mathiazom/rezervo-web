@@ -4,11 +4,13 @@ import { Avatar, Box, CircularProgress, TableCell, TableRow, Tooltip, Typography
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
 
-import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { hexColorHash } from "@/lib/utils/colorUtils";
 import { ChainProfile } from "@/types/chain";
 import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
+
+type ConfirmDialogAction = UserRelationshipAction.REMOVE_FRIEND | UserRelationshipAction.DENY_FRIEND;
 
 const CommunityUserCard = ({
     communityUser,
@@ -18,9 +20,8 @@ const CommunityUserCard = ({
     chainProfiles: ChainProfile[];
 }) => {
     const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
-    const [confirmDialogState, setConfirmDialogState] = useState<
-        UserRelationshipAction.REMOVE_FRIEND | UserRelationshipAction.DENY_FRIEND | null
-    >(null);
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [confirmDialogAction, setConfirmDialogAction] = useState<ConfirmDialogAction | null>(null);
 
     const updateUserRelationship = (action: UserRelationshipAction) => {
         return updateRelationship({
@@ -31,6 +32,11 @@ const CommunityUserCard = ({
 
     const isLoading = communityLoading || isUpdatingRelationship;
 
+    function showConfirmDialog(action: ConfirmDialogAction) {
+        setConfirmDialogAction(action);
+        setConfirmDialogOpen(true);
+    }
+
     const renderRelationshipActions = (relationship: UserRelationship) => {
         switch (relationship) {
             case UserRelationship.FRIEND:
@@ -39,7 +45,7 @@ const CommunityUserCard = ({
                         loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
-                        onClick={() => setConfirmDialogState(UserRelationshipAction.REMOVE_FRIEND)}
+                        onClick={() => showConfirmDialog(UserRelationshipAction.REMOVE_FRIEND)}
                     >
                         Fjern venn
                     </LoadingButton>
@@ -58,7 +64,7 @@ const CommunityUserCard = ({
                                 <Button
                                     startIcon={<PersonRemove />}
                                     color={"error"}
-                                    onClick={() => setConfirmDialogState(UserRelationshipAction.DENY_FRIEND)}
+                                    onClick={() => showConfirmDialog(UserRelationshipAction.DENY_FRIEND)}
                                 >
                                     Avslå
                                 </Button>
@@ -90,6 +96,36 @@ const CommunityUserCard = ({
                     </LoadingButton>
                 );
         }
+    };
+
+    const confirmDialogPropsMap: {
+        [key in ConfirmDialogAction]: Required<Pick<ConfirmationDialogProps, "title" | "confirmText" | "description">> &
+            Partial<ConfirmationDialogProps>;
+    } = {
+        [UserRelationshipAction.REMOVE_FRIEND]: {
+            title: "Fjerne venn?",
+            confirmText: "Fjern venn",
+            description: (
+                <>
+                    <Typography>
+                        Du er i ferd med å fjerne <b>{communityUser.name}</b> som venn.
+                    </Typography>
+                    <Typography>Dette kan ikke angres!</Typography>
+                </>
+            ),
+        },
+        [UserRelationshipAction.DENY_FRIEND]: {
+            title: "Avslå venneforespørsel?",
+            confirmText: "Avslå forespørsel",
+            description: (
+                <>
+                    <Typography>
+                        Du er i ferd med å avslå <b>{communityUser.name}</b> sin venneforespørsel.
+                    </Typography>
+                    <Typography>Dette kan ikke angres!</Typography>
+                </>
+            ),
+        },
     };
 
     return (
@@ -146,50 +182,19 @@ const CommunityUserCard = ({
                     {renderRelationshipActions(communityUser.relationship)}
                 </TableCell>
             </TableRow>
-            {confirmDialogState !== null &&
-                (confirmDialogState === UserRelationshipAction.REMOVE_FRIEND ? (
-                    <ConfirmationDialog
-                        open={true}
-                        title={"Fjerne venn?"}
-                        description={
-                            <>
-                                <Typography>
-                                    Du er i ferd med å fjerne <b>{communityUser.name}</b> som venn.
-                                </Typography>
-                                <Typography>Dette kan ikke angres!</Typography>
-                            </>
+            {confirmDialogAction != null && (
+                <ConfirmationDialog
+                    open={confirmDialogOpen}
+                    onCancel={() => setConfirmDialogOpen(false)}
+                    onConfirm={() => {
+                        if (confirmDialogAction !== null) {
+                            updateUserRelationship(confirmDialogAction);
                         }
-                        confirmText={"Fjern venn"}
-                        onCancel={() => setConfirmDialogState(null)}
-                        onConfirm={() => {
-                            if (confirmDialogState !== null) {
-                                updateUserRelationship(confirmDialogState);
-                            }
-                            setConfirmDialogState(null);
-                        }}
-                    />
-                ) : (
-                    <ConfirmationDialog
-                        open={true}
-                        title={"Avslå venneforespørsel?"}
-                        description={
-                            <>
-                                <Typography>
-                                    Du er i ferd med å avslå <b>{communityUser.name}</b> sin venneforespørsel.
-                                </Typography>
-                                <Typography>Dette kan ikke angres!</Typography>
-                            </>
-                        }
-                        confirmText={"Avslå forespørsel"}
-                        onCancel={() => setConfirmDialogState(null)}
-                        onConfirm={() => {
-                            if (confirmDialogState !== null) {
-                                updateUserRelationship(confirmDialogState);
-                            }
-                            setConfirmDialogState(null);
-                        }}
-                    />
-                ))}
+                        setConfirmDialogOpen(false);
+                    }}
+                    {...confirmDialogPropsMap[confirmDialogAction]}
+                />
+            )}
         </>
     );
 };
