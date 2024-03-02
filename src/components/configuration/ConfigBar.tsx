@@ -10,11 +10,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect } from "react";
 
-import { ChainIdentifier } from "@/lib/activeChains";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexColorHash } from "@/lib/utils/colorUtils";
+import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
 

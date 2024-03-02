@@ -16,15 +16,14 @@ function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
         <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
             {themeMode && (
                 <Image
-                    src={
-                        themeMode === "dark" ? chainProfile.images.dark.largeLogo : chainProfile.images.light.largeLogo
-                    }
+                    src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${themeMode === "dark" ? chainProfile.images.dark.largeLogo : chainProfile.images.light.largeLogo}`}
                     alt={`${chainProfile.identifier}-rezervo`}
                     fill={true}
                     style={{
                         objectFit: "contain",
                         objectPosition: "center",
                     }}
+                    unoptimized // png image optimization fails for production builds
                 />
             )}
         </Box>

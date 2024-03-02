@@ -18,6 +18,6 @@ export const POST = withApiAuthRequired(async (req, ctx) => {
 
     const data = await req.text();
     return await doOperation(() =>
-        post(`${process.env["CONFIG_HOST"]}/${chainIdentifier}/cancel-booking`, accessToken, data),
+        post(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/cancel-booking`, accessToken, data),
     );
 });

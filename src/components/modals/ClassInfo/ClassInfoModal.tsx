@@ -2,9 +2,8 @@ import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import ClassInfo from "@/components/modals/ClassInfo/ClassInfo";
-import { ChainIdentifier } from "@/lib/activeChains";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass } from "@/types/chain";
+import { ChainIdentifier, RezervoClass } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 const ClassInfoModal = ({

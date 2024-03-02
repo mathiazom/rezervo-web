@@ -17,5 +17,7 @@ export const POST = withApiAuthRequired(async (req, ctx) => {
     if (chainIdentifier === null) return respondNotFound();
 
     const data = await req.text();
-    return await doOperation(() => post(`${process.env["CONFIG_HOST"]}/${chainIdentifier}/book`, accessToken, data));
+    return await doOperation(() =>
+        post(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/book`, accessToken, data),
+    );
 });

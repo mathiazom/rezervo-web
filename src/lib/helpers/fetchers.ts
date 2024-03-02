@@ -1,9 +1,8 @@
-import { getChains } from "@/lib/activeChains";
 import { firstDateOfWeekByOffset } from "@/lib/helpers/date";
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { serializeWeekSchedule } from "@/lib/serialization/serializers";
-import { ActivityCategory, BaseRezervoChain, RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
+import { ActivityCategory, ChainIdentifier, RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { ChainPageProps, RezervoWeekScheduleDTO, SWRPrefetchedCacheData } from "@/types/serialization";
 
@@ -28,7 +27,7 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
     const locationIdentifiers = chain.branches.flatMap((branch) =>
         branch.locations.map((location) => location.identifier),
     );
-    const chainProfiles = (await getChains()).map((chain) => chain.profile);
+    const chainProfiles = (await fetchActiveChains()).map((chain) => chain.profile);
     const activityCategories = await fetchActivityCategories();
     const emptyWeekScheduleFallbackKey = scheduleUrlKey(chain.profile.identifier, 0, locationIdentifiers);
     try {
@@ -81,8 +80,17 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
     };
 }
 
-export async function fetchActiveChains(): Promise<BaseRezervoChain[]> {
-    return fetch(`${process.env["CONFIG_HOST"]}/chains`).then((res) => {
+export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
+    return fetch(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/chains/${chainIdentifier}`).then((res) => {
+        if (!res.ok) {
+            throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
+        }
+        return res.json();
+    });
+}
+
+export async function fetchActiveChains(): Promise<RezervoChain[]> {
+    return fetch(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/chains`).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -99,7 +107,7 @@ export async function fetchRezervoWeekSchedule(
         locationIds: locationIdentifiers,
         ...(await (
             await fetch(
-                `${process.env["CONFIG_HOST"]}/schedule/${chain_identifier}/${weekOffset}${
+                `${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/schedule/${chain_identifier}/${weekOffset}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
             )
@@ -124,7 +132,7 @@ export async function fetchRezervoSchedule(
 }
 
 export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
-    return fetch(`${process.env["CONFIG_HOST"]}/categories`).then((res) => {
+    return fetch(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/categories`).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }

@@ -27,6 +27,10 @@ const nextConfig = withPWA({
         remotePatterns: [
             {
                 protocol: "https",
+                hostname: new URL(process.env["NEXT_PUBLIC_CONFIG_HOST"]).hostname,
+            },
+            {
+                protocol: "https",
                 hostname: "ibooking.no",
             },
             {

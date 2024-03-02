@@ -3,9 +3,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
-import { ChainIdentifier } from "@/lib/activeChains";
 import { isToday } from "@/lib/helpers/date";
-import { RezervoClass, RezervoWeekSchedule } from "@/types/chain";
+import { ChainIdentifier, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 import { ClassPopularityIndex } from "@/types/popularity";
 
 function WeekSchedule({

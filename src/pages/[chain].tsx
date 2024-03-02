@@ -3,17 +3,16 @@ import React, { useEffect, useMemo } from "react";
 import { Middleware, SWRConfig, useSWRConfig } from "swr";
 
 import Chain from "@/components/Chain";
-import { getChain, getChainIdentifiers } from "@/lib/activeChains";
-import { fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
+import { fetchActiveChains, fetchChain, fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
 import { storeSelectedChain } from "@/lib/helpers/storage";
 import { ChainPageParams } from "@/types/chain";
 import { ChainPageProps, RezervoWeekScheduleDTO } from "@/types/serialization";
 
 export const getStaticPaths: GetStaticPaths = async () => {
     return {
-        paths: (await getChainIdentifiers()).map((chain) => ({
+        paths: (await fetchActiveChains()).map((chain) => ({
             params: {
-                chain,
+                chain: chain.profile.identifier,
             },
         })),
         fallback: false,
@@ -24,7 +23,7 @@ export async function getStaticProps({ params }: { params: ChainPageParams }): P
     revalidate: number;
     props: ChainPageProps;
 }> {
-    return getChain(params.chain).then(fetchChainPageStaticProps);
+    return fetchChain(params.chain).then(fetchChainPageStaticProps);
 }
 
 /**

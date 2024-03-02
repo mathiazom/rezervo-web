@@ -7,8 +7,9 @@ import React, { useEffect, useState } from "react";
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
-import { ChainIdentifier, getChains } from "@/lib/activeChains";
+import { fetchActiveChains } from "@/lib/helpers/fetchers";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
+import { ChainIdentifier } from "@/types/chain";
 import { IndexPageProps } from "@/types/serialization";
 
 export async function getStaticProps(): Promise<{
@@ -18,7 +19,7 @@ export async function getStaticProps(): Promise<{
     return {
         revalidate: 60,
         props: {
-            chainProfiles: (await getChains()).map((chain) => chain.profile),
+            chainProfiles: (await fetchActiveChains()).map((chain) => chain.profile),
         },
     };
 }

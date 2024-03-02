@@ -169,7 +169,7 @@ const CommunityUserCard = ({
                                             <Tooltip title={chainProfile.name} key={chain}>
                                                 <Avatar
                                                     sx={{ width: 16, height: 16 }}
-                                                    src={chainProfile.images.common.smallLogo ?? ""}
+                                                    src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainProfile.images.common.smallLogo}`}
                                                 >
                                                     {chain}
                                                 </Avatar>
