@@ -102,6 +102,14 @@ export default function MembershipLogin({
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setPassword(event.target.value);
                             }}
+                            onKeyDown={(event: React.KeyboardEvent) => {
+                                if (event.key === "Enter" && password.trim() !== "" && username.trim() !== "") {
+                                    submit({
+                                        username,
+                                        password,
+                                    });
+                                }
+                            }}
                         />
                     </Box>
                 </Box>
