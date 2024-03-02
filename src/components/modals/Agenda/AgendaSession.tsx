@@ -1,4 +1,4 @@
-import { Clear, EventBusy } from "@mui/icons-material";
+import { Clear, EventBusy, HourglassTopRounded } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Chip, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useRouter } from "next/navigation";
@@ -103,11 +103,6 @@ export default function AgendaSession({
                             <Box>
                                 <Box sx={{ display: "flex", gap: 1 }}>
                                     <Typography sx={{ fontSize: "1.05rem" }}>{displayName} </Typography>
-                                    {userSession?.status === SessionStatus.WAITLIST && (
-                                        <Tooltip title={"Du er på venteliste for denne timen"}>
-                                            <Chip size={"small"} color={"warning"} label={"Venteliste"} />
-                                        </Tooltip>
-                                    )}
                                 </Box>
                                 <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                                     {`${timeFrom}${timeTo ? ` - ${timeTo}` : ""}`}
@@ -121,6 +116,23 @@ export default function AgendaSession({
                                     <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
                                         {userSession?.class_data.instructors.map((i) => i.name).join(", ")}
                                     </Typography>
+                                )}
+                                {userSession?.status === SessionStatus.WAITLIST && (
+                                    <Tooltip title={"Du er på venteliste for denne timen"}>
+                                        <Chip
+                                            size={"small"}
+                                            color={"warning"}
+                                            label={"Venteliste"}
+                                            icon={<HourglassTopRounded />}
+                                            sx={{
+                                                marginY: "0.2rem",
+                                                "& .MuiChip-icon": {
+                                                    fontSize: "0.85rem",
+                                                    marginLeft: "0.5rem",
+                                                },
+                                            }}
+                                        />
+                                    </Tooltip>
                                 )}
                             </Box>
                             {userSession?.class_data === undefined && (
