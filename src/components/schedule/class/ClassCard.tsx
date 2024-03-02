@@ -1,7 +1,7 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
 import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
@@ -185,7 +185,7 @@ const ClassCard = ({
                                         ))}
                                     {userSessions.length > 0 &&
                                         userSessions.map(({ user_name, status }) => (
-                                            <Fragment key={user_name}>
+                                            <Box key={user_name}>
                                                 <ClassUserAvatar
                                                     username={user_name}
                                                     invisibleBadge={isInThePast}
@@ -203,7 +203,7 @@ const ClassCard = ({
                                                               : undefined
                                                     }
                                                 />
-                                            </Fragment>
+                                            </Box>
                                         ))}
                                 </AvatarGroup>
                             </Box>
