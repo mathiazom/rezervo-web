@@ -17,7 +17,9 @@ export const GET = withApiAuthRequired(async (req, ctx) => {
     const chainIdentifier = chainIdentifierFromContext(ctx as AppRouteHandlerFnContext);
     if (chainIdentifier === null) return respondNotFound();
 
-    return await doOperation(() => get(`${process.env["CONFIG_HOST"]}/${chainIdentifier}/config`, accessToken));
+    return await doOperation(() =>
+        get(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/config`, accessToken),
+    );
 });
 
 export const PUT = withApiAuthRequired(async (req, ctx) => {
@@ -28,5 +30,7 @@ export const PUT = withApiAuthRequired(async (req, ctx) => {
     if (chainIdentifier === null) return respondNotFound();
 
     const data = await req.text();
-    return await doOperation(() => put(`${process.env["CONFIG_HOST"]}/${chainIdentifier}/config`, accessToken, data));
+    return await doOperation(() =>
+        put(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/config`, accessToken, data),
+    );
 });

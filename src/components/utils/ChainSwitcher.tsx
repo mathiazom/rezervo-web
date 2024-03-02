@@ -4,8 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
-import { ChainIdentifier } from "@/lib/activeChains";
-import { ChainProfile } from "@/types/chain";
+import { ChainIdentifier, ChainProfile } from "@/types/chain";
 
 function ChainSwitcher({
     currentChainProfile,

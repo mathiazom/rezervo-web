@@ -2,10 +2,9 @@ import { Box, Chip, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
-import { ChainIdentifier } from "@/lib/activeChains";
 import { getCapitalizedWeekday, isDayPassed, isToday } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass, RezervoDaySchedule } from "@/types/chain";
+import { ChainIdentifier, RezervoClass, RezervoDaySchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({

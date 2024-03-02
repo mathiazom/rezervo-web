@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-import { ChainIdentifier } from "@/lib/activeChains";
+import { ChainIdentifier } from "@/types/chain";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
 const STORAGE_KEYS = {

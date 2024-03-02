@@ -1,8 +1,8 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
-import { ChainIdentifier } from "@/lib/activeChains";
 import { fetcher } from "@/lib/utils/fetchUtils";
+import { ChainIdentifier } from "@/types/chain";
 import { UserSessionsIndex } from "@/types/userSessions";
 
 export function useUserSessions(chain: ChainIdentifier) {

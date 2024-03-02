@@ -2,9 +2,9 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { ChainIdentifier } from "@/lib/activeChains";
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { fetcher } from "@/lib/utils/fetchUtils";
+import { ChainIdentifier } from "@/types/chain";
 import { ChainConfigPayload, ChainConfig } from "@/types/config";
 
 function putConfig(url: string, { arg: config }: { arg: ChainConfigPayload }) {

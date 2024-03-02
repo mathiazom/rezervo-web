@@ -7,7 +7,6 @@ import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMet
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
-import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -16,7 +15,7 @@ import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { shortenMiddleNames } from "@/lib/utils/textUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
-import { RezervoClass, RezervoInstructor } from "@/types/chain";
+import { ChainIdentifier, RezervoClass, RezervoInstructor } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 

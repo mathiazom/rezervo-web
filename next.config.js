@@ -27,6 +27,10 @@ const nextConfig = withPWA({
         remotePatterns: [
             {
                 protocol: "https",
+                hostname: "api.rezervo.no",
+            },
+            {
+                protocol: "https",
                 hostname: "ibooking.no",
             },
             {

@@ -5,9 +5,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
-import { ChainIdentifier } from "@/lib/activeChains";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { RezervoClass } from "@/types/chain";
+import { ChainIdentifier, RezervoClass } from "@/types/chain";
 
 const BookingPopupModal = ({
     onClose,

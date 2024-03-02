@@ -7,5 +7,7 @@ export const POST = withApiAuthRequired(async (req) => {
     if (!accessToken) return respondUnauthorized();
 
     const data = await req.text();
-    return await doOperation(() => post(`${process.env["CONFIG_HOST"]}/notifications/push/verify`, accessToken, data));
+    return await doOperation(() =>
+        post(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/notifications/push/verify`, accessToken, data),
+    );
 });

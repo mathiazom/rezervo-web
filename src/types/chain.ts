@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { ChainIdentifier } from "@/lib/activeChains";
+export type ChainIdentifier = string;
 
 export type ChainProfileImages = {
     light: {
@@ -14,24 +14,10 @@ export type ChainProfileImages = {
     };
 };
 
-export type BaseChainProfile = {
+export type ChainProfile = {
     identifier: ChainIdentifier;
     name: string;
-};
-
-export type ChainProfileExtras = {
     images: ChainProfileImages;
-};
-
-export type ChainProfile = BaseChainProfile & ChainProfileExtras;
-
-export type BaseRezervoChain = {
-    profile: BaseChainProfile;
-    branches: RezervoBranch[];
-};
-
-export type RezervoChainExtras = {
-    profile: ChainProfileExtras;
 };
 
 export type RezervoChain = {

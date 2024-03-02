@@ -6,5 +6,5 @@ export const GET = withApiAuthRequired(async (req) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
 
-    return await doOperation(() => get(`${process.env["CONFIG_HOST"]}/features`, accessToken));
+    return await doOperation(() => get(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/features`, accessToken));
 });

@@ -26,14 +26,13 @@ import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMet
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
-import { ChainIdentifier } from "@/lib/activeChains";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { RezervoClass } from "@/types/chain";
+import { ChainIdentifier, RezervoClass } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 

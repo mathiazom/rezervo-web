@@ -48,7 +48,3 @@ yarn check
 # automatic fixes
 yarn fix
 ```
-
-#### 🔌 Support new chain
-
-Add your own chain by adding it to [`activeChains`](src/lib/activeChains.ts).

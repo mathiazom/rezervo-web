@@ -1,7 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { NextRequest } from "next/server";
 
-import { getChainIdentifiers } from "@/lib/activeChains";
+import { fetchActiveChains } from "@/lib/helpers/fetchers";
 
 export const GET = async (req: NextRequest) => {
     const secret = req.nextUrl.searchParams.get("secret");
@@ -11,9 +11,9 @@ export const GET = async (req: NextRequest) => {
     }
 
     await Promise.all(
-        (await getChainIdentifiers()).map((chain) => {
-            console.log(`Revalidating /${chain}`);
-            return revalidatePath(`/${chain}`);
+        (await fetchActiveChains()).map((chain) => {
+            console.log(`Revalidating /${chain.profile.identifier}`);
+            return revalidatePath(`/${chain.profile.identifier}`);
         }),
     );
 
