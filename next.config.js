@@ -27,7 +27,7 @@ const nextConfig = withPWA({
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: "api.rezervo.no",
+                hostname: new URL(process.env["NEXT_PUBLIC_CONFIG_HOST"]).hostname,
             },
             {
                 protocol: "https",

@@ -4,7 +4,7 @@ import { AppRouteHandlerFnContext } from "@auth0/nextjs-auth0";
 import { NextRequest } from "next/server";
 
 import { chainIdentifierFromContext, respondNotFound } from "@/lib/helpers/api";
-import { fetchChain, fetchRezervoWeekSchedule } from "@/lib/helpers/fetchers";
+import { fetchRezervoWeekSchedule } from "@/lib/helpers/fetchers";
 import { serializeWeekSchedule } from "@/lib/serialization/serializers";
 
 export const GET = async (req: NextRequest, ctx: AppRouteHandlerFnContext) => {
@@ -23,8 +23,7 @@ export const GET = async (req: NextRequest, ctx: AppRouteHandlerFnContext) => {
     const locationIds = queryParams.getAll("locationId");
     const chainIdentifier = chainIdentifierFromContext(ctx);
     if (chainIdentifier === null) return respondNotFound();
-    const chain = await fetchChain(chainIdentifier);
     return Response.json(
-        serializeWeekSchedule(await fetchRezervoWeekSchedule(chain.profile.identifier, weekOffset, locationIds)),
+        serializeWeekSchedule(await fetchRezervoWeekSchedule(chainIdentifier, weekOffset, locationIds)),
     );
 };
