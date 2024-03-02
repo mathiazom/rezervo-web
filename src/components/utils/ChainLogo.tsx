@@ -23,7 +23,7 @@ function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
                         objectFit: "contain",
                         objectPosition: "center",
                     }}
-                    unoptimized
+                    unoptimized // png image optimization fails for production builds
                 />
             )}
         </Box>
