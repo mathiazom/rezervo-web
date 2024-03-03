@@ -1,8 +1,6 @@
-import { EditRounded } from "@mui/icons-material";
+import { SettingsRounded } from "@mui/icons-material";
 import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
-import PlayCircleOutlineRoundedIcon from "@mui/icons-material/PlayCircleOutlineRounded";
 import {
-    Avatar,
     Box,
     CircularProgress,
     Divider,
@@ -15,20 +13,16 @@ import {
     Switch as MaterialUISwitch,
     TextField,
     Typography,
-    useTheme,
 } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
+import Memberships from "@/components/modals/Settings/Memberships/Memberships";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
-import RippleBadge from "@/components/utils/RippleBadge";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
-import { useChainUser } from "@/lib/hooks/useChainUser";
 import { usePreferences } from "@/lib/hooks/usePreferences";
-import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { ChainProfile } from "@/types/chain";
-import { ChainConfigPayload, NotificationsConfig, PreferencesPayload } from "@/types/config";
+import { ChainIdentifier, ChainProfile } from "@/types/chain";
+import { ChainConfig, NotificationsConfig, PreferencesPayload } from "@/types/config";
 import { Features } from "@/types/features";
 
 // Fix track not visible with "system" color scheme
@@ -55,24 +49,15 @@ enum ReminderTimeBeforeInputUnit {
 }
 
 export default function Settings({
-    chainProfile,
-    bookingActive,
+    chainProfiles,
+    chainConfigs,
     features,
-    setBookingActive,
-    openChainUserSettings,
 }: {
-    chainProfile: ChainProfile;
-    bookingActive: boolean;
+    chainProfiles: ChainProfile[];
+    chainConfigs: Record<ChainIdentifier, ChainConfig>;
     features: Features | undefined;
-    setBookingActive: Dispatch<SetStateAction<boolean>>;
-    openChainUserSettings: () => void;
 }) {
-    const theme = useTheme();
-    const { chainUser, chainUserError, chainUserLoading } = useChainUser(chainProfile.identifier);
-    const hasChainUser = chainUser !== undefined && chainUserError == undefined && !chainUserLoading;
-    const { userConfig, putUserConfig } = useUserConfig(chainProfile.identifier);
     const { preferences, putPreferences } = usePreferences();
-    const [bookingActiveLoading, setBookingActiveLoading] = useState(false);
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
     const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminder_hours_before != null);
     const [reminderHoursBefore, setReminderHoursBefore] = useState<number | null>(null);
@@ -80,16 +65,6 @@ export default function Settings({
     const [reminderTimeBeforeInputUnit, setReminderTimeBeforeInputUnit] = useState<ReminderTimeBeforeInputUnit | null>(
         null,
     );
-
-    async function onBookingActiveChanged(active: boolean) {
-        setBookingActive(active);
-        setBookingActiveLoading(true);
-        await putUserConfig({
-            ...userConfig,
-            active: active,
-        } as ChainConfigPayload);
-        setBookingActiveLoading(false);
-    }
 
     function handleReminderActiveChanged(active: boolean) {
         setReminderActive(active);
@@ -210,108 +185,21 @@ export default function Settings({
                 },
             }}
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    paddingBottom: 1,
-                }}
-            >
+            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
+                <SettingsRounded />
                 <Typography variant="h6" component="h2">
                     Innstillinger
                 </Typography>
             </Box>
-            <Box pt={2} sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <FormGroup sx={{ gap: "1rem" }}>
-                    <FormGroup
-                        sx={{
-                            maxWidth: "100%",
-                            paddingBottom: "0.75rem",
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: "flex",
-                                gap: "1rem",
-                                backgroundColor: theme.palette.secondaryBackground.default,
-                                padding: "1rem 1.25rem",
-                                borderRadius: "6px",
-                                width: "100%",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                            }}
-                        >
-                            <RippleBadge
-                                invisible={!hasChainUser}
-                                overlap="circular"
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "right",
-                                }}
-                                variant={"dot"}
-                                rippleColor={"#44b700"}
-                            >
-                                <Avatar
-                                    sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
-                                    src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainProfile.images.common.smallLogo}`}
-                                >
-                                    {chainProfile.identifier}
-                                </Avatar>
-                            </RippleBadge>
-                            <Typography
-                                noWrap
-                                sx={{
-                                    flexGrow: 1,
-                                    opacity: 0.6,
-                                    color: theme.palette.primary.contrastText,
-                                }}
-                            >
-                                {chainUser?.username}
-                            </Typography>
-                            <FormLabel>
-                                <IconButton onClick={() => openChainUserSettings()}>
-                                    <EditRounded />
-                                </IconButton>
-                            </FormLabel>
-                        </Box>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormLabel>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
-                                <PlayCircleOutlineRoundedIcon />
-                                <Typography
-                                    sx={{
-                                        userSelect: "none",
-                                    }}
-                                >
-                                    Automatisk booking
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "right",
-                                        flexGrow: 1,
-                                    }}
-                                >
-                                    {bookingActiveLoading && <CircularProgress size="1rem" />}
-                                    <Switch
-                                        checked={bookingActive}
-                                        onChange={(_, checked) => onBookingActiveChanged(checked)}
-                                        inputProps={{
-                                            "aria-label": "booking-aktiv",
-                                        }}
-                                    />
-                                </Box>
-                            </Box>
-                        </FormLabel>
-                    </FormGroup>
-                    <PushNotifications />
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <Memberships chainProfiles={chainProfiles} chainConfigs={chainConfigs} />
+                <Divider sx={{ my: 1 }} />
+                <PushNotifications />
+                <FormGroup>
                     <Divider orientation="horizontal" />
                     {features && features.class_reminder_notifications && (
                         <>
-                            <FormGroup>
+                            <FormGroup sx={{ py: 2 }}>
                                 <FormLabel>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                         <NotificationsActiveRoundedIcon />

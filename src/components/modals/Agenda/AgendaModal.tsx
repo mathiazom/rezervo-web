@@ -2,40 +2,26 @@ import { Modal } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
-import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass } from "@/types/chain";
+import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
+import { BaseUserSession } from "@/types/userSessions";
 
 const AgendaModal = ({
+    userSession,
+    chainConfigs,
+    chainProfiles,
     open,
     setOpen,
-    userConfig,
-    classes,
-    onInfo,
-    onUpdateConfig,
 }: {
+    userSession: BaseUserSession[];
+    chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    chainProfiles: ChainProfile[];
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    userConfig: ChainConfig | undefined;
-    classes: RezervoClass[];
-    onInfo: Dispatch<SetStateAction<RezervoClass | null>>;
-    onUpdateConfig: (classId: string, selected: boolean) => void;
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <>
-                {userConfig?.recurringBookings && (
-                    <Agenda
-                        agendaClasses={userConfig.recurringBookings.map((c) => ({
-                            config: c,
-                            _class: classes.find((sc) => classRecurrentId(sc) === classConfigRecurrentId(c)),
-                        }))}
-                        onInfo={onInfo}
-                        onDelete={(c) => onUpdateConfig(classConfigRecurrentId(c), false)}
-                        bookingActive={userConfig?.active === true}
-                    />
-                )}
-            </>
+            <Agenda userSessions={userSession} chainConfigs={chainConfigs} chainProfiles={chainProfiles} />
         </Modal>
     );
 };

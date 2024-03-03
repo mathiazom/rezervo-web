@@ -4,7 +4,6 @@ import React, { memo, useEffect, useMemo, useState } from "react";
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
 import BookingPopupModal from "@/components/modals/BookingPopupModal";
-import ChainUserSettingsModal from "@/components/modals/ChainUser/ChainUserSettingsModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
 import CommunityModal from "@/components/modals/Community/CommunityModal";
 import SettingsModal from "@/components/modals/Settings/SettingsModal";
@@ -12,15 +11,26 @@ import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
+import ClassLinkingProvider from "@/components/utils/ClassLinkingProvider";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { getStoredSelectedCategories, getStoredSelectedLocations } from "@/lib/helpers/storage";
 import { useSchedule } from "@/lib/hooks/useSchedule";
+import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
-import { ActivityCategory, ChainProfile, RezervoChain, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
+import {
+    ActivityCategory,
+    BookingPopupAction,
+    BookingPopupState,
+    ChainProfile,
+    RezervoChain,
+    RezervoClass,
+    RezervoWeekSchedule,
+} from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
@@ -45,7 +55,9 @@ function Chain({
     error: RezervoError | undefined;
 }) {
     const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chain.profile.identifier);
-    const { userSessionsIndex } = useUserSessions(chain.profile.identifier);
+    const { userSessionsIndex } = useUserSessionsIndex(chain.profile.identifier);
+    const { userSessions } = useUserSessions();
+    const { userChainConfigs } = useUserChainConfigs();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -53,10 +65,8 @@ function Chain({
 
     const [isCommunityOpen, setIsCommunityOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isChainUserSettingsOpen, setIsChainUserSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
-    const [bookingPopupClass, setBookingPopupClass] = useState<RezervoClass | null>(null);
-    const [bookingPopupAction, setBookingPopupAction] = useState<"book" | "cancel" | null>(null);
+    const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
 
@@ -109,25 +119,32 @@ function Chain({
         return { ...classesConfigMap, ...ghostClassesConfigs };
     }, [classesConfigMap, userConfig?.recurringBookings]);
 
-    const onUpdateConfig = (classId: string, selected: boolean) => {
+    const onUpdateConfig = async (classId: string, selected: boolean) => {
         const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
         if (selectedClass?.isBookable) {
-            setBookingPopupClass(selectedClass);
             const isBooked =
                 userSessionsIndex?.[selectedClass.id]?.some(
                     (userSession) => userSession.is_self && userSession.status === SessionStatus.BOOKED,
                 ) ?? false;
             if (selected && !isBooked) {
-                setBookingPopupAction("book");
+                setBookingPopupState({
+                    chain: chain.profile.identifier,
+                    _class: selectedClass,
+                    action: BookingPopupAction.BOOK,
+                });
             } else if (!selected && isBooked) {
-                setBookingPopupAction("cancel");
+                setBookingPopupState({
+                    chain: chain.profile.identifier,
+                    _class: selectedClass,
+                    action: BookingPopupAction.CANCEL,
+                });
             }
         }
         const s = selectedClassIds;
         const newSelectedClassIds =
             s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId);
         setSelectedClassIds(newSelectedClassIds);
-        return putUserConfig({
+        return await putUserConfig({
             active: userConfigActive,
             recurringBookings: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
         });
@@ -162,6 +179,11 @@ function Chain({
     return (
         <>
             <PageHead title={`${chain.profile.identifier}-rezervo`} />
+            <ClassLinkingProvider
+                classes={classes}
+                setWeekOffset={setWeekOffset}
+                setClassInfoClass={setClassInfoClass}
+            />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
@@ -170,13 +192,12 @@ function Chain({
                         }
                         rightComponent={
                             <ConfigBar
-                                chain={chain.profile.identifier}
-                                userConfig={userConfig}
-                                isLoadingConfig={userConfig == null || userConfigLoading}
+                                chainConfigs={userChainConfigs}
+                                userSessions={userSessions}
+                                isLoadingConfig={userConfigLoading}
                                 isConfigError={userConfigError}
                                 onCommunityOpen={() => setIsCommunityOpen(true)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
-                                onChainUserSettingsOpen={() => setIsChainUserSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
                             />
                         }
@@ -225,34 +246,31 @@ function Chain({
                 onUpdateConfig={onUpdateConfig}
             />
             <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
-            <AgendaModal
-                open={isAgendaOpen}
-                setOpen={setIsAgendaOpen}
-                userConfig={userConfig}
-                classes={classes}
-                onInfo={setClassInfoClass}
-                onUpdateConfig={onUpdateConfig}
-            />
-            <SettingsModal
-                open={isSettingsOpen}
-                setOpen={setIsSettingsOpen}
-                chainProfile={chain.profile}
-                bookingActive={userConfigActive}
-                setBookingActive={setUserConfigActive}
-                openChainUserSettings={() => setIsChainUserSettingsOpen(true)}
-            />
-            <ChainUserSettingsModal
-                open={isChainUserSettingsOpen}
-                setOpen={setIsChainUserSettingsOpen}
-                chainProfile={chain.profile}
-                onSubmit={() => setIsChainUserSettingsOpen(false)}
-            />
-            <BookingPopupModal
-                onClose={() => setBookingPopupAction(null)}
-                chain={chain.profile.identifier}
-                _class={bookingPopupClass}
-                action={bookingPopupAction}
-            />
+            {userSessions !== null && userChainConfigs !== null && (
+                <AgendaModal
+                    userSession={userSessions}
+                    chainConfigs={userChainConfigs}
+                    chainProfiles={chainProfiles}
+                    open={isAgendaOpen}
+                    setOpen={setIsAgendaOpen}
+                />
+            )}
+            {userChainConfigs !== null && (
+                <SettingsModal
+                    open={isSettingsOpen}
+                    setOpen={setIsSettingsOpen}
+                    chainProfiles={chainProfiles}
+                    chainConfigs={userChainConfigs}
+                />
+            )}
+            {bookingPopupState && (
+                <BookingPopupModal
+                    onClose={() => setBookingPopupState(null)}
+                    chain={bookingPopupState.chain}
+                    _class={bookingPopupState._class}
+                    action={bookingPopupState.action}
+                />
+            )}
         </>
     );
 }

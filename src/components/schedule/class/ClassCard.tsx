@@ -1,7 +1,7 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
 import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
@@ -10,7 +10,7 @@ import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBa
 import { isClassInThePast } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { useUserSessions } from "@/lib/hooks/useUserSessions";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { randomElementFromArray } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { shortenMiddleNames } from "@/lib/utils/textUtils";
@@ -36,7 +36,7 @@ const ClassCard = ({
     onUpdateConfig: (selected: boolean) => void;
     onInfo: () => void;
 }) => {
-    const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessions(chain);
+    const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex(chain);
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const { allConfigsIndex } = useUserConfig(chain);
@@ -185,7 +185,7 @@ const ClassCard = ({
                                         ))}
                                     {userSessions.length > 0 &&
                                         userSessions.map(({ user_name, status }) => (
-                                            <Fragment key={user_name}>
+                                            <Box key={user_name}>
                                                 <ClassUserAvatar
                                                     username={user_name}
                                                     invisibleBadge={isInThePast}
@@ -203,7 +203,7 @@ const ClassCard = ({
                                                               : undefined
                                                     }
                                                 />
-                                            </Fragment>
+                                            </Box>
                                         ))}
                                 </AvatarGroup>
                             </Box>

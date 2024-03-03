@@ -20,7 +20,7 @@ import { useChainUser } from "@/lib/hooks/useChainUser";
 import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
-export default function ChainUserSettings({
+export default function MembershipLogin({
     chainProfile,
     submit,
     isSubmitting,
@@ -101,6 +101,14 @@ export default function ChainUserSettings({
                                 : {})}
                             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                                 setPassword(event.target.value);
+                            }}
+                            onKeyDown={(event: React.KeyboardEvent) => {
+                                if (event.key === "Enter" && password.trim() !== "" && username.trim() !== "") {
+                                    submit({
+                                        username,
+                                        password,
+                                    });
+                                }
                             }}
                         />
                     </Box>

@@ -17,6 +17,6 @@ export const GET = withApiAuthRequired(async (req, ctx) => {
     if (chainIdentifier === null) return respondNotFound();
 
     return await doOperation(() =>
-        get(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/sessions`, accessToken),
+        get(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/sessions-index`, accessToken),
     );
 });

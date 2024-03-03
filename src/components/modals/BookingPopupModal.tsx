@@ -6,7 +6,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { ChainIdentifier, RezervoClass } from "@/types/chain";
+import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
+import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
 
 const BookingPopupModal = ({
     onClose,
@@ -16,23 +17,25 @@ const BookingPopupModal = ({
 }: {
     onClose: () => void;
     chain: ChainIdentifier;
-    _class: RezervoClass | null;
-    action: "book" | "cancel" | null;
+    _class: RezervoClass;
+    action: BookingPopupAction;
 }) => {
-    const { mutateSessionsIndex } = useUserSessions(chain);
+    const { mutateSessionsIndex } = useUserSessionsIndex(chain);
+    const { mutateUserSessions } = useUserSessions();
     const [bookingLoading, setBookingLoading] = useState(false);
-    const isCancellation = action === "cancel";
-    const classDescription = _class
-        ? `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat("HH:mm")})`
-        : "";
+    const isCancellation = action === BookingPopupAction.CANCEL;
+    const classDescription = `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat(
+        "HH:mm",
+    )})`;
 
     async function book() {
         setBookingLoading(true);
         await fetch(`/api/${chain}/book`, {
             method: "POST",
-            body: JSON.stringify({ class_id: _class?.id.toString() }, null, 2),
+            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
+        await mutateUserSessions();
         setBookingLoading(false);
         onClose();
     }
@@ -41,9 +44,10 @@ const BookingPopupModal = ({
         setBookingLoading(true);
         await fetch(`/api/${chain}/cancel-booking`, {
             method: "POST",
-            body: JSON.stringify({ class_id: _class?.id.toString() }, null, 2),
+            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
+        await mutateUserSessions();
         setBookingLoading(false);
         onClose();
     }
