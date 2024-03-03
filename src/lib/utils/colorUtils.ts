@@ -2,6 +2,10 @@ export function hexWithOpacityToRgb(hex: string, opacity: number, brightness: nu
     return hex.match(/[\da-f]{2}/gi)?.map((c) => opacity * parseInt(c, 16) + (1 - opacity) * brightness) ?? [0, 0, 0];
 }
 
+export function avatarColor(username: string, darkMode: boolean = false) {
+    return `rgb(${hexWithOpacityToRgb(hexColorHash(username), darkMode ? 0.85 : 1, darkMode ? 255 : 0).join(",")})`;
+}
+
 export function hexColorHash(s: string) {
     let hash = 0;
     for (let i = 0; i < s.length; i++) {

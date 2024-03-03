@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useMemo } from "react";
 
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { hexColorHash } from "@/lib/utils/colorUtils";
+import { avatarColor } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
@@ -159,7 +159,10 @@ function ConfigBar({
                                         width: 32,
                                         height: 32,
                                         fontSize: 18,
-                                        backgroundColor: hexColorHash(user.name),
+                                        backgroundColor: avatarColor(user.name),
+                                        '[data-mui-color-scheme="dark"] &': {
+                                            backgroundColor: avatarColor(user.name, true),
+                                        },
                                     }}
                                 >
                                     {user.name[0]}

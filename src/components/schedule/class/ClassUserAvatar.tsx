@@ -2,7 +2,7 @@ import { Avatar, Badge, CircularProgress, circularProgressClasses } from "@mui/m
 import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
-import { hexColorHash } from "@/lib/utils/colorUtils";
+import { avatarColor } from "@/lib/utils/colorUtils";
 import { StatusColors } from "@/types/userSessions";
 
 export default function ClassUserAvatar({
@@ -22,7 +22,10 @@ export default function ClassUserAvatar({
         <Avatar
             alt={username}
             sx={{
-                backgroundColor: hexColorHash(username),
+                backgroundColor: avatarColor(username),
+                '[data-mui-color-scheme="dark"] &': {
+                    backgroundColor: avatarColor(username, true),
+                },
             }}
         >
             {username[0]}

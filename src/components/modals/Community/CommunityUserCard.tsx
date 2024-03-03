@@ -6,7 +6,7 @@ import React, { useState } from "react";
 
 import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { hexColorHash } from "@/lib/utils/colorUtils";
+import { avatarColor } from "@/lib/utils/colorUtils";
 import { ChainProfile } from "@/types/chain";
 import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
 
@@ -144,7 +144,10 @@ const CommunityUserCard = ({
                         <Avatar
                             alt={communityUser.name}
                             sx={{
-                                backgroundColor: hexColorHash(communityUser.name),
+                                backgroundColor: avatarColor(communityUser.name),
+                                '[data-mui-color-scheme="dark"] &': {
+                                    backgroundColor: avatarColor(communityUser.name, true),
+                                },
                                 width: 36,
                                 height: 36,
                                 fontSize: 18,
