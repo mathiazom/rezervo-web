@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
 
+import { LocalizedDateTime, weekOffsetBetweenDates } from "@/lib/helpers/date";
 import { RezervoClass } from "@/types/chain";
 
 function ClassLinkingProvider({
@@ -18,12 +19,13 @@ function ClassLinkingProvider({
     const searchParams = useSearchParams();
     const [checkedWeekOffset, setCheckedWeekOffset] = useState(false);
 
-    const classIdParam = searchParams?.get("classId");
-    const startTimeParam = searchParams?.get("startTime");
+    const classIdParam = searchParams?.get("classId") ?? null;
+    const startTimeParam = searchParams?.get("startTime") ?? null;
 
     if (!checkedWeekOffset && classIdParam !== null && startTimeParam !== null) {
         setCheckedWeekOffset(true);
-        setWeekOffset(Math.floor(DateTime.fromISO(startTimeParam ?? "").diff(DateTime.now(), "weeks").weeks));
+        const startTimeDate = DateTime.fromISO(startTimeParam);
+        setWeekOffset(weekOffsetBetweenDates(startTimeDate, LocalizedDateTime.now()));
         router.replace(`${pathname}?classId=${classIdParam}`);
     }
 
