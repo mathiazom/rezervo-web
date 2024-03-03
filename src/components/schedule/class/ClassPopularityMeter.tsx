@@ -19,7 +19,7 @@ const ClassPopularityIcon = ({ popularity }: { popularity: ClassPopularity }) =>
         case ClassPopularity.Low:
             return <SpeedRoundedIcon style={{ color: "green" }} />;
         default:
-            return <QuestionMarkRoundedIcon />;
+            return <QuestionMarkRoundedIcon fontSize={"small"} />;
     }
 };
 
