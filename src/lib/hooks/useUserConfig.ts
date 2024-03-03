@@ -12,13 +12,13 @@ import { ChainConfigPayload, ChainConfig } from "@/types/config";
 async function putConfig(
     url: string,
     { arg: config }: { arg: ChainConfigPayload },
-    blockingMutations: () => Promise<unknown[]>,
+    dependantMutations: () => Promise<unknown[]>,
 ) {
     const r = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(config, null, 2),
     });
-    await blockingMutations();
+    await dependantMutations();
     return await r.json();
 }
 
@@ -31,14 +31,14 @@ export function useUserConfig(chain: ChainIdentifier) {
     const { mutateUserSessions } = useUserSessions();
     const { mutateUserChainConfigs } = useUserChainConfigs();
 
-    const blockingMutations = async () => Promise.all([mutateUserSessions(), mutateUserChainConfigs()]);
+    const dependantMutations = async () => Promise.all([mutateUserSessions(), mutateUserChainConfigs()]);
 
     const { data, error, isLoading, mutate } = useSWR<ChainConfig>(user && chain ? configApiUrl : null, fetcher);
 
     const { trigger, isMutating } = useSWRMutation<ChainConfig, unknown, string, ChainConfigPayload>(
         configApiUrl,
         (url: string, { arg: config }: { arg: ChainConfigPayload }) =>
-            putConfig(url, { arg: config }, blockingMutations),
+            putConfig(url, { arg: config }, dependantMutations),
         {
             populateCache: true, // use updated data from mutate response
             revalidate: false,

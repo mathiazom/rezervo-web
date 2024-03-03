@@ -11,7 +11,7 @@ import { ChainUser, ChainUserPayload } from "@/types/config";
 async function putChainUser(
     url: string,
     { arg: chainUser }: { arg: ChainUserPayload },
-    blockingMutations: () => Promise<void>,
+    dependantMutations: () => Promise<void>,
 ) {
     const res = await fetch(url, {
         method: "PUT",
@@ -21,7 +21,7 @@ async function putChainUser(
     if (!res.ok || data?.username == undefined) {
         throw new Error("An error occurred while updating chain user");
     }
-    await blockingMutations();
+    await dependantMutations();
     return data;
 }
 
@@ -34,14 +34,14 @@ export function useChainUser(chain: ChainIdentifier) {
 
     const { mutateUserConfig } = useUserConfig(chain);
     const { mutateUserChainConfigs } = useUserChainConfigs();
-    const blockingMutations = async () => {
+    const dependantMutations = async () => {
         await mutateUserChainConfigs();
     };
 
     const { trigger, isMutating } = useSWRMutation<ChainUser, unknown, string, ChainUserPayload>(
         chainUserApiUrl,
         (url: string, { arg: chainUser }: { arg: ChainUserPayload }) =>
-            putChainUser(url, { arg: chainUser }, blockingMutations),
+            putChainUser(url, { arg: chainUser }, dependantMutations),
         {
             populateCache: true, // use updated data from mutate response
             revalidate: false,
