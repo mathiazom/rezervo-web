@@ -30,7 +30,7 @@ export default function AgendaSession({
 
     const classColorRGB = (dark: boolean) =>
         userSession?.classData
-            ? `rgb(${hexWithOpacityToRgb(userSession?.classData.activity.color, 0.6, dark ? 0 : 255).join(",")})`
+            ? hexWithOpacityToRgb(userSession?.classData.activity.color, 0.6, dark ? 0 : 255)
             : "#111";
 
     const displayName = userSession?.classData.activity.name ?? classConfig!.displayName;

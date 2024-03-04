@@ -11,13 +11,15 @@ import { isClassInThePast } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
-import { randomElementFromArray } from "@/lib/utils/arrayUtils";
+import { randomElementFromArray, userNameWithIsSelfComparator } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { shortenMiddleNames } from "@/lib/utils/textUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
 import { ChainIdentifier, RezervoClass, RezervoInstructor } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
+
+const AVATAR_SIZE = 24;
 
 const ClassCard = ({
     chain,
@@ -38,7 +40,7 @@ const ClassCard = ({
 }) => {
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex(chain);
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
-    const userSessions = userSessionsIndex?.[_class.id] ?? [];
+    const userSessions = userSessionsIndex?.[_class.id]?.sort(userNameWithIsSelfComparator) ?? [];
     const { allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
@@ -66,14 +68,15 @@ const ClassCard = ({
         return formattedNames + (instructors.length > namesToShow ? `, +${instructors.length - namesToShow}` : "");
     }
 
-    const classColorRGB = (dark: boolean) =>
-        `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
+    const classColorRGB = (dark: boolean) => hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255);
 
     const isInThePast = isClassInThePast(_class);
 
     const showSelected = !isInThePast && !_class.isCancelled && selected;
 
-    const usersPlanned = configUsers.filter(({ userName }) => !userSessions.map((u) => u.userName).includes(userName));
+    const usersPlanned = configUsers
+        .filter(({ userName }) => !userSessions.map((u) => u.userName).includes(userName))
+        .sort(userNameWithIsSelfComparator);
 
     const showScheduleAction = !isInThePast && selectable && !_class.isCancelled;
     const showUsersPlanned = userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0);
@@ -81,9 +84,9 @@ const ClassCard = ({
     return (
         <Card
             sx={{
-                background: `rgb(${hexWithOpacityToRgb("#ffffff", isInThePast ? 0.6 : 1, 255).join(",")})`,
+                background: hexWithOpacityToRgb("#ffffff", isInThePast ? 0.6 : 1, 255),
                 '[data-mui-color-scheme="dark"] &': {
-                    background: `rgb(${hexWithOpacityToRgb("#191919", isInThePast ? 0.6 : 1, 0).join(",")})`,
+                    background: hexWithOpacityToRgb("#191919", isInThePast ? 0.6 : 1, 0),
                 },
             }}
         >
@@ -160,8 +163,8 @@ const ClassCard = ({
                                         justifyContent: "start",
                                         marginLeft: "auto",
                                         "& .MuiAvatar-root": {
-                                            width: 24,
-                                            height: 24,
+                                            width: AVATAR_SIZE,
+                                            height: AVATAR_SIZE,
                                             fontSize: 12,
                                             borderColor: "white",
                                             '[data-mui-color-scheme="dark"] &': {
@@ -172,10 +175,12 @@ const ClassCard = ({
                                 >
                                     {!isInThePast &&
                                         usersPlanned.length > 0 &&
-                                        usersPlanned.map(({ userName }) => (
+                                        usersPlanned.map(({ userId, userName }) => (
                                             <ClassUserAvatar
-                                                key={userName}
+                                                key={userId}
+                                                userId={userId}
                                                 username={userName}
+                                                size={AVATAR_SIZE}
                                                 badgeIcon={
                                                     _class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined
                                                 }
@@ -183,10 +188,12 @@ const ClassCard = ({
                                             />
                                         ))}
                                     {userSessions.length > 0 &&
-                                        userSessions.map(({ userName, status }) => (
-                                            <Box key={userName}>
+                                        userSessions.map(({ userId, userName, status }) => (
+                                            <Box key={userId}>
                                                 <ClassUserAvatar
+                                                    userId={userId}
                                                     username={userName}
+                                                    size={AVATAR_SIZE}
                                                     invisibleBadge={isInThePast}
                                                     badgeIcon={
                                                         status === SessionStatus.NOSHOW ? (

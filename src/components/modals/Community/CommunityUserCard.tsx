@@ -5,8 +5,8 @@ import Button from "@mui/material/Button";
 import React, { useState } from "react";
 
 import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
+import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { avatarColor } from "@/lib/utils/colorUtils";
 import { ChainProfile } from "@/types/chain";
 import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
 
@@ -141,21 +141,16 @@ const CommunityUserCard = ({
                     }}
                 >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
-                        <Avatar
-                            alt={communityUser.name}
+                        <Box
                             sx={{
-                                backgroundColor: avatarColor(communityUser.name),
-                                '[data-mui-color-scheme="dark"] &': {
-                                    backgroundColor: avatarColor(communityUser.name, true),
-                                },
-                                width: 36,
-                                height: 36,
-                                fontSize: 18,
                                 mr: 1.5,
+                                "& .MuiAvatar-root": {
+                                    fontSize: 18,
+                                },
                             }}
                         >
-                            {communityUser.name[0]}
-                        </Avatar>
+                            <UserAvatar userId={communityUser.userId} username={communityUser.name} />
+                        </Box>
                         <Box>
                             <Typography variant={"subtitle2"} fontWeight={"bold"}>
                                 {communityUser.name}

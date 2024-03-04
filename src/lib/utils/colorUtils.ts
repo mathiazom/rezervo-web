@@ -1,9 +1,13 @@
-export function hexWithOpacityToRgb(hex: string, opacity: number, brightness: number) {
+function hexWithOpacityToRgbArray(hex: string, opacity: number, brightness: number) {
     return hex.match(/[\da-f]{2}/gi)?.map((c) => opacity * parseInt(c, 16) + (1 - opacity) * brightness) ?? [0, 0, 0];
 }
 
+export function hexWithOpacityToRgb(hex: string, opacity: number, brightness: number) {
+    return `rgb(${hexWithOpacityToRgbArray(hex, opacity, brightness).join(",")})`;
+}
+
 export function avatarColor(username: string, darkMode: boolean = false) {
-    return `rgb(${hexWithOpacityToRgb(hexColorHash(username), darkMode ? 0.85 : 1, darkMode ? 255 : 0).join(",")})`;
+    return hexWithOpacityToRgb(hexColorHash(username), darkMode ? 0.85 : 1, darkMode ? 255 : 0);
 }
 
 export function hexColorHash(s: string) {

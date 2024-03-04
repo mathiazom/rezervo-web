@@ -56,28 +56,20 @@ export default function ClassInfo({
     const { mutateUserSessions } = useUserSessions();
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
-    const color = (dark: boolean) =>
-        `rgb(${hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255).join(",")})`;
+    const color = (dark: boolean) => hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255);
 
     const isInThePast = isClassInThePast(_class);
 
     const usersBooked = userSessions.filter(
         ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED,
     );
-
-    const selfBooked = usersBooked.some((u) => u.isSelf);
-
     const usersOnWaitlist = userSessions.filter(({ status }) => status === SessionStatus.WAITLIST);
 
-    const selfOnWaitlist = usersOnWaitlist.some((u) => u.isSelf);
+    const selfBookedOrOnWaitlist = usersBooked.some((u) => u.isSelf) || usersOnWaitlist.some((u) => u.isSelf);
 
     const noShowUsers = userSessions.filter(({ status }) => status === SessionStatus.NOSHOW);
 
-    const selfNoShow = noShowUsers.some((u) => u.isSelf);
-
     const usersPlanned = configUsers.filter(({ userName }) => !userSessions.map((u) => u.userName).includes(userName));
-
-    const selfPlanned = usersPlanned.some((u) => u.isSelf);
 
     const classInUserConfig = userConfig?.recurringBookings
         ?.map(classConfigRecurrentId)
@@ -250,7 +242,6 @@ export default function ClassInfo({
                 <>
                     <ClassInfoUsersGroup
                         users={usersPlanned}
-                        includeSelf={selfPlanned}
                         badgeIcon={_class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined}
                         loading={userSessionsLoading}
                         text={
@@ -263,7 +254,6 @@ export default function ClassInfo({
                     />
                     <ClassInfoUsersGroup
                         users={usersOnWaitlist}
-                        includeSelf={selfOnWaitlist}
                         rippleColor={StatusColors.WAITLIST}
                         isCancelled={_class.isCancelled}
                         text={
@@ -276,7 +266,6 @@ export default function ClassInfo({
             )}
             <ClassInfoUsersGroup
                 users={usersBooked}
-                includeSelf={selfBooked}
                 rippleColor={StatusColors.ACTIVE}
                 invisibleBadges={isInThePast}
                 isCancelled={_class.isCancelled}
@@ -290,7 +279,6 @@ export default function ClassInfo({
             />
             <ClassInfoUsersGroup
                 users={noShowUsers}
-                includeSelf={selfNoShow}
                 badgeIcon={<NoShowBadgeIcon />}
                 text={"booket plass, men møtte ikke opp!"}
             />
@@ -343,7 +331,7 @@ export default function ClassInfo({
                 !isInThePast &&
                 !_class.isCancelled && (
                     <>
-                        {selfBooked || selfOnWaitlist ? (
+                        {selfBookedOrOnWaitlist ? (
                             <LoadingButton
                                 startIcon={<Clear />}
                                 sx={{ mt: 2, mr: 1 }}

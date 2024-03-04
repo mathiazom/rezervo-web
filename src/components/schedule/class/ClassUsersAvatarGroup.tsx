@@ -2,6 +2,9 @@ import { AvatarGroup } from "@mui/material";
 import React from "react";
 
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
+import { UserNameWithIsSelf } from "@/types/config";
+
+const AVATAR_SIZE = 24;
 
 export default function ClassUsersAvatarGroup({
     users,
@@ -10,7 +13,7 @@ export default function ClassUsersAvatarGroup({
     loading = false,
     invisibleBadges = false,
 }: {
-    users: string[];
+    users: UserNameWithIsSelf[];
     rippleColor?: string | undefined;
     badgeIcon?: React.ReactNode | undefined;
     loading?: boolean;
@@ -23,8 +26,8 @@ export default function ClassUsersAvatarGroup({
                 ml: 1,
                 justifyContent: "start",
                 "& .MuiAvatar-root": {
-                    width: 24,
-                    height: 24,
+                    width: AVATAR_SIZE,
+                    height: AVATAR_SIZE,
                     fontSize: 12,
                     borderColor: "white",
                     '[data-mui-color-scheme="dark"] &': {
@@ -33,10 +36,12 @@ export default function ClassUsersAvatarGroup({
                 },
             }}
         >
-            {users.map((username) => (
+            {users.map(({ userId, userName }) => (
                 <ClassUserAvatar
-                    key={username}
-                    username={username}
+                    key={userId}
+                    userId={userId}
+                    username={userName}
+                    size={AVATAR_SIZE}
                     rippleColor={rippleColor}
                     invisibleBadge={invisibleBadges}
                     badgeIcon={badgeIcon}

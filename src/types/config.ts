@@ -37,6 +37,7 @@ export type PreferencesPayload = Preferences;
 
 export type UserNameWithIsSelf = {
     isSelf: boolean;
+    userId: string;
     userName: string;
 };
 

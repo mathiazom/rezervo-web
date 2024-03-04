@@ -2,12 +2,11 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
-import { formatNameArray } from "@/lib/utils/arrayUtils";
+import { formatNameArray, userNameWithIsSelfComparator } from "@/lib/utils/arrayUtils";
 import { UserNameWithIsSelf } from "@/types/config";
 
 export default function ClassInfoUsersGroup({
     users,
-    includeSelf,
     text,
     isCancelled = false,
     invisibleBadges = false,
@@ -16,7 +15,6 @@ export default function ClassInfoUsersGroup({
     rippleColor,
 }: {
     users: UserNameWithIsSelf[];
-    includeSelf: boolean;
     text: string;
     isCancelled?: boolean;
     invisibleBadges?: boolean;
@@ -25,6 +23,8 @@ export default function ClassInfoUsersGroup({
     rippleColor?: string | undefined;
 }) {
     const cancelledOpacity = 0.5;
+
+    const sortedUsers = users.sort(userNameWithIsSelfComparator);
 
     return (
         users.length > 0 && (
@@ -38,7 +38,7 @@ export default function ClassInfoUsersGroup({
                 }}
             >
                 <ClassUsersAvatarGroup
-                    users={users.map((u) => u.userName)}
+                    users={sortedUsers}
                     rippleColor={rippleColor}
                     invisibleBadges={invisibleBadges}
                     badgeIcon={badgeIcon}
@@ -48,9 +48,9 @@ export default function ClassInfoUsersGroup({
                     {loading
                         ? "henter bookingstatus ..."
                         : `${formatNameArray(
-                              users.filter((u) => !u.isSelf).map((u) => u.userName),
+                              sortedUsers.filter((u) => !u.isSelf).map((u) => u.userName),
                               4,
-                              includeSelf,
+                              sortedUsers.some((u) => u.isSelf),
                           )} ${text}`}
                 </Typography>
             </Box>

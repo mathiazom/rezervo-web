@@ -6,6 +6,7 @@ import AgendaModal from "@/components/modals/Agenda/AgendaModal";
 import BookingPopupModal from "@/components/modals/BookingPopupModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
 import CommunityModal from "@/components/modals/Community/CommunityModal";
+import ProfileModal from "@/components/modals/Profile/ProfileModal";
 import SettingsModal from "@/components/modals/Settings/SettingsModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
@@ -66,6 +67,7 @@ function Chain({
     const [isCommunityOpen, setIsCommunityOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isAgendaOpen, setIsAgendaOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
@@ -199,6 +201,7 @@ function Chain({
                                 onCommunityOpen={() => setIsCommunityOpen(true)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
+                                onProfileOpen={() => setIsProfileOpen(true)}
                             />
                         }
                     />
@@ -263,6 +266,7 @@ function Chain({
                     chainConfigs={userChainConfigs}
                 />
             )}
+            <ProfileModal open={isProfileOpen} setOpen={setIsProfileOpen} />
             {bookingPopupState && (
                 <BookingPopupModal
                     onClose={() => setBookingPopupState(null)}

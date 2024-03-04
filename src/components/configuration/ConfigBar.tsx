@@ -5,13 +5,14 @@ import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import { Avatar, Badge, Box, Tooltip, useTheme } from "@mui/material";
+import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useMemo } from "react";
 
+import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { avatarColor } from "@/lib/utils/colorUtils";
+import { useMyUserId } from "@/stores/userStore";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
@@ -25,6 +26,7 @@ function ConfigBar({
     onCommunityOpen,
     onSettingsOpen,
     onAgendaOpen,
+    onProfileOpen,
 }: {
     chainConfigs: Record<ChainIdentifier, ChainConfig> | null;
     userSessions: BaseUserSession[] | null;
@@ -33,9 +35,11 @@ function ConfigBar({
     onCommunityOpen: () => void;
     onSettingsOpen: () => void;
     onAgendaOpen: () => void;
+    onProfileOpen: () => void;
 }) {
     const theme = useTheme();
     const { user, isLoading } = useUser();
+    const setMyUserId = useMyUserId((state) => state.setUserId);
     const { community } = useCommunity();
     const friendRequestCount =
         community?.users.filter((cu) => cu.relationship === UserRelationship.REQUEST_RECEIVED).length ?? 0;
@@ -47,10 +51,14 @@ function ConfigBar({
     }, [chainConfigs]);
 
     useEffect(() => {
+        if (user == undefined) return;
         fetch("/api/user", {
             method: "PUT",
+        }).then(async (res) => {
+            if (!res.ok) return;
+            setMyUserId(await res.json());
         });
-    }, []);
+    }, [user, setMyUserId]);
 
     return (
         !isLoading && (
@@ -154,19 +162,11 @@ function ConfigBar({
                         )}
                         {user.name && (
                             <Tooltip title={user.name}>
-                                <Avatar
-                                    sx={{
-                                        width: 32,
-                                        height: 32,
-                                        fontSize: 18,
-                                        backgroundColor: avatarColor(user.name),
-                                        '[data-mui-color-scheme="dark"] &': {
-                                            backgroundColor: avatarColor(user.name, true),
-                                        },
-                                    }}
-                                >
-                                    {user.name[0]}
-                                </Avatar>
+                                <Box sx={{ position: "relative" }}>
+                                    <Box onClick={() => onProfileOpen()}>
+                                        <UserAvatar userId={"me"} username={user.name} />
+                                    </Box>
+                                </Box>
                             </Tooltip>
                         )}
                         <Tooltip title={"Logg ut"}>

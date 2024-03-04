@@ -46,6 +46,7 @@ function ConfirmCancellation({
                     <Typography>
                         Du er i ferd med å avbestille <b>{classDescription}</b>.
                     </Typography>
+                    <br />
                     <Typography>Dette kan ikke angres!</Typography>
                 </>
             }

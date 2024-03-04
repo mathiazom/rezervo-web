@@ -5,6 +5,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { ChainIdentifier } from "@/types/chain";
 
+export function isUserMeFromContext(context: AppRouteHandlerFnContext): boolean {
+    return userIdFromContext(context) === "me";
+}
+
+export function userIdFromContext(context: AppRouteHandlerFnContext): string | null {
+    const userIdArg = context.params["userId"];
+    return (typeof userIdArg !== "string" ? userIdArg?.pop() : userIdArg) as string;
+}
+
+export function thumbnailSizeFromContext(context: AppRouteHandlerFnContext): string | null {
+    const sizeArg = context.params["size"];
+    return (typeof sizeArg !== "string" ? sizeArg?.pop() : sizeArg) as string;
+}
+
 export function chainIdentifierFromContext(context: AppRouteHandlerFnContext): ChainIdentifier | null {
     const chainArg = context.params["chain"];
     return (typeof chainArg !== "string" ? chainArg?.pop() : chainArg) as ChainIdentifier;
@@ -57,7 +71,6 @@ export function get(path: string, accessToken: string): Promise<Response> {
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
-        cache: "no-store",
     });
 }
 
@@ -66,11 +79,12 @@ export function put(path: string, accessToken: string, body?: BodyInit): Promise
         method: "PUT",
         headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
         },
     };
     if (body) {
         requestInit.body = body;
+        // @ts-expect-error - TS doesn't know about this header
+        requestInit.headers["Content-Type"] = "application/json";
     }
     return fetch(buildBackendPath(path), requestInit);
 }
@@ -80,11 +94,12 @@ export function post(path: string, accessToken: string, body?: BodyInit): Promis
         method: "POST",
         headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
         },
     };
     if (body) {
         requestInit.body = body;
+        // @ts-expect-error - TS doesn't know about this header
+        requestInit.headers["Content-Type"] = "application/json";
     }
     return fetch(buildBackendPath(path), requestInit);
 }
@@ -93,11 +108,12 @@ export function destroy(path: string, accessToken: string, body?: BodyInit): Pro
         method: "DELETE",
         headers: {
             Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
         },
     };
     if (body) {
         requestInit.body = body;
+        // @ts-expect-error - TS doesn't know about this header
+        requestInit.headers["Content-Type"] = "application/json";
     }
     return fetch(buildBackendPath(path), requestInit);
 }
