@@ -1,7 +1,7 @@
 {
     "name": "rezervo",
     "short_name": "rezervo",
-    "description": "Automatic booking of group classes",
+    "description": "Automatisk booking av gruppetimer",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
