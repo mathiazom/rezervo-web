@@ -65,21 +65,19 @@ export default function ClassInfo({
         ({ status }) => status === SessionStatus.CONFIRMED || status === SessionStatus.BOOKED,
     );
 
-    const selfBooked = usersBooked.some((u) => u.is_self);
+    const selfBooked = usersBooked.some((u) => u.isSelf);
 
     const usersOnWaitlist = userSessions.filter(({ status }) => status === SessionStatus.WAITLIST);
 
-    const selfOnWaitlist = usersOnWaitlist.some((u) => u.is_self);
+    const selfOnWaitlist = usersOnWaitlist.some((u) => u.isSelf);
 
     const noShowUsers = userSessions.filter(({ status }) => status === SessionStatus.NOSHOW);
 
-    const selfNoShow = noShowUsers.some((u) => u.is_self);
+    const selfNoShow = noShowUsers.some((u) => u.isSelf);
 
-    const usersPlanned = configUsers.filter(
-        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
-    );
+    const usersPlanned = configUsers.filter(({ userName }) => !userSessions.map((u) => u.userName).includes(userName));
 
-    const selfPlanned = usersPlanned.some((u) => u.is_self);
+    const selfPlanned = usersPlanned.some((u) => u.isSelf);
 
     const classInUserConfig = userConfig?.recurringBookings
         ?.map(classConfigRecurrentId)
@@ -93,7 +91,7 @@ export default function ClassInfo({
         setBookingLoading(true);
         await fetch(`/api/${chain}/book`, {
             method: "POST",
-            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
+            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
         await mutateUserSessions();

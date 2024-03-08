@@ -26,5 +26,5 @@ export type UserSessionsIndex = {
 export type BaseUserSession = {
     chain: ChainIdentifier;
     status: SessionStatus;
-    class_data: RezervoClass;
+    classData: RezervoClass;
 };

@@ -26,7 +26,7 @@ export type ChainUserPayload = ChainUser & {
 };
 
 export type NotificationsConfig = {
-    reminder_hours_before: number | null;
+    reminderHoursBefore: number | null;
 };
 
 export type Preferences = {
@@ -36,8 +36,8 @@ export type Preferences = {
 export type PreferencesPayload = Preferences;
 
 export type UserNameWithIsSelf = {
-    is_self: boolean;
-    user_name: string;
+    isSelf: boolean;
+    userName: string;
 };
 
 export type AllConfigsIndex = {

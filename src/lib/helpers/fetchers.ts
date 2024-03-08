@@ -99,7 +99,7 @@ export async function fetchActiveChains(): Promise<RezervoChain[]> {
 }
 
 export async function fetchRezervoWeekSchedule(
-    chain_identifier: string,
+    chainIdentifier: string,
     weekOffset: number,
     locationIdentifiers: string[],
 ): Promise<RezervoWeekSchedule> {
@@ -107,7 +107,7 @@ export async function fetchRezervoWeekSchedule(
         locationIds: locationIdentifiers,
         ...(await (
             await fetch(
-                `${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/schedule/${chain_identifier}/${weekOffset}${
+                `${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/schedule/${chainIdentifier}/${weekOffset}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
             )

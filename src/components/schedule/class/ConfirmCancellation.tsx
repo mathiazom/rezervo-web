@@ -26,7 +26,7 @@ function ConfirmCancellation({
         setLoading(true);
         await fetch(`/api/${chain}/cancel-booking`, {
             method: "POST",
-            body: JSON.stringify({ class_id: _class.id.toString() }, null, 2),
+            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
         });
         await mutateSessionsIndex();
         await mutateUserSessions();

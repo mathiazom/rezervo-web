@@ -48,6 +48,6 @@ export function deserializeSchedule(scheduleDTO: RezervoScheduleDTO): RezervoSch
 export function deserializeUserSessions(userSessionsDTO: BaseUserSessionDTO[]): BaseUserSession[] {
     return userSessionsDTO.map((userSessionDTO) => ({
         ...userSessionDTO,
-        class_data: deserializeClass(userSessionDTO.class_data),
+        classData: deserializeClass(userSessionDTO.classData),
     }));
 }

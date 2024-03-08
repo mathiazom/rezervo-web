@@ -38,7 +38,7 @@ export default function ClassInfoUsersGroup({
                 }}
             >
                 <ClassUsersAvatarGroup
-                    users={users.map((u) => u.user_name)}
+                    users={users.map((u) => u.userName)}
                     rippleColor={rippleColor}
                     invisibleBadges={invisibleBadges}
                     badgeIcon={badgeIcon}
@@ -48,7 +48,7 @@ export default function ClassInfoUsersGroup({
                     {loading
                         ? "henter bookingstatus ..."
                         : `${formatNameArray(
-                              users.filter((u) => !u.is_self).map((u) => u.user_name),
+                              users.filter((u) => !u.isSelf).map((u) => u.userName),
                               4,
                               includeSelf,
                           )} ${text}`}

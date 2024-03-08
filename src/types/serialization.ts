@@ -39,5 +39,5 @@ export type IndexPageProps = {
 export type BaseUserSessionDTO = {
     chain: ChainIdentifier;
     status: SessionStatus;
-    class_data: RezervoClassDTO;
+    classData: RezervoClassDTO;
 };

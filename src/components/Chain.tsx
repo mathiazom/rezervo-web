@@ -124,7 +124,7 @@ function Chain({
         if (selectedClass?.isBookable) {
             const isBooked =
                 userSessionsIndex?.[selectedClass.id]?.some(
-                    (userSession) => userSession.is_self && userSession.status === SessionStatus.BOOKED,
+                    (userSession) => userSession.isSelf && userSession.status === SessionStatus.BOOKED,
                 ) ?? false;
             if (selected && !isBooked) {
                 setBookingPopupState({

@@ -59,7 +59,7 @@ export default function Settings({
 }) {
     const { preferences, putPreferences } = usePreferences();
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
-    const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminder_hours_before != null);
+    const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminderHoursBefore != null);
     const [reminderHoursBefore, setReminderHoursBefore] = useState<number | null>(null);
     const [reminderTimeBeforeInput, setReminderTimeBeforeInput] = useState<string | null>(null);
     const [reminderTimeBeforeInputUnit, setReminderTimeBeforeInputUnit] = useState<ReminderTimeBeforeInputUnit | null>(
@@ -75,7 +75,7 @@ export default function Settings({
         }
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
-            reminder_hours_before: active ? reminderHoursBefore ?? DEFAULT_REMINDER_HOURS : null,
+            reminderHoursBefore: active ? reminderHoursBefore ?? DEFAULT_REMINDER_HOURS : null,
         });
     }
 
@@ -127,7 +127,7 @@ export default function Settings({
         );
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
-            reminder_hours_before: reminderActive ? newReminderHoursBefore : null,
+            reminderHoursBefore: reminderActive ? newReminderHoursBefore : null,
         });
     }
 
@@ -141,7 +141,7 @@ export default function Settings({
 
     useEffect(
         () => {
-            const newReminderHoursBefore = preferences?.notifications?.reminder_hours_before;
+            const newReminderHoursBefore = preferences?.notifications?.reminderHoursBefore;
             if (newReminderHoursBefore == null) {
                 setReminderActive(false);
                 return;
@@ -162,7 +162,7 @@ export default function Settings({
             );
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [preferences?.notifications?.reminder_hours_before],
+        [preferences?.notifications?.reminderHoursBefore],
     );
 
     return (
@@ -197,7 +197,7 @@ export default function Settings({
                 <PushNotifications />
                 <FormGroup>
                     <Divider orientation="horizontal" />
-                    {features && features.class_reminder_notifications && (
+                    {features && features.classReminderNotifications && (
                         <>
                             <FormGroup sx={{ py: 2 }}>
                                 <FormLabel>

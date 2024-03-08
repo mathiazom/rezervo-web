@@ -73,9 +73,7 @@ const ClassCard = ({
 
     const showSelected = !isInThePast && !_class.isCancelled && selected;
 
-    const usersPlanned = configUsers.filter(
-        ({ user_name }) => !userSessions.map((u) => u.user_name).includes(user_name),
-    );
+    const usersPlanned = configUsers.filter(({ userName }) => !userSessions.map((u) => u.userName).includes(userName));
 
     const showScheduleAction = !isInThePast && selectable && !_class.isCancelled;
     const showUsersPlanned = userSessions.length > 0 || (!isInThePast && usersPlanned.length > 0);
@@ -174,10 +172,10 @@ const ClassCard = ({
                                 >
                                     {!isInThePast &&
                                         usersPlanned.length > 0 &&
-                                        usersPlanned.map(({ user_name }) => (
+                                        usersPlanned.map(({ userName }) => (
                                             <ClassUserAvatar
-                                                key={user_name}
-                                                username={user_name}
+                                                key={userName}
+                                                username={userName}
                                                 badgeIcon={
                                                     _class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined
                                                 }
@@ -185,10 +183,10 @@ const ClassCard = ({
                                             />
                                         ))}
                                     {userSessions.length > 0 &&
-                                        userSessions.map(({ user_name, status }) => (
-                                            <Box key={user_name}>
+                                        userSessions.map(({ userName, status }) => (
+                                            <Box key={userName}>
                                                 <ClassUserAvatar
-                                                    username={user_name}
+                                                    username={userName}
                                                     invisibleBadge={isInThePast}
                                                     badgeIcon={
                                                         status === SessionStatus.NOSHOW ? (

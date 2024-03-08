@@ -13,7 +13,7 @@ import { SessionStatus, BaseUserSession } from "@/types/userSessions";
 
 function mapClassesByStartTime(classes: BaseUserSession[]): Record<string, BaseUserSession[]> {
     return classes.reduce<Record<string, BaseUserSession[]>>((acc, next) => {
-        const prettyStartTime = capitalizeFirstCharacter(next.class_data.startTime.toFormat("cccc d. LLLL") ?? "");
+        const prettyStartTime = capitalizeFirstCharacter(next.classData.startTime.toFormat("cccc d. LLLL") ?? "");
         return {
             ...acc,
             [prettyStartTime]: [...(acc[prettyStartTime] ?? []), next],
@@ -38,7 +38,7 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
                         {prettyDate}
                     </Typography>
                     {dayMap[prettyDate]!.map((userSession) => (
-                        <Box key={userSession.class_data.id} py={0.5}>
+                        <Box key={userSession.classData.id} py={0.5}>
                             <AgendaEntry userSession={userSession} chain={userSession.chain} />
                         </Box>
                     ))}
@@ -52,7 +52,7 @@ function searchForGhosts(
     userSessions: BaseUserSession[],
     chainConfigs: Record<ChainIdentifier, ChainConfig>,
 ): Record<ChainIdentifier, ClassConfig[]> {
-    const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.class_data));
+    const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.classData));
     return Object.entries(chainConfigs).reduce<Record<ChainIdentifier, ClassConfig[]>>(
         (acc, [chainIdentifier, config]) => {
             if (!config.active) {
