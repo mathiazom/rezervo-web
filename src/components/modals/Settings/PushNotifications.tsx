@@ -23,6 +23,11 @@ const PushNotifications = () => {
     }
 
     useEffect(() => {
+        if (navigator.serviceWorker === undefined) {
+            // not available (e.g. outside Secure Context)
+            setSubscriptionIsLoading(false);
+            return;
+        }
         navigator.serviceWorker.ready.then((reg) => {
             setRegistration(reg);
             if (!reg.pushManager) {
