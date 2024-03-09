@@ -17,6 +17,11 @@ export async function tryUseRefreshToken(req: NextRequest): Promise<string | und
     return accessToken;
 }
 
+export function buildBackendPath(path: string): string {
+    const host = process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
+    return `${host}/${path}`;
+}
+
 export function respondUnauthorized(): Response {
     return Response.json("Not authenticated", { status: constants.HTTP_STATUS_UNAUTHORIZED });
 }
@@ -47,7 +52,7 @@ export async function doOperation(operation: () => Promise<Response>): Promise<R
 }
 
 export function get(path: string, accessToken: string): Promise<Response> {
-    return fetch(path, {
+    return fetch(buildBackendPath(path), {
         method: "GET",
         headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -67,7 +72,7 @@ export function put(path: string, accessToken: string, body?: BodyInit): Promise
     if (body) {
         requestInit.body = body;
     }
-    return fetch(path, requestInit);
+    return fetch(buildBackendPath(path), requestInit);
 }
 
 export function post(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
@@ -81,7 +86,7 @@ export function post(path: string, accessToken: string, body?: BodyInit): Promis
     if (body) {
         requestInit.body = body;
     }
-    return fetch(path, requestInit);
+    return fetch(buildBackendPath(path), requestInit);
 }
 export function destroy(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
     const requestInit: RequestInit = {
@@ -94,5 +99,5 @@ export function destroy(path: string, accessToken: string, body?: BodyInit): Pro
     if (body) {
         requestInit.body = body;
     }
-    return fetch(path, requestInit);
+    return fetch(buildBackendPath(path), requestInit);
 }

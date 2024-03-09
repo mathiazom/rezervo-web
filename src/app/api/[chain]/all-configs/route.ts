@@ -16,7 +16,5 @@ export const GET = withApiAuthRequired(async (req, ctx) => {
     const chainIdentifier = chainIdentifierFromContext(ctx as AppRouteHandlerFnContext);
     if (chainIdentifier === null) return respondNotFound();
 
-    return await doOperation(() =>
-        get(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainIdentifier}/all-configs`, accessToken),
-    );
+    return await doOperation(() => get(`${chainIdentifier}/all-configs`, accessToken));
 });

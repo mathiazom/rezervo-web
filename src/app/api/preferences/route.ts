@@ -6,12 +6,12 @@ export const GET = withApiAuthRequired(async (req) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
 
-    return await doOperation(() => get(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/preferences`, accessToken));
+    return await doOperation(() => get(`preferences`, accessToken));
 });
 
 export const PUT = withApiAuthRequired(async (req) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
     const data = await req.text();
-    return await doOperation(() => put(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/preferences`, accessToken, data));
+    return await doOperation(() => put(`preferences`, accessToken, data));
 });

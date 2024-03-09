@@ -7,7 +7,5 @@ export const PUT = withApiAuthRequired(async (req) => {
     if (!accessToken) return respondUnauthorized();
 
     const data = await req.text();
-    return await doOperation(() =>
-        put(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/community/relationship`, accessToken, data),
-    );
+    return await doOperation(() => put(`community/relationship`, accessToken, data));
 });

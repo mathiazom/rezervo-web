@@ -6,5 +6,5 @@ export const PUT = withApiAuthRequired(async (req) => {
     const accessToken = await tryUseRefreshToken(req);
     if (!accessToken) return respondUnauthorized();
 
-    return await doOperation(() => put(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/user`, accessToken));
+    return await doOperation(() => put(`user`, accessToken));
 });

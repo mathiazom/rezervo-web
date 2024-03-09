@@ -7,9 +7,7 @@ export const PUT = withApiAuthRequired(async (req) => {
     if (!accessToken) return respondUnauthorized();
 
     const data = await req.text();
-    return await doOperation(() =>
-        put(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/notifications/push`, accessToken, data),
-    );
+    return await doOperation(() => put(`notifications/push`, accessToken, data));
 });
 
 export const DELETE = withApiAuthRequired(async (req) => {
@@ -17,7 +15,5 @@ export const DELETE = withApiAuthRequired(async (req) => {
     if (!accessToken) return respondUnauthorized();
 
     const data = await req.text();
-    return await doOperation(() =>
-        destroy(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/notifications/push`, accessToken, data),
-    );
+    return await doOperation(() => destroy(`notifications/push`, accessToken, data));
 });
