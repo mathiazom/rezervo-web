@@ -1,6 +1,6 @@
 import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
-import { Tooltip } from "@mui/material";
+import { Theme, Tooltip, useTheme } from "@mui/material";
 import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
@@ -10,14 +10,20 @@ import { RezervoClass } from "@/types/chain";
 import { ClassPopularity } from "@/types/popularity";
 import { StatusColors } from "@/types/userSessions";
 
-const ClassPopularityIcon = ({ popularity }: { popularity: ClassPopularity }) => {
+export const getClassPopularityColors = (theme: Theme): Record<ClassPopularity, string> => ({
+    [ClassPopularity.High]: theme.palette.error.main,
+    [ClassPopularity.Medium]: theme.palette.warning.main,
+    [ClassPopularity.Low]: theme.palette.primary.main,
+    [ClassPopularity.Unknown]: theme.palette.grey.A700,
+});
+
+export const ClassPopularityIcon = ({ popularity, withColor }: { popularity: ClassPopularity; withColor: boolean }) => {
+    const theme = useTheme();
     switch (popularity) {
         case ClassPopularity.High:
-            return <SpeedRoundedIcon style={{ color: "red" }} />;
         case ClassPopularity.Medium:
-            return <SpeedRoundedIcon style={{ color: "orange" }} />;
         case ClassPopularity.Low:
-            return <SpeedRoundedIcon style={{ color: "green" }} />;
+            return <SpeedRoundedIcon sx={{ color: withColor ? getClassPopularityColors(theme)[popularity] : "" }} />;
         default:
             return <QuestionMarkRoundedIcon fontSize={"small"} />;
     }
@@ -33,7 +39,7 @@ const ClassPopularityMeter = ({
     const popularity =
         isClassInThePast(_class) || _class.isBookable ? determineClassPopularity(_class) : historicPopularity;
 
-    const popularityIcon = <ClassPopularityIcon popularity={popularity} />;
+    const popularityIcon = <ClassPopularityIcon popularity={popularity} withColor={true} />;
 
     if (_class.isBookable) {
         return (

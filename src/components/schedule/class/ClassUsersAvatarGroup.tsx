@@ -26,10 +26,7 @@ export default function ClassUsersAvatarGroup({
                     width: 24,
                     height: 24,
                     fontSize: 12,
-                    borderColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
-                        borderColor: "#191919",
-                    },
+                    border: "none",
                 },
             }}
         >
