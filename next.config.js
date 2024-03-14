@@ -1,9 +1,10 @@
-const withPWA = require("@ducanh2912/next-pwa").default({
-    customWorkerSrc: "src/serviceworker",
+const withSerwist = require("@serwist/next").default({
+    swSrc: "src/serviceworker/index.ts",
+    swDest: "public/sw.js",
 });
 
 /** @type {import('next').NextConfig} */
-const nextConfig = withPWA({
+const nextConfig = withSerwist({
     reactStrictMode: true,
     staticPageGenerationTimeout: 120,
     output: process.env.BUILD_STANDALONE === "true" ? "standalone" : undefined,

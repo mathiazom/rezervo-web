@@ -29,6 +29,7 @@
                 "name": "next"
             }
         ],
+        "types": ["@serwist/next/typings"],
         "paths": {
             "@/*": ["./src/*"]
         }
