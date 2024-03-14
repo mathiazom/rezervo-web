@@ -3,7 +3,6 @@ import { CalendarMonth, CalendarToday, PauseCircleRounded, People } from "@mui/i
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import LoginIcon from "@mui/icons-material/Login";
-import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -169,11 +168,6 @@ function ConfigBar({
                                 </Box>
                             </Tooltip>
                         )}
-                        <Tooltip title={"Logg ut"}>
-                            <IconButton href={"/api/auth/logout"}>
-                                <LogoutRoundedIcon />
-                            </IconButton>
-                        </Tooltip>
                     </Box>
                 )}
             </>

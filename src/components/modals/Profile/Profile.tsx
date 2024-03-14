@@ -1,6 +1,8 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { PersonRounded } from "@mui/icons-material";
-import { Box, Typography, useTheme } from "@mui/material";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
+import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
@@ -241,6 +243,11 @@ function Profile({
                                 pointerEvents: "none",
                             }}
                         />
+                        <Stack direction={"row"} justifyContent={"center"}>
+                            <Button color={"error"} startIcon={<LogoutRoundedIcon />} href={"/api/auth/logout"}>
+                                Logg ut
+                            </Button>
+                        </Stack>
                     </Box>
                     <EditAvatarDialog
                         open={editAvatarDialogOpen}
