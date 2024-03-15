@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
+import PWAInstall from "@/components/utils/PWAInstall";
 import { fetchActiveChains } from "@/lib/helpers/fetchers";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { ChainIdentifier } from "@/types/chain";
@@ -46,6 +47,11 @@ const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
     return (
         <>
             <PageHead title={"rezervo"} />
+            <PWAInstall
+                install-description={
+                    "Denne nettsiden har app-funksjonalitet. Legg den til på hjemskjermen for å få enklere tilgang og muligheten til å aktivere push-varsler for booking."
+                }
+            />
             <Box
                 sx={{
                     display: "flex",

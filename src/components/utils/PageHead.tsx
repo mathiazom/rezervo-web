@@ -22,12 +22,12 @@ const PageHead = ({ title }: { title: string }) => {
             <meta name="apple-mobile-web-app-capable" content="yes" />
             <meta name="apple-mobile-web-app-status-bar-style" content="default" />
             <meta name="apple-mobile-web-app-title" content="rezervo" />
-            <meta name="description" content="Automatic booking of group classes" />
+            <meta name="description" content="Automatisk booking av gruppetimer" />
             <meta name="format-detection" content="telephone=no" />
             <meta name="mobile-web-app-capable" content="yes" />
             <meta property="og:type" content="website" />
             <meta property="og:title" content="rezervo" />
-            <meta property="og:description" content="Automatic booking of group classes" />
+            <meta property="og:description" content="Automatisk booking av gruppetimer" />
             <meta property="og:site_name" content="rezervo" />
             <meta property="og:url" content="https://rezervo.no" />
             <meta property="og:image" content="https://rezervo.no/apple-touch-icon.png" />
