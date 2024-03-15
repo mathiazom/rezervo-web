@@ -10,6 +10,7 @@ const ProfileModal = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<SetS
 
     return (
         <Dropzone
+            noClick={true}
             onDragEnter={() => setIsDraggingOverBackdrop(true)}
             onDragLeave={() => setIsDraggingOverBackdrop(false)}
             onDrop={() => setIsDraggingOverBackdrop(false)}

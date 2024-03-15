@@ -121,6 +121,7 @@ function Profile({
 
     return (
         <Dropzone
+            noClick={true}
             onDragEnter={() => setIsDraggingOverDialog(true)}
             onDragLeave={() => setIsDraggingOverDialog(false)}
             onDrop={() => setIsDraggingOverDialog(false)}
