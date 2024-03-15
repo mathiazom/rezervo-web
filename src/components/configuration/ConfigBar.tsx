@@ -72,6 +72,7 @@ function ConfigBar({
                             display: "flex",
                             alignItems: "center",
                             gap: { xs: 1, md: 1.5 },
+                            marginRight: 1,
                         }}
                     >
                         {isConfigError ? (

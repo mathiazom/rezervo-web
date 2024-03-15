@@ -243,8 +243,13 @@ function Profile({
                                 pointerEvents: "none",
                             }}
                         />
-                        <Stack direction={"row"} justifyContent={"center"}>
-                            <Button color={"error"} startIcon={<LogoutRoundedIcon />} href={"/api/auth/logout"}>
+                        <Stack alignItems={"center"} mt={2}>
+                            <Button
+                                variant={"outlined"}
+                                color={"error"}
+                                startIcon={<LogoutRoundedIcon />}
+                                href={"/api/auth/logout"}
+                            >
                                 Logg ut
                             </Button>
                         </Stack>
