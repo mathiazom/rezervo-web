@@ -38,7 +38,9 @@ const ClassPopularityMeter = ({
     if (_class.isBookable) {
         return (
             <Tooltip
-                title={"Påmelding for denne timen har åpnet. " + stringifyClassPopularity(_class, historicPopularity)}
+                title={
+                    "Påmelding for denne timen har åpnet. " + stringifyClassPopularity(_class, historicPopularity) ?? ""
+                }
             >
                 <RippleBadge
                     invisible={isClassInThePast(_class)}
