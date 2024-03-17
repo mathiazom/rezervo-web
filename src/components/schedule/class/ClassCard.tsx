@@ -226,7 +226,9 @@ const ClassCard = ({
                                 </Badge>
                             </Tooltip>
                         ) : (
-                            <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
+                            (_class.totalSlots !== null || (_class.isBookable && _class.waitingListCount !== null)) && (
+                                <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
+                            )
                         )}
                         {showScheduleAction && (
                             <Tooltip
@@ -246,6 +248,7 @@ const ClassCard = ({
                                     }}
                                     size={"small"}
                                     sx={{
+                                        marginTop: "auto",
                                         padding: 0,
                                         height: 28, // to avoid jumping when avatars are displayed
                                     }}

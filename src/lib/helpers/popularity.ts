@@ -4,7 +4,15 @@ import { RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 export function determineClassPopularity(_class: RezervoClass) {
-    if (!_class || _class.availableSlots === undefined) return ClassPopularity.Unknown;
+    if (!_class || _class.availableSlots === null || _class.totalSlots === null) {
+        if (_class.waitingListCount != null) {
+            if (_class.waitingListCount == 0) {
+                return ClassPopularity.Low;
+            }
+            return ClassPopularity.High;
+        }
+        return ClassPopularity.Unknown;
+    }
     if (_class.availableSlots <= 0) return ClassPopularity.High;
     if (_class.availableSlots / _class.totalSlots <= 0.2) return ClassPopularity.Medium;
     return ClassPopularity.Low;
@@ -23,9 +31,12 @@ export function createClassPopularityIndex(previousWeekSchedule: RezervoWeekSche
         );
 }
 
-export function stringifyClassPopularity(_class: RezervoClass, historicPopularity: ClassPopularity): string {
+export function stringifyClassPopularity(_class: RezervoClass, historicPopularity: ClassPopularity): string | null {
     let classPopularityInfo: string;
     const isInThePast = isClassInThePast(_class);
+    if (_class.availableSlots === null || _class.totalSlots === null) {
+        return null;
+    }
     const numberOfAttendees = _class.totalSlots - Math.max(_class.availableSlots, 0);
 
     if (isInThePast) {
@@ -40,4 +51,8 @@ export function stringifyClassPopularity(_class: RezervoClass, historicPopularit
         classPopularityInfo += ` | ${_class.waitingListCount} ${isInThePast ? "fikk ikke plass" : "er på venteliste"}`;
     }
     return classPopularityInfo;
+}
+
+export function hasWaitingList(_class: RezervoClass): boolean {
+    return _class.availableSlots === null ? (_class?.waitingListCount ?? 0) > 0 : _class.availableSlots <= 0;
 }

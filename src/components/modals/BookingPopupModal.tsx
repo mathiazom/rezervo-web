@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
+import { hasWaitingList } from "@/lib/helpers/popularity";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
@@ -67,7 +68,7 @@ const BookingPopupModal = ({
                                 ) : (
                                     <>
                                         Booking for <b>{classDescription}</b> har allerede åpnet. Vil du{" "}
-                                        {_class.availableSlots > 0 ? "booke timen nå" : "sette deg på venteliste"}?
+                                        {hasWaitingList(_class) ? "sette deg på venteliste" : "booke timen nå"}?
                                     </>
                                 )}
                             </Typography>
@@ -78,19 +79,13 @@ const BookingPopupModal = ({
                             Nei takk
                         </Button>
                         <LoadingButton
-                            startIcon={
-                                isCancellation ? <Clear /> : _class.availableSlots > 0 ? <Add /> : <HourglassTop />
-                            }
-                            color={isCancellation ? "error" : _class.availableSlots > 0 ? "primary" : "warning"}
+                            startIcon={isCancellation ? <Clear /> : hasWaitingList(_class) ? <HourglassTop /> : <Add />}
+                            color={isCancellation ? "error" : hasWaitingList(_class) ? "warning" : "primary"}
                             variant={"outlined"}
                             onClick={isCancellation ? cancelBooking : book}
                             loading={bookingLoading}
                         >
-                            {isCancellation
-                                ? "Avbestill"
-                                : _class.availableSlots > 0
-                                  ? "Book nå"
-                                  : "Sett på venteliste"}
+                            {isCancellation ? "Avbestill" : hasWaitingList(_class) ? "Sett på venteliste" : "Book nå"}
                         </LoadingButton>
                     </DialogActions>
                 </>
