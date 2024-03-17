@@ -226,7 +226,7 @@ const ClassCard = ({
                                 </Badge>
                             </Tooltip>
                         ) : (
-                            _class.totalSlots !== null && (
+                            (_class.totalSlots !== null || (_class.isBookable && _class.waitingListCount !== null)) && (
                                 <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                             )
                         )}
