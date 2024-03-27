@@ -25,6 +25,10 @@ export type ChainUserPayload = ChainUser & {
     password: string;
 };
 
+export type ChainUserTotpPayload = {
+    totp: string;
+};
+
 export type NotificationsConfig = {
     reminderHoursBefore: number | null;
 };

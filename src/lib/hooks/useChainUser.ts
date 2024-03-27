@@ -18,17 +18,29 @@ async function putChainUser(
         body: JSON.stringify(chainUser, null, 2),
     });
     const data = await res.json();
-    if (!res.ok || data?.username == undefined) {
+    if (!res.ok) {
         throw new Error("An error occurred while updating chain user");
     }
     await dependantMutations();
     return data;
 }
 
+type ChainUserUpdatedResponse = {
+    status: "updated";
+    profile: ChainUser;
+};
+
+type ChainUserTotpFlowInitiatedResponse = {
+    status: "initiated_totp_flow";
+};
+
+type ChainUserMutationReponse = ChainUserUpdatedResponse | ChainUserTotpFlowInitiatedResponse;
+
 export function useChainUser(chain: ChainIdentifier) {
     const { user } = useUser();
 
     const chainUserApiUrl = `/api/${chain}/user`;
+    const chainUserTotpApiUrl = `/api/${chain}/user/totp`;
 
     const { data, error, isLoading } = useSWR<ChainUser>(user && chain ? chainUserApiUrl : null, fetcher);
 
@@ -38,23 +50,38 @@ export function useChainUser(chain: ChainIdentifier) {
         await mutateUserChainConfigs();
     };
 
-    const { trigger, isMutating } = useSWRMutation<ChainUser, unknown, string, ChainUserPayload>(
+    const putChainUserMutation = useSWRMutation<ChainUserMutationReponse, unknown, string, ChainUserPayload>(
         chainUserApiUrl,
         (url: string, { arg: chainUser }: { arg: ChainUserPayload }) =>
             putChainUser(url, { arg: chainUser }, dependantMutations),
         {
-            populateCache: true, // use updated data from mutate response
-            revalidate: false,
+            // TODO
+            // populateCache: true, // use updated data from mutate response
+            // revalidate: false,
             onSuccess: () => mutateUserConfig(),
         },
+    );
+
+    const putChainUserTotpMutation = useSWRMutation<unknown, unknown, string, ChainUserPayload>(
+        chainUserTotpApiUrl,
+        (url: string, { arg: chainUser }: { arg: ChainUserPayload }) =>
+            putChainUser(url, { arg: chainUser }, dependantMutations),
+        // TODO
+        // {
+        //     populateCache: true, // use updated data from mutate response
+        //     revalidate: false,
+        //     onSuccess: () => mutateUserConfig(),
+        // },
     );
 
     return {
         chainUser: data,
         chainUserError: error,
         chainUserMissing: error && error.status === 404,
-        chainUserLoading: isLoading || isMutating,
-        putChainUser: trigger,
-        putChainUserIsMutating: isMutating,
+        chainUserLoading: isLoading || putChainUserMutation.isMutating,
+        putChainUser: putChainUserMutation.trigger,
+        putChainUserIsMutating: putChainUserMutation.isMutating,
+        putChainUserTotp: putChainUserTotpMutation.trigger,
+        putChainUserTotpIsMutating: putChainUserTotpMutation.isMutating,
     };
 }
