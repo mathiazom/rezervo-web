@@ -1,6 +1,7 @@
 import { AppRouteHandlerFnContext, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 import {
+    buildBackendPath,
     doOperation,
     respondNotFound,
     respondUnauthorized,
@@ -23,7 +24,7 @@ export const GET = withApiAuthRequired(async (req, ctx) => {
     req.nextUrl.searchParams.get("CACHE-BUSTER-NOT-ACTUALLY-USED");
 
     return await doOperation(() =>
-        fetch(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/user/${userId}/avatar/${thumbnailSize}`, {
+        fetch(buildBackendPath(`user/${userId}/avatar/${thumbnailSize}`), {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },

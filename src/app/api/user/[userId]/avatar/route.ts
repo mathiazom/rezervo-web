@@ -1,6 +1,7 @@
 import { AppRouteHandlerFnContext, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
 import {
+    buildBackendPath,
     destroy,
     doOperation,
     isUserMeFromContext,
@@ -17,7 +18,7 @@ export const PUT = withApiAuthRequired(async (req, ctx) => {
 
     const formData = await req.formData();
     return await doOperation(() =>
-        fetch(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/user/me/avatar`, {
+        fetch(buildBackendPath("user/me/avatar"), {
             method: "PUT",
             headers: {
                 Authorization: `Bearer ${accessToken}`,
