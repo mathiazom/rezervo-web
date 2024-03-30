@@ -1,5 +1,3 @@
-import { constants } from "http2";
-
 import { AppRouteHandlerFnContext, getAccessToken } from "@auth0/nextjs-auth0";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -37,14 +35,14 @@ export function buildBackendPath(path: string): string {
 }
 
 export function respondUnauthorized(): Response {
-    return Response.json("Not authenticated", { status: constants.HTTP_STATUS_UNAUTHORIZED });
+    return Response.json("Not authenticated", { status: 403 });
 }
 
 export function respondInternalServerError(): Response {
-    return Response.json("Request failed", { status: constants.HTTP_STATUS_INTERNAL_SERVER_ERROR });
+    return Response.json("Request failed", { status: 500 });
 }
 export function respondNotFound(): Response {
-    return Response.json("Not found", { status: constants.HTTP_STATUS_NOT_FOUND });
+    return Response.json("Not found", { status: 404 });
 }
 
 export function respondNonOkResponse(response: Response): Response {

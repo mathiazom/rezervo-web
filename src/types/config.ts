@@ -21,8 +21,16 @@ export type ChainUser = {
     username: string;
 };
 
+export type ChainUserProfile = ChainUser & {
+    isAuthVerified: boolean;
+};
+
 export type ChainUserPayload = ChainUser & {
     password: string;
+};
+
+export type ChainUserTotpPayload = {
+    totp: string;
 };
 
 export type NotificationsConfig = {

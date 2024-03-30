@@ -72,14 +72,14 @@ function ChainMembership({
                     >
                         <Tooltip title={chainProfile.name} arrow>
                             <RippleBadge
-                                invisible={!hasChainUser}
+                                invisible={chainUserLoading}
                                 overlap="circular"
                                 anchorOrigin={{
                                     vertical: "bottom",
                                     horizontal: "right",
                                 }}
                                 variant={"dot"}
-                                rippleColor={"#44b700"}
+                                rippleColor={!hasChainUser || !chainUser.isAuthVerified ? "#FF0000" : "#44b700"}
                             >
                                 <Avatar
                                     sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
