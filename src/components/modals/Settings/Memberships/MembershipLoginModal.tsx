@@ -181,6 +181,9 @@ const MembershipLoginModal = ({
                                             submitTotp(totp);
                                         }
                                     }}
+                                    inputProps={{
+                                        autoComplete: "one-time-code",
+                                    }}
                                 />
                             </>
                         )
