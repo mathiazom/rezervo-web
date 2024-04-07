@@ -59,13 +59,13 @@ export type RezervoClassBase = {
     location: {
         id: string;
         studio: string;
-        room: string;
+        room: string | null;
     };
     isBookable: boolean;
     isCancelled: boolean;
     cancelText: string | null;
-    totalSlots: number;
-    availableSlots: number;
+    totalSlots: number | null;
+    availableSlots: number | null;
     waitingListCount: number | null;
     activity: RezervoActivity;
     instructors: RezervoInstructor[];

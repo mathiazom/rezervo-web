@@ -45,6 +45,10 @@ const nextConfig = withPWA({
                 protocol: "https",
                 hostname: "storage.googleapis.com",
             },
+            {
+                protocol: "https",
+                hostname: "images.ctfassets.net",
+            },
         ],
     },
 });
