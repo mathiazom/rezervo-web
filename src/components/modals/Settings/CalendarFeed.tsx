@@ -36,9 +36,10 @@ export default function CalendarFeed() {
                 </Typography>
                 <Typography
                     variant="body2"
-                    style={{
+                    sx={{
                         color: theme.palette.grey[600],
                         fontSize: 14,
+                        mb: 1,
                     }}
                 >
                     Kopier denne lenken inn i din kalenderapp for å automatisk synkronisere dine bookinger og planlagte

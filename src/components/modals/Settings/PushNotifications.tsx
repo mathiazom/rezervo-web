@@ -77,6 +77,9 @@ const PushNotifications = () => {
     return (
         <>
             <FormGroup>
+                <Typography variant="h6" sx={{ fontSize: 18, mb: 1 }}>
+                    Push-varsler
+                </Typography>
                 <FormLabel disabled={!isWebPushSupported || subscriptionIsLoading}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                         <Vibration />
@@ -85,7 +88,7 @@ const PushNotifications = () => {
                                 userSelect: "none",
                             }}
                         >
-                            Push-varsler for booking
+                            Bookinger og venneforespørsler
                         </Typography>
                         <Box
                             sx={{

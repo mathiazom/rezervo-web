@@ -193,13 +193,16 @@ export default function Settings({
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <Memberships chainProfiles={chainProfiles} chainConfigs={chainConfigs} />
-                <Divider sx={{ my: 1 }} />
+                <Divider sx={{ mt: 1 }} />
                 <PushNotifications />
                 <FormGroup>
                     <Divider orientation="horizontal" />
                     {features && features.classReminderNotifications && (
                         <>
                             <FormGroup sx={{ py: 2 }}>
+                                <Typography variant="h6" sx={{ fontSize: 18, mb: 1 }}>
+                                    Slack
+                                </Typography>
                                 <FormLabel>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                         <NotificationsActiveRoundedIcon />
