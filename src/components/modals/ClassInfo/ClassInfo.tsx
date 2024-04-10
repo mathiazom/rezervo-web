@@ -16,11 +16,12 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Alert, AlertTitle, Box, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
 import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
@@ -90,8 +91,6 @@ export default function ClassInfo({
         setBookingLoading(false);
     }
 
-    const cancelledOpacity = 0.5;
-
     return (
         <Box
             sx={{
@@ -112,14 +111,7 @@ export default function ClassInfo({
                 },
             }}
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    paddingBottom: 1,
-                }}
-            >
+            <Stack direction={"row"} gap={1} alignItems={"center"} paddingBottom={1}>
                 <Box
                     sx={{
                         borderRadius: "50%",
@@ -134,7 +126,7 @@ export default function ClassInfo({
                 <Typography variant="h6" component="h2">
                     {_class.activity.name}
                 </Typography>
-            </Box>
+            </Stack>
             {_class.isCancelled && (
                 <Alert severity={"error"} icon={<CancelRounded />}>
                     {_class.cancelText ? (
@@ -147,96 +139,41 @@ export default function ClassInfo({
                     )}
                 </Alert>
             )}
-            <Box
-                sx={{
-                    display: "flex",
-                    paddingTop: 1,
-                    gap: 1,
-                    alignItems: "center",
-                    opacity: _class.isCancelled ? cancelledOpacity : 1,
-                }}
-            >
-                <CalendarMonthIcon />
-                <Typography variant="body2" color="text.secondary">
-                    {_class.startTime.toFormat("EEEE d. LLLL")}
-                </Typography>
-            </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    paddingTop: 1,
-                    gap: 1,
-                    alignItems: "center",
-                    opacity: _class.isCancelled ? cancelledOpacity : 1,
-                }}
-            >
-                <AccessTimeRoundedIcon />
-                <Typography variant="body2" color="text.secondary">
-                    {_class.startTime.toFormat("HH:mm")}–{_class.endTime.toFormat("HH:mm")}
-                </Typography>
-            </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    paddingTop: 1,
-                    gap: 1,
-                    alignItems: "center",
-                    opacity: _class.isCancelled ? cancelledOpacity : 1,
-                }}
-            >
-                <LocationOnRoundedIcon />
-                <Typography variant="body2" color="text.secondary">
-                    {_class.location.studio}
-                    {_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}
-                </Typography>
-            </Box>
+            <ClassInfoEntry
+                icon={<CalendarMonthIcon />}
+                label={_class.startTime.toFormat("EEEE d. LLLL")}
+                cancelled={_class.isCancelled}
+            />
+            <ClassInfoEntry
+                icon={<AccessTimeRoundedIcon />}
+                label={`${_class.startTime.toFormat("HH:mm")}–${_class.endTime.toFormat("HH:mm")}`}
+                cancelled={_class.isCancelled}
+            />
+            <ClassInfoEntry
+                icon={<LocationOnRoundedIcon />}
+                label={`${_class.location.studio} ${_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}`}
+                cancelled={_class.isCancelled}
+            />
             {_class.instructors.length > 0 && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        paddingTop: 1,
-                        gap: 1,
-                        alignItems: "center",
-                        opacity: _class.isCancelled ? cancelledOpacity : 1,
-                    }}
-                >
-                    <PersonRoundedIcon />
-                    <Typography variant="body2" color="text.secondary">
-                        {_class.instructors.map((i) => i.name).join(", ")}
-                    </Typography>
-                </Box>
+                <ClassInfoEntry
+                    icon={<PersonRoundedIcon />}
+                    label={_class.instructors.map((i) => i.name).join(", ")}
+                    cancelled={_class.isCancelled}
+                />
             )}
             {_class.totalSlots !== null && ((!_class.isBookable && !isInThePast) || _class.isCancelled) && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        paddingTop: 1,
-                        gap: 1,
-                        alignItems: "center",
-                        opacity: _class.isCancelled ? cancelledOpacity : 1,
-                    }}
-                >
-                    <Diversity3Rounded />
-                    <Typography variant="body2" color="text.secondary">
-                        {_class.totalSlots} plasser
-                    </Typography>
-                </Box>
+                <ClassInfoEntry
+                    icon={<Diversity3Rounded />}
+                    label={`${_class.totalSlots} plasser`}
+                    cancelled={_class.isCancelled}
+                />
             )}
             {!_class.isCancelled && _class.totalSlots !== null && _class.availableSlots !== null && (
-                <Box
-                    sx={{
-                        display: "flex",
-                        paddingTop: 1,
-                        gap: 1,
-                        alignItems: "center",
-                        opacity: _class.isCancelled ? cancelledOpacity : 1,
-                    }}
-                >
-                    <ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />
-                    <Typography variant="body2" color="text.secondary">
-                        {stringifyClassPopularity(_class, classPopularity)}
-                    </Typography>
-                </Box>
+                <ClassInfoEntry
+                    icon={<ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />}
+                    label={stringifyClassPopularity(_class, classPopularity) ?? ""}
+                    cancelled={_class.isCancelled}
+                />
             )}
             {!isInThePast && (
                 <>
