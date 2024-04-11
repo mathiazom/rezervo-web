@@ -39,7 +39,8 @@ const ClassPopularityMeter = ({
         return (
             <Tooltip
                 title={
-                    "Påmelding for denne timen har åpnet. " + stringifyClassPopularity(_class, historicPopularity) ?? ""
+                    "Påmelding for denne timen har åpnet. " +
+                    (stringifyClassPopularity(_class, historicPopularity) ?? "")
                 }
             >
                 <RippleBadge
