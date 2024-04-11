@@ -48,7 +48,8 @@ export function useUserConfig(chain: ChainIdentifier) {
 
     return {
         userConfig: data,
-        userConfigError: !isLoading && !isMutating && error && error.status !== 404 ? error : null,
+        userConfigError:
+            !isLoading && !isMutating && error && error.status !== 404 && error.status !== 401 ? error : null,
         userConfigLoading: isLoading || isMutating,
         mutateUserConfig: mutate,
         putUserConfig: trigger,
