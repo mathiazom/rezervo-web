@@ -151,7 +151,7 @@ export default function ClassInfo({
             />
             <ClassInfoEntry
                 icon={<LocationOnRoundedIcon />}
-                label={`${_class.location.studio} ${_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}`}
+                label={`${_class.location.studio}${_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}`}
                 cancelled={_class.isCancelled}
             />
             {_class.instructors.length > 0 && (
