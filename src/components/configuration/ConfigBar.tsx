@@ -163,7 +163,7 @@ function ConfigBar({
                         {user.name && (
                             <Tooltip title={user.name}>
                                 <Box sx={{ position: "relative" }}>
-                                    <IconButton onClick={() => onProfileOpen()}>
+                                    <IconButton onClick={() => onProfileOpen()} sx={{ padding: 0 }}>
                                         <UserAvatar userId={"me"} username={user.name} />
                                     </IconButton>
                                 </Box>
