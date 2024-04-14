@@ -234,7 +234,7 @@ function Chain({
                             selectedClassIds={selectedClassIds}
                             onUpdateConfig={onUpdateConfig}
                             onInfo={setClassInfoClass}
-                            todayRef={scrollToTodayRef}
+                            scrollToTodayRef={scrollToTodayRef}
                         />
                     )
                 ) : (

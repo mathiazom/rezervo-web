@@ -142,6 +142,12 @@ export default function WeekNavigator({
                 onClick={() => {
                     setCurrentWeekOffset(0);
                     onGoToToday();
+                    // handle case where we are not viewing current week by
+                    // re-scrolling when current week has (hopefully) loaded
+                    // TODO: improve this (possibly with URL params)
+                    setTimeout(() => {
+                        onGoToToday();
+                    }, 300);
                 }}
             >
                 I dag

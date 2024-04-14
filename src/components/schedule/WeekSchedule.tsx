@@ -14,7 +14,7 @@ function WeekSchedule({
     classPopularityIndex,
     selectable,
     selectedClassIds,
-    todayRef,
+    scrollToTodayRef,
     onUpdateConfig,
     onInfo,
 }: {
@@ -25,7 +25,7 @@ function WeekSchedule({
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
-    todayRef: React.MutableRefObject<HTMLDivElement | null>;
+    scrollToTodayRef: React.MutableRefObject<HTMLDivElement | null>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {
@@ -40,7 +40,6 @@ function WeekSchedule({
                         return (
                             <Box
                                 key={daySchedule.date.toString()}
-                                ref={dayIsToday ? todayRef : null}
                                 paddingX={dayIsToday ? "0.9rem" : "0.5rem"}
                                 marginX={dayIsToday ? "0.1rem" : "0rem"}
                                 paddingBottom={"2rem"}
@@ -63,6 +62,7 @@ function WeekSchedule({
                                     classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}
                                     selectedClassIds={selectedClassIds}
+                                    scrollToTodayRef={scrollToTodayRef}
                                     onUpdateConfig={onUpdateConfig}
                                     onInfo={onInfo}
                                 />
