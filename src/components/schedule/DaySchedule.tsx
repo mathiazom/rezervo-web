@@ -2,7 +2,8 @@ import { Box, Chip, Typography, useTheme } from "@mui/material";
 import React, { useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
-import { getCapitalizedWeekday, isDayPassed, isToday, LocalizedDateTime } from "@/lib/helpers/date";
+import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
+import { getCapitalizedWeekday, isClassInThePast, isDayPassed, isToday, LocalizedDateTime } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { ChainIdentifier, RezervoClass, RezervoDaySchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
@@ -63,7 +64,12 @@ function DaySchedule({
             width={180}
             ref={dayIsToday && scrollToTodayClassId == null ? scrollToTodayRef : null}
         >
-            <Box pt={1.5} pb={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }}>
+            <Box
+                sx={{
+                    padding: "0.75rem 0.5rem 1rem 0.5rem",
+                    opacity: isDayPassed(daySchedule.date) ? 1 : 0.5,
+                }}
+            >
                 <Typography variant="h6" component="div">
                     {getCapitalizedWeekday(daySchedule.date)}{" "}
                     {dayIsToday && (
@@ -87,20 +93,23 @@ function DaySchedule({
             </Box>
             {filteredClasses.length > 0 ? (
                 filteredClasses.map((_class) => (
-                    <Box
-                        key={_class.id}
-                        mb={1}
-                        ref={dayIsToday && _class.id === scrollToTodayClassId ? scrollToTodayRef : null}
-                    >
-                        <ClassCard
-                            chain={chain}
-                            _class={_class}
-                            popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
-                            selectable={selectable}
-                            selected={selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))}
-                            onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
-                            onInfo={() => onInfo(_class)}
-                        />
+                    <Box key={_class.id}>
+                        {dayIsToday && _class.id === scrollToTodayClassId && !isClassInThePast(_class) && (
+                            <CurrentTimeDivider />
+                        )}
+                        <Box mb={1} ref={dayIsToday && _class.id === scrollToTodayClassId ? scrollToTodayRef : null}>
+                            <ClassCard
+                                chain={chain}
+                                _class={_class}
+                                popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
+                                selectable={selectable}
+                                selected={
+                                    selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))
+                                }
+                                onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
+                                onInfo={() => onInfo(_class)}
+                            />
+                        </Box>
                     </Box>
                 ))
             ) : (
