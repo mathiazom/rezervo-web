@@ -7,7 +7,7 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
@@ -22,6 +22,7 @@ function ConfigBar({
     userSessions,
     isLoadingConfig,
     isConfigError,
+    onRefetchConfig,
     onCommunityOpen,
     onSettingsOpen,
     onAgendaOpen,
@@ -31,13 +32,15 @@ function ConfigBar({
     userSessions: BaseUserSession[] | null;
     isLoadingConfig: boolean;
     isConfigError: boolean;
+    onRefetchConfig: () => Promise<void>;
     onCommunityOpen: () => void;
     onSettingsOpen: () => void;
     onAgendaOpen: () => void;
     onProfileOpen: () => void;
 }) {
     const theme = useTheme();
-    const { user, isLoading } = useUser();
+    const { user, isLoading: isLoadingUser } = useUser();
+    const [isUserUpserted, setIsUserUpserted] = useState(false);
     const setMyUserId = useMyUserId((state) => state.setUserId);
     const { community } = useCommunity();
     const friendRequestCount =
@@ -56,11 +59,13 @@ function ConfigBar({
         }).then(async (res) => {
             if (!res.ok) return;
             setMyUserId(await res.json());
+            await onRefetchConfig();
+            setIsUserUpserted(true);
         });
-    }, [user, setMyUserId]);
+    }, [user, setMyUserId, onRefetchConfig]);
 
     return (
-        !isLoading && (
+        !isLoadingUser && (
             <>
                 {user == undefined ? (
                     <Button endIcon={<LoginIcon />} href={"/api/auth/login"}>
@@ -76,7 +81,8 @@ function ConfigBar({
                         }}
                     >
                         {isConfigError ? (
-                            !isLoadingConfig && (
+                            !isLoadingConfig &&
+                            isUserUpserted && (
                                 <Box mr={1.5}>
                                     <Tooltip title={"Feilet"}>
                                         <Badge

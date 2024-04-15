@@ -55,7 +55,9 @@ function Chain({
     activityCategories: ActivityCategory[];
     error: RezervoError | undefined;
 }) {
-    const { userConfig, userConfigError, userConfigLoading, putUserConfig } = useUserConfig(chain.profile.identifier);
+    const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
+        chain.profile.identifier,
+    );
     const { userSessionsIndex } = useUserSessionsIndex(chain.profile.identifier);
     const { userSessions } = useUserSessions();
     const { userChainConfigs } = useUserChainConfigs();
@@ -199,6 +201,9 @@ function Chain({
                                 userSessions={userSessions}
                                 isLoadingConfig={userConfigLoading}
                                 isConfigError={userConfigError}
+                                onRefetchConfig={async () => {
+                                    await mutateUserConfig();
+                                }}
                                 onCommunityOpen={() => setIsCommunityOpen(true)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
