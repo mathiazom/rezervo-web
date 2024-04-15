@@ -32,28 +32,43 @@ function DaySchedule({
 }) {
     const theme = useTheme();
 
-    const filteredClasses = daySchedule.classes.filter(
-        (c) => selectedLocationIds.includes(c.location.id) && selectedCategories.includes(c.activity.category),
+    const filteredClasses = useMemo(
+        () =>
+            daySchedule.classes.filter(
+                (c) => selectedLocationIds.includes(c.location.id) && selectedCategories.includes(c.activity.category),
+            ),
+        [daySchedule.classes, selectedLocationIds, selectedCategories],
     );
 
-    const mostRecentClassId = useMemo(() => {
+    const dayIsToday = isToday(daySchedule.date);
+
+    const scrollToTodayClassId = useMemo(() => {
+        if (!dayIsToday) return null;
         const now = LocalizedDateTime.now();
-        return filteredClasses.reduce((acc: RezervoClass | null, c) => {
-            if (acc == null) {
-                if (c.startTime < now) {
-                    return c;
-                }
-            } else if (acc.startTime <= c.startTime && c.startTime < now) return c;
-            return acc;
-        }, null)?.id;
-    }, [filteredClasses]);
+        let mostRecent = null;
+        // find the most recent class where start is in the past, with fallback to next class if no classes in the past
+        // we assume that filteredClasses is chronological from first to last
+        for (const c of filteredClasses) {
+            if (c.startTime < now) {
+                mostRecent = c;
+            } else if (mostRecent == null) {
+                mostRecent = c;
+                break;
+            }
+        }
+        return mostRecent?.id ?? null;
+    }, [dayIsToday, filteredClasses]);
 
     return (
-        <Box key={daySchedule.date.toString()} width={180} ref={filteredClasses.length == 0 ? scrollToTodayRef : null}>
+        <Box
+            key={daySchedule.date.toString()}
+            width={180}
+            ref={dayIsToday && scrollToTodayClassId == null ? scrollToTodayRef : null}
+        >
             <Box pt={1.5} pb={2} sx={{ opacity: isDayPassed(daySchedule.date) ? 1 : 0.5 }}>
                 <Typography variant="h6" component="div">
                     {getCapitalizedWeekday(daySchedule.date)}{" "}
-                    {isToday(daySchedule.date) && (
+                    {dayIsToday && (
                         <Chip
                             size={"small"}
                             sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
@@ -74,7 +89,11 @@ function DaySchedule({
             </Box>
             {filteredClasses.length > 0 ? (
                 filteredClasses.map((_class) => (
-                    <Box key={_class.id} mb={1} ref={_class.id === mostRecentClassId ? scrollToTodayRef : null}>
+                    <Box
+                        key={_class.id}
+                        mb={1}
+                        ref={dayIsToday && _class.id === scrollToTodayClassId ? scrollToTodayRef : null}
+                    >
                         <ClassCard
                             chain={chain}
                             _class={_class}
