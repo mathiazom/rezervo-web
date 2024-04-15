@@ -49,10 +49,8 @@ function DaySchedule({
         // find the most recent class where start is in the past, with fallback to next class if no classes in the past
         // we assume that filteredClasses is chronological from first to last
         for (const c of filteredClasses) {
-            if (c.startTime < now) {
-                mostRecent = c;
-            } else if (mostRecent == null) {
-                mostRecent = c;
+            mostRecent = c;
+            if (c.startTime >= now) {
                 break;
             }
         }

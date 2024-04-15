@@ -168,7 +168,8 @@ function Chain({
         if (target != null) {
             target.scrollIntoView({
                 behavior: "smooth",
-                inline: "start",
+                block: "center",
+                inline: "center",
             });
         }
     }
