@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
-import React, { memo, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -181,6 +181,10 @@ function Chain({
     const isLoadingNextWeek =
         weekScheduleLoading && latestLoadedWeekOffset != null && latestLoadedWeekOffset < weekOffset;
 
+    const refetchConfig = useCallback(async () => {
+        await mutateUserConfig();
+    }, [mutateUserConfig]);
+
     return (
         <>
             <PageHead title={`${chain.profile.identifier}-rezervo`} />
@@ -201,9 +205,7 @@ function Chain({
                                 userSessions={userSessions}
                                 isLoadingConfig={userConfigLoading}
                                 isConfigError={userConfigError}
-                                onRefetchConfig={async () => {
-                                    await mutateUserConfig();
-                                }}
+                                onRefetchConfig={refetchConfig}
                                 onCommunityOpen={() => setIsCommunityOpen(true)}
                                 onSettingsOpen={() => setIsSettingsOpen(true)}
                                 onAgendaOpen={() => setIsAgendaOpen(true)}
