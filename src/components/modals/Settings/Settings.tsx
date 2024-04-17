@@ -1,5 +1,4 @@
 import { SettingsRounded } from "@mui/icons-material";
-import NotificationsActiveRoundedIcon from "@mui/icons-material/NotificationsActiveRounded";
 import {
     Box,
     CircularProgress,
@@ -10,15 +9,18 @@ import {
     MenuItem,
     Select,
     styled,
+    SvgIcon,
     Switch as MaterialUISwitch,
     TextField,
     Typography,
+    useTheme,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import Memberships from "@/components/modals/Settings/Memberships/Memberships";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
+import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
@@ -57,6 +59,8 @@ export default function Settings({
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     features: Features | undefined;
 }) {
+    const theme = useTheme();
+
     const { preferences, putPreferences } = usePreferences();
     const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
     const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminderHoursBefore != null);
@@ -193,16 +197,23 @@ export default function Settings({
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <Memberships chainProfiles={chainProfiles} chainConfigs={chainConfigs} />
-                <Divider sx={{ my: 1 }} />
+                <Divider sx={{ mt: 1 }} />
                 <PushNotifications />
                 <FormGroup>
                     <Divider orientation="horizontal" />
                     {features && features.classReminderNotifications && (
                         <>
                             <FormGroup sx={{ py: 2 }}>
+                                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, pb: 1 }}>
+                                    <SvgIcon fontSize={"small"} sx={{ color: theme.palette.primary.contrastText }}>
+                                        <SlackSvgIcon />
+                                    </SvgIcon>
+                                    <Typography variant="h6" sx={{ fontSize: 18 }}>
+                                        Slack
+                                    </Typography>
+                                </Box>
                                 <FormLabel>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
-                                        <NotificationsActiveRoundedIcon />
                                         <Typography
                                             sx={{
                                                 userSelect: "none",
@@ -229,7 +240,7 @@ export default function Settings({
                                         </Box>
                                     </Box>
                                 </FormLabel>
-                                <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", ml: "33px", pb: 1 }}>
+                                <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", pb: 1 }}>
                                     <FormControl>
                                         <TextField
                                             disabled={!reminderActive || reminderHoursBefore == null}

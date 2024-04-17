@@ -1,7 +1,7 @@
 import { Check } from "@mui/icons-material";
 import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { Box, Checkbox, FormControlLabel, FormGroup, FormLabel, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, FormGroup, FormLabel, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
@@ -20,6 +20,7 @@ export default function CalendarFeed() {
     const [isCopiedToClipboard, isSupported, copyToClipboard] = useCopyToClipboard(userCalendarFeedUrl || "", {
         successDuration: 3000,
     });
+    const theme = useTheme();
 
     return (
         <Box
@@ -30,10 +31,23 @@ export default function CalendarFeed() {
                 gap: "1rem",
             }}
         >
-            <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                <CalendarMonthRoundedIcon fontSize={"small"} />
-                <Typography variant="overline" component="h2">
-                    Kalender
+            <Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, pb: 1 }}>
+                    <CalendarMonthRoundedIcon fontSize={"small"} />
+                    <Typography variant="h6" sx={{ fontSize: 18 }}>
+                        Kalender
+                    </Typography>
+                </Box>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: theme.palette.grey[600],
+                        fontSize: 14,
+                        mb: 1,
+                    }}
+                >
+                    Kopier denne lenken inn i din kalenderapp for å automatisk synkronisere dine bookinger og planlagte
+                    timer til din digitale kalender
                 </Typography>
             </Box>
             <FormGroup sx={{ gap: "0.75rem" }}>
