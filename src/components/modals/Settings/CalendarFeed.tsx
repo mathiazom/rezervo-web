@@ -1,4 +1,5 @@
 import { Check } from "@mui/icons-material";
+import CalendarMonthRoundedIcon from "@mui/icons-material/CalendarMonthRounded";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { Box, Checkbox, FormControlLabel, FormGroup, FormLabel, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -31,9 +32,12 @@ export default function CalendarFeed() {
             }}
         >
             <Box>
-                <Typography variant="h6" sx={{ fontSize: 18 }}>
-                    Kalender
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, pb: 1 }}>
+                    <CalendarMonthRoundedIcon fontSize={"small"} />
+                    <Typography variant="h6" sx={{ fontSize: 18 }}>
+                        Kalender
+                    </Typography>
+                </Box>
                 <Typography
                     variant="body2"
                     sx={{
