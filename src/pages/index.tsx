@@ -1,3 +1,4 @@
+import PWAInstall from "@khmyznikov/pwa-install/dist/pwa-install.react.js";
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -7,7 +8,6 @@ import React, { useEffect, useState } from "react";
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
-import PWAInstall from "@/components/utils/PWAInstall";
 import { fetchActiveChains } from "@/lib/helpers/fetchers";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { ChainIdentifier } from "@/types/chain";
