@@ -48,8 +48,10 @@ const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
         <>
             <PageHead title={"rezervo"} />
             <PWAInstall
+                // TODO: make "pwa-hide-install" flag persist across sessions
                 install-description={
-                    "Denne nettsiden har app-funksjonalitet. Legg den til på hjemskjermen for å få enklere tilgang og muligheten til å aktivere push-varsler for booking."
+                    "Denne nettsiden har app-funksjonalitet. Legg den til på hjemskjermen for å få enklere tilgang " +
+                    "og muligheten til å aktivere push-varsler for booking."
                 }
             />
             <Box
