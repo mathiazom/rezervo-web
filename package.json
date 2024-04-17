@@ -21,6 +21,7 @@
         "@ducanh2912/next-pwa": "^10.2.5",
         "@emotion/react": "^11.11.3",
         "@emotion/styled": "^11.11.0",
+        "@khmyznikov/pwa-install": "^0.3.6",
         "@mui/icons-material": "^5.15.10",
         "@mui/lab": "^5.0.0-alpha.165",
         "@mui/material": "^5.15.10",

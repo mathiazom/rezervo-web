@@ -1,3 +1,4 @@
+import PWAInstall from "@khmyznikov/pwa-install/dist/pwa-install.react.js";
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -46,6 +47,13 @@ const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
     return (
         <>
             <PageHead title={"rezervo"} />
+            <PWAInstall
+                // TODO: make "pwa-hide-install" flag persist across sessions
+                install-description={
+                    "Denne nettsiden har app-funksjonalitet. Legg den til på hjemskjermen for å få enklere tilgang " +
+                    "og muligheten til å aktivere push-varsler for booking."
+                }
+            />
             <Box
                 sx={{
                     display: "flex",

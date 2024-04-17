@@ -1,7 +1,9 @@
 {
+    "id": "rezervo",
     "name": "rezervo",
     "short_name": "rezervo",
-    "description": "Automatic booking of group classes",
+    "lang": "no",
+    "description": "Automatisk booking av gruppetimer",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -11,11 +13,17 @@
         {
             "src": "/android-chrome-512x512.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any maskable"
         }
     ],
     "theme_color": "#373737",
     "background_color": "#373737",
     "start_url": "/",
-    "display": "standalone"
+    "launch_handler": "auto",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "handle_links": "preferred",
+    "dir": "ltr",
+    "categories": ["fitness"]
 }
