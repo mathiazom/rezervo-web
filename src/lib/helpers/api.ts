@@ -1,4 +1,5 @@
 import { AppRouteHandlerFnContext, getAccessToken } from "@auth0/nextjs-auth0";
+import { HTTP_METHOD } from "next/dist/server/web/http";
 import { NextRequest, NextResponse } from "next/server";
 
 import { ChainIdentifier } from "@/types/chain";
@@ -73,46 +74,29 @@ export function get(path: string, accessToken: string): Promise<Response> {
     });
 }
 
-export function put(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
+function createRequestInit(method: HTTP_METHOD, accessToken: string, body?: BodyInit): RequestInit {
     const requestInit: RequestInit = {
-        method: "PUT",
+        method,
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
     };
+
     if (body) {
         requestInit.body = body;
         // @ts-expect-error - TS doesn't know about this header
         requestInit.headers["Content-Type"] = "application/json";
     }
-    return fetch(buildBackendPath(path), requestInit);
+    return requestInit;
+}
+
+export function put(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
+    return fetch(buildBackendPath(path), createRequestInit("PUT", accessToken, body));
 }
 
 export function post(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
-    const requestInit: RequestInit = {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    };
-    if (body) {
-        requestInit.body = body;
-        // @ts-expect-error - TS doesn't know about this header
-        requestInit.headers["Content-Type"] = "application/json";
-    }
-    return fetch(buildBackendPath(path), requestInit);
+    return fetch(buildBackendPath(path), createRequestInit("POST", accessToken, body));
 }
 export function destroy(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
-    const requestInit: RequestInit = {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        },
-    };
-    if (body) {
-        requestInit.body = body;
-        // @ts-expect-error - TS doesn't know about this header
-        requestInit.headers["Content-Type"] = "application/json";
-    }
-    return fetch(buildBackendPath(path), requestInit);
+    return fetch(buildBackendPath(path), createRequestInit("DELETE", accessToken, body));
 }
