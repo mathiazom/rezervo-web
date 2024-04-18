@@ -28,6 +28,7 @@ import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { isClassInThePast } from "@/lib/helpers/date";
+import { postBookingRequest } from "@/lib/helpers/fetchers";
 import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -82,10 +83,7 @@ export default function ClassInfo({
 
     async function book() {
         setBookingLoading(true);
-        await fetch(`/api/${chain}/book`, {
-            method: "POST",
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-        });
+        await postBookingRequest(chain, _class.id.toString(), "book");
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);

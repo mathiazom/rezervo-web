@@ -163,3 +163,9 @@ export function scheduleUrlKey(chainIdentifier: string, weekOffset: number, loca
         [...locationIds].sort(), // ensure cache hit with consistent ordering
     );
 }
+export async function postBookingRequest(chain: ChainIdentifier, classId: string, type: "book" | "cancel-booking") {
+    return await fetch(`/api/${chain}/${type}`, {
+        method: "POST",
+        body: JSON.stringify({ classId }, null, 2),
+    });
+}

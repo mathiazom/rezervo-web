@@ -5,6 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
+import { postBookingRequest } from "@/lib/helpers/fetchers";
 import { hasWaitingList } from "@/lib/helpers/popularity";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
@@ -31,10 +32,7 @@ const BookingPopupModal = ({
 
     async function book() {
         setBookingLoading(true);
-        await fetch(`/api/${chain}/book`, {
-            method: "POST",
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-        });
+        await postBookingRequest(chain, _class.id.toString(), "book");
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);
@@ -43,10 +41,7 @@ const BookingPopupModal = ({
 
     async function cancelBooking() {
         setBookingLoading(true);
-        await fetch(`/api/${chain}/cancel-booking`, {
-            method: "POST",
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-        });
+        await postBookingRequest(chain, _class.id.toString(), "cancel-booking");
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);
