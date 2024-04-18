@@ -3,6 +3,7 @@ import React, { useEffect, useMemo } from "react";
 import { Middleware, SWRConfig, useSWRConfig } from "swr";
 
 import Chain from "@/components/Chain";
+import PageHead from "@/components/utils/PageHead";
 import { fetchActiveChains, fetchChain, fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
 import { storeSelectedChain } from "@/lib/helpers/storage";
 import { ChainPageParams } from "@/types/chain";
@@ -106,6 +107,7 @@ const ChainPage: NextPage<ChainPageProps> = ({
                 use: [scheduleFetchMiddleware],
             }}
         >
+            <PageHead title={`${chain.profile.identifier}-rezervo`} />
             <SWRCacheInjector<RezervoWeekScheduleDTO> cacheData={swrPrefetched} />
             <Chain
                 classPopularityIndex={classPopularityIndex}

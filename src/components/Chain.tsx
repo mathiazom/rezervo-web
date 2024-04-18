@@ -14,7 +14,6 @@ import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
-import PageHead from "@/components/utils/PageHead";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import {
     compactISOWeekString,
@@ -242,7 +241,6 @@ function Chain({
 
     return (
         <>
-            <PageHead title={`${chain.profile.identifier}-rezervo`} />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
