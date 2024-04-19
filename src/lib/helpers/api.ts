@@ -2,6 +2,7 @@ import { AppRouteHandlerFn, AppRouteHandlerFnContext, getAccessToken, withApiAut
 import { HTTP_METHOD } from "next/dist/server/web/http";
 import { NextRequest, NextResponse } from "next/server";
 
+import { destroy, get, post, put } from "@/lib/helpers/requests";
 import { ChainIdentifier } from "@/types/chain";
 
 export function isUserMeFromContext(context: AppRouteHandlerFnContext): boolean {
@@ -45,50 +46,6 @@ export async function doOperation(operation: () => Promise<Response>): Promise<R
     return response;
 }
 
-function createRequestInit(
-    method: HTTP_METHOD,
-    accessToken?: string,
-    body?: BodyInit,
-    cache?: RequestCache,
-): RequestInit {
-    const headers = new Headers();
-    const requestInit: RequestInit = {
-        method,
-        headers,
-    };
-    if (accessToken) {
-        headers.append("Authorization", `Bearer ${accessToken}`);
-    }
-    if (body) {
-        requestInit.body = body;
-        headers.append("Content-Type", "application/json");
-    }
-    if (cache) {
-        requestInit.cache = cache;
-    }
-    return requestInit;
-}
-
-function buildBackendPath(path: string): string {
-    const host = process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
-    return `${host}/${path}`;
-}
-
-export function get(path: string, accessToken?: string): Promise<Response> {
-    return fetch(buildBackendPath(path), createRequestInit("GET", accessToken, undefined, "no-store"));
-}
-
-export function put(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
-    return fetch(buildBackendPath(path), createRequestInit("PUT", accessToken, body));
-}
-
-export function post(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
-    return fetch(buildBackendPath(path), createRequestInit("POST", accessToken, body));
-}
-export function destroy(path: string, accessToken: string, body?: BodyInit): Promise<Response> {
-    return fetch(buildBackendPath(path), createRequestInit("DELETE", accessToken, body));
-}
-
 export function createAuthenticatedEndpoint(
     handler: (req: NextRequest, ctx: AppRouteHandlerFnContext, accessToken: string) => Promise<Response>,
 ): AppRouteHandlerFn {
@@ -120,11 +77,14 @@ export function createGenericEndpoint(
         }
 
         let body: BodyInit | undefined;
+        let contentType: string | null;
         if (["POST", "PUT", "DELETE"].includes(method)) {
             if (options?.useFormData) {
                 body = await req.formData();
+                contentType = null;
             } else {
                 body = await req.text();
+                contentType = "application/json";
             }
         }
 
@@ -132,12 +92,11 @@ export function createGenericEndpoint(
             case "GET":
                 return await doOperation(() => get(pathPrefix + targetPath, accessToken));
             case "POST":
-                return await doOperation(() => post(pathPrefix + targetPath, accessToken, body));
+                return await doOperation(() => post(pathPrefix + targetPath, body, contentType, accessToken));
             case "PUT":
-                return await doOperation(() => put(pathPrefix + targetPath, accessToken, body));
+                return await doOperation(() => put(pathPrefix + targetPath, body, contentType, accessToken));
             case "DELETE":
-                return await doOperation(() => destroy(pathPrefix + targetPath, accessToken, body));
-
+                return await doOperation(() => destroy(pathPrefix + targetPath, body, contentType, accessToken));
             default:
                 throw new Error("HTTP method not implemented");
         }

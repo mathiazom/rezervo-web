@@ -1,6 +1,6 @@
-import { get } from "@/lib/helpers/api";
 import { firstDateOfWeekByOffset } from "@/lib/helpers/date";
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
+import { get } from "@/lib/helpers/requests";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { serializeWeekSchedule } from "@/lib/serialization/serializers";
 import { ActivityCategory, ChainIdentifier, RezervoChain, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
@@ -16,7 +16,7 @@ export function constructScheduleUrl(chainIdentifier: string, currentWeekOffset:
         ["weekOffset", currentWeekOffset.toString()],
         ...locationIds.map((locationId) => ["locationId", locationId]),
     ]);
-    return `/api/${chainIdentifier}/schedule?${searchParams.toString()}`;
+    return `${chainIdentifier}/schedule?${searchParams.toString()}`;
 }
 
 export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
@@ -82,7 +82,7 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
 }
 
 export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
-    return get(`chains/${chainIdentifier}`).then((res) => {
+    return get(`chains/${chainIdentifier}`, undefined, true).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
         }
@@ -91,7 +91,7 @@ export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<Reze
 }
 
 export async function fetchActiveChains(): Promise<RezervoChain[]> {
-    return get("chains").then((res) => {
+    return get("chains", undefined, true).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -111,6 +111,8 @@ export async function fetchRezervoWeekSchedule(
                 `schedule/${chainIdentifier}/${weekOffset}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
+                undefined,
+                true,
             )
         ).json()),
     }) as RezervoWeekSchedule;
@@ -133,7 +135,7 @@ export async function fetchRezervoSchedule(
 }
 
 export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
-    return get("categories").then((res) => {
+    return get("categories", undefined, true).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }
@@ -151,10 +153,4 @@ export function scheduleUrlKey(chainIdentifier: string, weekOffset: number, loca
         weekOffset,
         [...locationIds].sort(), // ensure cache hit with consistent ordering
     );
-}
-export async function postBookingRequest(chain: ChainIdentifier, classId: string, type: "book" | "cancel-booking") {
-    return await fetch(`/api/${chain}/${type}`, {
-        method: "POST",
-        body: JSON.stringify({ classId }, null, 2),
-    });
 }

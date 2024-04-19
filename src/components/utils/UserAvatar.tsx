@@ -2,6 +2,7 @@ import { Avatar, Box } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import { buildBackendAuthProxyPath } from "@/lib/helpers/requests";
 import { avatarColor } from "@/lib/utils/colorUtils";
 import { useMyAvatar, useMyUserId } from "@/stores/userStore";
 
@@ -42,10 +43,12 @@ export function UserAvatar({
             <Image
                 src={
                     previewOverride ??
-                    `/api/user/${userId}/avatar/${imgSrcSize}` +
-                        ((userId === myUserId || userId === "me") && myAvatarLastModifiedTimestamp
-                            ? `?cache-bust=${myAvatarLastModifiedTimestamp}`
-                            : "")
+                    buildBackendAuthProxyPath(
+                        `user/${userId}/avatar/${imgSrcSize}` +
+                            ((userId === myUserId || userId === "me") && myAvatarLastModifiedTimestamp
+                                ? `?cache-bust=${myAvatarLastModifiedTimestamp}`
+                                : ""),
+                    )
                 }
                 alt={username}
                 width={size}

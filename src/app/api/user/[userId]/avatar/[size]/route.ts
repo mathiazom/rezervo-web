@@ -1,11 +1,11 @@
 import {
     createAuthenticatedEndpoint,
     doOperation,
-    get,
     respondNotFound,
     thumbnailSizeFromContext,
     userIdFromContext,
 } from "@/lib/helpers/api";
+import { get } from "@/lib/helpers/requests";
 
 export const GET = createAuthenticatedEndpoint(async (req, ctx, accessToken) => {
     const userId = userIdFromContext(ctx);

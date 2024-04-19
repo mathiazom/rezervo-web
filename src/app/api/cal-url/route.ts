@@ -1,4 +1,5 @@
-import { createAuthenticatedEndpoint, doOperation, get } from "@/lib/helpers/api";
+import { createAuthenticatedEndpoint, doOperation } from "@/lib/helpers/api";
+import { get } from "@/lib/helpers/requests";
 
 export const GET = createAuthenticatedEndpoint(async (req, _ctx, accessToken) => {
     const response = await doOperation(() => get(`cal-token`, accessToken));

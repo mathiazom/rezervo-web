@@ -1,14 +1,13 @@
 import useSWRMutation from "swr/mutation";
 
+import { destroy, post, put } from "@/lib/helpers/requests";
+
 export function usePushNotificationSubscription() {
-    const subscriptionApiUrl = `/api/notifications/push`;
-    const subscriptionVerifyApiUrl = `/api/notifications/push/verify`;
+    const subscriptionApiUrl = `notifications/push`;
+    const subscriptionVerifyApiUrl = `notifications/push/verify`;
 
     function subscribe(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return fetch(url, {
-            method: "PUT",
-            body: JSON.stringify(subscription, null, 2),
-        }).then((r) => r.json());
+        return put(url, JSON.stringify(subscription, null, 2)).then((r) => r.json());
     }
 
     const { trigger: triggerSubscribe, isMutating: isSubscribing } = useSWRMutation<
@@ -19,10 +18,7 @@ export function usePushNotificationSubscription() {
     >(subscriptionApiUrl, subscribe);
 
     function unsubscribe(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return fetch(url, {
-            method: "DELETE",
-            body: JSON.stringify(subscription, null, 2),
-        }).then((r) => r.ok);
+        return destroy(url, JSON.stringify(subscription, null, 2)).then((r) => r.ok);
     }
 
     const { trigger: triggerUnsubscribe, isMutating: isUnsubscribing } = useSWRMutation<
@@ -33,10 +29,7 @@ export function usePushNotificationSubscription() {
     >(subscriptionApiUrl, unsubscribe);
 
     function verify(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return fetch(url, {
-            method: "POST",
-            body: JSON.stringify(subscription, null, 2),
-        }).then((r) => r.json());
+        return post(url, JSON.stringify(subscription, null, 2)).then((r) => r.json());
     }
 
     const { trigger: triggerVerify } = useSWRMutation<boolean, unknown, string, PushSubscription>(

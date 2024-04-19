@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import React, { Dispatch, SetStateAction } from "react";
 
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
-import { postBookingRequest } from "@/lib/helpers/fetchers";
+import { post } from "@/lib/helpers/requests";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { ChainIdentifier, RezervoClass } from "@/types/chain";
@@ -25,7 +25,7 @@ function ConfirmCancellation({
     async function cancelBooking() {
         setOpen(false);
         setLoading(true);
-        await postBookingRequest(chain, _class.id.toString(), "cancel-booking");
+        await post(`${chain}/cancel-booking`, JSON.stringify({ classId: _class.id.toString() }, null, 2));
         await mutateSessionsIndex();
         await mutateUserSessions();
         setLoading(false);

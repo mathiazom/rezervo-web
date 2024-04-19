@@ -28,9 +28,9 @@ import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { isClassInThePast } from "@/lib/helpers/date";
-import { postBookingRequest } from "@/lib/helpers/fetchers";
 import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { post } from "@/lib/helpers/requests";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
@@ -83,7 +83,7 @@ export default function ClassInfo({
 
     async function book() {
         setBookingLoading(true);
-        await postBookingRequest(chain, _class.id.toString(), "book");
+        await post(`${chain}/book`, JSON.stringify({ classId: _class.id.toString() }, null, 2));
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);

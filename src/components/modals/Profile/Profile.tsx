@@ -11,6 +11,7 @@ import EditAvatarDialog from "@/components/modals/Profile/EditAvatarDialog";
 import ProfileAvatar from "@/components/modals/Profile/ProfileAvatar";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
+import { buildBackendAuthProxyPath, destroy, put } from "@/lib/helpers/requests";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
 import { useMyAvatar } from "@/stores/userStore";
 import { Position } from "@/types/math";
@@ -79,10 +80,7 @@ function Profile({
         setAvatarPreviewDataURL(URL.createObjectURL(file));
         const formData = new FormData();
         formData.append("file", file);
-        const res = await fetch("/api/user/me/avatar", {
-            method: "PUT",
-            body: formData,
-        });
+        const res = await put("user/me/avatar", formData, null);
         if (res.ok) {
             updateMyAvatarLastModified();
         } else if (res.status === 413) {
@@ -96,9 +94,7 @@ function Profile({
     }
 
     function deleteAvatar() {
-        fetch("/api/user/me/avatar", {
-            method: "DELETE",
-        })
+        destroy("user/me/avatar")
             .then((res) => {
                 console.log(res);
                 if (!res.ok) {
@@ -248,7 +244,7 @@ function Profile({
                                 variant={"outlined"}
                                 color={"error"}
                                 startIcon={<LogoutRoundedIcon />}
-                                href={"/api/auth/logout"}
+                                href={buildBackendAuthProxyPath("auth/logout")}
                             >
                                 Logg ut
                             </Button>

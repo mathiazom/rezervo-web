@@ -7,7 +7,7 @@ import { Features } from "@/types/features";
 export function useFeatures() {
     const { user } = useUser();
 
-    const featuresApiUrl = `/api/features`;
+    const featuresApiUrl = `features`;
 
     const { data, error, isLoading } = useSWR<Features>(user ? featuresApiUrl : null, fetcher);
 

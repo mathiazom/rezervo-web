@@ -3,6 +3,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
+import { put } from "@/lib/helpers/requests";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { RezervoCommunity, UserRelationship, UserRelationshipAction } from "@/types/community";
 
@@ -10,17 +11,14 @@ function putRelationship(
     url: string,
     { arg: relationship }: { arg: { userId: string; action: UserRelationshipAction } },
 ) {
-    return fetch(url, {
-        method: "PUT",
-        body: JSON.stringify(relationship, null, 2),
-    }).then((r) => r.json());
+    return put(url, JSON.stringify(relationship, null, 2)).then((r) => r.json());
 }
 
 export function useCommunity() {
     const { user } = useUser();
 
-    const communityApiUrl = `/api/community`;
-    const relationshipApiUrl = `/api/community/relationship`;
+    const communityApiUrl = `community`;
+    const relationshipApiUrl = `community/relationship`;
 
     const { data, error, isLoading, mutate } = useSWR<RezervoCommunity>(user ? communityApiUrl : null, fetcher);
 

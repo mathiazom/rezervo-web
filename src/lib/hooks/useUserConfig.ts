@@ -2,6 +2,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
+import { put } from "@/lib/helpers/requests";
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
@@ -14,10 +15,7 @@ async function putConfig(
     { arg: config }: { arg: ChainConfigPayload },
     dependantMutations: () => Promise<unknown[]>,
 ) {
-    const r = await fetch(url, {
-        method: "PUT",
-        body: JSON.stringify(config, null, 2),
-    });
+    const r = await put(url, JSON.stringify(config, null, 2));
     await dependantMutations();
     return await r.json();
 }
@@ -25,7 +23,7 @@ async function putConfig(
 export function useUserConfig(chain: ChainIdentifier) {
     const { user } = useUser();
 
-    const configApiUrl = `/api/${chain}/config`;
+    const configApiUrl = `${chain}/config`;
 
     const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(chain);
     const { mutateUserSessions } = useUserSessions();
