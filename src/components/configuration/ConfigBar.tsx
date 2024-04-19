@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";
-import { buildBackendAuthProxyPath, put } from "@/lib/helpers/requests";
+import { buildAuthProxyPath, put } from "@/lib/helpers/requests";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useMyUserId } from "@/stores/userStore";
 import { ChainIdentifier } from "@/types/chain";
@@ -55,7 +55,7 @@ function ConfigBar({
 
     useEffect(() => {
         if (user == undefined) return;
-        put("user").then(async (res) => {
+        put("user", { useAuthProxy: true }).then(async (res) => {
             if (!res.ok) return;
             setMyUserId(await res.json());
             await onRefetchConfig();
@@ -67,7 +67,7 @@ function ConfigBar({
         !isLoadingUser && (
             <>
                 {user == undefined ? (
-                    <Button endIcon={<LoginIcon />} href={buildBackendAuthProxyPath("auth/login")}>
+                    <Button endIcon={<LoginIcon />} href={buildAuthProxyPath("auth/login")}>
                         Logg inn
                     </Button>
                 ) : (

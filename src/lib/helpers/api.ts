@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { destroy, get, post, put } from "@/lib/helpers/requests";
 import { ChainIdentifier } from "@/types/chain";
+import { RequestOptions } from "@/types/requests";
 
 export function isUserMeFromContext(context: AppRouteHandlerFnContext): boolean {
     return userIdFromContext(context) === "me";
@@ -76,27 +77,25 @@ export function createGenericEndpoint(
             return respondNotFound();
         }
 
-        let body: BodyInit | undefined;
-        let contentType: string | null;
+        const requestOptions: RequestOptions = { accessToken };
         if (["POST", "PUT", "DELETE"].includes(method)) {
             if (options?.useFormData) {
-                body = await req.formData();
-                contentType = null;
+                requestOptions.body = await req.formData();
+                requestOptions.withContentType = "NO_CONTENT_TYPE";
             } else {
-                body = await req.text();
-                contentType = "application/json";
+                requestOptions.body = await req.text();
             }
         }
 
         switch (method) {
             case "GET":
-                return await doOperation(() => get(pathPrefix + targetPath, accessToken));
+                return await doOperation(() => get(pathPrefix + targetPath, requestOptions));
             case "POST":
-                return await doOperation(() => post(pathPrefix + targetPath, body, contentType, accessToken));
+                return await doOperation(() => post(pathPrefix + targetPath, requestOptions));
             case "PUT":
-                return await doOperation(() => put(pathPrefix + targetPath, body, contentType, accessToken));
+                return await doOperation(() => put(pathPrefix + targetPath, requestOptions));
             case "DELETE":
-                return await doOperation(() => destroy(pathPrefix + targetPath, body, contentType, accessToken));
+                return await doOperation(() => destroy(pathPrefix + targetPath, requestOptions));
             default:
                 throw new Error("HTTP method not implemented");
         }

@@ -2,7 +2,7 @@ import { createAuthenticatedEndpoint, doOperation } from "@/lib/helpers/api";
 import { get } from "@/lib/helpers/requests";
 
 export const GET = createAuthenticatedEndpoint(async (req, _ctx, accessToken) => {
-    const response = await doOperation(() => get(`cal-token`, accessToken));
+    const response = await doOperation(() => get(`cal-token`, { accessToken }));
     if (!response.ok) return response;
 
     const calendarToken = await response.json();

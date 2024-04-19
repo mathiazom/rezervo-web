@@ -82,7 +82,7 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
 }
 
 export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
-    return get(`chains/${chainIdentifier}`, undefined, true).then((res) => {
+    return get(`chains/${chainIdentifier}`).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
         }
@@ -91,7 +91,7 @@ export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<Reze
 }
 
 export async function fetchActiveChains(): Promise<RezervoChain[]> {
-    return get("chains", undefined, true).then((res) => {
+    return get("chains").then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -111,8 +111,7 @@ export async function fetchRezervoWeekSchedule(
                 `schedule/${chainIdentifier}/${weekOffset}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
-                undefined,
-                true,
+                { cache: "no-store" },
             )
         ).json()),
     }) as RezervoWeekSchedule;
@@ -135,7 +134,7 @@ export async function fetchRezervoSchedule(
 }
 
 export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
-    return get("categories", undefined, true).then((res) => {
+    return get("categories").then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }

@@ -33,7 +33,7 @@ export async function getStaticProps({ params }: { params: ChainPageParams }): P
  */
 const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, config) => {
     // ignore non-schedule keys
-    if (!(typeof key === "string" && key.match(/^\/api\/[a-z0-9-]+\/schedule/))) {
+    if (!(typeof key === "string" && key.match(/^[a-z0-9-]+\/schedule/))) {
         return useSWRNext(key, fetcher, config);
     }
     const { cache } = useSWRConfig();

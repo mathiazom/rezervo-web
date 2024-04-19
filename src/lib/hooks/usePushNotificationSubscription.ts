@@ -7,7 +7,7 @@ export function usePushNotificationSubscription() {
     const subscriptionVerifyApiUrl = `notifications/push/verify`;
 
     function subscribe(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return put(url, JSON.stringify(subscription, null, 2)).then((r) => r.json());
+        return put(url, { body: JSON.stringify(subscription, null, 2), useAuthProxy: true }).then((r) => r.json());
     }
 
     const { trigger: triggerSubscribe, isMutating: isSubscribing } = useSWRMutation<
@@ -18,7 +18,7 @@ export function usePushNotificationSubscription() {
     >(subscriptionApiUrl, subscribe);
 
     function unsubscribe(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return destroy(url, JSON.stringify(subscription, null, 2)).then((r) => r.ok);
+        return destroy(url, { body: JSON.stringify(subscription, null, 2), useAuthProxy: true }).then((r) => r.ok);
     }
 
     const { trigger: triggerUnsubscribe, isMutating: isUnsubscribing } = useSWRMutation<
@@ -29,7 +29,7 @@ export function usePushNotificationSubscription() {
     >(subscriptionApiUrl, unsubscribe);
 
     function verify(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return post(url, JSON.stringify(subscription, null, 2)).then((r) => r.json());
+        return post(url, { body: JSON.stringify(subscription, null, 2), useAuthProxy: true }).then((r) => r.json());
     }
 
     const { trigger: triggerVerify } = useSWRMutation<boolean, unknown, string, PushSubscription>(

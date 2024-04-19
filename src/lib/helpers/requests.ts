@@ -1,28 +1,26 @@
 import { HTTP_METHOD } from "next/dist/server/web/http";
 
-function createRequestInit(
-    method: HTTP_METHOD,
-    accessToken?: string,
-    body?: BodyInit,
-    contentType: string | null = "application/json",
-    cache?: RequestCache,
-): RequestInit {
+import { RequestOptions } from "@/types/requests";
+
+function createRequestInit(method: HTTP_METHOD, options?: RequestOptions): RequestInit {
     const headers = new Headers();
     const requestInit: RequestInit = {
         method,
         headers,
     };
-    if (accessToken) {
-        headers.append("Authorization", `Bearer ${accessToken}`);
+    if (options?.accessToken) {
+        headers.append("Authorization", `Bearer ${options.accessToken}`);
     }
-    if (contentType) {
-        headers.append("Content-Type", contentType);
+    if (options?.withContentType === "NO_CONTENT_TYPE") {
+        // Omit the content type
+    } else {
+        headers.append("Content-Type", options?.withContentType ?? "application/json");
     }
-    if (body) {
-        requestInit.body = body;
+    if (options?.body) {
+        requestInit.body = options.body;
     }
-    if (cache) {
-        requestInit.cache = cache;
+    if (options?.cache) {
+        requestInit.cache = options.cache;
     }
     return requestInit;
 }
@@ -32,45 +30,29 @@ function buildBackendPath(path: string): string {
     return `${host}/${path}`;
 }
 
-export function buildBackendAuthProxyPath(path: string): string {
+export function buildAuthProxyPath(path: string): string {
     return `/api/${path}`;
 }
 
-function createRequest(path: string, requestInit: RequestInit, authProxyRequired?: boolean): Promise<Response> {
-    return fetch(authProxyRequired ? buildBackendAuthProxyPath(path) : buildBackendPath(path), requestInit);
+export function createRequest(path: string, requestInit?: RequestInit, options?: RequestOptions): Promise<Response> {
+    return fetch(options?.useAuthProxy ? buildAuthProxyPath(path) : buildBackendPath(path), requestInit);
 }
 
-export function get(path: string, accessToken?: string, skipAuthProxy?: boolean): Promise<Response> {
-    return createRequest(
-        path,
-        createRequestInit("GET", accessToken, undefined, undefined, "no-store"),
-        !accessToken && !skipAuthProxy,
-    );
+export function get(path: string, options?: RequestOptions): Promise<Response> {
+    if (options) {
+        options.cache ??= "no-store";
+    }
+    return createRequest(path, createRequestInit("GET", options), options);
 }
 
-export function put(
-    path: string,
-    body?: BodyInit,
-    contentType?: string | null,
-    accessToken?: string,
-): Promise<Response> {
-    return createRequest(path, createRequestInit("PUT", accessToken, body, contentType), !accessToken);
+export function put(path: string, options?: RequestOptions): Promise<Response> {
+    return createRequest(path, createRequestInit("PUT", options), options);
 }
 
-export function post(
-    path: string,
-    body?: BodyInit,
-    contentType?: string | null,
-    accessToken?: string,
-): Promise<Response> {
-    return createRequest(path, createRequestInit("POST", accessToken, body, contentType), !accessToken);
+export function post(path: string, options?: RequestOptions): Promise<Response> {
+    return createRequest(path, createRequestInit("POST", options), options);
 }
 
-export function destroy(
-    path: string,
-    body?: BodyInit,
-    contentType?: string | null,
-    accessToken?: string,
-): Promise<Response> {
-    return createRequest(path, createRequestInit("DELETE", accessToken, body, contentType), !accessToken);
+export function destroy(path: string, options?: RequestOptions): Promise<Response> {
+    return createRequest(path, createRequestInit("DELETE", options), options);
 }

@@ -11,7 +11,10 @@ function putRelationship(
     url: string,
     { arg: relationship }: { arg: { userId: string; action: UserRelationshipAction } },
 ) {
-    return put(url, JSON.stringify(relationship, null, 2)).then((r) => r.json());
+    return put(url, {
+        body: JSON.stringify(relationship, null, 2),
+        useAuthProxy: true,
+    }).then((r) => r.json());
 }
 
 export function useCommunity() {

@@ -32,7 +32,10 @@ const BookingPopupModal = ({
 
     async function book() {
         setBookingLoading(true);
-        await post(`${chain}/book`, JSON.stringify({ classId: _class.id.toString() }, null, 2));
+        await post(`${chain}/book`, {
+            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            useAuthProxy: true,
+        });
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);
@@ -41,7 +44,10 @@ const BookingPopupModal = ({
 
     async function cancelBooking() {
         setBookingLoading(true);
-        await post(`${chain}/cancel-booking`, JSON.stringify({ classId: _class.id.toString() }, null, 2));
+        await post(`${chain}/cancel-booking`, {
+            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            useAuthProxy: true,
+        });
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);

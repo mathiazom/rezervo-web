@@ -25,7 +25,10 @@ function ConfirmCancellation({
     async function cancelBooking() {
         setOpen(false);
         setLoading(true);
-        await post(`${chain}/cancel-booking`, JSON.stringify({ classId: _class.id.toString() }, null, 2));
+        await post(`${chain}/cancel-booking`, {
+            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            useAuthProxy: true,
+        });
         await mutateSessionsIndex();
         await mutateUserSessions();
         setLoading(false);

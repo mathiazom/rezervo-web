@@ -17,5 +17,5 @@ export const GET = createAuthenticatedEndpoint(async (req, ctx, accessToken) => 
     // TODO: cleaner implementation
     req.nextUrl.searchParams.get("CACHE-BUSTER-NOT-ACTUALLY-USED");
 
-    return await doOperation(() => get(`user/${userId}/avatar/${thumbnailSize}`, accessToken));
+    return await doOperation(() => get(`user/${userId}/avatar/${thumbnailSize}`, { accessToken }));
 });

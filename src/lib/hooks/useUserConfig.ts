@@ -15,7 +15,7 @@ async function putConfig(
     { arg: config }: { arg: ChainConfigPayload },
     dependantMutations: () => Promise<unknown[]>,
 ) {
-    const r = await put(url, JSON.stringify(config, null, 2));
+    const r = await put(url, { body: JSON.stringify(config, null, 2), useAuthProxy: true });
     await dependantMutations();
     return await r.json();
 }

@@ -83,7 +83,10 @@ export default function ClassInfo({
 
     async function book() {
         setBookingLoading(true);
-        await post(`${chain}/book`, JSON.stringify({ classId: _class.id.toString() }, null, 2));
+        await post(`${chain}/book`, {
+            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            useAuthProxy: true,
+        });
         await mutateSessionsIndex();
         await mutateUserSessions();
         setBookingLoading(false);
