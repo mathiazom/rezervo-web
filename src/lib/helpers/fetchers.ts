@@ -111,7 +111,6 @@ export async function fetchRezervoWeekSchedule(
                 `schedule/${chainIdentifier}/${weekOffset}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
-                { cache: "no-store" },
             )
         ).json()),
     }) as RezervoWeekSchedule;
