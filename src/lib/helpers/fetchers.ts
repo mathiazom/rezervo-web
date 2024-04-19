@@ -1,4 +1,4 @@
-import { buildBackendPath } from "@/lib/helpers/api";
+import { get } from "@/lib/helpers/api";
 import { firstDateOfWeekByOffset } from "@/lib/helpers/date";
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
@@ -82,9 +82,7 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
 }
 
 export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
-    return fetch(buildBackendPath(`chains/${chainIdentifier}`), {
-        cache: "no-store",
-    }).then((res) => {
+    return get(`chains/${chainIdentifier}`).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
         }
@@ -93,9 +91,7 @@ export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<Reze
 }
 
 export async function fetchActiveChains(): Promise<RezervoChain[]> {
-    return fetch(buildBackendPath("chains"), {
-        cache: "no-store",
-    }).then((res) => {
+    return get("chains").then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -111,15 +107,10 @@ export async function fetchRezervoWeekSchedule(
     return deserializeWeekSchedule({
         locationIds: locationIdentifiers,
         ...(await (
-            await fetch(
-                buildBackendPath(
-                    `schedule/${chainIdentifier}/${weekOffset}${
-                        locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
-                    }`,
-                ),
-                {
-                    cache: "no-store",
-                },
+            await get(
+                `schedule/${chainIdentifier}/${weekOffset}${
+                    locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
+                }`,
             )
         ).json()),
     }) as RezervoWeekSchedule;
@@ -142,9 +133,7 @@ export async function fetchRezervoSchedule(
 }
 
 export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
-    return fetch(buildBackendPath("categories"), {
-        cache: "no-store",
-    }).then((res) => {
+    return get("categories").then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }

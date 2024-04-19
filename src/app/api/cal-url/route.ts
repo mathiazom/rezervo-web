@@ -1,10 +1,6 @@
-import { withApiAuthRequired } from "@auth0/nextjs-auth0";
+import { createAuthenticatedEndpoint, doOperation, get } from "@/lib/helpers/api";
 
-import { doOperation, get, respondUnauthorized, tryUseRefreshToken } from "@/lib/helpers/api";
-
-export const GET = withApiAuthRequired(async (req) => {
-    const accessToken = await tryUseRefreshToken(req);
-    if (!accessToken) return respondUnauthorized();
+export const GET = createAuthenticatedEndpoint(async (req, _ctx, accessToken) => {
     const response = await doOperation(() => get(`cal-token`, accessToken));
     if (!response.ok) return response;
 
