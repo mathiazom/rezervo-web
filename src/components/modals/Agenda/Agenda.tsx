@@ -1,5 +1,12 @@
-import { CalendarMonth, CalendarToday, EventRepeat, PauseCircleRounded, SettingsRounded } from "@mui/icons-material";
-import { Alert, AlertTitle, Avatar, Box, Typography, useTheme } from "@mui/material";
+import {
+    CalendarMonth,
+    CalendarToday,
+    EventRepeat,
+    InfoOutlined,
+    PauseCircleRounded,
+    SettingsRounded,
+} from "@mui/icons-material";
+import { Alert, AlertTitle, Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 import React from "react";
 
 import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
@@ -226,6 +233,20 @@ export default function Agenda({
                         </Alert>
                     )}
                     <AgendaDays dayMap={plannedSessionsDayMap} />
+                    <Stack direction={"row"} alignItems={"center"} mt={4} mb={2} pl={1} pr={3} gap={2}>
+                        <InfoOutlined sx={{ color: theme.palette.grey[500] }} />
+                        <Typography
+                            variant="body2"
+                            style={{
+                                color: theme.palette.grey[500],
+                                fontSize: 14,
+                            }}
+                        >
+                            {PLANNED_SESSIONS_NEXT_WHOLE_WEEKS > 1
+                                ? `Viser planlagte bookinger kun for de neste\u00A0${PLANNED_SESSIONS_NEXT_WHOLE_WEEKS}\u00A0ukene`
+                                : `Viser planlagte bookinger kun til og med neste\u00A0uke`}
+                        </Typography>
+                    </Stack>
                 </Box>
             )}
         </Box>
