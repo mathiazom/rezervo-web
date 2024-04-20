@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSWR, { preload, useSWRConfig } from "swr";
 
 import { scheduleUrlKey } from "@/lib/helpers/fetchers";
@@ -34,9 +34,13 @@ export function useSchedule(chainIdentifier: string | null, currentWeekOffset: n
         },
     );
 
+    const weekSchedule = useMemo(() => {
+        return data ? deserializeWeekSchedule(data) : null;
+    }, [data]);
+
     return {
         latestLoadedWeekOffset: latestLoadedWeekOffset,
-        weekSchedule: data ? deserializeWeekSchedule(data) : null,
+        weekSchedule: weekSchedule,
         weekScheduleError: error,
         weekScheduleLoading: isLoading,
     };
