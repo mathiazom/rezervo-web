@@ -1,5 +1,5 @@
 import { Modal } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 
 import ClassInfo from "@/components/modals/ClassInfo/ClassInfo";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
@@ -9,18 +9,18 @@ import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 const ClassInfoModal = ({
     chain,
     classInfoClass,
-    setClassInfoClass,
     classPopularityIndex,
     onUpdateConfig,
+    onClose,
 }: {
     chain: ChainIdentifier;
     classInfoClass: RezervoClass | null;
-    setClassInfoClass: Dispatch<SetStateAction<RezervoClass | null>>;
     classPopularityIndex: ClassPopularityIndex;
     onUpdateConfig: (classId: string, selected: boolean) => void;
+    onClose: () => void;
 }) => {
     return (
-        <Modal open={classInfoClass != null} onClose={() => setClassInfoClass(null)}>
+        <Modal open={classInfoClass != null} onClose={() => onClose()}>
             <>
                 {classInfoClass && (
                     <ClassInfo

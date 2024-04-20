@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 
 function ChainSwitcher({
@@ -56,7 +58,12 @@ function ChainSwitcher({
                                 }
                             >
                                 <Link
-                                    href={`/${chainProfile.identifier}`}
+                                    href={{
+                                        pathname: `/${chainProfile.identifier}`,
+                                        query: {
+                                            [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(LocalizedDateTime.now()),
+                                        },
+                                    }}
                                     style={{ width: "100%" }}
                                     passHref
                                     legacyBehavior

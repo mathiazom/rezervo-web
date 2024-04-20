@@ -1,4 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
+import { useQueryState } from "nuqs";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -12,9 +13,15 @@ import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
-import ClassLinkingProvider from "@/components/utils/ClassLinkingProvider";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
+import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import {
+    compactISOWeekString,
+    fromCompactISOWeekString,
+    LocalizedDateTime,
+    weekOffsetBetweenDates,
+} from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { getStoredSelectedCategories, getStoredSelectedLocations } from "@/lib/helpers/storage";
 import { useSchedule } from "@/lib/hooks/useSchedule";
@@ -72,10 +79,6 @@ function Chain({
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
-    const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
-
-    const [weekOffset, setWeekOffset] = useState(0);
-
     const defaultLocationIds = useMemo(() => {
         return chain.branches.length > 0 ? chain.branches[0]!.locations.map(({ identifier }) => identifier) : [];
     }, [chain.branches]);
@@ -83,6 +86,30 @@ function Chain({
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
     const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
     const [selectedChain, setSelectedChain] = useState<string | null>(null);
+
+    const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
+
+    const [classIdParam, setClassIdParam] = useQueryState(CLASS_ID_QUERY_PARAM);
+    const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
+
+    useEffect(
+        () => {
+            if (weekParam === null) {
+                setWeekParam(compactISOWeekString(LocalizedDateTime.now()));
+            }
+        },
+        // TODO: experiencing frozen Chromium if using proper deps array...
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [],
+    );
+
+    // TODO: completely replace weekOffset with week year and number
+    const weekOffset = useMemo(() => {
+        if (weekParam === null) return 0;
+        const weekDate = fromCompactISOWeekString(weekParam);
+        if (weekDate === null) return 0;
+        return weekOffsetBetweenDates(weekDate, LocalizedDateTime.now());
+    }, [weekParam]);
 
     useEffect(() => {
         const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
@@ -102,6 +129,25 @@ function Chain({
     const classes = useMemo(
         () => currentWeekSchedule?.days.flatMap((daySchedule) => daySchedule.classes) ?? [],
         [currentWeekSchedule?.days],
+    );
+
+    useEffect(() => {
+        if (classIdParam === null) {
+            setClassInfoClass(null);
+            return;
+        }
+        const linkedClass = classes.find((_class) => _class.id === classIdParam);
+        if (linkedClass !== undefined) {
+            setClassInfoClass(linkedClass);
+        }
+    }, [classIdParam, classes, setClassInfoClass]);
+
+    const onSetClassInfoClass = useCallback(
+        (c: RezervoClass | null) => {
+            setClassIdParam(c?.id ?? null);
+            setClassInfoClass(c);
+        },
+        [setClassIdParam],
     );
 
     // Pre-generate all non-ghost class config strings
@@ -188,11 +234,6 @@ function Chain({
     return (
         <>
             <PageHead title={`${chain.profile.identifier}-rezervo`} />
-            <ClassLinkingProvider
-                classes={classes}
-                setWeekOffset={setWeekOffset}
-                setClassInfoClass={setClassInfoClass}
-            />
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
@@ -216,7 +257,6 @@ function Chain({
                     {error === undefined && currentWeekSchedule != null && (
                         <WeekNavigator
                             chain={chain}
-                            setCurrentWeekOffset={setWeekOffset}
                             isLoadingPreviousWeek={isLoadingPreviousWeek}
                             isLoadingNextWeek={isLoadingNextWeek}
                             weekNumber={getWeekNumber(currentWeekSchedule)}
@@ -241,7 +281,7 @@ function Chain({
                             selectable={userConfig != undefined && !userConfigError}
                             selectedClassIds={selectedClassIds}
                             onUpdateConfig={onUpdateConfig}
-                            onInfo={setClassInfoClass}
+                            onInfo={onSetClassInfoClass}
                             scrollToTodayRef={scrollToTodayRef}
                         />
                     )
@@ -252,9 +292,9 @@ function Chain({
             <ClassInfoModal
                 chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
-                setClassInfoClass={setClassInfoClass}
                 classPopularityIndex={classPopularityIndex}
                 onUpdateConfig={onUpdateConfig}
+                onClose={() => onSetClassInfoClass(null)}
             />
             <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
             {userSessions !== null && userChainConfigs !== null && (
