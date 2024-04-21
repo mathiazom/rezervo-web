@@ -30,6 +30,7 @@ import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBa
 import { isClassInThePast } from "@/lib/helpers/date";
 import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { post } from "@/lib/helpers/requests";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
@@ -82,9 +83,9 @@ export default function ClassInfo({
 
     async function book() {
         setBookingLoading(true);
-        await fetch(`/api/${chain}/book`, {
-            method: "POST",
+        await post(`${chain}/book`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            mode: "authProxy",
         });
         await mutateSessionsIndex();
         await mutateUserSessions();

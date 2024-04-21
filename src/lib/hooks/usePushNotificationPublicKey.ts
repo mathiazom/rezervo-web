@@ -6,7 +6,7 @@ import { fetcher } from "@/lib/utils/fetchUtils";
 export function usePushNotificationPublicKey() {
     const { user } = useUser();
 
-    const publicKeyApiUrl = `/api/notifications/push/public-key`;
+    const publicKeyApiUrl = `notifications/push/public-key`;
 
     const { data, error, isLoading } = useSWR<string>(user ? publicKeyApiUrl : null, fetcher);
 

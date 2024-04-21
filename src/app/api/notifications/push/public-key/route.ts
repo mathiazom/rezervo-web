@@ -1,10 +1,5 @@
-import { withApiAuthRequired } from "@auth0/nextjs-auth0";
+import { createAuthenticatedEndpoint } from "@/lib/helpers/api";
 
-import { respondUnauthorized, tryUseRefreshToken } from "@/lib/helpers/api";
-
-export const GET = withApiAuthRequired(async (req) => {
-    const accessToken = await tryUseRefreshToken(req);
-    if (!accessToken) return respondUnauthorized();
-
+export const GET = createAuthenticatedEndpoint(async () => {
     return Response.json(process.env["WEB_PUSH_PUBLIC_KEY"]);
 });

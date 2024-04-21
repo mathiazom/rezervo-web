@@ -1,5 +1,7 @@
-export const fetcher = async <TData>(key: RequestInfo | URL, init?: RequestInit): Promise<TData> => {
-    const r = await fetch(key, init);
+import { createRequest } from "@/lib/helpers/requests";
+
+export const fetcher = async <TData>(path: string, init?: RequestInit): Promise<TData> => {
+    const r = await createRequest(path, init, { mode: "authProxy" });
     if (r.ok) {
         return r.json();
     }

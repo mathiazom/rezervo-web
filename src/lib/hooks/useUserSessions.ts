@@ -8,7 +8,7 @@ import { BaseUserSessionDTO } from "@/types/serialization";
 export function useUserSessions() {
     const { user } = useUser();
 
-    const userSessionsApiUrl = `/api/user/sessions`;
+    const userSessionsApiUrl = `user/sessions`;
 
     const { data, mutate } = useSWR<BaseUserSessionDTO[]>(user ? userSessionsApiUrl : null, fetcher);
 

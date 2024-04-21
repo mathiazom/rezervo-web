@@ -6,15 +6,9 @@ import { fetcher } from "@/lib/utils/fetchUtils";
 export function useUserCalendarFeedUrl(includePast: boolean) {
     const { user } = useUser();
 
-    // `document.location` is used as a dummy origin, since URL only supports absolute paths
-    const userCalendarFeedTokenUrl = new URL("/api/cal-url", document.location.origin);
-    userCalendarFeedTokenUrl.searchParams.set("include_past", String(includePast));
+    const userCalendarFeedTokenUrl = `cal-url?include_past=${includePast}`;
 
-    const {
-        data: url,
-        error: urlError,
-        isLoading,
-    } = useSWR<string>(user ? userCalendarFeedTokenUrl.toString() : null, fetcher);
+    const { data: url, error: urlError, isLoading } = useSWR<string>(user ? userCalendarFeedTokenUrl : null, fetcher);
 
     return url != null && urlError == null
         ? {

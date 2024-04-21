@@ -1,33 +1,21 @@
-import { AppRouteHandlerFnContext, withApiAuthRequired } from "@auth0/nextjs-auth0";
-
 import {
-    buildBackendPath,
+    createAuthenticatedEndpoint,
     doOperation,
     respondNotFound,
-    respondUnauthorized,
     thumbnailSizeFromContext,
-    tryUseRefreshToken,
     userIdFromContext,
 } from "@/lib/helpers/api";
+import { get } from "@/lib/helpers/requests";
 
-export const GET = withApiAuthRequired(async (req, ctx) => {
-    const accessToken = await tryUseRefreshToken(req);
-    if (!accessToken) return respondUnauthorized();
-
-    const userId = userIdFromContext(ctx as AppRouteHandlerFnContext);
+export const GET = createAuthenticatedEndpoint(async (req, ctx, accessToken) => {
+    const userId = userIdFromContext(ctx);
     if (userId === null) return respondNotFound();
 
-    const thumbnailSize = thumbnailSizeFromContext(ctx as AppRouteHandlerFnContext);
+    const thumbnailSize = thumbnailSizeFromContext(ctx);
     if (thumbnailSize === null) return respondNotFound();
 
     // TODO: cleaner implementation
     req.nextUrl.searchParams.get("CACHE-BUSTER-NOT-ACTUALLY-USED");
 
-    return await doOperation(() =>
-        fetch(buildBackendPath(`user/${userId}/avatar/${thumbnailSize}`), {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            },
-        }),
-    );
+    return await doOperation(() => get(`user/${userId}/avatar/${thumbnailSize}`, { accessToken }));
 });

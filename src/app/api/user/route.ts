@@ -1,10 +1,3 @@
-import { withApiAuthRequired } from "@auth0/nextjs-auth0";
+import { createGenericEndpoint } from "@/lib/helpers/api";
 
-import { doOperation, put, respondUnauthorized, tryUseRefreshToken } from "@/lib/helpers/api";
-
-export const PUT = withApiAuthRequired(async (req) => {
-    const accessToken = await tryUseRefreshToken(req);
-    if (!accessToken) return respondUnauthorized();
-
-    return await doOperation(() => put(`user`, accessToken));
-});
+export const PUT = createGenericEndpoint("PUT", "user");

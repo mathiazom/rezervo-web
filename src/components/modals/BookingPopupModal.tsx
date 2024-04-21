@@ -6,6 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import React, { useState } from "react";
 
 import { hasWaitingList } from "@/lib/helpers/popularity";
+import { post } from "@/lib/helpers/requests";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
@@ -31,9 +32,9 @@ const BookingPopupModal = ({
 
     async function book() {
         setBookingLoading(true);
-        await fetch(`/api/${chain}/book`, {
-            method: "POST",
+        await post(`${chain}/book`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            mode: "authProxy",
         });
         await mutateSessionsIndex();
         await mutateUserSessions();
@@ -43,9 +44,9 @@ const BookingPopupModal = ({
 
     async function cancelBooking() {
         setBookingLoading(true);
-        await fetch(`/api/${chain}/cancel-booking`, {
-            method: "POST",
+        await post(`${chain}/cancel-booking`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
+            mode: "authProxy",
         });
         await mutateSessionsIndex();
         await mutateUserSessions();

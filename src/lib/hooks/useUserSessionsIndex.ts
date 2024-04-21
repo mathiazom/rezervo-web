@@ -8,7 +8,7 @@ import { UserSessionsIndex } from "@/types/userSessions";
 export function useUserSessionsIndex(chain: ChainIdentifier) {
     const { user } = useUser();
 
-    const userSessionsIndexApiUrl = `/api/${chain}/sessions-index`;
+    const userSessionsIndexApiUrl = `${chain}/sessions-index`;
 
     const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(
         user && chain ? userSessionsIndexApiUrl : null,

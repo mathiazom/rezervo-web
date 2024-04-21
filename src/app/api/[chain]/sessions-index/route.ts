@@ -1,20 +1,3 @@
-import { AppRouteHandlerFnContext, withApiAuthRequired } from "@auth0/nextjs-auth0";
+import { createGenericEndpoint } from "@/lib/helpers/api";
 
-import {
-    get,
-    tryUseRefreshToken,
-    respondUnauthorized,
-    respondNotFound,
-    doOperation,
-    chainIdentifierFromContext,
-} from "@/lib/helpers/api";
-
-export const GET = withApiAuthRequired(async (req, ctx) => {
-    const accessToken = await tryUseRefreshToken(req);
-    if (!accessToken) return respondUnauthorized();
-
-    const chainIdentifier = chainIdentifierFromContext(ctx as AppRouteHandlerFnContext);
-    if (chainIdentifier === null) return respondNotFound();
-
-    return await doOperation(() => get(`${chainIdentifier}/sessions-index`, accessToken));
-});
+export const GET = createGenericEndpoint("GET", "sessions-index", { withChainIdentifier: true });

@@ -8,7 +8,7 @@ import { ChainConfig } from "@/types/config";
 export function useUserChainConfigs() {
     const { user } = useUser();
 
-    const userChainConfigsApiUrl = `/api/user/chain-configs`;
+    const userChainConfigsApiUrl = `user/chain-configs`;
 
     const { data, error, isLoading, mutate } = useSWR<Record<ChainIdentifier, ChainConfig>>(
         user ? userChainConfigsApiUrl : null,
