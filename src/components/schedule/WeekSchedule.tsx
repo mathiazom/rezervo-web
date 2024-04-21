@@ -40,10 +40,8 @@ function WeekSchedule({
                         return (
                             <Box
                                 key={daySchedule.date.toString()}
-                                paddingX={"0.5rem"}
-                                marginX={"0rem"}
-                                paddingBottom={"2rem"}
                                 sx={{
+                                    display: "flex",
                                     ...(dayIsToday
                                         ? {
                                               backgroundColor: alpha(theme.palette.primary.main, 0.1),

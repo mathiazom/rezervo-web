@@ -1,10 +1,11 @@
-import { Box, Chip, Typography, useTheme } from "@mui/material";
+import { Box, Chip, Divider, Typography, useTheme } from "@mui/material";
 import React, { useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
 import { getCapitalizedWeekday, isClassInThePast, isDayPassed, isToday, LocalizedDateTime } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier, RezervoClass, RezervoDaySchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
@@ -60,63 +61,101 @@ function DaySchedule({
 
     return (
         <Box
+            width={196}
             key={daySchedule.date.toString()}
-            width={180}
             ref={dayIsToday && scrollToTodayClassId == null ? scrollToTodayRef : null}
+            sx={{
+                flexGrow: 1,
+            }}
         >
             <Box
                 sx={{
-                    padding: "0.75rem 0.5rem 1rem 0.5rem",
-                    opacity: isDayPassed(daySchedule.date) ? 1 : 0.5,
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 2,
+                    ...(dayIsToday
+                        ? {
+                              backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.1, 255),
+                              '[data-mui-color-scheme="dark"] &': {
+                                  backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.2, 0),
+                              },
+                          }
+                        : {
+                              backgroundColor: theme.palette.background.default,
+                          }),
                 }}
             >
-                <Typography variant="h6" component="div">
-                    {getCapitalizedWeekday(daySchedule.date)}{" "}
-                    {dayIsToday && (
-                        <Chip
-                            size={"small"}
-                            sx={{ backgroundColor: theme.palette.primary.dark, color: "#fff" }}
-                            label="I dag"
-                        />
-                    )}
-                </Typography>
-                <Typography
-                    variant="h6"
-                    component="div"
-                    style={{
-                        color: theme.palette.grey[600],
-                        fontSize: 15,
+                <Box
+                    sx={{
+                        opacity: isDayPassed(daySchedule.date) ? 1 : 0.5,
+                        padding: "0.5rem 1rem",
                     }}
                 >
-                    {daySchedule.date.toFormat("yyyy-MM-dd")}
-                </Typography>
-            </Box>
-            {filteredClasses.length > 0 ? (
-                filteredClasses.map((_class) => (
-                    <Box key={_class.id}>
-                        {dayIsToday && _class.id === scrollToTodayClassId && !isClassInThePast(_class) && (
-                            <CurrentTimeDivider />
-                        )}
-                        <Box mb={1} ref={dayIsToday && _class.id === scrollToTodayClassId ? scrollToTodayRef : null}>
-                            <ClassCard
-                                chain={chain}
-                                _class={_class}
-                                popularity={classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown}
-                                selectable={selectable}
-                                selected={
-                                    selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))
-                                }
-                                onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
-                                onInfo={() => onInfo(_class)}
+                    <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{ fontSize: "1.125rem", display: "flex", alignItems: "center", gap: "0.4rem" }}
+                    >
+                        {getCapitalizedWeekday(daySchedule.date)}{" "}
+                        {dayIsToday && (
+                            <Chip
+                                size={"small"}
+                                sx={{
+                                    backgroundColor: theme.palette.primary.dark,
+                                    color: "#fff",
+                                    fontSize: "0.7rem",
+                                    height: "18px",
+                                }}
+                                label="I dag"
                             />
+                        )}
+                    </Typography>
+                    <Typography
+                        variant="h6"
+                        component="div"
+                        sx={{
+                            color: theme.palette.grey[600],
+                            fontSize: "0.875rem",
+                        }}
+                    >
+                        {daySchedule.date.toFormat("yyyy-MM-dd")}
+                    </Typography>
+                </Box>
+                <Divider orientation="horizontal" />
+            </Box>
+            <Box padding={"0 0.5rem 2rem 0.5rem"} marginTop={"0.5rem"}>
+                {filteredClasses.length > 0 ? (
+                    filteredClasses.map((_class) => (
+                        <Box key={_class.id}>
+                            {dayIsToday && _class.id === scrollToTodayClassId && !isClassInThePast(_class) && (
+                                <CurrentTimeDivider />
+                            )}
+                            <Box
+                                mb={1}
+                                ref={dayIsToday && _class.id === scrollToTodayClassId ? scrollToTodayRef : null}
+                            >
+                                <ClassCard
+                                    chain={chain}
+                                    _class={_class}
+                                    popularity={
+                                        classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown
+                                    }
+                                    selectable={selectable}
+                                    selected={
+                                        selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))
+                                    }
+                                    onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
+                                    onInfo={() => onInfo(_class)}
+                                />
+                            </Box>
                         </Box>
-                    </Box>
-                ))
-            ) : (
-                <>
-                    <p>Ingen gruppetimer</p>
-                </>
-            )}
+                    ))
+                ) : (
+                    <>
+                        <p>Ingen gruppetimer</p>
+                    </>
+                )}
+            </Box>
         </Box>
     );
 }
