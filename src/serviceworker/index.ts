@@ -1,10 +1,14 @@
-import { defaultCache } from "@serwist/next/browser";
-import { PrecacheEntry } from "@serwist/precaching";
-import { installSerwist } from "@serwist/sw";
+import { defaultCache } from "@serwist/next/worker";
+import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
+import { Serwist } from "serwist";
 
-declare const self: ServiceWorkerGlobalScope & {
-    __SW_MANIFEST: (PrecacheEntry | string)[];
-};
+declare global {
+    interface WorkerGlobalScope extends SerwistGlobalConfig {
+        __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
+    }
+}
+
+declare const self: ServiceWorkerGlobalScope;
 
 /**
  * Custom listeners to enable receiving of notifications based on
@@ -38,10 +42,12 @@ self.addEventListener("notificationclick", (event) => {
     );
 });
 
-installSerwist({
-    precacheEntries: self.__SW_MANIFEST,
+const serwist = new Serwist({
+    precacheEntries: self.__SW_MANIFEST ?? [],
     skipWaiting: true,
     clientsClaim: true,
     navigationPreload: true,
     runtimeCaching: defaultCache,
 });
+
+serwist.addEventListeners();

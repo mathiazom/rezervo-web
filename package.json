@@ -24,9 +24,7 @@
         "@mui/icons-material": "^5.15.10",
         "@mui/lab": "^5.0.0-alpha.165",
         "@mui/material": "^5.15.10",
-        "@serwist/next": "^8.4.4",
-        "@serwist/precaching": "^8.4.4",
-        "@serwist/sw": "^8.4.4",
+        "@serwist/next": "^9.0.0",
         "js-cookie": "^3.0.5",
         "luxon": "^3.4.4",
         "next": "14.0.1",
@@ -59,6 +57,7 @@
         "eslint-plugin-no-relative-import-paths": "^1.5.3",
         "npm-run-all": "^4.1.5",
         "prettier": "^3.2.5",
+        "serwist": "^9.0.0",
         "typescript": "^5.3.3"
     }
 }
