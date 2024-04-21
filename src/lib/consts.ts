@@ -6,3 +6,5 @@ export const ALLOWED_AVATAR_FILE_TYPES = "image/*";
 
 export const CLASS_ID_QUERY_PARAM = "c";
 export const ISO_WEEK_QUERY_PARAM = "w";
+
+export const SCROLL_TO_NOW_QUERY_PARAM = "now";

@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
-import { useQueryState } from "nuqs";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -15,7 +15,7 @@ import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PageHead from "@/components/utils/PageHead";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import {
     compactISOWeekString,
     fromCompactISOWeekString,
@@ -211,6 +211,15 @@ function Chain({
         scrollToToday();
     }, [scrollToTodayRef]);
 
+    const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
+
+    useEffect(() => {
+        if (scrollToNowParam) {
+            scrollToToday();
+            setTimeout(() => setScrollToNowParam(null), 3000);
+        }
+    }, [scrollToNowParam, setScrollToNowParam]);
+
     function scrollToToday() {
         const target = scrollToTodayRef.current;
         if (target != null) {
@@ -260,7 +269,6 @@ function Chain({
                             isLoadingPreviousWeek={isLoadingPreviousWeek}
                             isLoadingNextWeek={isLoadingNextWeek}
                             weekNumber={getWeekNumber(currentWeekSchedule)}
-                            onGoToToday={scrollToToday}
                             selectedLocationIds={selectedLocationIds}
                             setSelectedLocationIds={setSelectedLocationIds}
                             allCategories={activityCategories}

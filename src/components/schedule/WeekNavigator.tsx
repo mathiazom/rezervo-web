@@ -2,11 +2,11 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
-import { useQueryState } from "nuqs";
+import { parseAsBoolean, useQueryState } from "nuqs";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 import ScheduleFiltersDialog, { CATEGORIES_COLOR, LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
-import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { ActivityCategory, RezervoChain } from "@/types/chain";
 
@@ -15,7 +15,6 @@ export default function WeekNavigator({
     isLoadingPreviousWeek,
     isLoadingNextWeek,
     weekNumber,
-    onGoToToday,
     selectedLocationIds,
     setSelectedLocationIds,
     allCategories,
@@ -26,7 +25,6 @@ export default function WeekNavigator({
     isLoadingPreviousWeek: boolean;
     isLoadingNextWeek: boolean;
     weekNumber: number;
-    onGoToToday: () => void;
     selectedLocationIds: string[];
     setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
     allCategories: ActivityCategory[];
@@ -34,6 +32,7 @@ export default function WeekNavigator({
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
 }) {
     const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
+    const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
 
     const isLocationFiltered = useMemo(() => {
         const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
@@ -53,11 +52,16 @@ export default function WeekNavigator({
             ? fromCompactISOWeekString(weekParam)
             : LocalizedDateTime.now().startOf("week");
         if (firstDayOfWeek === null) return;
+        setScrollToNowParam(null);
         setWeekParam(compactISOWeekString(firstDayOfWeek.plus({ weeks: offset })));
     }
 
-    function goToCurrentWeek() {
+    async function goToNow() {
         setWeekParam(compactISOWeekString(LocalizedDateTime.now()));
+        if (scrollToNowParam) {
+            await setScrollToNowParam(null);
+        }
+        setScrollToNowParam(true);
     }
 
     return (
@@ -154,16 +158,7 @@ export default function WeekNavigator({
                 }}
                 variant={"outlined"}
                 size={"small"}
-                onClick={() => {
-                    goToCurrentWeek();
-                    onGoToToday();
-                    // handle case where we are not viewing current week by
-                    // re-scrolling when current week has (hopefully) loaded
-                    // TODO: improve this (possibly with URL params)
-                    setTimeout(() => {
-                        onGoToToday();
-                    }, 300);
-                }}
+                onClick={() => goToNow()}
             >
                 I dag
             </Button>
