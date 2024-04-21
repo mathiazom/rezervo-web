@@ -22,7 +22,7 @@ type ChainUserTotpFlowInitiatedResponse = {
 type ChainUserMutationResponse = ChainUserUpdatedResponse | ChainUserTotpFlowInitiatedResponse;
 
 async function putChainUser(url: string, chainUser: ChainUserPayload, dependantMutations: () => Promise<void>) {
-    const res = await put(url, { body: JSON.stringify(chainUser, null, 2), useAuthProxy: true });
+    const res = await put(url, { body: JSON.stringify(chainUser, null, 2), mode: "authProxy" });
     const data = await res.json();
     if (!res.ok) {
         throw new Error("An error occurred while updating chain user");
@@ -32,7 +32,7 @@ async function putChainUser(url: string, chainUser: ChainUserPayload, dependantM
 }
 
 async function putChainUserTotp(url: string, totp: ChainUserTotpPayload, dependantMutations: () => Promise<void>) {
-    const res = await put(url, { body: JSON.stringify(totp, null, 2), useAuthProxy: true });
+    const res = await put(url, { body: JSON.stringify(totp, null, 2), mode: "authProxy" });
     const data = await res.json();
     if (!res.ok) {
         throw new Error("An error occurred while updating chain user TOTP");

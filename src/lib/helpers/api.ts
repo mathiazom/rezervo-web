@@ -63,17 +63,17 @@ export function createAuthenticatedEndpoint(
 export function createGenericEndpoint(
     method: HTTP_METHOD,
     targetPath: string,
-    options?: { withChainIdentifier?: boolean; checkUserIsMe?: boolean; useFormData?: boolean },
+    options?: { withChainIdentifier?: boolean; onlyMe?: boolean; useFormData?: boolean },
 ): AppRouteHandlerFn {
     return createAuthenticatedEndpoint(async (req, ctx, accessToken) => {
-        let pathPrefix = "";
+        let path = targetPath;
         if (options?.withChainIdentifier) {
             const chainIdentifier = chainIdentifierFromContext(ctx);
             if (chainIdentifier === null) return respondNotFound();
-            pathPrefix += `${chainIdentifier}/`;
+            path = `${chainIdentifier}/` + path;
         }
 
-        if (options?.checkUserIsMe && !isUserMeFromContext(ctx)) {
+        if (options?.onlyMe && !isUserMeFromContext(ctx)) {
             return respondNotFound();
         }
 
@@ -89,13 +89,13 @@ export function createGenericEndpoint(
 
         switch (method) {
             case "GET":
-                return await doOperation(() => get(pathPrefix + targetPath, requestOptions));
+                return await doOperation(() => get(path, requestOptions));
             case "POST":
-                return await doOperation(() => post(pathPrefix + targetPath, requestOptions));
+                return await doOperation(() => post(path, requestOptions));
             case "PUT":
-                return await doOperation(() => put(pathPrefix + targetPath, requestOptions));
+                return await doOperation(() => put(path, requestOptions));
             case "DELETE":
-                return await doOperation(() => destroy(pathPrefix + targetPath, requestOptions));
+                return await doOperation(() => destroy(path, requestOptions));
             default:
                 throw new Error("HTTP method not implemented");
         }

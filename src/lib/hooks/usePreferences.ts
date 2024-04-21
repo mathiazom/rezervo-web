@@ -7,7 +7,7 @@ import { fetcher } from "@/lib/utils/fetchUtils";
 import { Preferences, PreferencesPayload } from "@/types/config";
 
 function putPreferences(url: string, { arg: preferences }: { arg: PreferencesPayload }) {
-    return put(url, { body: JSON.stringify(preferences, null, 2), useAuthProxy: true }).then((r) => r.json());
+    return put(url, { body: JSON.stringify(preferences, null, 2), mode: "authProxy" }).then((r) => r.json());
 }
 
 export function usePreferences() {

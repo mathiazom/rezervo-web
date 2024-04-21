@@ -55,7 +55,7 @@ function ConfigBar({
 
     useEffect(() => {
         if (user == undefined) return;
-        put("user", { useAuthProxy: true }).then(async (res) => {
+        put("user", { mode: "authProxy" }).then(async (res) => {
             if (!res.ok) return;
             setMyUserId(await res.json());
             await onRefetchConfig();

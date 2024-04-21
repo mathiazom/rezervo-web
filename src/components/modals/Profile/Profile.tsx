@@ -83,7 +83,7 @@ function Profile({
         const res = await put("user/me/avatar", {
             body: formData,
             withContentType: "NO_CONTENT_TYPE",
-            useAuthProxy: true,
+            mode: "authProxy",
         });
         if (res.ok) {
             updateMyAvatarLastModified();
@@ -98,7 +98,7 @@ function Profile({
     }
 
     function deleteAvatar() {
-        destroy("user/me/avatar", { useAuthProxy: true })
+        destroy("user/me/avatar", { mode: "authProxy" })
             .then((res) => {
                 if (!res.ok) {
                     onAvatarMutateError(AvatarMutateError.UNKNOWN);

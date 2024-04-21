@@ -11,9 +11,7 @@ function createRequestInit(method: HTTP_METHOD, options?: RequestOptions): Reque
     if (options?.accessToken) {
         headers.append("Authorization", `Bearer ${options.accessToken}`);
     }
-    if (options?.withContentType === "NO_CONTENT_TYPE") {
-        // Omit the content type
-    } else {
+    if (options?.withContentType !== "NO_CONTENT_TYPE") {
         headers.append("Content-Type", options?.withContentType ?? "application/json");
     }
     if (options?.body) {
@@ -25,8 +23,13 @@ function createRequestInit(method: HTTP_METHOD, options?: RequestOptions): Reque
     return requestInit;
 }
 
-function buildBackendPath(path: string): string {
+function buildInternalBackendPath(path: string): string {
     const host = process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
+    return `${host}/${path}`;
+}
+
+function buildPublicBackendPath(path: string): string {
+    const host = process.env["NEXT_PUBLIC_CONFIG_HOST"];
     return `${host}/${path}`;
 }
 
@@ -35,24 +38,35 @@ export function buildAuthProxyPath(path: string): string {
 }
 
 export function createRequest(path: string, requestInit?: RequestInit, options?: RequestOptions): Promise<Response> {
-    return fetch(options?.useAuthProxy ? buildAuthProxyPath(path) : buildBackendPath(path), requestInit);
+    return fetch(
+        options?.mode === "authProxy"
+            ? buildAuthProxyPath(path)
+            : options?.mode === "server"
+              ? buildInternalBackendPath(path)
+              : buildPublicBackendPath(path),
+        requestInit,
+    );
+}
+
+export function createRequestFromOptions(path: string, method: HTTP_METHOD, options?: RequestOptions) {
+    return createRequest(path, createRequestInit(method, options), options);
 }
 
 export function get(path: string, options?: RequestOptions): Promise<Response> {
     if (options) {
         options.cache ??= "no-store";
     }
-    return createRequest(path, createRequestInit("GET", options), options);
+    return createRequestFromOptions(path, "GET", options);
 }
 
 export function put(path: string, options?: RequestOptions): Promise<Response> {
-    return createRequest(path, createRequestInit("PUT", options), options);
+    return createRequestFromOptions(path, "PUT", options);
 }
 
 export function post(path: string, options?: RequestOptions): Promise<Response> {
-    return createRequest(path, createRequestInit("POST", options), options);
+    return createRequestFromOptions(path, "POST", options);
 }
 
 export function destroy(path: string, options?: RequestOptions): Promise<Response> {
-    return createRequest(path, createRequestInit("DELETE", options), options);
+    return createRequestFromOptions(path, "DELETE", options);
 }

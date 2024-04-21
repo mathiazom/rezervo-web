@@ -34,7 +34,7 @@ const BookingPopupModal = ({
         setBookingLoading(true);
         await post(`${chain}/book`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            useAuthProxy: true,
+            mode: "authProxy",
         });
         await mutateSessionsIndex();
         await mutateUserSessions();
@@ -46,7 +46,7 @@ const BookingPopupModal = ({
         setBookingLoading(true);
         await post(`${chain}/cancel-booking`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            useAuthProxy: true,
+            mode: "authProxy",
         });
         await mutateSessionsIndex();
         await mutateUserSessions();

@@ -13,7 +13,7 @@ function putRelationship(
 ) {
     return put(url, {
         body: JSON.stringify(relationship, null, 2),
-        useAuthProxy: true,
+        mode: "authProxy",
     }).then((r) => r.json());
 }
 
