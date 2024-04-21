@@ -1,7 +1,7 @@
 import { Clear, EventBusy, HourglassTopRounded } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Chip, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
@@ -11,7 +11,7 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { ChainConfig, ClassConfig } from "@/types/config";
-import { BaseUserSession, SessionStatus } from "@/types/userSessions";
+import { SessionStatus, BaseUserSession } from "@/types/userSessions";
 
 export default function AgendaSession({
     chain,
@@ -22,6 +22,7 @@ export default function AgendaSession({
     | { classConfig?: never; userSession: BaseUserSession }
 )) {
     const theme = useTheme();
+    const router = useRouter();
     const { putUserConfig, userConfig } = useUserConfig(chain);
 
     const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
@@ -77,16 +78,7 @@ export default function AgendaSession({
     }
 
     return (
-        <Link
-            href={{
-                pathname: `/${chain}`,
-                query: {
-                    [ISO_WEEK_QUERY_PARAM]:
-                        userSession != null ? compactISOWeekString(userSession.classData.startTime) : null,
-                    [CLASS_ID_QUERY_PARAM]: userSession?.classData.id,
-                },
-            }}
-        >
+        <>
             <Card
                 sx={{
                     position: "relative",
@@ -96,6 +88,14 @@ export default function AgendaSession({
                         borderLeft: `0.4rem solid ${classColorRGB(true)}`,
                         backgroundColor: "#111",
                     },
+                }}
+                onClick={() => {
+                    if (!userSession) {
+                        return;
+                    }
+                    router.push(
+                        `/${chain}?${ISO_WEEK_QUERY_PARAM}=${compactISOWeekString(userSession.classData.startTime)}&${CLASS_ID_QUERY_PARAM}=${userSession.classData.id}`,
+                    );
                 }}
             >
                 <Box
@@ -241,6 +241,6 @@ export default function AgendaSession({
                     _class={userSession.classData}
                 />
             )}
-        </Link>
+        </>
     );
 }
