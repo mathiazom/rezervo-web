@@ -1,12 +1,19 @@
-"use strict";
+import { defaultCache } from "@serwist/next/worker";
+import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
+import { Serwist } from "serwist";
+
+declare global {
+    interface WorkerGlobalScope extends SerwistGlobalConfig {
+        __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
+    }
+}
+
+declare const self: ServiceWorkerGlobalScope;
 
 /**
  * Custom listeners to enable receiving of notifications based on
  * https://github.com/shadowwalker/next-pwa/blob/master/examples/web-push/worker/index.js
  */
-
-declare let self: ServiceWorkerGlobalScope;
-
 self.addEventListener("push", (event) => {
     const data = JSON.parse(event?.data?.text() || "{}");
     event?.waitUntil(
@@ -35,4 +42,12 @@ self.addEventListener("notificationclick", (event) => {
     );
 });
 
-export {};
+const serwist = new Serwist({
+    precacheEntries: self.__SW_MANIFEST ?? [],
+    skipWaiting: true,
+    clientsClaim: true,
+    navigationPreload: true,
+    runtimeCaching: defaultCache,
+});
+
+serwist.addEventListeners();
