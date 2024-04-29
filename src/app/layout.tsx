@@ -1,5 +1,4 @@
 "use client";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, getInitColorSchemeScript } from "@mui/material";
 import { Roboto } from "next/font/google";
 import React from "react";
@@ -19,9 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <CssVarsProvider theme={theme} defaultMode={"system"}>
                 <CssBaseline enableColorScheme />
-                <UserProvider>
-                    <body>{children}</body>
-                </UserProvider>
+                <body>{children}</body>
             </CssVarsProvider>
         </html>
     );
