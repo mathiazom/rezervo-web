@@ -1,17 +1,17 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
+import { useUser } from "@/lib/hooks/useUser";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { AllConfigsIndex } from "@/types/config";
 
 export function useAllConfigs(chain: ChainIdentifier) {
-    const { user } = useUser();
+    const { isAuthenticated } = useUser();
 
     const allConfigsApiUrl = `${chain}/all-configs`;
 
     const { data, error, isLoading, mutate } = useSWR<AllConfigsIndex>(
-        user && chain ? allConfigsApiUrl : null,
+        isAuthenticated && chain ? allConfigsApiUrl : null,
         fetcher,
     );
 

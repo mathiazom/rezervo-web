@@ -1,4 +1,4 @@
-export type RequestMode = "client" | "server" | "authProxy";
+export type RequestMode = "client" | "server";
 
 export type RequestOptions = {
     accessToken?: string | undefined;

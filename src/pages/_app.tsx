@@ -2,9 +2,9 @@ import "@/styles/globals.css";
 import "@/styles/animations.css";
 import "@/components/schedule/class/ClassCard.css";
 
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material";
 import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import Snowfall from "react-snowfall";
 
@@ -19,7 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <CssVarsProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
-            <UserProvider>
+            <SessionProvider>
                 {showSnow && (
                     <Snowfall
                         speed={[0.5, 1.0]}
@@ -33,7 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     />
                 )}
                 <Component {...pageProps} />
-            </UserProvider>
+            </SessionProvider>
         </CssVarsProvider>
     );
 }
