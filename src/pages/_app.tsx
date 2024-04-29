@@ -2,12 +2,13 @@ import "@/styles/globals.css";
 import "@/styles/animations.css";
 import "@/components/schedule/class/ClassCard.css";
 
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material";
 import type { AppProps } from "next/app";
 import React, { useEffect, useState } from "react";
 import Snowfall from "react-snowfall";
 
+import { FusionAuthClientProvider } from "@/components/utils/FusionAuthClientProvider";
+import { fusionAuthConfig } from "@/lib/auth";
 import theme from "@/lib/theme";
 import { checkSantaTime } from "@/lib/utils/santaUtils";
 
@@ -19,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <CssVarsProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
-            <UserProvider>
+            <FusionAuthClientProvider {...fusionAuthConfig}>
                 {showSnow && (
                     <Snowfall
                         speed={[0.5, 1.0]}
@@ -33,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     />
                 )}
                 <Component {...pageProps} />
-            </UserProvider>
+            </FusionAuthClientProvider>
         </CssVarsProvider>
     );
 }

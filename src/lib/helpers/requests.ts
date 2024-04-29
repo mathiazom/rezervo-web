@@ -28,24 +28,16 @@ function buildInternalBackendPath(path: string): string {
     return `${host}/${path}`;
 }
 
-function buildPublicBackendPath(path: string): string {
+export function buildPublicBackendPath(path: string): string {
     const host = process.env["NEXT_PUBLIC_CONFIG_HOST"];
     return `${host}/${path}`;
 }
 
-export function buildAuthProxyPath(path: string): string {
-    return `/api/${path}`;
-}
-
 export function createRequest(path: string, requestInit?: RequestInit, options?: RequestOptions): Promise<Response> {
-    return fetch(
-        options?.mode === "authProxy"
-            ? buildAuthProxyPath(path)
-            : options?.mode === "server"
-              ? buildInternalBackendPath(path)
-              : buildPublicBackendPath(path),
-        requestInit,
-    );
+    return fetch(options?.mode === "server" ? buildInternalBackendPath(path) : buildPublicBackendPath(path), {
+        ...requestInit,
+        credentials: "include",
+    });
 }
 
 export function createRequestFromOptions(path: string, method: HTTP_METHOD, options?: RequestOptions) {

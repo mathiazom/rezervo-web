@@ -1,8 +1,8 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { put } from "@/lib/helpers/requests";
+import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { fetcher } from "@/lib/utils/fetchUtils";
@@ -22,7 +22,7 @@ type ChainUserTotpFlowInitiatedResponse = {
 type ChainUserMutationResponse = ChainUserUpdatedResponse | ChainUserTotpFlowInitiatedResponse;
 
 async function putChainUser(url: string, chainUser: ChainUserPayload, dependantMutations: () => Promise<void>) {
-    const res = await put(url, { body: JSON.stringify(chainUser, null, 2), mode: "authProxy" });
+    const res = await put(url, { body: JSON.stringify(chainUser, null, 2), mode: "client" });
     const data = await res.json();
     if (!res.ok) {
         throw new Error("An error occurred while updating chain user");
@@ -32,7 +32,7 @@ async function putChainUser(url: string, chainUser: ChainUserPayload, dependantM
 }
 
 async function putChainUserTotp(url: string, totp: ChainUserTotpPayload, dependantMutations: () => Promise<void>) {
-    const res = await put(url, { body: JSON.stringify(totp, null, 2), mode: "authProxy" });
+    const res = await put(url, { body: JSON.stringify(totp, null, 2), mode: "client" });
     const data = await res.json();
     if (!res.ok) {
         throw new Error("An error occurred while updating chain user TOTP");
@@ -42,13 +42,13 @@ async function putChainUserTotp(url: string, totp: ChainUserTotpPayload, dependa
 }
 
 export function useChainUser(chain: ChainIdentifier) {
-    const { user } = useUser();
+    const { isAuthenticated } = useUser();
 
     const chainUserApiUrl = `${chain}/user`;
     const chainUserTotpApiUrl = `${chain}/user/totp`;
 
     const { data, error, isLoading, mutate } = useSWR<ChainUserProfile>(
-        user && chain ? chainUserApiUrl : null,
+        isAuthenticated && chain ? chainUserApiUrl : null,
         fetcher,
     );
 
@@ -68,7 +68,9 @@ export function useChainUser(chain: ChainIdentifier) {
 
     const putChainUserTotpMutation = useSWRMutation<unknown, unknown, string, ChainUserTotpPayload>(
         chainUserTotpApiUrl,
-        (url: string, { arg: totp }: { arg: ChainUserTotpPayload }) => putChainUserTotp(url, totp, dependantMutations),
+        (url: string, { arg: totp }: { arg: ChainUserTotpPayload }) => {
+            return putChainUserTotp(url, totp, dependantMutations);
+        },
     );
 
     return {

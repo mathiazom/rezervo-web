@@ -1,9 +1,9 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { useState } from "react";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 import { put } from "@/lib/helpers/requests";
+import { useUser } from "@/lib/hooks/useUser";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { RezervoCommunity, UserRelationship, UserRelationshipAction } from "@/types/community";
 
@@ -13,17 +13,19 @@ function putRelationship(
 ) {
     return put(url, {
         body: JSON.stringify(relationship, null, 2),
-        mode: "authProxy",
     }).then((r) => r.json());
 }
 
 export function useCommunity() {
-    const { user } = useUser();
+    const { isAuthenticated } = useUser();
 
     const communityApiUrl = `community`;
     const relationshipApiUrl = `community/relationship`;
 
-    const { data, error, isLoading, mutate } = useSWR<RezervoCommunity>(user ? communityApiUrl : null, fetcher);
+    const { data, error, isLoading, mutate } = useSWR<RezervoCommunity>(
+        isAuthenticated ? communityApiUrl : null,
+        fetcher,
+    );
 
     const [isMutatingRelationship, setIsMutatingRelationship] = useState(false);
 
@@ -33,7 +35,7 @@ export function useCommunity() {
         string | null,
         { userId: string; action: UserRelationshipAction }
     >(
-        user ? relationshipApiUrl : null,
+        isAuthenticated ? relationshipApiUrl : null,
         async (url, { arg: relationship }) => {
             setIsMutatingRelationship(true);
             const res = await putRelationship(url, { arg: relationship });

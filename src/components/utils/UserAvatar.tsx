@@ -2,9 +2,9 @@ import { Avatar, Box } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 
-import { buildAuthProxyPath } from "@/lib/helpers/requests";
+import { buildPublicBackendPath } from "@/lib/helpers/requests";
 import { avatarColor } from "@/lib/utils/colorUtils";
-import { useMyAvatar, useMyUserId } from "@/stores/userStore";
+import { useMyUserId } from "@/stores/userStore";
 
 export function UserAvatar({
     userId,
@@ -13,14 +13,14 @@ export function UserAvatar({
     previewOverride,
     onIsAvatarAvailableChanged,
 }: {
-    userId: string;
+    userId: string | "me";
     username: string;
     size?: number;
     previewOverride?: string | null | undefined;
     onIsAvatarAvailableChanged?: (available: boolean) => void;
 }) {
     const myUserId = useMyUserId((state) => state.userId);
-    const myAvatarLastModifiedTimestamp = useMyAvatar((state) => state.lastModifiedTimestamp);
+    const realUserId = userId === "me" ? myUserId : userId;
 
     const [isAvatarAvailable, setIsAvatarAvailable] = useState<boolean | null>(null);
 
@@ -41,15 +41,7 @@ export function UserAvatar({
             }}
         >
             <Image
-                src={
-                    previewOverride ??
-                    buildAuthProxyPath(
-                        `user/${userId}/avatar/${imgSrcSize}` +
-                            ((userId === myUserId || userId === "me") && myAvatarLastModifiedTimestamp
-                                ? `?cache-bust=${myAvatarLastModifiedTimestamp}`
-                                : ""),
-                    )
-                }
+                src={previewOverride ?? buildPublicBackendPath(`user/${realUserId}/avatar/${imgSrcSize}`) ?? ""}
                 alt={username}
                 width={size}
                 height={size}

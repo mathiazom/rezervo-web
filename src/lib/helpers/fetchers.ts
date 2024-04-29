@@ -13,10 +13,10 @@ export function constructScheduleUrl(chainIdentifier: string, currentWeekOffset:
         return null;
     }
     const searchParams = new URLSearchParams([
-        ["weekOffset", currentWeekOffset.toString()],
-        ...locationIds.map((locationId) => ["locationId", locationId]),
+        // ["weekOffset", currentWeekOffset.toString()],
+        ...locationIds.map((locationId) => ["location", locationId]),
     ]);
-    return `${chainIdentifier}/schedule?${searchParams.toString()}`;
+    return `schedule/${chainIdentifier}/${currentWeekOffset}?${searchParams.toString()}`;
 }
 
 export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
@@ -82,7 +82,7 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
 }
 
 export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
-    return get(`chains/${chainIdentifier}`).then((res) => {
+    return get(`chains/${chainIdentifier}`, { mode: "server" }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
         }
@@ -91,7 +91,7 @@ export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<Reze
 }
 
 export async function fetchActiveChains(): Promise<RezervoChain[]> {
-    return get("chains").then((res) => {
+    return get("chains", { mode: "server" }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -111,6 +111,7 @@ export async function fetchRezervoWeekSchedule(
                 `schedule/${chainIdentifier}/${weekOffset}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
+                { mode: "server" },
             )
         ).json()),
     }) as RezervoWeekSchedule;
@@ -133,7 +134,7 @@ export async function fetchRezervoSchedule(
 }
 
 export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
-    return get("categories").then((res) => {
+    return get("categories", { mode: "server" }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }

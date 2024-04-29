@@ -7,7 +7,7 @@ export function usePushNotificationSubscription() {
     const subscriptionVerifyApiUrl = `notifications/push/verify`;
 
     function subscribe(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return put(url, { body: JSON.stringify(subscription, null, 2), mode: "authProxy" }).then((r) => r.json());
+        return put(url, { body: JSON.stringify(subscription, null, 2), mode: "client" }).then((r) => r.json());
     }
 
     const { trigger: triggerSubscribe, isMutating: isSubscribing } = useSWRMutation<
@@ -15,10 +15,12 @@ export function usePushNotificationSubscription() {
         unknown,
         string,
         PushSubscription
-    >(subscriptionApiUrl, subscribe);
+    >(subscriptionApiUrl, (url: string, { arg: subscription }: { arg: PushSubscription }) => {
+        return subscribe(url, { arg: subscription });
+    });
 
     function unsubscribe(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return destroy(url, { body: JSON.stringify(subscription, null, 2), mode: "authProxy" }).then((r) => r.ok);
+        return destroy(url, { body: JSON.stringify(subscription, null, 2), mode: "client" }).then((r) => r.ok);
     }
 
     const { trigger: triggerUnsubscribe, isMutating: isUnsubscribing } = useSWRMutation<
@@ -26,15 +28,19 @@ export function usePushNotificationSubscription() {
         unknown,
         string,
         PushSubscription
-    >(subscriptionApiUrl, unsubscribe);
+    >(subscriptionApiUrl, (url, { arg: subscription }) => {
+        return unsubscribe(url, { arg: subscription });
+    });
 
     function verify(url: string, { arg: subscription }: { arg: PushSubscription }) {
-        return post(url, { body: JSON.stringify(subscription, null, 2), mode: "authProxy" }).then((r) => r.json());
+        return post(url, { body: JSON.stringify(subscription, null, 2), mode: "client" }).then((r) => r.json());
     }
 
     const { trigger: triggerVerify } = useSWRMutation<boolean, unknown, string, PushSubscription>(
         subscriptionVerifyApiUrl,
-        verify,
+        (url, { arg: subscription }) => {
+            return verify(url, { arg: subscription });
+        },
     );
 
     return {

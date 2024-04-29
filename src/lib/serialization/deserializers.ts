@@ -1,11 +1,10 @@
 import { LocalizedDateTime } from "@/lib/helpers/date";
-import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
+import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
 import {
+    BaseUserSessionDTO,
     RezervoClassDTO,
     RezervoDayScheduleDTO,
-    RezervoScheduleDTO,
     RezervoWeekScheduleDTO,
-    BaseUserSessionDTO,
 } from "@/types/serialization";
 import { BaseUserSession } from "@/types/userSessions";
 
@@ -29,20 +28,6 @@ export function deserializeWeekSchedule(weekScheduleDTO: RezervoWeekScheduleDTO)
         locationIds: weekScheduleDTO.locationIds,
         days: weekScheduleDTO.days.map(deserializeDaySchedule),
     };
-}
-
-export function deserializeSchedule(scheduleDTO: RezervoScheduleDTO): RezervoSchedule {
-    return Object.keys(scheduleDTO)
-        .map((weekOffset) => {
-            const weekSchedule = scheduleDTO[Number(weekOffset)];
-            if (weekSchedule === undefined) {
-                throw new Error(`Invalid week schedule for week offset ${weekOffset}`);
-            }
-            return {
-                [Number(weekOffset)]: deserializeWeekSchedule(weekSchedule),
-            };
-        })
-        .reduce((acc, next) => ({ ...acc, ...next }), {});
 }
 
 export function deserializeUserSessions(userSessionsDTO: BaseUserSessionDTO[]): BaseUserSession[] {

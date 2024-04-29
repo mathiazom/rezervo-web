@@ -1,4 +1,4 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useFusionAuth } from "@fusionauth/react-sdk";
 import { CalendarMonth, CalendarToday, PauseCircleRounded, People } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
@@ -10,8 +10,9 @@ import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useMemo, useState } from "react";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";
-import { buildAuthProxyPath, put } from "@/lib/helpers/requests";
+import { put } from "@/lib/helpers/requests";
 import { useCommunity } from "@/lib/hooks/useCommunity";
+import { useUser } from "@/lib/hooks/useUser";
 import { useMyUserId } from "@/stores/userStore";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
@@ -40,7 +41,8 @@ function ConfigBar({
     onProfileOpen: () => void;
 }) {
     const theme = useTheme();
-    const { user, isLoading: isLoadingUser } = useUser();
+    const { user, authStatus } = useUser();
+    const { startLogin } = useFusionAuth();
     const [isUserUpserted, setIsUserUpserted] = useState(false);
     const setMyUserId = useMyUserId((state) => state.setUserId);
     const { community } = useCommunity();
@@ -54,20 +56,19 @@ function ConfigBar({
     }, [chainConfigs]);
 
     useEffect(() => {
-        if (user == undefined) return;
-        put("user", { mode: "authProxy" }).then(async (res) => {
+        put("user").then(async (res) => {
             if (!res.ok) return;
             setMyUserId(await res.json());
             await onRefetchConfig();
             setIsUserUpserted(true);
         });
-    }, [user, setMyUserId, onRefetchConfig]);
+    }, [setMyUserId, onRefetchConfig]);
 
     return (
-        !isLoadingUser && (
+        authStatus != "loading" && (
             <>
-                {user == undefined ? (
-                    <Button endIcon={<LoginIcon />} href={buildAuthProxyPath("auth/login")}>
+                {authStatus === "unauthenticated" ? (
+                    <Button endIcon={<LoginIcon />} onClick={() => startLogin()}>
                         Logg inn
                     </Button>
                 ) : (
@@ -165,7 +166,7 @@ function ConfigBar({
                                 </Box>
                             </>
                         )}
-                        {user.name && (
+                        {user?.name && (
                             <Tooltip title={user.name}>
                                 <Box sx={{ position: "relative" }}>
                                     <IconButton onClick={() => onProfileOpen()} sx={{ padding: 0 }}>
