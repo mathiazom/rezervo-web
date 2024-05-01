@@ -5,11 +5,13 @@ import { RezervoClass } from "@/types/chain";
 export const compactISOWeekString = (date: DateTime): string | null =>
     date.toISOWeekDate()?.replace("-", "").slice(0, 7) ?? null;
 
-export const fromCompactISOWeekString = (weekString: string): DateTime | null =>
-    LocalizedDateTime.fromObject({
+export const fromCompactISOWeekString = (weekString: string | null): DateTime | null => {
+    if (weekString === null) return null;
+    return LocalizedDateTime.fromObject({
         weekYear: Number.parseInt(weekString.slice(0, 4)),
         weekNumber: Number.parseInt(weekString.slice(5, 7)),
     });
+};
 
 export const calculateMondayOffset = () => LocalizedDateTime.now().weekday - 1;
 
@@ -51,12 +53,6 @@ export function firstDateOfWeekByOffset(weekOffset: number): DateTime {
     return LocalizedDateTime.now()
         .startOf("day")
         .plus({ day: weekOffset * 7 - calculateMondayOffset() });
-}
-
-export function weekOffsetBetweenDates(date1: DateTime, date2: DateTime) {
-    // luxon will adjust for DST when working with week units
-    // (https://github.com/moment/luxon/blob/3.4.4/docs/zones.md#math-across-dsts)
-    return Math.floor(date1.startOf("week").diff(date2.startOf("week"), "weeks").weeks);
 }
 
 export const LocalizedDateTime: typeof DateTime = (() => {

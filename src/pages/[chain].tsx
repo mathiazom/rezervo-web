@@ -46,8 +46,8 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
         return useSWRNext(key, fetcher, config);
     }
     const queryParams = new URLSearchParams(queryParamsRaw);
-    const weekOffset = queryParams.get("weekOffset");
-    if (weekOffset == undefined) {
+    const compactISOWeek = queryParams.get("w");
+    if (compactISOWeek == undefined) {
         return useSWRNext(key, fetcher, config);
     }
     const locationIds = queryParams.getAll("locationId");
@@ -60,7 +60,7 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
             continue;
         }
         const candidateQueryParams = new URLSearchParams(candidateQueryParamsRaw);
-        if (candidateQueryParams.get("weekOffset") !== weekOffset) {
+        if (candidateQueryParams.get("w") !== compactISOWeek) {
             continue;
         }
         const candidateLocationIds = candidateQueryParams.getAll("locationId");

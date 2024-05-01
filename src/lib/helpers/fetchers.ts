@@ -1,4 +1,4 @@
-import { firstDateOfWeekByOffset } from "@/lib/helpers/date";
+import { compactISOWeekString, firstDateOfWeekByOffset } from "@/lib/helpers/date";
 import { createClassPopularityIndex } from "@/lib/helpers/popularity";
 import { get } from "@/lib/helpers/requests";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
@@ -7,13 +7,13 @@ import { ActivityCategory, ChainIdentifier, RezervoChain, RezervoSchedule, Rezer
 import { RezervoError } from "@/types/errors";
 import { ChainPageProps, RezervoWeekScheduleDTO, SWRPrefetchedCacheData } from "@/types/serialization";
 
-export function constructScheduleUrl(chainIdentifier: string, currentWeekOffset: number, locationIds: string[]) {
+export function constructScheduleUrl(chainIdentifier: string, compactISOWeek: string, locationIds: string[]) {
     if (locationIds == undefined) {
         // make sure conditional fetching check fails
         return null;
     }
     const searchParams = new URLSearchParams([
-        ["weekOffset", currentWeekOffset.toString()],
+        ["w", compactISOWeek],
         ...locationIds.map((locationId) => ["locationId", locationId]),
     ]);
     return `${chainIdentifier}/schedule?${searchParams.toString()}`;
@@ -30,9 +30,16 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
     );
     const chainProfiles = (await fetchActiveChains()).map((chain) => chain.profile);
     const activityCategories = await fetchActivityCategories();
-    const emptyWeekScheduleFallbackKey = scheduleUrlKey(chain.profile.identifier, 0, locationIdentifiers);
+    const compact_iso_weeks = [-1, 0, 1, 2, 3].map(
+        (weekOffset) => compactISOWeekString(firstDateOfWeekByOffset(weekOffset))!,
+    );
+    const emptyWeekScheduleFallbackKey = scheduleUrlKey(
+        chain.profile.identifier,
+        compact_iso_weeks[1]!,
+        locationIdentifiers,
+    );
     try {
-        initialSchedule = await fetchRezervoSchedule(chain.profile.identifier, [-1, 0, 1, 2, 3], locationIdentifiers);
+        initialSchedule = await fetchRezervoSchedule(chain.profile.identifier, compact_iso_weeks, locationIdentifiers);
     } catch (e) {
         console.error(e);
         const firstDateOfWeek = firstDateOfWeekByOffset(0);
@@ -61,11 +68,11 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
         };
     }
 
-    const classPopularityIndex = createClassPopularityIndex(initialSchedule[-1]!);
+    const classPopularityIndex = createClassPopularityIndex(initialSchedule[compact_iso_weeks[0]!]!);
     const invalidationTimeInSeconds = 5 * 60;
 
-    const swrPrefetched = Object.entries(initialSchedule).reduce((acc, [weekOffset, weekSchedule]) => {
-        const key = scheduleUrlKey(chain.profile.identifier, Number(weekOffset), locationIdentifiers);
+    const swrPrefetched = Object.entries(initialSchedule).reduce((acc, [compactISOWeek, weekSchedule]) => {
+        const key = scheduleUrlKey(chain.profile.identifier, compactISOWeek, locationIdentifiers);
         return key === null ? acc : { ...acc, [key]: serializeWeekSchedule(weekSchedule) };
     }, {}) as SWRPrefetchedCacheData<RezervoWeekScheduleDTO>;
 
@@ -101,14 +108,14 @@ export async function fetchActiveChains(): Promise<RezervoChain[]> {
 
 export async function fetchRezervoWeekSchedule(
     chainIdentifier: string,
-    weekOffset: number,
+    compactISOWeek: string | null,
     locationIdentifiers: string[],
 ): Promise<RezervoWeekSchedule> {
     return deserializeWeekSchedule({
         locationIds: locationIdentifiers,
         ...(await (
             await get(
-                `schedule/${chainIdentifier}/${weekOffset}${
+                `schedule/${chainIdentifier}/${compactISOWeek}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
             )
@@ -118,14 +125,18 @@ export async function fetchRezervoWeekSchedule(
 
 export async function fetchRezervoSchedule(
     chainIdentifier: string,
-    weekOffsets: number[],
+    compact_iso_weeks: string[],
     locationIdentifiers: string[] = [],
 ): Promise<RezervoSchedule> {
     return (
         await Promise.all(
-            weekOffsets.map(
-                async (weekOffset: number): Promise<RezervoSchedule> => ({
-                    [weekOffset]: await fetchRezervoWeekSchedule(chainIdentifier, weekOffset, locationIdentifiers),
+            compact_iso_weeks.map(
+                async (compact_iso_week: string): Promise<RezervoSchedule> => ({
+                    [compact_iso_week]: await fetchRezervoWeekSchedule(
+                        chainIdentifier,
+                        compact_iso_week,
+                        locationIdentifiers,
+                    ),
                 }),
             ),
         )
@@ -141,14 +152,14 @@ export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
     });
 }
 
-export function scheduleUrlKey(chainIdentifier: string, weekOffset: number, locationIds: string[]) {
+export function scheduleUrlKey(chainIdentifier: string, compactISOWeek: string, locationIds: string[]) {
     if (locationIds == undefined) {
         // make sure conditional fetching check fails
         return null;
     }
     return constructScheduleUrl(
         chainIdentifier,
-        weekOffset,
+        compactISOWeek,
         [...locationIds].sort(), // ensure cache hit with consistent ordering
     );
 }

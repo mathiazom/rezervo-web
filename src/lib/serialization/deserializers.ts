@@ -33,13 +33,13 @@ export function deserializeWeekSchedule(weekScheduleDTO: RezervoWeekScheduleDTO)
 
 export function deserializeSchedule(scheduleDTO: RezervoScheduleDTO): RezervoSchedule {
     return Object.keys(scheduleDTO)
-        .map((weekOffset) => {
-            const weekSchedule = scheduleDTO[Number(weekOffset)];
+        .map((compactISOWeek) => {
+            const weekSchedule = scheduleDTO[compactISOWeek];
             if (weekSchedule === undefined) {
-                throw new Error(`Invalid week schedule for week offset ${weekOffset}`);
+                throw new Error(`Invalid week schedule for week ${compactISOWeek}`);
             }
             return {
-                [Number(weekOffset)]: deserializeWeekSchedule(weekSchedule),
+                [compactISOWeek]: deserializeWeekSchedule(weekSchedule),
             };
         })
         .reduce((acc, next) => ({ ...acc, ...next }), {});

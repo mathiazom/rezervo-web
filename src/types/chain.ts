@@ -41,7 +41,7 @@ export type RezervoInstructor = {
 };
 
 export type RezervoSchedule = {
-    [weekOffset: number]: RezervoWeekSchedule;
+    [compact_iso_week: string]: RezervoWeekSchedule;
 };
 
 export type RezervoWeekSchedule = {
