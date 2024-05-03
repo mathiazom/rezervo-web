@@ -1,6 +1,7 @@
+import { PWAInstallElement } from "@khmyznikov/pwa-install";
 import { Box, Divider, Stack } from "@mui/material";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -14,10 +15,16 @@ import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
+import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { getStoredSelectedCategories, getStoredSelectedLocations } from "@/lib/helpers/storage";
+import {
+    getStoredPWAInstallDismissed,
+    getStoredSelectedCategories,
+    getStoredSelectedLocations,
+    storePWAInstallDismissed,
+} from "@/lib/helpers/storage";
 import { useSchedule } from "@/lib/hooks/useSchedule";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -221,6 +228,30 @@ function Chain({
         await mutateUserConfig();
     }, [mutateUserConfig]);
 
+    const pwaInstallRef = useRef<PWAInstallElement | null>(null);
+
+    // @ts-expect-error https://github.com/khmyznikov/pwa-install?tab=readme-ov-file#supported-properties-readonly
+    const isPWAInstalled = pwaInstallRef.current?.isUnderStandaloneMode === true;
+    const [isFirstTimeUsingPWA, setIsFirstTimeUsingPWA] = useState(false);
+
+    useEffect(() => {
+        pwaInstallRef.current?.addEventListener("pwa-install-available-event", () => {
+            if (getStoredPWAInstallDismissed()) {
+                pwaInstallRef.current?.hideDialog();
+            }
+        });
+        pwaInstallRef.current?.addEventListener("pwa-user-choice-result-event", (event) => {
+            // @ts-expect-error Missing type in @khmyznikov/pwa-install
+            if (event.detail.message === "dismissed") {
+                storePWAInstallDismissed();
+            }
+        });
+        // isUnderStandaloneMode is not updated the first time Chrome opens the PWA after install
+        pwaInstallRef.current?.addEventListener("pwa-install-success-event", () => {
+            setIsFirstTimeUsingPWA(true);
+        });
+    }, [pwaInstallRef]);
+
     return (
         <>
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
@@ -243,6 +274,7 @@ function Chain({
                             />
                         }
                     />
+                    <PWAInstallPrompt ref={pwaInstallRef} />
                     {error === undefined && currentWeekSchedule != null && (
                         <WeekNavigator
                             chain={chain}
@@ -300,6 +332,8 @@ function Chain({
                     setOpen={setIsSettingsOpen}
                     chainProfiles={chainProfiles}
                     chainConfigs={userChainConfigs}
+                    isPWAInstalled={isPWAInstalled || isFirstTimeUsingPWA}
+                    showPWAInstall={() => pwaInstallRef.current?.showDialog(true)}
                 />
             )}
             <ProfileModal open={isProfileOpen} setOpen={setIsProfileOpen} />
