@@ -213,7 +213,7 @@ export default function Settings({
                             {INSTALL_PROMPT_DESCRIPTION}
                         </Alert>
                         <Button color={"info"} variant={"outlined"} startIcon={<GetApp />} onClick={showPWAInstall}>
-                            Kom i gang
+                            Installer
                         </Button>
                     </>
                 )}

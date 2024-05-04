@@ -1,6 +1,6 @@
 import { PWAInstallElement } from "@khmyznikov/pwa-install";
 import PWAInstall from "@khmyznikov/pwa-install/dist/pwa-install.react.js";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 import { getStoredPWAInstallDismissed, storePWAInstallDismissed } from "@/lib/helpers/storage";
 
@@ -18,22 +18,24 @@ function PWAInstallPrompt({
 }) {
     const pwaInstallRef = useRef<PWAInstallElement | null>(null);
 
-    const [isFirstTimeUsingPWA, setIsFirstTimeUsingPWA] = useState(false);
-
-    useEffect(() => {
+    const isAppleDevice =
         // @ts-expect-error https://github.com/khmyznikov/pwa-install?tab=readme-ov-file#supported-properties-readonly
-        const isPWAInstalled = pwaInstallRef.current?.isUnderStandaloneMode === true;
-
-        onIsInstalledChanged(isPWAInstalled || isFirstTimeUsingPWA);
-    }, [onIsInstalledChanged, isFirstTimeUsingPWA]);
+        pwaInstallRef.current?.isAppleMobilePlatform || pwaInstallRef.current?.isAppleDesktopPlatform;
+    const isInstalled =
+        // @ts-expect-error https://github.com/khmyznikov/pwa-install?tab=readme-ov-file#supported-properties-readonly
+        pwaInstallRef.current?.isUnderStandaloneMode || pwaInstallRef.current?.isInstallAvailable === false;
 
     useEffect(() => {
         if (show) {
-            pwaInstallRef.current?.showDialog();
+            if (isAppleDevice) {
+                pwaInstallRef.current?.showDialog();
+            } else {
+                pwaInstallRef.current?.install();
+            }
         } else {
             pwaInstallRef.current?.hideDialog();
         }
-    }, [show]);
+    }, [show, isAppleDevice]);
 
     useEffect(() => {
         pwaInstallRef.current?.addEventListener("pwa-install-available-event", () => {
@@ -48,11 +50,11 @@ function PWAInstallPrompt({
             }
             onClose();
         });
-        // isUnderStandaloneMode is not updated the first time Chrome opens the PWA after install
-        pwaInstallRef.current?.addEventListener("pwa-install-success-event", () => {
-            setIsFirstTimeUsingPWA(true);
-        });
     }, [onClose]);
+
+    useEffect(() => {
+        onIsInstalledChanged(isInstalled);
+    }, [isInstalled, onIsInstalledChanged]);
 
     return <PWAInstall ref={pwaInstallRef} install-description={INSTALL_PROMPT_DESCRIPTION} />;
 }
