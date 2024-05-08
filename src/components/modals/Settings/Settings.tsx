@@ -1,6 +1,9 @@
-import { SettingsRounded } from "@mui/icons-material";
+import { GetApp, SettingsRounded } from "@mui/icons-material";
 import {
+    Alert,
+    AlertTitle,
     Box,
+    Button,
     CircularProgress,
     Divider,
     FormControl,
@@ -20,6 +23,7 @@ import React, { useEffect, useState } from "react";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import Memberships from "@/components/modals/Settings/Memberships/Memberships";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
+import { INSTALL_PROMPT_DESCRIPTION } from "@/components/utils/PWAInstallPrompt";
 import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
 import { usePreferences } from "@/lib/hooks/usePreferences";
@@ -54,10 +58,14 @@ export default function Settings({
     chainProfiles,
     chainConfigs,
     features,
+    isPWAInstalled,
+    showPWAInstall,
 }: {
     chainProfiles: ChainProfile[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     features: Features | undefined;
+    isPWAInstalled: boolean;
+    showPWAInstall: () => void;
 }) {
     const theme = useTheme();
 
@@ -196,6 +204,19 @@ export default function Settings({
                 </Typography>
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                {!isPWAInstalled && (
+                    <>
+                        <Alert severity="info" icon={<GetApp />}>
+                            <AlertTitle>
+                                Installer <b>rezervo</b> som app
+                            </AlertTitle>
+                            {INSTALL_PROMPT_DESCRIPTION}
+                        </Alert>
+                        <Button color={"info"} variant={"outlined"} startIcon={<GetApp />} onClick={showPWAInstall}>
+                            Installer
+                        </Button>
+                    </>
+                )}
                 <Memberships chainProfiles={chainProfiles} chainConfigs={chainConfigs} />
                 <Divider sx={{ mt: 1 }} />
                 <PushNotifications />

@@ -11,18 +11,28 @@ const SettingsModal = ({
     setOpen,
     chainProfiles,
     chainConfigs,
+    isPWAInstalled,
+    showPWAInstall,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     chainProfiles: ChainProfile[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    isPWAInstalled: boolean;
+    showPWAInstall: () => void;
 }) => {
     const { features } = useFeatures();
 
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
             <>
-                <Settings chainProfiles={chainProfiles} chainConfigs={chainConfigs} features={features} />
+                <Settings
+                    chainProfiles={chainProfiles}
+                    chainConfigs={chainConfigs}
+                    features={features}
+                    isPWAInstalled={isPWAInstalled}
+                    showPWAInstall={showPWAInstall}
+                />
             </>
         </Modal>
     );
