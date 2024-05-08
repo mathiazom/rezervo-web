@@ -35,11 +35,7 @@ export function useSchedule(chainIdentifier: string | null, weekParam: string | 
             : scheduleUrlKey(chainIdentifier, weekParam, locationIds),
         fetcher,
         {
-            onSuccess: () => {
-                if (weekParam != null) {
-                    setLatestLoadedWeekDate(fromCompactISOWeekString(weekParam));
-                }
-            },
+            onSuccess: () => setLatestLoadedWeekDate(currentWeekDate),
             keepPreviousData: true,
             revalidateIfStale: false,
         },
