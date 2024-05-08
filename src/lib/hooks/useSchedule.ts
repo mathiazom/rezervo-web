@@ -10,13 +10,13 @@ import { RezervoWeekScheduleDTO } from "@/types/serialization";
 
 export function useSchedule(chainIdentifier: string | null, weekParam: string | null, locationIds: string[] | null) {
     const [latestLoadedWeekDate, setLatestLoadedWeekDate] = useState<DateTime | null>(null);
-    const currentWeekDate = fromCompactISOWeekString(weekParam) ?? LocalizedDateTime.now();
+    const currentWeekDate = (weekParam ? fromCompactISOWeekString(weekParam) : null) ?? LocalizedDateTime.now();
 
     const { cache } = useSWRConfig();
 
     // prefetch previous and next week if not in cache
     useEffect(() => {
-        if (locationIds == null || chainIdentifier == null) return;
+        if (currentWeekDate == null || locationIds == null || chainIdentifier == null) return;
 
         for (const compactISOWeek of [
             compactISOWeekString(currentWeekDate.minus({ week: 1 })),
@@ -35,7 +35,11 @@ export function useSchedule(chainIdentifier: string | null, weekParam: string | 
             : scheduleUrlKey(chainIdentifier, weekParam, locationIds),
         fetcher,
         {
-            onSuccess: () => setLatestLoadedWeekDate(fromCompactISOWeekString(weekParam)),
+            onSuccess: () => {
+                if (weekParam != null) {
+                    setLatestLoadedWeekDate(fromCompactISOWeekString(weekParam));
+                }
+            },
             keepPreviousData: true,
             revalidateIfStale: false,
         },

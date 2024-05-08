@@ -108,7 +108,7 @@ export async function fetchActiveChains(): Promise<RezervoChain[]> {
 
 export async function fetchRezervoWeekSchedule(
     chainIdentifier: string,
-    compactISOWeek: string | null,
+    compactISOWeek: string,
     locationIdentifiers: string[],
 ): Promise<RezervoWeekSchedule> {
     return deserializeWeekSchedule({

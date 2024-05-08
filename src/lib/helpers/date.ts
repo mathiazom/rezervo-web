@@ -5,13 +5,11 @@ import { RezervoClass } from "@/types/chain";
 export const compactISOWeekString = (date: DateTime): string | null =>
     date.toISOWeekDate()?.replace("-", "").slice(0, 7) ?? null;
 
-export const fromCompactISOWeekString = (weekString: string | null): DateTime | null => {
-    if (weekString === null) return null;
-    return LocalizedDateTime.fromObject({
+export const fromCompactISOWeekString = (weekString: string): DateTime | null =>
+    LocalizedDateTime.fromObject({
         weekYear: Number.parseInt(weekString.slice(0, 4)),
         weekNumber: Number.parseInt(weekString.slice(5, 7)),
     });
-};
 
 export const calculateMondayOffset = () => LocalizedDateTime.now().weekday - 1;
 
