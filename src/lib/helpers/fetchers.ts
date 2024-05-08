@@ -30,16 +30,16 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
     );
     const chainProfiles = (await fetchActiveChains()).map((chain) => chain.profile);
     const activityCategories = await fetchActivityCategories();
-    const compact_iso_weeks = [-1, 0, 1, 2, 3].map(
+    const compactISOWeeks = [-1, 0, 1, 2, 3].map(
         (weekOffset) => compactISOWeekString(firstDateOfWeekByOffset(weekOffset))!,
     );
     const emptyWeekScheduleFallbackKey = scheduleUrlKey(
         chain.profile.identifier,
-        compact_iso_weeks[1]!,
+        compactISOWeeks[1]!,
         locationIdentifiers,
     );
     try {
-        initialSchedule = await fetchRezervoSchedule(chain.profile.identifier, compact_iso_weeks, locationIdentifiers);
+        initialSchedule = await fetchRezervoSchedule(chain.profile.identifier, compactISOWeeks, locationIdentifiers);
     } catch (e) {
         console.error(e);
         const firstDateOfWeek = firstDateOfWeekByOffset(0);
@@ -68,7 +68,7 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
         };
     }
 
-    const classPopularityIndex = createClassPopularityIndex(initialSchedule[compact_iso_weeks[0]!]!);
+    const classPopularityIndex = createClassPopularityIndex(initialSchedule[compactISOWeeks[0]!]!);
     const invalidationTimeInSeconds = 5 * 60;
 
     const swrPrefetched = Object.entries(initialSchedule).reduce((acc, [compactISOWeek, weekSchedule]) => {
@@ -125,16 +125,16 @@ export async function fetchRezervoWeekSchedule(
 
 export async function fetchRezervoSchedule(
     chainIdentifier: string,
-    compact_iso_weeks: string[],
+    compactISOWeeks: string[],
     locationIdentifiers: string[] = [],
 ): Promise<RezervoSchedule> {
     return (
         await Promise.all(
-            compact_iso_weeks.map(
-                async (compact_iso_week: string): Promise<RezervoSchedule> => ({
-                    [compact_iso_week]: await fetchRezervoWeekSchedule(
+            compactISOWeeks.map(
+                async (compactISOWeek: string): Promise<RezervoSchedule> => ({
+                    [compactISOWeek]: await fetchRezervoWeekSchedule(
                         chainIdentifier,
-                        compact_iso_week,
+                        compactISOWeek,
                         locationIdentifiers,
                     ),
                 }),
