@@ -53,12 +53,6 @@ export function firstDateOfWeekByOffset(weekOffset: number): DateTime {
         .plus({ day: weekOffset * 7 - calculateMondayOffset() });
 }
 
-export function weekOffsetBetweenDates(date1: DateTime, date2: DateTime) {
-    // luxon will adjust for DST when working with week units
-    // (https://github.com/moment/luxon/blob/3.4.4/docs/zones.md#math-across-dsts)
-    return Math.floor(date1.startOf("week").diff(date2.startOf("week"), "weeks").weeks);
-}
-
 export const LocalizedDateTime: typeof DateTime = (() => {
     Settings.defaultLocale = "no";
     Settings.defaultZone = "Europe/Oslo";

@@ -1,34 +1,41 @@
+import { DateTime } from "luxon";
 import { useEffect, useMemo, useState } from "react";
 import useSWR, { preload, useSWRConfig } from "swr";
 
+import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { scheduleUrlKey } from "@/lib/helpers/fetchers";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { RezervoWeekScheduleDTO } from "@/types/serialization";
 
-export function useSchedule(chainIdentifier: string | null, currentWeekOffset: number, locationIds: string[] | null) {
-    const [latestLoadedWeekOffset, setLatestLoadedWeekOffset] = useState<number | null>(null);
+export function useSchedule(chainIdentifier: string | null, weekParam: string | null, locationIds: string[] | null) {
+    const [latestLoadedWeekDate, setLatestLoadedWeekDate] = useState<DateTime | null>(null);
+    const currentWeekDate = (weekParam ? fromCompactISOWeekString(weekParam) : null) ?? LocalizedDateTime.now();
 
     const { cache } = useSWRConfig();
 
     // prefetch previous and next week if not in cache
     useEffect(() => {
-        if (locationIds == null || currentWeekOffset == null || chainIdentifier == null) return;
-        for (const weekOffset of [currentWeekOffset - 1, currentWeekOffset + 1]) {
-            const key = scheduleUrlKey(chainIdentifier, weekOffset, locationIds);
+        if (currentWeekDate == null || locationIds == null || chainIdentifier == null) return;
+
+        for (const compactISOWeek of [
+            compactISOWeekString(currentWeekDate.minus({ week: 1 })),
+            compactISOWeekString(currentWeekDate.plus({ week: 1 })),
+        ]) {
+            const key = scheduleUrlKey(chainIdentifier, compactISOWeek!, locationIds);
             if (key !== null && cache.get(key) === undefined) {
                 preload(key, fetcher);
             }
         }
-    }, [currentWeekOffset, chainIdentifier, locationIds, cache]);
+    }, [chainIdentifier, locationIds, cache, currentWeekDate]);
 
     const { data, error, isLoading } = useSWR<RezervoWeekScheduleDTO>(
-        locationIds == null || currentWeekOffset == null || chainIdentifier == null
+        locationIds == null || weekParam == null || chainIdentifier == null
             ? null
-            : scheduleUrlKey(chainIdentifier, currentWeekOffset, locationIds),
+            : scheduleUrlKey(chainIdentifier, weekParam, locationIds),
         fetcher,
         {
-            onSuccess: () => setLatestLoadedWeekOffset(currentWeekOffset),
+            onSuccess: () => setLatestLoadedWeekDate(currentWeekDate),
             keepPreviousData: true,
             revalidateIfStale: false,
         },
@@ -39,9 +46,9 @@ export function useSchedule(chainIdentifier: string | null, currentWeekOffset: n
     }, [data]);
 
     return {
-        latestLoadedWeekOffset: latestLoadedWeekOffset,
+        isLoadingPreviousWeek: isLoading && latestLoadedWeekDate != null && latestLoadedWeekDate > currentWeekDate,
+        isLoadingNextWeek: isLoading && latestLoadedWeekDate != null && latestLoadedWeekDate < currentWeekDate,
         weekSchedule: weekSchedule,
         weekScheduleError: error,
-        weekScheduleLoading: isLoading,
     };
 }

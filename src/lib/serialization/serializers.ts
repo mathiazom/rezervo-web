@@ -30,13 +30,13 @@ export function serializeWeekSchedule(weekSchedule: RezervoWeekSchedule): Rezerv
 
 export function serializeSchedule(schedule: RezervoSchedule): RezervoScheduleDTO {
     return Object.keys(schedule)
-        .map((weekOffset) => {
-            const weekSchedule = schedule[Number(weekOffset)];
+        .map((compactISOWeek) => {
+            const weekSchedule = schedule[compactISOWeek];
             if (weekSchedule === undefined) {
-                throw new Error(`Invalid week schedule for week offset ${weekOffset}`);
+                throw new Error(`Invalid week schedule for week ${compactISOWeek}`);
             }
             return {
-                [Number(weekOffset)]: serializeWeekSchedule(weekSchedule),
+                [compactISOWeek]: serializeWeekSchedule(weekSchedule),
             };
         })
         .reduce((acc, next) => ({ ...acc, ...next }), {});

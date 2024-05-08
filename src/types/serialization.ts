@@ -4,7 +4,7 @@ import { ClassPopularityIndex } from "@/types/popularity";
 import { SessionStatus } from "@/types/userSessions";
 
 export type RezervoScheduleDTO = {
-    [weekOffset: number]: RezervoWeekScheduleDTO;
+    [compactISOWeek: string]: RezervoWeekScheduleDTO;
 };
 export type RezervoWeekScheduleDTO = {
     locationIds: string[];

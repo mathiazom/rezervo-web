@@ -15,12 +15,7 @@ import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
-import {
-    compactISOWeekString,
-    fromCompactISOWeekString,
-    LocalizedDateTime,
-    weekOffsetBetweenDates,
-} from "@/lib/helpers/date";
+import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { getStoredSelectedCategories, getStoredSelectedLocations } from "@/lib/helpers/storage";
 import { useSchedule } from "@/lib/hooks/useSchedule";
@@ -102,14 +97,6 @@ function Chain({
         [],
     );
 
-    // TODO: completely replace weekOffset with week year and number
-    const weekOffset = useMemo(() => {
-        if (weekParam === null) return 0;
-        const weekDate = fromCompactISOWeekString(weekParam);
-        if (weekDate === null) return 0;
-        return weekOffsetBetweenDates(weekDate, LocalizedDateTime.now());
-    }, [weekParam]);
-
     useEffect(() => {
         const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
         setSelectedLocationIds(locationIds);
@@ -120,10 +107,10 @@ function Chain({
     }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
 
     const {
-        latestLoadedWeekOffset,
+        isLoadingPreviousWeek,
+        isLoadingNextWeek,
         weekSchedule: currentWeekSchedule,
-        weekScheduleLoading,
-    } = useSchedule(selectedChain, weekOffset, selectedLocationIds);
+    } = useSchedule(selectedChain, weekParam, selectedLocationIds);
 
     const classes = useMemo(
         () => currentWeekSchedule?.days.flatMap((daySchedule) => daySchedule.classes) ?? [],
@@ -229,11 +216,6 @@ function Chain({
             });
         }
     }
-
-    const isLoadingPreviousWeek =
-        weekScheduleLoading && latestLoadedWeekOffset != null && latestLoadedWeekOffset > weekOffset;
-    const isLoadingNextWeek =
-        weekScheduleLoading && latestLoadedWeekOffset != null && latestLoadedWeekOffset < weekOffset;
 
     const refetchConfig = useCallback(async () => {
         await mutateUserConfig();
