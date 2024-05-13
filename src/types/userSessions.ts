@@ -18,6 +18,7 @@ export enum StatusColors {
 
 export type UserNameSessionStatus = UserNameWithIsSelf & {
     status: SessionStatus;
+    positionInWaitList: number | null;
 };
 export type UserSessionsIndex = {
     [classId: string]: UserNameSessionStatus[];
@@ -26,5 +27,6 @@ export type UserSessionsIndex = {
 export type BaseUserSession = {
     chain: ChainIdentifier;
     status: SessionStatus;
+    positionInWaitList: number | null;
     classData: RezervoClass;
 };

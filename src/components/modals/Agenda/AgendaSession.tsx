@@ -147,11 +147,21 @@ export default function AgendaSession({
                                     </Typography>
                                 )}
                                 {userSession?.status === SessionStatus.WAITLIST && (
-                                    <Tooltip title={"Du er på venteliste for denne timen"}>
+                                    <Tooltip
+                                        title={
+                                            userSession.positionInWaitList
+                                                ? `Du er nummer ${userSession.positionInWaitList} på venteliste for denne timen`
+                                                : "Du er på venteliste for denne timen"
+                                        }
+                                    >
                                         <Chip
                                             size={"small"}
                                             color={"warning"}
-                                            label={"Venteliste"}
+                                            label={
+                                                userSession.positionInWaitList
+                                                    ? `Venteliste: ${userSession.positionInWaitList}`
+                                                    : "Venteliste"
+                                            }
                                             icon={<HourglassTopRounded />}
                                             sx={{
                                                 marginY: "0.2rem",
