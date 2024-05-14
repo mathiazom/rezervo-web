@@ -92,7 +92,7 @@ export default function ClassInfo({
         setBookingLoading(false);
     }
 
-    // We do not know their position in the wait list before the sessions are pulled
+    // We might not know their position in the wait list before the sessions are pulled, depending on provider implementation
     const positionedUsersInWaitList = usersOnWaitlist.filter((u) => u.positionInWaitList);
 
     return (
