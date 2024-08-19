@@ -50,7 +50,7 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
     if (compactISOWeek == undefined) {
         return useSWRNext(key, fetcher, config);
     }
-    const locationIds = queryParams.getAll("locationId");
+    const locationIds = queryParams.getAll("location");
     for (const candidateKey of Array.from(cache.keys())) {
         if (!candidateKey.startsWith(baseUrl)) {
             continue;
@@ -63,7 +63,7 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
         if (candidateQueryParams.get("w") !== compactISOWeek) {
             continue;
         }
-        const candidateLocationIds = candidateQueryParams.getAll("locationId");
+        const candidateLocationIds = candidateQueryParams.getAll("location");
         // check if cache value represents a superset of the requested locationIds
         // (possibly returning more data than requested)
         if (locationIds.every((id) => candidateLocationIds.includes(id))) {

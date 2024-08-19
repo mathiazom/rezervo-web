@@ -9,6 +9,7 @@ const STORAGE_KEYS = {
     selectedLocations: (chain: string) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
     selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
     excludeClassTimeFilters: `${STORAGE_KEY_PREFIX}excludeClassTimeFilters`,
+    preLoginPath: `${STORAGE_KEY_PREFIX}preLoginPath`,
 };
 
 function storeValue<T>(key: string, value: T) {
@@ -56,6 +57,14 @@ export function getStoredExcludeClassTimeFilters(): ExcludeClassTimeFilter[] | n
     return getStoredValue<ExcludeClassTimeFilter[]>(STORAGE_KEYS.excludeClassTimeFilters, true);
 }
 
+export function storePreLoginPath(path: string) {
+    storeValue(STORAGE_KEYS.preLoginPath, path);
+}
+
+export function popStoredPreLoginPath(): string | null {
+    return popStoredValue<string>(STORAGE_KEYS.preLoginPath, false);
+}
+
 function storeAsCookie<T>(key: string, value: T) {
     // using a common Max-Age upper limit of 400 days (https://www.cookiestatus.com/)
     Cookies.set(key, typeof value !== "string" ? JSON.stringify(value) : value, { expires: 400 });
@@ -98,4 +107,23 @@ function getFromLocalStorage<T>(key: string, deserialize: boolean): T | null {
         return value as T;
     }
     return JSON.parse(value) as T | null;
+}
+
+function popStoredValue<T>(key: string, deserialize: boolean): T | null {
+    const value = getStoredValue<T>(key, deserialize);
+    removeStoredValue(key);
+    return value;
+}
+
+function removeStoredValue(key: string): void {
+    removeFromCookies(key);
+    removeFromLocalStorage(key);
+}
+
+function removeFromCookies(key: string): void {
+    Cookies.remove(key);
+}
+
+function removeFromLocalStorage(key: string): void {
+    localStorage.removeItem(key);
 }

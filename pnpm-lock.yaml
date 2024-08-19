@@ -37,6 +37,9 @@ importers:
             js-cookie:
                 specifier: ^3.0.5
                 version: 3.0.5
+            jwt-decode:
+                specifier: ^4.0.0
+                version: 4.0.0
             luxon:
                 specifier: ^3.5.0
                 version: 3.5.0
@@ -58,6 +61,9 @@ importers:
             react-dropzone:
                 specifier: ^14.3.5
                 version: 14.3.5(react@18.3.1)
+            react-oauth2-code-pkce:
+                specifier: ^1.22.2
+                version: 1.22.2(react@18.3.1)
             react-snowfall:
                 specifier: ^2.2.0
                 version: 2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2672,6 +2678,13 @@ packages:
             }
         engines: { node: ">=4.0" }
 
+    jwt-decode@4.0.0:
+        resolution:
+            {
+                integrity: sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==,
+            }
+        engines: { node: ">=18" }
+
     keycode@2.2.1:
         resolution:
             {
@@ -3245,6 +3258,14 @@ packages:
             {
                 integrity: sha512-H91OHcwjZsbq3ClIDHMzBShc1rotbfACdWENsmEf0IFvZ3FgGPtdHMcsv45bQ1hAbgdfiA8SnxTKfDS+x/8m2g==,
             }
+
+    react-oauth2-code-pkce@1.22.2:
+        resolution:
+            {
+                integrity: sha512-Mn6JfA6AhYkhCZ83CJDsTRhNFbXkZnTuhdaJgj2/W1bqkU29cQAZaVnWtQrlXOLKYq9Ete9SdBHSi93pPt6gVA==,
+            }
+        peerDependencies:
+            react: ">=16.8.0"
 
     react-snowfall@2.2.0:
         resolution:
@@ -5211,7 +5232,7 @@ snapshots:
         transitivePeerDependencies:
             - supports-color
 
-    eslint-module-utils@2.12.0(@typescript-eslint/parser@8.18.2(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1):
+    eslint-module-utils@2.12.0(@typescript-eslint/parser@8.18.2(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1):
         dependencies:
             debug: 3.2.7
         optionalDependencies:
@@ -5243,7 +5264,7 @@ snapshots:
             doctrine: 2.1.0
             eslint: 8.57.1
             eslint-import-resolver-node: 0.3.9
-            eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.18.2(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@8.57.1)
+            eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.18.2(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1)
             hasown: 2.0.2
             is-core-module: 2.16.1
             is-glob: 4.0.3
@@ -5760,6 +5781,8 @@ snapshots:
             object.assign: 4.1.7
             object.values: 1.2.1
 
+    jwt-decode@4.0.0: {}
+
     keycode@2.2.1: {}
 
     keyv@4.5.4:
@@ -6083,6 +6106,10 @@ snapshots:
     react-is@16.13.1: {}
 
     react-is@19.0.0: {}
+
+    react-oauth2-code-pkce@1.22.2(react@18.3.1):
+        dependencies:
+            react: 18.3.1
 
     react-snowfall@2.2.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
         dependencies:

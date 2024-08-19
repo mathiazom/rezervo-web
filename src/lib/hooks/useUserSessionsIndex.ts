@@ -1,18 +1,18 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
-import { fetcher } from "@/lib/utils/fetchUtils";
+import { useUser } from "@/lib/hooks/useUser";
+import { authedFetcher } from "@/lib/utils/fetchUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { UserSessionsIndex } from "@/types/userSessions";
 
 export function useUserSessionsIndex(chain: ChainIdentifier) {
-    const { user } = useUser();
+    const { isAuthenticated, token } = useUser();
 
     const userSessionsIndexApiUrl = `${chain}/sessions-index`;
 
     const { data, error, isLoading, mutate } = useSWR<UserSessionsIndex>(
-        user && chain ? userSessionsIndexApiUrl : null,
-        fetcher,
+        isAuthenticated && chain ? userSessionsIndexApiUrl : null,
+        authedFetcher(token ?? ""),
     );
 
     return {
