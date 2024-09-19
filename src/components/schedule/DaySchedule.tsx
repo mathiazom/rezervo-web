@@ -3,10 +3,17 @@ import React, { useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
-import { getCapitalizedWeekday, isClassInThePast, isDayPassed, isToday, LocalizedDateTime } from "@/lib/helpers/date";
+import {
+    getCapitalizedWeekday,
+    isClassInThePast,
+    isClassExcludedByTimeFilter,
+    isDayPassed,
+    isToday,
+    LocalizedDateTime,
+} from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { ChainIdentifier, RezervoClass, RezervoDaySchedule } from "@/types/chain";
+import { ChainIdentifier, ExcludeClassTimeFilter, RezervoClass, RezervoDaySchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({
@@ -14,6 +21,7 @@ function DaySchedule({
     daySchedule,
     selectedLocationIds,
     selectedCategories,
+    excludedClassTimeFilters,
     classPopularityIndex,
     selectable,
     selectedClassIds,
@@ -25,6 +33,7 @@ function DaySchedule({
     daySchedule: RezervoDaySchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
+    excludedClassTimeFilters: ExcludeClassTimeFilter[];
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -37,9 +46,12 @@ function DaySchedule({
     const filteredClasses = useMemo(
         () =>
             daySchedule.classes.filter(
-                (c) => selectedLocationIds.includes(c.location.id) && selectedCategories.includes(c.activity.category),
+                (c) =>
+                    selectedLocationIds.includes(c.location.id) &&
+                    selectedCategories.includes(c.activity.category) &&
+                    !excludedClassTimeFilters.some((filter) => isClassExcludedByTimeFilter(c, filter)),
             ),
-        [daySchedule.classes, selectedLocationIds, selectedCategories],
+        [daySchedule.classes, selectedLocationIds, selectedCategories, excludedClassTimeFilters],
     );
 
     const dayIsToday = isToday(daySchedule.date);

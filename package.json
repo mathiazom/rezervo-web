@@ -24,6 +24,7 @@
         "@mui/icons-material": "^5.15.15",
         "@mui/lab": "^5.0.0-alpha.170",
         "@mui/material": "^5.15.15",
+        "@mui/x-date-pickers": "^7.18.0",
         "@serwist/next": "^9.0.1",
         "js-cookie": "^3.0.5",
         "luxon": "^3.4.4",

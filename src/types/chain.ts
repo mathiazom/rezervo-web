@@ -105,3 +105,11 @@ export type BookingPopupState = {
     _class: RezervoClass;
     action: BookingPopupAction;
 };
+
+export type ExcludeClassTimeFilter = {
+    weekday: number;
+    startHour: number;
+    startMinute: number;
+    endHour: number;
+    endMinute: number;
+};
