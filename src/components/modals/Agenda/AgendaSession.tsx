@@ -159,12 +159,13 @@ export default function AgendaSession({
                                             color={"warning"}
                                             label={
                                                 userSession.positionInWaitList
-                                                    ? `Venteliste: ${userSession.positionInWaitList}`
+                                                    ? `Venteliste: ${userSession.positionInWaitList}.`
                                                     : "Venteliste"
                                             }
                                             icon={<HourglassTopRounded />}
                                             sx={{
-                                                marginY: "0.2rem",
+                                                marginTop: "0.5rem",
+                                                marginBottom: "0.2rem",
                                                 "& .MuiChip-icon": {
                                                     fontSize: "0.85rem",
                                                     marginLeft: "0.5rem",

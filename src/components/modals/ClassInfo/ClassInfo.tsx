@@ -205,7 +205,7 @@ export default function ClassInfo({
                                       ? ` (${positionedUsersInWaitList
                                             .map(
                                                 (u) =>
-                                                    `${u.isSelf ? "Din plassering" : u.userName}: ${u.positionInWaitList}`,
+                                                    `${u.isSelf ? "din plassering" : u.userName}: ${u.positionInWaitList}.`,
                                             )
                                             .join(", ")})`
                                       : "")
