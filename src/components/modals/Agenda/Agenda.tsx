@@ -11,7 +11,7 @@ import React from "react";
 
 import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
-import { capitalizeFirstCharacter } from "@/lib/helpers/date";
+import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
@@ -95,7 +95,9 @@ export default function Agenda({
     );
     const bookedSessionsDayMap = mapClassesByStartTime(
         userSessions.filter(
-            (_class) => _class.status === SessionStatus.WAITLIST || _class.status === SessionStatus.BOOKED,
+            (_class) =>
+                !isClassInThePast(_class.classData) &&
+                (_class.status === SessionStatus.WAITLIST || _class.status === SessionStatus.BOOKED),
         ),
     );
     const missingClassConfigs = searchForGhosts(userSessions, chainConfigs);
