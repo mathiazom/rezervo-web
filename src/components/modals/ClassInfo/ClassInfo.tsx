@@ -92,6 +92,9 @@ export default function ClassInfo({
         setBookingLoading(false);
     }
 
+    // We might not know their position in the wait list before the sessions are pulled, depending on provider implementation
+    const positionedUsersInWaitList = usersOnWaitlist.filter((u) => u.positionInWaitList);
+
     return (
         <Box
             sx={{
@@ -197,7 +200,15 @@ export default function ClassInfo({
                         text={
                             _class.isCancelled
                                 ? "var på venteliste for denne timen"
-                                : "er på venteliste for denne timen"
+                                : "er på venteliste for denne timen" +
+                                  (positionedUsersInWaitList.length > 0
+                                      ? ` (${positionedUsersInWaitList
+                                            .map(
+                                                (u) =>
+                                                    `${u.isSelf ? "din plassering" : u.userName}: ${u.positionInWaitList}.`,
+                                            )
+                                            .join(", ")})`
+                                      : "")
                         }
                     />
                 </>
