@@ -1,6 +1,6 @@
 import { DateTime, Info, Settings } from "luxon";
 
-import { RezervoClass } from "@/types/chain";
+import { ExcludeClassTimeFilter, RezervoClass } from "@/types/chain";
 
 export const compactISOWeekString = (date: DateTime): string | null =>
     date.toISOWeekDate()?.replace("-", "").slice(0, 7) ?? null;
@@ -58,3 +58,30 @@ export const LocalizedDateTime: typeof DateTime = (() => {
     Settings.defaultZone = "Europe/Oslo";
     return DateTime;
 })();
+
+export const isClassExcludedByTimeFilter = (
+    _class: RezervoClass,
+    excludeClassTimeFilter: ExcludeClassTimeFilter,
+): boolean => {
+    if (
+        _class.startTime.weekday !== excludeClassTimeFilter.weekday &&
+        _class.endTime.weekday !== excludeClassTimeFilter.weekday
+    ) {
+        return false;
+    }
+
+    // Include a check for the middle value, in case of entirely overlapping exclude-filter
+    const middle = _class.startTime.plus(_class.endTime.minus(_class.startTime.toMillis()).toMillis() / 2);
+    return [_class.startTime, _class.endTime, middle].some((candidateTime) => {
+        const startTime = candidateTime.set({
+            hour: excludeClassTimeFilter.startHour,
+            minute: excludeClassTimeFilter.startMinute,
+        });
+        const endTime = candidateTime.set({
+            hour: excludeClassTimeFilter.endHour,
+            minute: excludeClassTimeFilter.endMinute,
+        });
+
+        return candidateTime > startTime && candidateTime < endTime;
+    });
+};

@@ -1,12 +1,13 @@
 import Cookies from "js-cookie";
 
-import { ChainIdentifier } from "@/types/chain";
+import { ChainIdentifier, ExcludeClassTimeFilter } from "@/types/chain";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
 const STORAGE_KEYS = {
     SELECTED_CHAIN: `${STORAGE_KEY_PREFIX}selectedChain`,
     selectedLocations: (chain: string) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
     selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
+    excludedClassTimeFilters: `${STORAGE_KEY_PREFIX}excludedClassTimeFilters`,
 };
 
 function storeValue<T>(key: string, value: T) {
@@ -36,6 +37,14 @@ export function storeSelectedCategories(chainIdentifier: string, categories: str
 
 export function getStoredSelectedCategories(chainIdentifier: string): string[] | null {
     return getStoredValue<string[]>(STORAGE_KEYS.selectedCategories(chainIdentifier), true);
+}
+
+export function storeExcludedClassTimeFilters(excludedClassTimeFilters: ExcludeClassTimeFilter[]) {
+    storeValue(STORAGE_KEYS.excludedClassTimeFilters, excludedClassTimeFilters);
+}
+
+export function getStoredExcludedClassTimeFilters(): ExcludeClassTimeFilter[] | null {
+    return getStoredValue<ExcludeClassTimeFilter[]>(STORAGE_KEYS.excludedClassTimeFilters, true);
 }
 
 function storeAsCookie<T>(key: string, value: T) {
