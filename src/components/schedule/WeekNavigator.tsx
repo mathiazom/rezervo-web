@@ -7,7 +7,7 @@ import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,
-    CLASS_TIME_COLOR,
+    EXCLUDE_CLASS_TIME_COLOR,
     LOCATIONS_COLOR,
 } from "@/components/modals/ScheduleFiltersDialog";
 import { ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
@@ -136,7 +136,7 @@ export default function WeekNavigator({
                                     width: 20,
                                     height: 20,
                                     fontSize: 12,
-                                    backgroundColor: CLASS_TIME_COLOR[500],
+                                    backgroundColor: EXCLUDE_CLASS_TIME_COLOR[500],
                                 }}
                             >
                                 {excludedClassTimeFilters.length}

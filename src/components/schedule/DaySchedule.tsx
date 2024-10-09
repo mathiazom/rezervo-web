@@ -21,7 +21,7 @@ function DaySchedule({
     daySchedule,
     selectedLocationIds,
     selectedCategories,
-    excludedClassTimeFilters,
+    excludeClassTimeFilters,
     classPopularityIndex,
     selectable,
     selectedClassIds,
@@ -33,7 +33,7 @@ function DaySchedule({
     daySchedule: RezervoDaySchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
-    excludedClassTimeFilters: ExcludeClassTimeFilter[];
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -49,9 +49,9 @@ function DaySchedule({
                 (c) =>
                     selectedLocationIds.includes(c.location.id) &&
                     selectedCategories.includes(c.activity.category) &&
-                    !excludedClassTimeFilters.some((filter) => isClassExcludedByTimeFilter(c, filter)),
+                    !excludeClassTimeFilters.some((filter) => isClassExcludedByTimeFilter(c, filter)),
             ),
-        [daySchedule.classes, selectedLocationIds, selectedCategories, excludedClassTimeFilters],
+        [daySchedule.classes, selectedLocationIds, selectedCategories, excludeClassTimeFilters],
     );
 
     const dayIsToday = isToday(daySchedule.date);

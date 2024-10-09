@@ -15,7 +15,7 @@ import {
     useTheme,
 } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers";
-import { DateTime } from "luxon";
+import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
@@ -37,12 +37,14 @@ export default function ExcludeClassTimeFilters({
     const [excludedClassTimeEndTime, setExcludedClassTimeEndTime] = useState<DateTime | null>(null);
     const [inputValid, setInputValid] = useState<boolean>(false);
 
-    const validateInput = useCallback(() => {
-        return (
+    const validateInput: () => false | ExcludeClassTimeFilter = useCallback(() => {
+        if (
             excludedClassTimeWeekday >= 1 &&
             excludedClassTimeWeekday <= 7 &&
-            excludedClassTimeStartTime?.isValid === true &&
-            excludedClassTimeEndTime?.isValid === true &&
+            excludedClassTimeStartTime !== null &&
+            excludedClassTimeStartTime.isValid &&
+            excludedClassTimeEndTime !== null &&
+            excludedClassTimeEndTime.isValid &&
             excludedClassTimeStartTime < excludedClassTimeEndTime &&
             !excludedClassTimeFilters.some(
                 (it) =>
@@ -52,11 +54,21 @@ export default function ExcludeClassTimeFilters({
                     it.endHour === excludedClassTimeEndTime.hour &&
                     it.endMinute === excludedClassTimeEndTime.minute,
             )
-        );
+        ) {
+            return {
+                weekday: excludedClassTimeWeekday as WeekdayNumbers,
+                startHour: excludedClassTimeStartTime.hour as HourNumbers,
+                startMinute: excludedClassTimeStartTime.minute as MinuteNumbers,
+                endHour: excludedClassTimeEndTime.hour as HourNumbers,
+                endMinute: excludedClassTimeEndTime.minute as MinuteNumbers,
+            }
+        } else {
+            return false
+        }
     }, [excludedClassTimeFilters, excludedClassTimeWeekday, excludedClassTimeStartTime, excludedClassTimeEndTime]);
 
     useEffect(() => {
-        setInputValid(validateInput());
+        setInputValid(validateInput() !== false);
     }, [
         validateInput,
         excludedClassTimeFilters,
@@ -66,21 +78,15 @@ export default function ExcludeClassTimeFilters({
     ]);
 
     const addFilter = () => {
-        if (!validateInput()) {
-            console.log("input was null...");
+        const validInput = validateInput()
+        if (validInput === false) {
             return;
         }
 
         setExcludedClassTimeFilters((filters) => {
             const newFilters = [
                 ...filters,
-                {
-                    weekday: excludedClassTimeWeekday,
-                    startHour: excludedClassTimeStartTime!.hour,
-                    startMinute: excludedClassTimeStartTime!.minute,
-                    endHour: excludedClassTimeEndTime!.hour,
-                    endMinute: excludedClassTimeEndTime!.minute,
-                },
+                validInput,
             ];
             storeExcludedClassTimeFilters(newFilters);
             return newFilters;
@@ -102,6 +108,13 @@ export default function ExcludeClassTimeFilters({
             return empty;
         });
     };
+
+    const toSortedFilters = (filters: ExcludeClassTimeFilter[]) => {
+        return filters
+            .toSorted((a, b) => a.endHour * 60 + a.endMinute - (b.endHour * 60 + b.endMinute))
+            .toSorted((a, b) => a.startHour * 60 + a.startMinute - (b.startHour * 60 + b.startMinute))
+            .toSorted((a, b) => a.weekday - b.weekday)
+    }
 
     return (
         <Stack
@@ -145,7 +158,8 @@ export default function ExcludeClassTimeFilters({
                                 value={excludedClassTimeWeekday}
                                 label="Ukedag"
                                 onChange={({ target: { value } }) => {
-                                    setExcludedClassTimeWeekday(() => value as number);
+                                    if (typeof value === "string") return;
+                                    setExcludedClassTimeWeekday(() => value);
                                 }}
                             >
                                 {weekdays.map((day, i) => (
@@ -158,17 +172,15 @@ export default function ExcludeClassTimeFilters({
                                 <TimePicker
                                     label="Fra"
                                     views={["hours", "minutes"]}
-                                    ampm={false}
                                     value={excludedClassTimeStartTime}
-                                    onChange={(newValue) => setExcludedClassTimeStartTime(() => newValue)}
+                                    onChange={(newValue) => setExcludedClassTimeStartTime(newValue)}
                                 />
                                 <RemoveRounded />
                                 <TimePicker
                                     label="Til"
                                     views={["hours", "minutes"]}
-                                    ampm={false}
                                     value={excludedClassTimeEndTime}
-                                    onChange={(newValue) => setExcludedClassTimeEndTime(() => newValue)}
+                                    onChange={(newValue) => setExcludedClassTimeEndTime(newValue)}
                                 />
                             </Stack>
                             <Stack direction={"row"} gap={1} justifyContent={"center"}>
@@ -193,10 +205,7 @@ export default function ExcludeClassTimeFilters({
                     Skjulte tidsrom
                 </Typography>
                 <Box sx={{ mt: 1 }}>
-                    {excludedClassTimeFilters
-                        .toSorted((a, b) => a.endHour * 60 + a.endMinute - (b.endHour * 60 + b.endMinute))
-                        .toSorted((a, b) => a.startHour * 60 + a.startMinute - (b.startHour * 60 + b.startMinute))
-                        .toSorted((a, b) => a.weekday - b.weekday)
+                    {toSortedFilters(excludedClassTimeFilters)
                         .map((filter) => (
                             <Stack
                                 key={JSON.stringify(filter)}

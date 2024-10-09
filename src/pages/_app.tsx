@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <CssVarsProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
             <UserProvider>
-                <LocalizationProvider dateAdapter={AdapterLuxon}>
+                <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="nb-NO">
                     {showSnow && (
                         <Snowfall
                             speed={[0.5, 1.0]}
