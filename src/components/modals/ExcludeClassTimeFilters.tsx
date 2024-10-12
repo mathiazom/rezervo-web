@@ -13,6 +13,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
+import Grid2 from "@mui/material/Unstable_Grid2";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
@@ -20,7 +21,6 @@ import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { storeExcludeClassTimeFilters } from "@/lib/helpers/storage";
 import { ExcludeClassTimeFilter } from "@/types/chain";
-import Grid2 from "@mui/material/Unstable_Grid2";
 
 export default function ExcludeClassTimeFilters({
     excludeClassTimeFilters,
@@ -60,28 +60,22 @@ export default function ExcludeClassTimeFilters({
                 startMinute: excludeClassTimeStartTime.minute as MinuteNumbers,
                 endHour: excludeClassTimeEndTime.hour as HourNumbers,
                 endMinute: excludeClassTimeEndTime.minute as MinuteNumbers,
-            }
+            };
         } else {
-            return false
+            return false;
         }
     }, [excludeClassTimeFilters, excludeClassTimeWeekday, excludeClassTimeStartTime, excludeClassTimeEndTime]);
 
-    const inputValid = useMemo(
-        () => validateInput() !== false,
-        [validateInput]
-    )
+    const inputValid = useMemo(() => validateInput() !== false, [validateInput]);
 
     const addFilter = () => {
-        const validInput = validateInput()
+        const validInput = validateInput();
         if (validInput === false) {
             return;
         }
 
         setExcludeClassTimeFilters((filters) => {
-            const newFilters = [
-                ...filters,
-                validInput,
-            ];
+            const newFilters = [...filters, validInput];
             storeExcludeClassTimeFilters(newFilters);
             return newFilters;
         });
@@ -89,17 +83,17 @@ export default function ExcludeClassTimeFilters({
 
     const equalFilters = (a: ExcludeClassTimeFilter, b: ExcludeClassTimeFilter) => {
         return (
-            a.weekday === b.weekday
-            && a.startHour === b.startHour
-            && a.startMinute === b.startMinute
-            && a.endHour === b.endHour
-            && a.endMinute === b.endMinute
-        )
-    }
+            a.weekday === b.weekday &&
+            a.startHour === b.startHour &&
+            a.startMinute === b.startMinute &&
+            a.endHour === b.endHour &&
+            a.endMinute === b.endMinute
+        );
+    };
 
     const removeFilter = (filter: ExcludeClassTimeFilter) => {
         setExcludeClassTimeFilters((filters) => {
-            const newFilters = filters.filter((it) => !equalFilters(filter, it))
+            const newFilters = filters.filter((it) => !equalFilters(filter, it));
             storeExcludeClassTimeFilters(newFilters);
             return newFilters;
         });
@@ -117,8 +111,8 @@ export default function ExcludeClassTimeFilters({
         return filters
             .toSorted((a, b) => a.endHour * 60 + a.endMinute - (b.endHour * 60 + b.endMinute))
             .toSorted((a, b) => a.startHour * 60 + a.startMinute - (b.startHour * 60 + b.startMinute))
-            .toSorted((a, b) => a.weekday - b.weekday)
-    }
+            .toSorted((a, b) => a.weekday - b.weekday);
+    };
 
     return (
         <Stack
@@ -209,36 +203,35 @@ export default function ExcludeClassTimeFilters({
                     Skjulte tidsrom
                 </Typography>
                 <Grid2 container rowSpacing={1}>
-                    {toSortedFilters(excludeClassTimeFilters)
-                        .map((filter) => (
-                            <>
-                                <Grid2 xs={4} textAlign={"left"} alignContent={"center"}>
-                                    <Typography>{weekdays[filter.weekday - 1]}</Typography>
-                                </Grid2>
-                                <Grid2 xs={6} sm={4} textAlign={"center"} alignContent={"center"}>
-                                    <Typography>
-                                        {filter.startHour.toFixed(0).padStart(2, "0")}:
-                                        {filter.startMinute.toFixed(0).padStart(2, "0")}
-                                        {" – "}
-                                        {filter.endHour.toFixed(0).padStart(2, "0")}:
-                                        {filter.endMinute.toFixed(0).padStart(2, "0")}
-                                    </Typography>
-                                </Grid2>
-                                <Grid2 xs={2} sm={4} textAlign={"right"} alignContent={"center"}>
-                                    <Tooltip title="Fjern tidsrom">
-                                        <IconButton
-                                            onClick={(event) => {
-                                                event.preventDefault();
-                                                removeFilter(filter);
-                                            }}
-                                            sx={{ opacity: 0.5 }}
-                                        >
-                                            <DeleteRounded />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Grid2>
-                            </>
-                        ))}
+                    {toSortedFilters(excludeClassTimeFilters).map((filter) => (
+                        <>
+                            <Grid2 xs={4} textAlign={"left"} alignContent={"center"}>
+                                <Typography>{weekdays[filter.weekday - 1]}</Typography>
+                            </Grid2>
+                            <Grid2 xs={6} sm={4} textAlign={"center"} alignContent={"center"}>
+                                <Typography>
+                                    {filter.startHour.toFixed(0).padStart(2, "0")}:
+                                    {filter.startMinute.toFixed(0).padStart(2, "0")}
+                                    {" – "}
+                                    {filter.endHour.toFixed(0).padStart(2, "0")}:
+                                    {filter.endMinute.toFixed(0).padStart(2, "0")}
+                                </Typography>
+                            </Grid2>
+                            <Grid2 xs={2} sm={4} textAlign={"right"} alignContent={"center"}>
+                                <Tooltip title="Fjern tidsrom">
+                                    <IconButton
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            removeFilter(filter);
+                                        }}
+                                        sx={{ opacity: 0.5 }}
+                                    >
+                                        <DeleteRounded />
+                                    </IconButton>
+                                </Tooltip>
+                            </Grid2>
+                        </>
+                    ))}
                 </Grid2>
                 {excludeClassTimeFilters.length === 0 ? (
                     <Typography variant={"body2"} textAlign={"center"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
