@@ -7,7 +7,7 @@ const STORAGE_KEYS = {
     SELECTED_CHAIN: `${STORAGE_KEY_PREFIX}selectedChain`,
     selectedLocations: (chain: string) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
     selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
-    excludedClassTimeFilters: `${STORAGE_KEY_PREFIX}excludedClassTimeFilters`,
+    excludeClassTimeFilters: `${STORAGE_KEY_PREFIX}excludeClassTimeFilters`,
 };
 
 function storeValue<T>(key: string, value: T) {
@@ -39,12 +39,12 @@ export function getStoredSelectedCategories(chainIdentifier: string): string[] |
     return getStoredValue<string[]>(STORAGE_KEYS.selectedCategories(chainIdentifier), true);
 }
 
-export function storeExcludedClassTimeFilters(excludedClassTimeFilters: ExcludeClassTimeFilter[]) {
-    storeValue(STORAGE_KEYS.excludedClassTimeFilters, excludedClassTimeFilters);
+export function storeExcludeClassTimeFilters(excludeClassTimeFilters: ExcludeClassTimeFilter[]) {
+    storeValue(STORAGE_KEYS.excludeClassTimeFilters, excludeClassTimeFilters);
 }
 
-export function getStoredExcludedClassTimeFilters(): ExcludeClassTimeFilter[] | null {
-    return getStoredValue<ExcludeClassTimeFilter[]>(STORAGE_KEYS.excludedClassTimeFilters, true);
+export function getStoredExcludeClassTimeFilters(): ExcludeClassTimeFilter[] | null {
+    return getStoredValue<ExcludeClassTimeFilter[]>(STORAGE_KEYS.excludeClassTimeFilters, true);
 }
 
 function storeAsCookie<T>(key: string, value: T) {

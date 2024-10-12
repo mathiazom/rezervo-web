@@ -24,8 +24,8 @@ export default function WeekNavigator({
     allCategories,
     selectedCategories,
     setSelectedCategories,
-    excludedClassTimeFilters,
-    setExcludedClassTimeFilters,
+    excludeClassTimeFilters,
+    setExcludeClassTimeFilters,
 }: {
     chain: RezervoChain;
     isLoadingPreviousWeek: boolean;
@@ -36,8 +36,8 @@ export default function WeekNavigator({
     allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
-    excludedClassTimeFilters: ExcludeClassTimeFilter[];
-    setExcludedClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
 }) {
     const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
     const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
@@ -52,8 +52,8 @@ export default function WeekNavigator({
     }, [selectedCategories, allCategories]);
 
     const isClassTimeFiltered = useMemo(() => {
-        return excludedClassTimeFilters.length > 0;
-    }, [excludedClassTimeFilters]);
+        return excludeClassTimeFilters.length > 0;
+    }, [excludeClassTimeFilters]);
 
     const isFiltered = isLocationFiltered || isCategoryFiltered || isClassTimeFiltered;
 
@@ -139,7 +139,7 @@ export default function WeekNavigator({
                                     backgroundColor: EXCLUDE_CLASS_TIME_COLOR[500],
                                 }}
                             >
-                                {excludedClassTimeFilters.length}
+                                {excludeClassTimeFilters.length}
                             </Avatar>
                         )}
                     </Box>
@@ -154,8 +154,8 @@ export default function WeekNavigator({
                 allCategories={allCategories}
                 selectedCategories={selectedCategories}
                 setSelectedCategories={setSelectedCategories}
-                excludedClassTimeFilters={excludedClassTimeFilters}
-                setExcludedClassTimeFilters={setExcludedClassTimeFilters}
+                excludeClassTimeFilters={excludeClassTimeFilters}
+                setExcludeClassTimeFilters={setExcludeClassTimeFilters}
             />
             <LoadingButton
                 loading={isLoadingPreviousWeek}

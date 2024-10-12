@@ -50,7 +50,9 @@ export const LOCATIONS_COLOR = blue;
 
 export const CATEGORIES_COLOR = pink;
 
-export const CLASS_TIME_COLOR = purple;
+export const EXCLUDE_CLASS_TIME_COLOR = purple;
+
+const tabColors = [LOCATIONS_COLOR[500], CATEGORIES_COLOR[500], EXCLUDE_CLASS_TIME_COLOR[500]];
 
 export default function ScheduleFiltersDialog({
     open,
@@ -61,8 +63,8 @@ export default function ScheduleFiltersDialog({
     allCategories,
     selectedCategories,
     setSelectedCategories,
-    excludedClassTimeFilters,
-    setExcludedClassTimeFilters,
+    excludeClassTimeFilters,
+    setExcludeClassTimeFilters,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
@@ -72,8 +74,8 @@ export default function ScheduleFiltersDialog({
     allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
-    excludedClassTimeFilters: ExcludeClassTimeFilter[];
-    setExcludedClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
 }) {
     const theme = useTheme();
     const [tab, setTab] = useState(0);
@@ -90,7 +92,6 @@ export default function ScheduleFiltersDialog({
         setTab(index);
     };
 
-    const tabColors = [LOCATIONS_COLOR[500], CATEGORIES_COLOR[500], CLASS_TIME_COLOR[500]];
     const currentTabColor = tabColors[tab];
 
     return (
@@ -142,7 +143,7 @@ export default function ScheduleFiltersDialog({
                         label={"Tidsrom"}
                         icon={<AccessTimeRounded fontSize={"small"} />}
                         iconPosition={"start"}
-                        sx={{ minHeight: "3rem", color: tab == 2 ? CLASS_TIME_COLOR[500] : undefined }}
+                        sx={{ minHeight: "3rem", color: tab == 2 ? EXCLUDE_CLASS_TIME_COLOR[500] : undefined }}
                         {...a11yProps(2)}
                     />
                 </Tabs>
@@ -167,8 +168,8 @@ export default function ScheduleFiltersDialog({
                     </TabPanel>
                     <TabPanel value={tab} index={2} dir={theme.direction}>
                         <ExcludeClassTimeFilters
-                            excludedClassTimeFilters={excludedClassTimeFilters}
-                            setExcludedClassTimeFilters={setExcludedClassTimeFilters}
+                            excludeClassTimeFilters={excludeClassTimeFilters}
+                            setExcludeClassTimeFilters={setExcludeClassTimeFilters}
                         />
                     </TabPanel>
                 </SwipeableViews>

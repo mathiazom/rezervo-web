@@ -11,7 +11,7 @@ function WeekSchedule({
     weekSchedule,
     selectedLocationIds,
     selectedCategories,
-    excludedClassTimeFilters,
+    excludeClassTimeFilters,
     classPopularityIndex,
     selectable,
     selectedClassIds,
@@ -23,7 +23,7 @@ function WeekSchedule({
     weekSchedule: RezervoWeekSchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
-    excludedClassTimeFilters: ExcludeClassTimeFilter[];
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -59,7 +59,7 @@ function WeekSchedule({
                                     daySchedule={daySchedule}
                                     selectedLocationIds={selectedLocationIds}
                                     selectedCategories={selectedCategories}
-                                    excludedClassTimeFilters={excludedClassTimeFilters}
+                                    excludeClassTimeFilters={excludeClassTimeFilters}
                                     classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}
                                     selectedClassIds={selectedClassIds}

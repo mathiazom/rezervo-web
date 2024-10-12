@@ -1,6 +1,5 @@
 import { Add, DeleteForeverRounded, DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import {
-    Box,
     Button,
     Divider,
     FormControl,
@@ -16,66 +15,61 @@ import {
 } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
-import { storeExcludedClassTimeFilters } from "@/lib/helpers/storage";
+import { storeExcludeClassTimeFilters } from "@/lib/helpers/storage";
 import { ExcludeClassTimeFilter } from "@/types/chain";
+import Grid2 from "@mui/material/Unstable_Grid2";
 
 export default function ExcludeClassTimeFilters({
-    excludedClassTimeFilters,
-    setExcludedClassTimeFilters,
+    excludeClassTimeFilters,
+    setExcludeClassTimeFilters,
 }: {
-    excludedClassTimeFilters: ExcludeClassTimeFilter[];
-    setExcludedClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
 }) {
     const theme = useTheme();
 
     const weekdays = getCapitalizedWeekdays();
-    const [excludedClassTimeWeekday, setExcludedClassTimeWeekday] = useState<number>(1);
-    const [excludedClassTimeStartTime, setExcludedClassTimeStartTime] = useState<DateTime | null>(null);
-    const [excludedClassTimeEndTime, setExcludedClassTimeEndTime] = useState<DateTime | null>(null);
-    const [inputValid, setInputValid] = useState<boolean>(false);
+    const [excludeClassTimeWeekday, setExcludeClassTimeWeekday] = useState<number>(1);
+    const [excludeClassTimeStartTime, setExcludeClassTimeStartTime] = useState<DateTime | null>(null);
+    const [excludeClassTimeEndTime, setExcludeClassTimeEndTime] = useState<DateTime | null>(null);
 
     const validateInput: () => false | ExcludeClassTimeFilter = useCallback(() => {
         if (
-            excludedClassTimeWeekday >= 1 &&
-            excludedClassTimeWeekday <= 7 &&
-            excludedClassTimeStartTime !== null &&
-            excludedClassTimeStartTime.isValid &&
-            excludedClassTimeEndTime !== null &&
-            excludedClassTimeEndTime.isValid &&
-            excludedClassTimeStartTime < excludedClassTimeEndTime &&
-            !excludedClassTimeFilters.some(
+            excludeClassTimeWeekday >= 1 &&
+            excludeClassTimeWeekday <= 7 &&
+            excludeClassTimeStartTime !== null &&
+            excludeClassTimeStartTime.isValid &&
+            excludeClassTimeEndTime !== null &&
+            excludeClassTimeEndTime.isValid &&
+            excludeClassTimeStartTime < excludeClassTimeEndTime &&
+            !excludeClassTimeFilters.some(
                 (it) =>
-                    it.weekday === excludedClassTimeWeekday &&
-                    it.startHour === excludedClassTimeStartTime.hour &&
-                    it.startMinute === excludedClassTimeStartTime.minute &&
-                    it.endHour === excludedClassTimeEndTime.hour &&
-                    it.endMinute === excludedClassTimeEndTime.minute,
+                    it.weekday === excludeClassTimeWeekday &&
+                    it.startHour === excludeClassTimeStartTime.hour &&
+                    it.startMinute === excludeClassTimeStartTime.minute &&
+                    it.endHour === excludeClassTimeEndTime.hour &&
+                    it.endMinute === excludeClassTimeEndTime.minute,
             )
         ) {
             return {
-                weekday: excludedClassTimeWeekday as WeekdayNumbers,
-                startHour: excludedClassTimeStartTime.hour as HourNumbers,
-                startMinute: excludedClassTimeStartTime.minute as MinuteNumbers,
-                endHour: excludedClassTimeEndTime.hour as HourNumbers,
-                endMinute: excludedClassTimeEndTime.minute as MinuteNumbers,
+                weekday: excludeClassTimeWeekday as WeekdayNumbers,
+                startHour: excludeClassTimeStartTime.hour as HourNumbers,
+                startMinute: excludeClassTimeStartTime.minute as MinuteNumbers,
+                endHour: excludeClassTimeEndTime.hour as HourNumbers,
+                endMinute: excludeClassTimeEndTime.minute as MinuteNumbers,
             }
         } else {
             return false
         }
-    }, [excludedClassTimeFilters, excludedClassTimeWeekday, excludedClassTimeStartTime, excludedClassTimeEndTime]);
+    }, [excludeClassTimeFilters, excludeClassTimeWeekday, excludeClassTimeStartTime, excludeClassTimeEndTime]);
 
-    useEffect(() => {
-        setInputValid(validateInput() !== false);
-    }, [
-        validateInput,
-        excludedClassTimeFilters,
-        excludedClassTimeWeekday,
-        excludedClassTimeStartTime,
-        excludedClassTimeEndTime,
-    ]);
+    const inputValid = useMemo(
+        () => validateInput() !== false,
+        [validateInput]
+    )
 
     const addFilter = () => {
         const validInput = validateInput()
@@ -83,28 +77,38 @@ export default function ExcludeClassTimeFilters({
             return;
         }
 
-        setExcludedClassTimeFilters((filters) => {
+        setExcludeClassTimeFilters((filters) => {
             const newFilters = [
                 ...filters,
                 validInput,
             ];
-            storeExcludedClassTimeFilters(newFilters);
+            storeExcludeClassTimeFilters(newFilters);
             return newFilters;
         });
     };
 
+    const equalFilters = (a: ExcludeClassTimeFilter, b: ExcludeClassTimeFilter) => {
+        return (
+            a.weekday === b.weekday
+            && a.startHour === b.startHour
+            && a.startMinute === b.startMinute
+            && a.endHour === b.endHour
+            && a.endMinute === b.endMinute
+        )
+    }
+
     const removeFilter = (filter: ExcludeClassTimeFilter) => {
-        setExcludedClassTimeFilters((filters) => {
-            const newFilters = filters.filter((it) => it !== filter);
-            storeExcludedClassTimeFilters(newFilters);
+        setExcludeClassTimeFilters((filters) => {
+            const newFilters = filters.filter((it) => !equalFilters(filter, it))
+            storeExcludeClassTimeFilters(newFilters);
             return newFilters;
         });
     };
 
     const clearFilters = () => {
-        setExcludedClassTimeFilters(() => {
+        setExcludeClassTimeFilters(() => {
             const empty: ExcludeClassTimeFilter[] = [];
-            storeExcludedClassTimeFilters(empty);
+            storeExcludeClassTimeFilters(empty);
             return empty;
         });
     };
@@ -155,11 +159,11 @@ export default function ExcludeClassTimeFilters({
                             <Select
                                 labelId="exclude-class-time-filter-weekday"
                                 id="exclude-class-time-select"
-                                value={excludedClassTimeWeekday}
+                                value={excludeClassTimeWeekday}
                                 label="Ukedag"
                                 onChange={({ target: { value } }) => {
                                     if (typeof value === "string") return;
-                                    setExcludedClassTimeWeekday(() => value);
+                                    setExcludeClassTimeWeekday(() => value);
                                 }}
                             >
                                 {weekdays.map((day, i) => (
@@ -172,15 +176,15 @@ export default function ExcludeClassTimeFilters({
                                 <TimePicker
                                     label="Fra"
                                     views={["hours", "minutes"]}
-                                    value={excludedClassTimeStartTime}
-                                    onChange={(newValue) => setExcludedClassTimeStartTime(newValue)}
+                                    value={excludeClassTimeStartTime}
+                                    onChange={(newValue) => setExcludeClassTimeStartTime(newValue)}
                                 />
                                 <RemoveRounded />
                                 <TimePicker
                                     label="Til"
                                     views={["hours", "minutes"]}
-                                    value={excludedClassTimeEndTime}
-                                    onChange={(newValue) => setExcludedClassTimeEndTime(newValue)}
+                                    value={excludeClassTimeEndTime}
+                                    onChange={(newValue) => setExcludeClassTimeEndTime(newValue)}
                                 />
                             </Stack>
                             <Stack direction={"row"} gap={1} justifyContent={"center"}>
@@ -204,38 +208,39 @@ export default function ExcludeClassTimeFilters({
                 <Typography variant="h6" textAlign={"center"} sx={{ fontSize: 18 }}>
                     Skjulte tidsrom
                 </Typography>
-                <Box sx={{ mt: 1 }}>
-                    {toSortedFilters(excludedClassTimeFilters)
+                <Grid2 container rowSpacing={1}>
+                    {toSortedFilters(excludeClassTimeFilters)
                         .map((filter) => (
-                            <Stack
-                                key={JSON.stringify(filter)}
-                                direction={"row"}
-                                alignItems={"center"}
-                                justifyContent={"space-between"}
-                            >
-                                <Typography>{weekdays[filter.weekday - 1]}</Typography>
-                                <Typography>
-                                    {filter.startHour.toFixed(0).padStart(2, "0")}:
-                                    {filter.startMinute.toFixed(0).padStart(2, "0")}
-                                    {" – "}
-                                    {filter.endHour.toFixed(0).padStart(2, "0")}:
-                                    {filter.endMinute.toFixed(0).padStart(2, "0")}
-                                </Typography>
-                                <Tooltip title="Fjern tidsrom">
-                                    <IconButton
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            removeFilter(filter);
-                                        }}
-                                        sx={{ opacity: 0.5 }}
-                                    >
-                                        <DeleteRounded />
-                                    </IconButton>
-                                </Tooltip>
-                            </Stack>
+                            <>
+                                <Grid2 xs={4} textAlign={"left"} alignContent={"center"}>
+                                    <Typography>{weekdays[filter.weekday - 1]}</Typography>
+                                </Grid2>
+                                <Grid2 xs={6} sm={4} textAlign={"center"} alignContent={"center"}>
+                                    <Typography>
+                                        {filter.startHour.toFixed(0).padStart(2, "0")}:
+                                        {filter.startMinute.toFixed(0).padStart(2, "0")}
+                                        {" – "}
+                                        {filter.endHour.toFixed(0).padStart(2, "0")}:
+                                        {filter.endMinute.toFixed(0).padStart(2, "0")}
+                                    </Typography>
+                                </Grid2>
+                                <Grid2 xs={2} sm={4} textAlign={"right"} alignContent={"center"}>
+                                    <Tooltip title="Fjern tidsrom">
+                                        <IconButton
+                                            onClick={(event) => {
+                                                event.preventDefault();
+                                                removeFilter(filter);
+                                            }}
+                                            sx={{ opacity: 0.5 }}
+                                        >
+                                            <DeleteRounded />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Grid2>
+                            </>
                         ))}
-                </Box>
-                {excludedClassTimeFilters.length === 0 ? (
+                </Grid2>
+                {excludeClassTimeFilters.length === 0 ? (
                     <Typography variant={"body2"} textAlign={"center"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
                         Du har ikke eksludert noen tidsrom.
                     </Typography>

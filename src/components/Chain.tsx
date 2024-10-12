@@ -18,7 +18,7 @@ import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM }
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import {
-    getStoredExcludedClassTimeFilters,
+    getStoredExcludeClassTimeFilters,
     getStoredSelectedCategories,
     getStoredSelectedLocations,
 } from "@/lib/helpers/storage";
@@ -84,7 +84,7 @@ function Chain({
 
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
     const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
-    const [excludedClassTimeFilters, setExcludedClassTimeFilters] = useState<ExcludeClassTimeFilter[]>([]);
+    const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFilter[]>([]);
     const [selectedChain, setSelectedChain] = useState<string | null>(null);
 
     const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
@@ -109,7 +109,7 @@ function Chain({
         setSelectedCategories(
             getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories.map((ac) => ac.name),
         );
-        setExcludedClassTimeFilters(getStoredExcludedClassTimeFilters() ?? []);
+        setExcludeClassTimeFilters(getStoredExcludeClassTimeFilters() ?? []);
         setSelectedChain(chain.profile.identifier);
     }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
 
@@ -261,8 +261,8 @@ function Chain({
                             allCategories={activityCategories}
                             selectedCategories={selectedCategories}
                             setSelectedCategories={setSelectedCategories}
-                            excludedClassTimeFilters={excludedClassTimeFilters}
-                            setExcludedClassTimeFilters={setExcludedClassTimeFilters}
+                            excludeClassTimeFilters={excludeClassTimeFilters}
+                            setExcludeClassTimeFilters={setExcludeClassTimeFilters}
                         />
                     )}
                     <Divider orientation="horizontal" />
@@ -274,7 +274,7 @@ function Chain({
                             weekSchedule={currentWeekSchedule}
                             selectedLocationIds={selectedLocationIds}
                             selectedCategories={selectedCategories}
-                            excludedClassTimeFilters={excludedClassTimeFilters}
+                            excludeClassTimeFilters={excludeClassTimeFilters}
                             classPopularityIndex={classPopularityIndex}
                             selectable={userConfig != undefined && !userConfigError}
                             selectedClassIds={selectedClassIds}
