@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 
 export type ChainIdentifier = string;
 
@@ -104,4 +104,12 @@ export type BookingPopupState = {
     chain: ChainIdentifier;
     _class: RezervoClass;
     action: BookingPopupAction;
+};
+
+export type ExcludeClassTimeFilter = {
+    weekday: WeekdayNumbers;
+    startHour: HourNumbers;
+    startMinute: MinuteNumbers;
+    endHour: HourNumbers;
+    endMinute: MinuteNumbers;
 };

@@ -1,6 +1,6 @@
-import { CategoryRounded, PlaceRounded } from "@mui/icons-material";
+import { AccessTimeRounded, CategoryRounded, PlaceRounded } from "@mui/icons-material";
 import { Box, Button, Dialog, Tab, Tabs, Typography, useTheme } from "@mui/material";
-import { blue, pink } from "@mui/material/colors";
+import { blue, pink, purple } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { DialogHeader } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
@@ -8,8 +8,9 @@ import React, { Dispatch, SetStateAction, useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 
 import CategoryFilters from "@/components/modals/CategoryFilters";
+import ExcludeClassTimeFilters from "@/components/modals/ExcludeClassTimeFilters";
 import LocationFilters from "@/components/modals/LocationFilters";
-import { ActivityCategory, RezervoChain } from "@/types/chain";
+import { ActivityCategory, ExcludeClassTimeFilter, RezervoChain } from "@/types/chain";
 
 function a11yProps(index: number) {
     return {
@@ -49,6 +50,10 @@ export const LOCATIONS_COLOR = blue;
 
 export const CATEGORIES_COLOR = pink;
 
+export const EXCLUDE_CLASS_TIME_COLOR = purple;
+
+const tabColors = [LOCATIONS_COLOR[500], CATEGORIES_COLOR[500], EXCLUDE_CLASS_TIME_COLOR[500]];
+
 export default function ScheduleFiltersDialog({
     open,
     setOpen,
@@ -58,6 +63,8 @@ export default function ScheduleFiltersDialog({
     allCategories,
     selectedCategories,
     setSelectedCategories,
+    excludeClassTimeFilters,
+    setExcludeClassTimeFilters,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
@@ -67,6 +74,8 @@ export default function ScheduleFiltersDialog({
     allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
 }) {
     const theme = useTheme();
     const [tab, setTab] = useState(0);
@@ -83,7 +92,7 @@ export default function ScheduleFiltersDialog({
         setTab(index);
     };
 
-    const currentTabColor = tab === 0 ? LOCATIONS_COLOR[500] : CATEGORIES_COLOR[500];
+    const currentTabColor = tabColors[tab];
 
     return (
         <Dialog
@@ -130,6 +139,13 @@ export default function ScheduleFiltersDialog({
                         sx={{ minHeight: "3rem", color: tab == 1 ? CATEGORIES_COLOR[500] : undefined }}
                         {...a11yProps(1)}
                     />
+                    <Tab
+                        label={"Tidsrom"}
+                        icon={<AccessTimeRounded fontSize={"small"} />}
+                        iconPosition={"start"}
+                        sx={{ minHeight: "3rem", color: tab == 2 ? EXCLUDE_CLASS_TIME_COLOR[500] : undefined }}
+                        {...a11yProps(2)}
+                    />
                 </Tabs>
             </DialogHeader>
             <DialogContent sx={{ padding: 0, margin: 0 }}>
@@ -148,6 +164,12 @@ export default function ScheduleFiltersDialog({
                             allCategories={allCategories}
                             selectedCategories={selectedCategories}
                             setSelectedCategories={setSelectedCategories}
+                        />
+                    </TabPanel>
+                    <TabPanel value={tab} index={2} dir={theme.direction}>
+                        <ExcludeClassTimeFilters
+                            excludeClassTimeFilters={excludeClassTimeFilters}
+                            setExcludeClassTimeFilters={setExcludeClassTimeFilters}
                         />
                     </TabPanel>
                 </SwipeableViews>

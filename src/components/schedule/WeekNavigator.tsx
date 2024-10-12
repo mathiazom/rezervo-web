@@ -5,10 +5,14 @@ import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 
-import ScheduleFiltersDialog, { CATEGORIES_COLOR, LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
+import ScheduleFiltersDialog, {
+    CATEGORIES_COLOR,
+    EXCLUDE_CLASS_TIME_COLOR,
+    LOCATIONS_COLOR,
+} from "@/components/modals/ScheduleFiltersDialog";
 import { ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
-import { ActivityCategory, RezervoChain } from "@/types/chain";
+import { ActivityCategory, ExcludeClassTimeFilter, RezervoChain } from "@/types/chain";
 
 export default function WeekNavigator({
     chain,
@@ -20,6 +24,8 @@ export default function WeekNavigator({
     allCategories,
     selectedCategories,
     setSelectedCategories,
+    excludeClassTimeFilters,
+    setExcludeClassTimeFilters,
 }: {
     chain: RezervoChain;
     isLoadingPreviousWeek: boolean;
@@ -30,6 +36,8 @@ export default function WeekNavigator({
     allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
 }) {
     const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
     const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
@@ -43,7 +51,11 @@ export default function WeekNavigator({
         return selectedCategories.length < allCategories.length;
     }, [selectedCategories, allCategories]);
 
-    const isFiltered = isLocationFiltered || isCategoryFiltered;
+    const isClassTimeFiltered = useMemo(() => {
+        return excludeClassTimeFilters.length > 0;
+    }, [excludeClassTimeFilters]);
+
+    const isFiltered = isLocationFiltered || isCategoryFiltered || isClassTimeFiltered;
 
     const [isScheduleFiltersOpen, setIsScheduleFiltersOpen] = useState(false);
 
@@ -118,6 +130,18 @@ export default function WeekNavigator({
                                 {selectedCategories.length}
                             </Avatar>
                         )}
+                        {isClassTimeFiltered && (
+                            <Avatar
+                                sx={{
+                                    width: 20,
+                                    height: 20,
+                                    fontSize: 12,
+                                    backgroundColor: EXCLUDE_CLASS_TIME_COLOR[500],
+                                }}
+                            >
+                                {excludeClassTimeFilters.length}
+                            </Avatar>
+                        )}
                     </Box>
                 )}
             </Button>
@@ -130,6 +154,8 @@ export default function WeekNavigator({
                 allCategories={allCategories}
                 selectedCategories={selectedCategories}
                 setSelectedCategories={setSelectedCategories}
+                excludeClassTimeFilters={excludeClassTimeFilters}
+                setExcludeClassTimeFilters={setExcludeClassTimeFilters}
             />
             <LoadingButton
                 loading={isLoadingPreviousWeek}
