@@ -5,6 +5,7 @@ import { ChainIdentifier, ExcludeClassTimeFilter } from "@/types/chain";
 const STORAGE_KEY_PREFIX = "rezervo.";
 const STORAGE_KEYS = {
     SELECTED_CHAIN: `${STORAGE_KEY_PREFIX}selectedChain`,
+    PWA_INSTALL_DISMISSED: `${STORAGE_KEY_PREFIX}pwaInstallDismissed`,
     selectedLocations: (chain: string) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
     selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
     excludeClassTimeFilters: `${STORAGE_KEY_PREFIX}excludeClassTimeFilters`,
@@ -21,6 +22,14 @@ export function storeSelectedChain(chain: ChainIdentifier) {
 
 export function getStoredSelectedChain(): ChainIdentifier | null {
     return getStoredValue<ChainIdentifier>(STORAGE_KEYS.SELECTED_CHAIN, false);
+}
+
+export function storePWAInstallDismissed() {
+    storeValue(STORAGE_KEYS.PWA_INSTALL_DISMISSED, true);
+}
+
+export function getStoredPWAInstallDismissed(): boolean | null {
+    return getStoredValue<boolean>(STORAGE_KEYS.PWA_INSTALL_DISMISSED, false);
 }
 
 export function storeSelectedLocations(chainIdentifier: string, locationIdentifiers: string[]) {

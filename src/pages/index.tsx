@@ -1,4 +1,3 @@
-import PWAInstall from "@khmyznikov/pwa-install/dist/pwa-install.react.js";
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
 import type { NextPage } from "next";
 import Link from "next/link";
@@ -8,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import PageHead from "@/components/utils/PageHead";
+import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { fetchActiveChains } from "@/lib/helpers/fetchers";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { ChainIdentifier } from "@/types/chain";
@@ -47,13 +47,7 @@ const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
     return (
         <>
             <PageHead title={"rezervo"} />
-            <PWAInstall
-                // TODO: make "pwa-hide-install" flag persist across sessions
-                install-description={
-                    "Denne nettsiden har app-funksjonalitet. Legg den til på hjemskjermen for å få enklere tilgang " +
-                    "og muligheten til å aktivere push-varsler for booking."
-                }
-            />
+            <PWAInstallPrompt />
             <Box
                 sx={{
                     display: "flex",

@@ -14,6 +14,7 @@ import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import ErrorMessage from "@/components/utils/ErrorMessage";
+import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
@@ -228,6 +229,9 @@ function Chain({
         await mutateUserConfig();
     }, [mutateUserConfig]);
 
+    const [showPWAInstall, setShowPWAInstall] = useState(false);
+    const [isPWAInstalled, setIsPWAInstalled] = useState(false);
+
     return (
         <>
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
@@ -310,6 +314,8 @@ function Chain({
                     setOpen={setIsSettingsOpen}
                     chainProfiles={chainProfiles}
                     chainConfigs={userChainConfigs}
+                    isPWAInstalled={isPWAInstalled}
+                    showPWAInstall={() => setShowPWAInstall(true)}
                 />
             )}
             <ProfileModal open={isProfileOpen} setOpen={setIsProfileOpen} />
@@ -321,6 +327,14 @@ function Chain({
                     action={bookingPopupState.action}
                 />
             )}
+            <PWAInstallPrompt
+                show={showPWAInstall}
+                onClose={() => setShowPWAInstall(false)}
+                onIsInstalledChanged={useCallback(
+                    (isInstalled: boolean) => setIsPWAInstalled(isInstalled),
+                    [setIsPWAInstalled],
+                )}
+            />
         </>
     );
 }
