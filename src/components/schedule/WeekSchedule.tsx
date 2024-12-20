@@ -42,17 +42,19 @@ function WeekSchedule({
                         return (
                             <Box
                                 key={daySchedule.date.toString()}
-                                sx={{
-                                    display: "flex",
-                                    ...(dayIsToday
+                                sx={[
+                                    {
+                                        display: "flex",
+                                    },
+                                    dayIsToday
                                         ? {
                                               backgroundColor: alpha(theme.palette.primary.main, 0.1),
                                               '[data-mui-color-scheme="dark"] &': {
                                                   backgroundColor: alpha(theme.palette.primary.main, 0.2),
                                               },
                                           }
-                                        : {}),
-                                }}
+                                        : {},
+                                ]}
                             >
                                 <DaySchedule
                                     chain={chain}
@@ -75,5 +77,4 @@ function WeekSchedule({
         </Box>
     );
 }
-
 export default WeekSchedule;

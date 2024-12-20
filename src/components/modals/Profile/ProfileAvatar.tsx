@@ -155,11 +155,19 @@ function ProfileAvatar({
                     }}
                 >
                     <Box
-                        sx={{
-                            display: isUpdating ? "none" : "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        }}
+                        sx={[
+                            {
+                                flexDirection: "column",
+                                alignItems: "center",
+                            },
+                            isUpdating
+                                ? {
+                                      display: "none",
+                                  }
+                                : {
+                                      display: "flex",
+                                  },
+                        ]}
                     >
                         <UploadRounded sx={{ fontSize: 42 }} />
                         <Typography
@@ -199,9 +207,15 @@ function ProfileAvatar({
                 >
                     {showDragArrowHint ? (
                         <Box
-                            sx={{
-                                rotate: dragAngleRadiansToDropzone ? `${dragAngleRadiansToDropzone}rad` : 0,
-                            }}
+                            sx={[
+                                dragAngleRadiansToDropzone
+                                    ? {
+                                          rotate: `${dragAngleRadiansToDropzone}rad`,
+                                      }
+                                    : {
+                                          rotate: 0,
+                                      },
+                            ]}
                         >
                             <Box
                                 sx={{
@@ -214,7 +228,10 @@ function ProfileAvatar({
                                 <DoubleArrowRounded
                                     sx={{
                                         fontSize: 58,
-                                        rotate: `${Math.PI}rad`,
+                                        rotate: `${"var(--Math-PI)"}rad`,
+                                    }}
+                                    style={{
+                                        "--Math-PI": Math.PI,
                                     }}
                                 />
                             </Box>
@@ -223,29 +240,45 @@ function ProfileAvatar({
                         <UploadRounded sx={{ fontSize: 64 }} />
                     )}
                     <Box
-                        sx={{
-                            borderRadius: "50%",
-                            position: "absolute",
-                            outlineStyle: "dashed",
-                            outlineOffset: "-0.3rem",
-                            width: 120,
-                            height: 120,
-                            rotate: dragAngleRadiansToDropzone ? `${dragAngleRadiansToDropzone}rad` : 0,
-                            ...(showDragArrowHint
+                        sx={[
+                            {
+                                borderRadius: "50%",
+                                position: "absolute",
+                                outlineStyle: "dashed",
+                                outlineOffset: "-0.3rem",
+                                width: 120,
+                                height: 120,
+                            },
+                            dragAngleRadiansToDropzone
+                                ? {
+                                      rotate: `${dragAngleRadiansToDropzone}rad`,
+                                  }
+                                : {
+                                      rotate: 0,
+                                  },
+                            showDragArrowHint
                                 ? {}
                                 : {
                                       animation: `${rotationAnimation} 8s linear infinite`,
-                                  }),
-                        }}
+                                  },
+                        ]}
                     />
                 </Avatar>
             ) : (
                 <Box
-                    sx={{
-                        "& .MuiAvatar-root *": {
-                            filter: isUpdating ? "blur(1px) grayscale(100%)" : "none",
-                        },
-                    }}
+                    sx={[
+                        isUpdating
+                            ? {
+                                  "& .MuiAvatar-root *": {
+                                      filter: "blur(1px) grayscale(100%)",
+                                  },
+                              }
+                            : {
+                                  "& .MuiAvatar-root *": {
+                                      filter: "none",
+                                  },
+                              },
+                    ]}
                 >
                     <UserAvatar
                         userId={"me"}

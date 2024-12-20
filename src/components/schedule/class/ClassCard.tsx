@@ -144,12 +144,14 @@ const ClassCard = ({
                 >
                     <Box sx={{ minWidth: 0 }}>
                         <Typography
-                            sx={{
-                                textDecoration: isInThePast || _class.isCancelled ? "line-through" : "none",
-                                fontSize: "1.05rem",
-                                hyphens: "auto",
-                                ...(showSelected ? { fontWeight: "bold" } : {}),
-                            }}
+                            sx={[
+                                {
+                                    textDecoration: isInThePast || _class.isCancelled ? "line-through" : "none",
+                                    fontSize: "1.05rem",
+                                    hyphens: "auto",
+                                },
+                                showSelected ? { fontWeight: "bold" } : {},
+                            ]}
                         >
                             {_class.activity.name}
                         </Typography>

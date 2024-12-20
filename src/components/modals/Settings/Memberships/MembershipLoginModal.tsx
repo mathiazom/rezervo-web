@@ -140,7 +140,22 @@ const MembershipLoginModal = ({
                     marginTop: 1,
                 }}
             >
-                <Box sx={{ height: 50, flexShrink: 0, marginY: 2, display: shortDevice ? "none" : undefined }}>
+                <Box
+                    sx={[
+                        {
+                            height: 50,
+                            flexShrink: 0,
+                            marginY: 2,
+                        },
+                        shortDevice
+                            ? {
+                                  display: "none",
+                              }
+                            : {
+                                  display: null,
+                              },
+                    ]}
+                >
                     <ChainLogo chainProfile={chainProfile} />
                 </Box>
                 <Typography variant={"h6"} textAlign={"center"}>
@@ -167,7 +182,6 @@ const MembershipLoginModal = ({
                                     <AlertTitle>Engangskode på SMS</AlertTitle>
                                     <Typography>Skriv inn koden under for å fullføre innloggingen</Typography>
                                 </Alert>
-
                                 <TextField
                                     sx={{ width: "100%" }}
                                     value={totp}

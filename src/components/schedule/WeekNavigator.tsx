@@ -80,20 +80,22 @@ export default function WeekNavigator({
         <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
             <Button
                 startIcon={<FilterAltRoundedIcon />}
-                sx={{
-                    mr: 1,
-                    position: { xs: "absolute", md: "inherit" },
-                    left: { xs: 10, md: "inherit" },
-                    height: "100%",
-                    ...(isFiltered
+                sx={[
+                    {
+                        mr: 1,
+                        position: { xs: "absolute", md: "inherit" },
+                        left: { xs: 10, md: "inherit" },
+                        height: "100%",
+                    },
+                    isFiltered
                         ? {}
                         : {
                               minWidth: 0,
                               ".MuiButton-startIcon": {
                                   margin: 0,
                               },
-                          }),
-                }}
+                          },
+                ]}
                 variant={"outlined"}
                 size={"small"}
                 onClick={() => setIsScheduleFiltersOpen(true)}

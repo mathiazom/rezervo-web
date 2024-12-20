@@ -69,19 +69,21 @@ function ChainSwitcher({
                                     legacyBehavior
                                 >
                                     <ListItemButton
-                                        sx={{
-                                            display: "flex",
-                                            justifyContent: "center",
-                                            padding: "1.75rem",
-                                            height: "6rem",
-                                            width: "100%",
-                                            ...(isLoading || isCurrentChain
+                                        sx={[
+                                            {
+                                                display: "flex",
+                                                justifyContent: "center",
+                                                padding: "1.75rem",
+                                                height: "6rem",
+                                                width: "100%",
+                                            },
+                                            isLoading || isCurrentChain
                                                 ? {
                                                       pointerEvents: "none",
                                                       touchEvents: "none",
                                                   }
-                                                : {}),
-                                        }}
+                                                : {},
+                                        ]}
                                         disableTouchRipple
                                         disabled={isLoading && !isCurrentLoadingChain}
                                         selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}

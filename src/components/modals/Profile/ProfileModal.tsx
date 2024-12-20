@@ -20,14 +20,16 @@ const ProfileModal = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<SetS
                 <Modal
                     open={open}
                     onClose={() => setOpen(false)}
-                    sx={{
-                        transition: "background-color 225ms cubic-bezier(0.4, 0, 0.2, 1)",
-                        ...(isDraggingOverBackdrop
+                    sx={[
+                        {
+                            transition: "background-color 225ms cubic-bezier(0.4, 0, 0.2, 1)",
+                        },
+                        isDraggingOverBackdrop
                             ? {
                                   backgroundColor: "rgba(0, 0, 0, 0.5)",
                               }
-                            : {}),
-                    }}
+                            : {},
+                    ]}
                     {...getRootProps({ className: "modal-backdrop-dropzone" })}
                 >
                     <Profile

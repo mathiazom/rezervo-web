@@ -97,7 +97,6 @@ const CommunityUserCard = ({
                 );
         }
     };
-
     const confirmDialogPropsMap: {
         [key in ConfirmDialogAction]: Required<Pick<ConfirmationDialogProps, "title" | "confirmText" | "description">> &
             Partial<ConfirmationDialogProps>;
@@ -127,7 +126,6 @@ const CommunityUserCard = ({
             ),
         },
     };
-
     return (
         <>
             <TableRow sx={{ display: "flex" }}>

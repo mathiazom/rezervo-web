@@ -29,13 +29,27 @@ export default function ClassInfoUsersGroup({
     return (
         users.length > 0 && (
             <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: badgeIcon ? 1.5 : 1.25,
-                    mt: 1.5,
-                    opacity: isCancelled ? cancelledOpacity : 1,
-                }}
+                sx={[
+                    {
+                        display: "flex",
+                        alignItems: "center",
+                        mt: 1.5,
+                    },
+                    badgeIcon
+                        ? {
+                              gap: 1.5,
+                          }
+                        : {
+                              gap: 1.25,
+                          },
+                    isCancelled
+                        ? {
+                              opacity: cancelledOpacity,
+                          }
+                        : {
+                              opacity: 1,
+                          },
+                ]}
             >
                 <ClassUsersAvatarGroup
                     users={sortedUsers}

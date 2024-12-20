@@ -81,11 +81,13 @@ function DaySchedule({
             }}
         >
             <Box
-                sx={{
-                    position: "sticky",
-                    top: 0,
-                    zIndex: 2,
-                    ...(dayIsToday
+                sx={[
+                    {
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 2,
+                    },
+                    dayIsToday
                         ? {
                               backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.1, 255),
                               '[data-mui-color-scheme="dark"] &': {
@@ -94,8 +96,8 @@ function DaySchedule({
                           }
                         : {
                               backgroundColor: theme.palette.background.default,
-                          }),
-                }}
+                          },
+                ]}
             >
                 <Box
                     sx={{

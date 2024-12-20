@@ -181,20 +181,22 @@ function Profile({
                                 {({ getRootProps: getDropzoneRootProps, getInputProps: getDropzoneInputProps }) => (
                                     <Box
                                         {...getDropzoneRootProps()}
-                                        sx={{
-                                            ...(isDraggingOver
+                                        sx={[
+                                            {
+                                                display: "flex",
+                                                gap: "1rem",
+                                                margin: "0 auto",
+                                                "& .MuiAvatar-root": {
+                                                    fontSize: 42,
+                                                },
+                                            },
+                                            isDraggingOver
                                                 ? {
                                                       position: "relative",
                                                       zIndex: theme.zIndex.tooltip,
                                                   }
-                                                : {}),
-                                            display: "flex",
-                                            gap: "1rem",
-                                            margin: "0 auto",
-                                            "& .MuiAvatar-root": {
-                                                fontSize: 42,
-                                            },
-                                        }}
+                                                : {},
+                                        ]}
                                     >
                                         <ProfileAvatar
                                             username={user?.name ?? ""}
@@ -230,17 +232,25 @@ function Profile({
                             </Typography>
                         </Box>
                         <Box
-                            sx={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                bottom: 0,
-                                right: 0,
-                                background: "black",
-                                opacity: isDraggingOver ? 0.5 : 0,
-                                transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1)",
-                                pointerEvents: "none",
-                            }}
+                            sx={[
+                                {
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    background: "black",
+                                    transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                    pointerEvents: "none",
+                                },
+                                isDraggingOver
+                                    ? {
+                                          opacity: 0.5,
+                                      }
+                                    : {
+                                          opacity: 0,
+                                      },
+                            ]}
                         />
                         <Stack alignItems={"center"} mt={2}>
                             <Button

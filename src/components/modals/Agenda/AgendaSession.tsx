@@ -99,28 +99,41 @@ export default function AgendaSession({
                 }}
             >
                 <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        background:
-                            userSession === undefined
-                                ? `repeating-linear-gradient(
-                            -55deg,
-                            ${theme.palette.background.default},
-                            ${theme.palette.background.default} 10px,
-                            ${theme.palette.background.paper} 10px,
-                            ${theme.palette.background.paper} 20px)`
-                                : undefined,
-                    }}
+                    sx={[
+                        {
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                        },
+                        userSession === undefined
+                            ? {
+                                  background: `repeating-linear-gradient(
+                    -55deg,
+                    ${theme.palette.background.default},
+                    ${theme.palette.background.default} 10px,
+                    ${theme.palette.background.paper} 10px,
+                    ${theme.palette.background.paper} 20px)`,
+                              }
+                            : {
+                                  background: null,
+                              },
+                    ]}
                 >
                     <CardContent
                         className={"unselectable"}
-                        sx={{
-                            paddingBottom: 2,
-                            flexGrow: 1,
-                            cursor: userSession?.classData === undefined ? "auto" : "pointer",
-                        }}
+                        sx={[
+                            {
+                                paddingBottom: 2,
+                                flexGrow: 1,
+                            },
+                            userSession?.classData === undefined
+                                ? {
+                                      cursor: "auto",
+                                  }
+                                : {
+                                      cursor: "pointer",
+                                  },
+                        ]}
                     >
                         <Box
                             sx={{
