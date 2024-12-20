@@ -158,7 +158,12 @@ const MembershipLoginModal = ({
                 >
                     <ChainLogo chainProfile={chainProfile} />
                 </Box>
-                <Typography variant={"h6"} textAlign={"center"}>
+                <Typography
+                    variant={"h6"}
+                    sx={{
+                        textAlign: "center",
+                    }}
+                >
                     Koble til <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
                 </Typography>
                 <Typography

@@ -57,9 +57,11 @@ const CommunityUserCard = ({
                             <CircularProgress size={22} thickness={4} sx={{ mr: "1rem" }} />
                         ) : (
                             <Box
-                                display={"flex"}
-                                alignItems={"center"}
-                                sx={{ flexDirection: { xs: "column", sm: "row" } }}
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: { xs: "column", sm: "row" },
+                                }}
                             >
                                 <Button
                                     startIcon={<PersonRemove />}
@@ -150,7 +152,12 @@ const CommunityUserCard = ({
                             <UserAvatar userId={communityUser.userId} username={communityUser.name} />
                         </Box>
                         <Box>
-                            <Typography variant={"subtitle2"} fontWeight={"bold"}>
+                            <Typography
+                                variant={"subtitle2"}
+                                sx={{
+                                    fontWeight: "bold",
+                                }}
+                            >
                                 {communityUser.name}
                             </Typography>
                             <Box sx={{ display: "flex", gap: 0.5 }}>

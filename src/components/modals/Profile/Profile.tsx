@@ -153,7 +153,15 @@ function Profile({
                         },
                     }}
                 >
-                    <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 1,
+                            paddingBottom: 2,
+                        }}
+                    >
                         <PersonRounded />
                         <Typography variant="h6" component="h2">
                             Profil
@@ -219,14 +227,21 @@ function Profile({
                             </Dropzone>
                         </Box>
                         <Box>
-                            <Typography variant="h6" textAlign={"center"}>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    textAlign: "center",
+                                }}
+                            >
                                 {user?.name}
                             </Typography>
                             <Typography
                                 variant="h6"
-                                textAlign={"center"}
-                                sx={{ fontSize: 14 }}
-                                color={"text.secondary"}
+                                sx={{
+                                    textAlign: "center",
+                                    color: "text.secondary",
+                                    fontSize: 14,
+                                }}
                             >
                                 {user?.email}
                             </Typography>
@@ -252,7 +267,12 @@ function Profile({
                                       },
                             ]}
                         />
-                        <Stack alignItems={"center"} mt={2}>
+                        <Stack
+                            sx={{
+                                alignItems: "center",
+                                mt: 2,
+                            }}
+                        >
                             <Button
                                 variant={"outlined"}
                                 color={"error"}

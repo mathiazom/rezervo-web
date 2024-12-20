@@ -108,11 +108,11 @@ export default function AgendaSession({
                         userSession === undefined
                             ? {
                                   background: `repeating-linear-gradient(
-                    -55deg,
-                    ${theme.palette.background.default},
-                    ${theme.palette.background.default} 10px,
-                    ${theme.palette.background.paper} 10px,
-                    ${theme.palette.background.paper} 20px)`,
+                -55deg,
+                ${theme.palette.background.default},
+                ${theme.palette.background.default} 10px,
+                ${theme.palette.background.paper} 10px,
+                ${theme.palette.background.paper} 20px)`,
                               }
                             : {
                                   background: null,
@@ -146,16 +146,34 @@ export default function AgendaSession({
                                 <Box sx={{ display: "flex", gap: 1 }}>
                                     <Typography sx={{ fontSize: "1.05rem" }}>{displayName} </Typography>
                                 </Box>
-                                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: "text.secondary",
+                                        fontSize: "0.85rem",
+                                    }}
+                                >
                                     {`${timeFrom}${timeTo ? ` - ${timeTo}` : ""}`}
                                 </Typography>
                                 {userSession?.classData && (
-                                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: "text.secondary",
+                                            fontSize: "0.85rem",
+                                        }}
+                                    >
                                         {userSession?.classData.location.studio}
                                     </Typography>
                                 )}
                                 {userSession?.classData && (
-                                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: "text.secondary",
+                                            fontSize: "0.85rem",
+                                        }}
+                                    >
                                         {userSession?.classData.instructors.map((i) => i.name).join(", ")}
                                     </Typography>
                                 )}

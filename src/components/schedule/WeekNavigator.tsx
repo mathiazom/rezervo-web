@@ -77,7 +77,15 @@ export default function WeekNavigator({
     }
 
     return (
-        <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
+        <Stack
+            direction={"row"}
+            sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                mb: 1,
+                position: "relative",
+            }}
+        >
             <Button
                 startIcon={<FilterAltRoundedIcon />}
                 sx={[
@@ -168,7 +176,13 @@ export default function WeekNavigator({
             >
                 <ArrowBack />
             </LoadingButton>
-            <Typography sx={{ opacity: 0.7 }} mx={2} variant={"subtitle2"}>{`UKE ${weekNumber}`}</Typography>
+            <Typography
+                variant={"subtitle2"}
+                sx={{
+                    mx: 2,
+                    opacity: 0.7,
+                }}
+            >{`UKE ${weekNumber}`}</Typography>
             <LoadingButton
                 loading={isLoadingNextWeek}
                 variant={"outlined"}

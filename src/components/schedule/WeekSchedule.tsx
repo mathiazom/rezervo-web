@@ -36,7 +36,14 @@ function WeekSchedule({
     return (
         <Box sx={{ display: "flex", flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>
             <Stack direction={"column"} sx={{ flexGrow: "1" }}>
-                <Stack direction={"row"} margin={"auto"} paddingX={"0.5rem"} sx={{ flexGrow: "1" }}>
+                <Stack
+                    direction={"row"}
+                    sx={{
+                        margin: "auto",
+                        paddingX: "0.5rem",
+                        flexGrow: "1",
+                    }}
+                >
                     {weekSchedule.days.map((daySchedule) => {
                         const dayIsToday = isToday(daySchedule.date);
                         return (

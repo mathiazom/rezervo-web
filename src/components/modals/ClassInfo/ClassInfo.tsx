@@ -115,7 +115,14 @@ export default function ClassInfo({
                 },
             }}
         >
-            <Stack direction={"row"} gap={1} alignItems={"center"} paddingBottom={1}>
+            <Stack
+                direction={"row"}
+                sx={{
+                    gap: 1,
+                    alignItems: "center",
+                    paddingBottom: 1,
+                }}
+            >
                 <Box
                     sx={{
                         borderRadius: "50%",
@@ -252,7 +259,11 @@ export default function ClassInfo({
                 </Alert>
             )}
             {_class.activity.image && (
-                <Box pt={2}>
+                <Box
+                    sx={{
+                        pt: 2,
+                    }}
+                >
                     <Image
                         src={_class.activity.image}
                         alt={_class.activity.name}
@@ -272,7 +283,13 @@ export default function ClassInfo({
                     ></Image>
                 </Box>
             )}
-            <Typography pt={2}>{_class.activity.description}</Typography>
+            <Typography
+                sx={{
+                    pt: 2,
+                }}
+            >
+                {_class.activity.description}
+            </Typography>
             {user &&
                 userConfig != undefined &&
                 !userConfigLoading &&

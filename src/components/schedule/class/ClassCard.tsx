@@ -155,19 +155,42 @@ const ClassCard = ({
                         >
                             {_class.activity.name}
                         </Typography>
-                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: "text.secondary",
+                                fontSize: "0.85rem",
+                            }}
+                        >
                             {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
                         </Typography>
-                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: "text.secondary",
+                                fontSize: "0.85rem",
+                            }}
+                        >
                             {_class.location.studio}
                         </Typography>
                         {_class.instructors.length > 0 && (
-                            <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: "text.secondary",
+                                    fontSize: "0.85rem",
+                                }}
+                            >
                                 {formatInstructorNames(_class.instructors)}
                             </Typography>
                         )}
                         <Collapse in={showUsersPlanned}>
-                            <Box pl={0.75} pt={1}>
+                            <Box
+                                sx={{
+                                    pl: 0.75,
+                                    pt: 1,
+                                }}
+                            >
                                 <AvatarGroup
                                     max={4}
                                     sx={{

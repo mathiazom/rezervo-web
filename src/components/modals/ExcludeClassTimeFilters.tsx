@@ -118,20 +118,30 @@ export default function ExcludeClassTimeFilters({
         <Stack
             direction={"column"}
             sx={{
+                gap: 3,
                 px: { xs: 0.5, sm: 2 },
                 mt: 1,
                 mx: 3,
             }}
-            gap={3}
         >
-            <Stack gap={0.5}>
-                <Typography variant="h6" textAlign={"center"} sx={{ fontSize: 18 }}>
+            <Stack
+                sx={{
+                    gap: 0.5,
+                }}
+            >
+                <Typography
+                    variant="h6"
+                    sx={{
+                        textAlign: "center",
+                        fontSize: 18,
+                    }}
+                >
                     Skjul tidsrom
                 </Typography>
                 <Typography
                     variant="body2"
-                    textAlign={"center"}
                     sx={{
+                        textAlign: "center",
                         color: theme.palette.grey[600],
                         fontSize: 14,
                         mb: 1,
@@ -148,7 +158,12 @@ export default function ExcludeClassTimeFilters({
             >
                 <FormControl component="fieldset">
                     <FormGroup sx={{ mt: 1 }}>
-                        <Stack direction={"column"} gap={2}>
+                        <Stack
+                            direction={"column"}
+                            sx={{
+                                gap: 2,
+                            }}
+                        >
                             <InputLabel id="exclude-class-time-filter-weekday">Ukedag</InputLabel>
                             <Select
                                 labelId="exclude-class-time-filter-weekday"
@@ -166,7 +181,13 @@ export default function ExcludeClassTimeFilters({
                                     </MenuItem>
                                 ))}
                             </Select>
-                            <Stack direction={"row"} gap={2} alignItems={"center"}>
+                            <Stack
+                                direction={"row"}
+                                sx={{
+                                    gap: 2,
+                                    alignItems: "center",
+                                }}
+                            >
                                 <TimePicker
                                     label="Fra"
                                     views={["hours", "minutes"]}
@@ -181,7 +202,13 @@ export default function ExcludeClassTimeFilters({
                                     onChange={(newValue) => setExcludeClassTimeEndTime(newValue)}
                                 />
                             </Stack>
-                            <Stack direction={"row"} gap={1} justifyContent={"center"}>
+                            <Stack
+                                direction={"row"}
+                                sx={{
+                                    gap: 1,
+                                    justifyContent: "center",
+                                }}
+                            >
                                 <Button
                                     startIcon={<Add />}
                                     variant={"outlined"}
@@ -199,21 +226,35 @@ export default function ExcludeClassTimeFilters({
             </form>
             <Divider />
             <Stack>
-                <Typography variant="h6" textAlign={"center"} sx={{ fontSize: 18 }}>
+                <Typography
+                    variant="h6"
+                    sx={{
+                        textAlign: "center",
+                        fontSize: 18,
+                    }}
+                >
                     Skjulte tidsrom
                 </Typography>
                 <Grid2 container rowSpacing={1}>
                     {toSortedFilters(excludeClassTimeFilters).map((filter) => (
                         <>
-                            <Grid2 textAlign={"left"} alignContent={"center"} size={4}>
+                            <Grid2
+                                size={4}
+                                sx={{
+                                    textAlign: "left",
+                                    alignContent: "center",
+                                }}
+                            >
                                 <Typography>{weekdays[filter.weekday - 1]}</Typography>
                             </Grid2>
                             <Grid2
-                                textAlign={"center"}
-                                alignContent={"center"}
                                 size={{
                                     xs: 6,
                                     sm: 4,
+                                }}
+                                sx={{
+                                    textAlign: "center",
+                                    alignContent: "center",
                                 }}
                             >
                                 <Typography>
@@ -225,11 +266,13 @@ export default function ExcludeClassTimeFilters({
                                 </Typography>
                             </Grid2>
                             <Grid2
-                                textAlign={"right"}
-                                alignContent={"center"}
                                 size={{
                                     xs: 2,
                                     sm: 4,
+                                }}
+                                sx={{
+                                    textAlign: "right",
+                                    alignContent: "center",
                                 }}
                             >
                                 <Tooltip title="Fjern tidsrom">
@@ -248,7 +291,14 @@ export default function ExcludeClassTimeFilters({
                     ))}
                 </Grid2>
                 {excludeClassTimeFilters.length === 0 ? (
-                    <Typography variant={"body2"} textAlign={"center"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
+                    <Typography
+                        variant={"body2"}
+                        sx={{
+                            textAlign: "center",
+                            opacity: 0.6,
+                            fontStyle: "italic",
+                        }}
+                    >
                         Du har ikke eksludert noen tidsrom.
                     </Typography>
                 ) : (

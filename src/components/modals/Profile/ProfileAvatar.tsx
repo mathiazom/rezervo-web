@@ -171,10 +171,11 @@ function ProfileAvatar({
                     >
                         <UploadRounded sx={{ fontSize: 42 }} />
                         <Typography
-                            textAlign={"center"}
                             sx={{
+                                textAlign: "center",
                                 fontSize: 14,
                                 color: "white",
+
                                 '[data-mui-color-scheme="dark"] &': {
                                     color: "#191919",
                                 },

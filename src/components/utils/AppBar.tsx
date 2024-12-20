@@ -9,9 +9,25 @@ export default function AppBar({
     rightComponent: ReactNode;
 }) {
     return (
-        <Box display={"flex"} justifyContent={"center"}>
-            <Box width={1400} height={60}>
-                <Box display="flex" p={1} alignItems={"center"}>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+            }}
+        >
+            <Box
+                sx={{
+                    width: 1400,
+                    height: 60,
+                }}
+            >
+                <Box
+                    sx={{
+                        display: "flex",
+                        p: 1,
+                        alignItems: "center",
+                    }}
+                >
                     {leftComponent}
                     <Box sx={{ marginLeft: "auto" }}>{rightComponent}</Box>
                 </Box>

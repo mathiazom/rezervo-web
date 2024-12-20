@@ -197,7 +197,15 @@ export default function Settings({
                 },
             }}
         >
-            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    paddingBottom: 2,
+                }}
+            >
                 <SettingsRounded />
                 <Typography variant="h6" component="h2">
                     Innstillinger

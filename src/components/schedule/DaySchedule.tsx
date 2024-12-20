@@ -73,10 +73,10 @@ function DaySchedule({
 
     return (
         <Box
-            width={196}
             key={daySchedule.date.toString()}
             ref={dayIsToday && scrollToTodayClassId == null ? scrollToTodayRef : null}
             sx={{
+                width: 196,
                 flexGrow: 1,
             }}
         >
@@ -137,7 +137,12 @@ function DaySchedule({
                 </Box>
                 <Divider orientation="horizontal" />
             </Box>
-            <Box padding={"0 0.5rem 2rem 0.5rem"} marginTop={"0.5rem"}>
+            <Box
+                sx={{
+                    padding: "0 0.5rem 2rem 0.5rem",
+                    marginTop: "0.5rem",
+                }}
+            >
                 {filteredClasses.length > 0 ? (
                     filteredClasses.map((_class) => (
                         <Box key={_class.id}>
@@ -145,8 +150,10 @@ function DaySchedule({
                                 <CurrentTimeDivider />
                             )}
                             <Box
-                                mb={1}
                                 ref={dayIsToday && _class.id === scrollToTodayClassId ? scrollToTodayRef : null}
+                                sx={{
+                                    mb: 1,
+                                }}
                             >
                                 <ClassCard
                                     chain={chain}
