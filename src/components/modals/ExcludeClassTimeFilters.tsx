@@ -205,10 +205,17 @@ export default function ExcludeClassTimeFilters({
                 <Grid2 container rowSpacing={1}>
                     {toSortedFilters(excludeClassTimeFilters).map((filter) => (
                         <>
-                            <Grid2 xs={4} textAlign={"left"} alignContent={"center"}>
+                            <Grid2 textAlign={"left"} alignContent={"center"} size={4}>
                                 <Typography>{weekdays[filter.weekday - 1]}</Typography>
                             </Grid2>
-                            <Grid2 xs={6} sm={4} textAlign={"center"} alignContent={"center"}>
+                            <Grid2
+                                textAlign={"center"}
+                                alignContent={"center"}
+                                size={{
+                                    xs: 6,
+                                    sm: 4,
+                                }}
+                            >
                                 <Typography>
                                     {filter.startHour.toFixed(0).padStart(2, "0")}:
                                     {filter.startMinute.toFixed(0).padStart(2, "0")}
@@ -217,7 +224,14 @@ export default function ExcludeClassTimeFilters({
                                     {filter.endMinute.toFixed(0).padStart(2, "0")}
                                 </Typography>
                             </Grid2>
-                            <Grid2 xs={2} sm={4} textAlign={"right"} alignContent={"center"}>
+                            <Grid2
+                                textAlign={"right"}
+                                alignContent={"center"}
+                                size={{
+                                    xs: 2,
+                                    sm: 4,
+                                }}
+                            >
                                 <Tooltip title="Fjern tidsrom">
                                     <IconButton
                                         onClick={(event) => {
