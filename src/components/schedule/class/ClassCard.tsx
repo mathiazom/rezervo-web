@@ -52,9 +52,9 @@ const ClassCard = ({
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id]?.sort(userNameWithIsSelfComparator) ?? [];
     const { allConfigsIndex } = useUserConfig(chain);
-    const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
+    const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
-        selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
+        selected ? (randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null) : null,
     );
     const [showSelectClassTooltip, setShowSelectClassTooltip] = useState(false);
 

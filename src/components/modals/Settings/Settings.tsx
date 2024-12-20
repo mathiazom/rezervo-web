@@ -87,7 +87,7 @@ export default function Settings({
         }
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
-            reminderHoursBefore: active ? reminderHoursBefore ?? DEFAULT_REMINDER_HOURS : null,
+            reminderHoursBefore: active ? (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS) : null,
         });
     }
 
