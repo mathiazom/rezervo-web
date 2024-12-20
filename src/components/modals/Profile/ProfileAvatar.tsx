@@ -229,10 +229,7 @@ function ProfileAvatar({
                                 <DoubleArrowRounded
                                     sx={{
                                         fontSize: 58,
-                                        rotate: `${"var(--Math-PI)"}rad`,
-                                    }}
-                                    style={{
-                                        "--Math-PI": Math.PI,
+                                        rotate: `${Math.PI}rad`,
                                     }}
                                 />
                             </Box>

@@ -1,6 +1,7 @@
 "use client";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider, getInitColorSchemeScript } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
 import { Roboto } from "next/font/google";
 import React from "react";
 
@@ -15,14 +16,14 @@ const roboto = Roboto({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="no" className={roboto.className}>
-            {getInitColorSchemeScript()}
+            <InitColorSchemeScript />
 
-            <CssVarsProvider theme={theme} defaultMode={"system"}>
+            <ThemeProvider theme={theme} defaultMode={"system"}>
                 <CssBaseline enableColorScheme />
                 <UserProvider>
                     <body>{children}</body>
                 </UserProvider>
-            </CssVarsProvider>
+            </ThemeProvider>
         </html>
     );
 }

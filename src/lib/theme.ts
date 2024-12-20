@@ -1,4 +1,4 @@
-import { experimental_extendTheme } from "@mui/material";
+import { extendTheme } from "@mui/material";
 // @ts-expect-error: undetected usage below
 import { TypeBackground } from "@mui/material/styles/createPalette";
 
@@ -12,7 +12,7 @@ declare module "@mui/material/styles/createPalette" {
     }
 }
 
-const theme = experimental_extendTheme({
+const theme = extendTheme({
     colorSchemes: {
         light: {
             palette: {
