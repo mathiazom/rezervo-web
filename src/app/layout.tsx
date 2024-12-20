@@ -3,6 +3,7 @@ import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
 import { Roboto } from "next/font/google";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import React from "react";
 
 import theme from "@/lib/theme";
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ThemeProvider theme={theme} defaultMode={"system"}>
                 <CssBaseline enableColorScheme />
                 <UserProvider>
-                    <body>{children}</body>
+                    <NuqsAdapter>
+                        <body>{children}</body>
+                    </NuqsAdapter>
                 </UserProvider>
             </ThemeProvider>
         </html>
