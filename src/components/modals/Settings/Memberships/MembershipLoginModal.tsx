@@ -181,8 +181,10 @@ const MembershipLoginModal = ({
                                             submitTotp(totp);
                                         }
                                     }}
-                                    inputProps={{
-                                        autoComplete: "one-time-code",
+                                    slotProps={{
+                                        htmlInput: {
+                                            autoComplete: "one-time-code",
+                                        },
                                     }}
                                 />
                             </>

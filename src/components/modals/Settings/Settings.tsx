@@ -265,7 +265,6 @@ export default function Settings({
                                     <FormControl>
                                         <TextField
                                             disabled={!reminderActive || reminderHoursBefore == null}
-                                            inputProps={{ inputMode: "numeric" }}
                                             value={
                                                 reminderTimeBeforeInput ??
                                                 (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
@@ -281,6 +280,9 @@ export default function Settings({
                                             }
                                             sx={{ width: "4rem" }}
                                             size={"small"}
+                                            slotProps={{
+                                                htmlInput: { inputMode: "numeric" },
+                                            }}
                                         />
                                     </FormControl>
                                     <FormLabel disabled={!reminderActive}>
