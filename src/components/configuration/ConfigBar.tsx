@@ -82,7 +82,11 @@ function ConfigBar({
                         {isConfigError ? (
                             !isLoadingConfig &&
                             isUserUpserted && (
-                                <Box mr={1.5}>
+                                <Box
+                                    sx={{
+                                        mr: 1.5,
+                                    }}
+                                >
                                     <Tooltip title={"Feilet"}>
                                         <Badge
                                             overlap={"circular"}

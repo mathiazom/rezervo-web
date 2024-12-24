@@ -126,7 +126,7 @@ const MembershipLoginModal = ({
             PaperProps={{
                 sx: {
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         backgroundColor: "black",
                     },
                 },
@@ -140,10 +140,30 @@ const MembershipLoginModal = ({
                     marginTop: 1,
                 }}
             >
-                <Box sx={{ height: 50, flexShrink: 0, marginY: 2, display: shortDevice ? "none" : undefined }}>
+                <Box
+                    sx={[
+                        {
+                            height: 50,
+                            flexShrink: 0,
+                            marginY: 2,
+                        },
+                        shortDevice
+                            ? {
+                                  display: "none",
+                              }
+                            : {
+                                  display: null,
+                              },
+                    ]}
+                >
                     <ChainLogo chainProfile={chainProfile} />
                 </Box>
-                <Typography variant={"h6"} textAlign={"center"}>
+                <Typography
+                    variant={"h6"}
+                    sx={{
+                        textAlign: "center",
+                    }}
+                >
                     Koble til <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
                 </Typography>
                 <Typography
@@ -167,7 +187,6 @@ const MembershipLoginModal = ({
                                     <AlertTitle>Engangskode på SMS</AlertTitle>
                                     <Typography>Skriv inn koden under for å fullføre innloggingen</Typography>
                                 </Alert>
-
                                 <TextField
                                     sx={{ width: "100%" }}
                                     value={totp}
@@ -181,8 +200,10 @@ const MembershipLoginModal = ({
                                             submitTotp(totp);
                                         }
                                     }}
-                                    inputProps={{
-                                        autoComplete: "one-time-code",
+                                    slotProps={{
+                                        htmlInput: {
+                                            autoComplete: "one-time-code",
+                                        },
                                     }}
                                 />
                             </>

@@ -148,12 +148,20 @@ function Profile({
                         boxShadow: 24,
                         p: 4,
                         backgroundColor: "white",
-                        '[data-mui-color-scheme="dark"] &': {
+                        '[data-color-scheme="dark"] &': {
                             backgroundColor: "#111",
                         },
                     }}
                 >
-                    <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 1,
+                            paddingBottom: 2,
+                        }}
+                    >
                         <PersonRounded />
                         <Typography variant="h6" component="h2">
                             Profil
@@ -181,20 +189,22 @@ function Profile({
                                 {({ getRootProps: getDropzoneRootProps, getInputProps: getDropzoneInputProps }) => (
                                     <Box
                                         {...getDropzoneRootProps()}
-                                        sx={{
-                                            ...(isDraggingOver
+                                        sx={[
+                                            {
+                                                display: "flex",
+                                                gap: "1rem",
+                                                margin: "0 auto",
+                                                "& .MuiAvatar-root": {
+                                                    fontSize: 42,
+                                                },
+                                            },
+                                            isDraggingOver
                                                 ? {
                                                       position: "relative",
                                                       zIndex: theme.zIndex.tooltip,
                                                   }
-                                                : {}),
-                                            display: "flex",
-                                            gap: "1rem",
-                                            margin: "0 auto",
-                                            "& .MuiAvatar-root": {
-                                                fontSize: 42,
-                                            },
-                                        }}
+                                                : {},
+                                        ]}
                                     >
                                         <ProfileAvatar
                                             username={user?.name ?? ""}
@@ -217,32 +227,52 @@ function Profile({
                             </Dropzone>
                         </Box>
                         <Box>
-                            <Typography variant="h6" textAlign={"center"}>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    textAlign: "center",
+                                }}
+                            >
                                 {user?.name}
                             </Typography>
                             <Typography
                                 variant="h6"
-                                textAlign={"center"}
-                                sx={{ fontSize: 14 }}
-                                color={"text.secondary"}
+                                sx={{
+                                    textAlign: "center",
+                                    color: "text.secondary",
+                                    fontSize: 14,
+                                }}
                             >
                                 {user?.email}
                             </Typography>
                         </Box>
                         <Box
-                            sx={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                bottom: 0,
-                                right: 0,
-                                background: "black",
-                                opacity: isDraggingOver ? 0.5 : 0,
-                                transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1)",
-                                pointerEvents: "none",
-                            }}
+                            sx={[
+                                {
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    background: "black",
+                                    transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                    pointerEvents: "none",
+                                },
+                                isDraggingOver
+                                    ? {
+                                          opacity: 0.5,
+                                      }
+                                    : {
+                                          opacity: 0,
+                                      },
+                            ]}
                         />
-                        <Stack alignItems={"center"} mt={2}>
+                        <Stack
+                            sx={{
+                                alignItems: "center",
+                                mt: 2,
+                            }}
+                        >
                             <Button
                                 variant={"outlined"}
                                 color={"error"}

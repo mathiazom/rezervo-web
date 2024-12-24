@@ -36,14 +36,14 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
     "& .MuiSwitch-switchBase": {
         "&.Mui-checked": {
             "& + .MuiSwitch-track": {
-                '[data-mui-color-scheme="light"] &': {
+                '[data-color-scheme="light"] &': {
                     backgroundColor: theme.palette.primary.main,
                 },
             },
         },
     },
     "& .MuiSwitch-track": {
-        '[data-mui-color-scheme="light"] &': {
+        '[data-color-scheme="light"] &': {
             backgroundColor: "#000",
         },
     },
@@ -87,7 +87,7 @@ export default function Settings({
         }
         onNotificationsConfigChanged({
             ...(preferences?.notifications ?? {}),
-            reminderHoursBefore: active ? reminderHoursBefore ?? DEFAULT_REMINDER_HOURS : null,
+            reminderHoursBefore: active ? (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS) : null,
         });
     }
 
@@ -192,12 +192,20 @@ export default function Settings({
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     backgroundColor: "#111",
                 },
             }}
         >
-            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    paddingBottom: 2,
+                }}
+            >
                 <SettingsRounded />
                 <Typography variant="h6" component="h2">
                     Innstillinger
@@ -265,7 +273,6 @@ export default function Settings({
                                     <FormControl>
                                         <TextField
                                             disabled={!reminderActive || reminderHoursBefore == null}
-                                            inputProps={{ inputMode: "numeric" }}
                                             value={
                                                 reminderTimeBeforeInput ??
                                                 (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
@@ -281,6 +288,9 @@ export default function Settings({
                                             }
                                             sx={{ width: "4rem" }}
                                             size={"small"}
+                                            slotProps={{
+                                                htmlInput: { inputMode: "numeric" },
+                                            }}
                                         />
                                     </FormControl>
                                     <FormLabel disabled={!reminderActive}>

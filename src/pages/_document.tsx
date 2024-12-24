@@ -1,4 +1,4 @@
-import { getInitColorSchemeScript } from "@mui/material";
+import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 import React from "react";
 
@@ -13,7 +13,7 @@ class MyDocument extends Document {
                     />
                 </Head>
                 <body>
-                    {getInitColorSchemeScript()}
+                    <InitColorSchemeScript />
                     <Main />
                     <NextScript />
                 </body>

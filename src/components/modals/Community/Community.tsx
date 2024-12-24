@@ -80,7 +80,7 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     backgroundColor: "#111",
                 },
             }}
@@ -94,7 +94,13 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                     paddingBottom: 1,
                 }}
             >
-                <Box display={"flex"} alignItems={"center"} gap={1}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                    }}
+                >
                     <People />
                     <Typography variant="h6" component="h2">
                         Venner
@@ -106,8 +112,10 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                         color: theme.palette.grey[600],
                         fontSize: 15,
                     }}
-                    textAlign={"center"}
-                    mb={2.5}
+                    sx={{
+                        textAlign: "center",
+                        mb: 2.5,
+                    }}
                 >
                     Venner kan se hverandres bookinger og timeplaner
                 </Typography>

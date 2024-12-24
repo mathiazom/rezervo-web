@@ -84,7 +84,7 @@ export default function AgendaSession({
                     position: "relative",
                     borderLeft: `0.4rem solid ${classColorRGB(false)}`,
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         borderLeft: `0.4rem solid ${classColorRGB(true)}`,
                         backgroundColor: "#111",
                     },
@@ -99,28 +99,41 @@ export default function AgendaSession({
                 }}
             >
                 <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        background:
-                            userSession === undefined
-                                ? `repeating-linear-gradient(
-                            -55deg,
-                            ${theme.palette.background.default},
-                            ${theme.palette.background.default} 10px,
-                            ${theme.palette.background.paper} 10px,
-                            ${theme.palette.background.paper} 20px)`
-                                : undefined,
-                    }}
+                    sx={[
+                        {
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                        },
+                        userSession === undefined
+                            ? {
+                                  background: `repeating-linear-gradient(
+                -55deg,
+                ${theme.palette.background.default},
+                ${theme.palette.background.default} 10px,
+                ${theme.palette.background.paper} 10px,
+                ${theme.palette.background.paper} 20px)`,
+                              }
+                            : {
+                                  background: null,
+                              },
+                    ]}
                 >
                     <CardContent
                         className={"unselectable"}
-                        sx={{
-                            paddingBottom: 2,
-                            flexGrow: 1,
-                            cursor: userSession?.classData === undefined ? "auto" : "pointer",
-                        }}
+                        sx={[
+                            {
+                                paddingBottom: 2,
+                                flexGrow: 1,
+                            },
+                            userSession?.classData === undefined
+                                ? {
+                                      cursor: "auto",
+                                  }
+                                : {
+                                      cursor: "pointer",
+                                  },
+                        ]}
                     >
                         <Box
                             sx={{
@@ -133,16 +146,34 @@ export default function AgendaSession({
                                 <Box sx={{ display: "flex", gap: 1 }}>
                                     <Typography sx={{ fontSize: "1.05rem" }}>{displayName} </Typography>
                                 </Box>
-                                <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        color: "text.secondary",
+                                        fontSize: "0.85rem",
+                                    }}
+                                >
                                     {`${timeFrom}${timeTo ? ` - ${timeTo}` : ""}`}
                                 </Typography>
                                 {userSession?.classData && (
-                                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: "text.secondary",
+                                            fontSize: "0.85rem",
+                                        }}
+                                    >
                                         {userSession?.classData.location.studio}
                                     </Typography>
                                 )}
                                 {userSession?.classData && (
-                                    <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: "text.secondary",
+                                            fontSize: "0.85rem",
+                                        }}
+                                    >
                                         {userSession?.classData.instructors.map((i) => i.name).join(", ")}
                                     </Typography>
                                 )}
@@ -237,7 +268,7 @@ export default function AgendaSession({
                         width: "100%",
                         zIndex: -1,
                         backgroundColor: "white",
-                        '[data-mui-color-scheme="dark"] &': {
+                        '[data-color-scheme="dark"] &': {
                             backgroundColor: "#111",
                         },
                     }}

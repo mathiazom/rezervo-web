@@ -52,9 +52,9 @@ const ClassCard = ({
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
     const userSessions = userSessionsIndex?.[_class.id]?.sort(userNameWithIsSelfComparator) ?? [];
     const { allConfigsIndex } = useUserConfig(chain);
-    const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
+    const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
-        selected ? randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null : null,
+        selected ? (randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null) : null,
     );
     const [showSelectClassTooltip, setShowSelectClassTooltip] = useState(false);
 
@@ -95,7 +95,7 @@ const ClassCard = ({
         <Card
             sx={{
                 background: hexWithOpacityToRgb("#ffffff", isInThePast ? 0.6 : 1, 255),
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     background: hexWithOpacityToRgb("#191919", isInThePast ? 0.6 : 1, 0),
                 },
             }}
@@ -108,7 +108,7 @@ const ClassCard = ({
                     background: "none",
                     position: "relative",
                     borderLeft: `0.4rem solid ${classColorRGB(false)}`,
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         borderLeft: `0.4rem solid ${classColorRGB(true)}`,
                     },
                 }}
@@ -125,7 +125,7 @@ const ClassCard = ({
                             height: "100%",
                             width: "100%",
                             backgroundColor: classColorRGB(false),
-                            '[data-mui-color-scheme="dark"] &': {
+                            '[data-color-scheme="dark"] &': {
                                 backgroundColor: classColorRGB(true),
                             },
                         }}
@@ -144,28 +144,53 @@ const ClassCard = ({
                 >
                     <Box sx={{ minWidth: 0 }}>
                         <Typography
-                            sx={{
-                                textDecoration: isInThePast || _class.isCancelled ? "line-through" : "none",
-                                fontSize: "1.05rem",
-                                hyphens: "auto",
-                                ...(showSelected ? { fontWeight: "bold" } : {}),
-                            }}
+                            sx={[
+                                {
+                                    textDecoration: isInThePast || _class.isCancelled ? "line-through" : "none",
+                                    fontSize: "1.05rem",
+                                    hyphens: "auto",
+                                },
+                                showSelected ? { fontWeight: "bold" } : {},
+                            ]}
                         >
                             {_class.activity.name}
                         </Typography>
-                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: "text.secondary",
+                                fontSize: "0.85rem",
+                            }}
+                        >
                             {_class.startTime.toFormat("HH:mm")} - {_class.endTime.toFormat("HH:mm")}
                         </Typography>
-                        <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: "text.secondary",
+                                fontSize: "0.85rem",
+                            }}
+                        >
                             {_class.location.studio}
                         </Typography>
                         {_class.instructors.length > 0 && (
-                            <Typography sx={{ fontSize: "0.85rem" }} variant="body2" color="text.secondary">
+                            <Typography
+                                variant="body2"
+                                sx={{
+                                    color: "text.secondary",
+                                    fontSize: "0.85rem",
+                                }}
+                            >
                                 {formatInstructorNames(_class.instructors)}
                             </Typography>
                         )}
                         <Collapse in={showUsersPlanned}>
-                            <Box pl={0.75} pt={1}>
+                            <Box
+                                sx={{
+                                    pl: 0.75,
+                                    pt: 1,
+                                }}
+                            >
                                 <AvatarGroup
                                     max={4}
                                     sx={{
@@ -176,7 +201,7 @@ const ClassCard = ({
                                             height: AVATAR_SIZE,
                                             fontSize: 12,
                                             borderColor: "white",
-                                            '[data-mui-color-scheme="dark"] &': {
+                                            '[data-color-scheme="dark"] &': {
                                                 borderColor: "#191919",
                                             },
                                         },

@@ -40,12 +40,19 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
                             color: theme.palette.grey[600],
                             fontSize: 15,
                         }}
-                        mb={0.5}
+                        sx={{
+                            mb: 0.5,
+                        }}
                     >
                         {prettyDate}
                     </Typography>
                     {dayMap[prettyDate]!.map((userSession) => (
-                        <Box key={userSession.classData.id} py={0.5}>
+                        <Box
+                            key={userSession.classData.id}
+                            sx={{
+                                py: 0.5,
+                            }}
+                        >
                             <AgendaEntry userSession={userSession} chain={userSession.chain} />
                         </Box>
                     ))}
@@ -119,12 +126,20 @@ export default function Agenda({
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     backgroundColor: "#181818",
                 },
             }}
         >
-            <Box display={"flex"} alignItems={"center"} justifyContent={"center"} gap={1} paddingBottom={2}>
+            <Box
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 1,
+                    paddingBottom: 2,
+                }}
+            >
                 {userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}
                 <Typography variant="h6" component="h2">
                     Min timeplan
@@ -235,7 +250,17 @@ export default function Agenda({
                         </Alert>
                     )}
                     <AgendaDays dayMap={plannedSessionsDayMap} />
-                    <Stack direction={"row"} alignItems={"center"} mt={4} mb={2} pl={1} pr={3} gap={2}>
+                    <Stack
+                        direction={"row"}
+                        sx={{
+                            alignItems: "center",
+                            mt: 4,
+                            mb: 2,
+                            pl: 1,
+                            pr: 3,
+                            gap: 2,
+                        }}
+                    >
                         <InfoOutlined sx={{ color: theme.palette.grey[500] }} />
                         <Typography
                             variant="body2"

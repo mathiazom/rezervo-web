@@ -104,7 +104,7 @@ export default function ScheduleFiltersDialog({
                 sx: {
                     height: "100%",
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         backgroundColor: "#111",
                         backgroundImage: "none",
                     },
@@ -129,21 +129,54 @@ export default function ScheduleFiltersDialog({
                         label={"Sentre"}
                         icon={<PlaceRounded fontSize={"small"} />}
                         iconPosition={"start"}
-                        sx={{ minHeight: "3rem", color: tab == 0 ? LOCATIONS_COLOR[500] : undefined }}
+                        sx={[
+                            {
+                                minHeight: "3rem",
+                            },
+                            tab == 0
+                                ? {
+                                      color: LOCATIONS_COLOR[500],
+                                  }
+                                : {
+                                      color: null,
+                                  },
+                        ]}
                         {...a11yProps(0)}
                     />
                     <Tab
                         label={"Kategorier"}
                         icon={<CategoryRounded fontSize={"small"} />}
                         iconPosition={"start"}
-                        sx={{ minHeight: "3rem", color: tab == 1 ? CATEGORIES_COLOR[500] : undefined }}
+                        sx={[
+                            {
+                                minHeight: "3rem",
+                            },
+                            tab == 1
+                                ? {
+                                      color: CATEGORIES_COLOR[500],
+                                  }
+                                : {
+                                      color: null,
+                                  },
+                        ]}
                         {...a11yProps(1)}
                     />
                     <Tab
                         label={"Tidsrom"}
                         icon={<AccessTimeRounded fontSize={"small"} />}
                         iconPosition={"start"}
-                        sx={{ minHeight: "3rem", color: tab == 2 ? EXCLUDE_CLASS_TIME_COLOR[500] : undefined }}
+                        sx={[
+                            {
+                                minHeight: "3rem",
+                            },
+                            tab == 2
+                                ? {
+                                      color: EXCLUDE_CLASS_TIME_COLOR[500],
+                                  }
+                                : {
+                                      color: null,
+                                  },
+                        ]}
                         {...a11yProps(2)}
                     />
                 </Tabs>

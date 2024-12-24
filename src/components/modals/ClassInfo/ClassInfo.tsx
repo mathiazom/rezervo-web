@@ -52,7 +52,7 @@ export default function ClassInfo({
 }) {
     const { user } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
-    const configUsers = allConfigsIndex ? allConfigsIndex[classRecurrentId(_class)] ?? [] : [];
+    const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
         useUserSessionsIndex(chain);
     const { mutateUserSessions } = useUserSessions();
@@ -110,19 +110,26 @@ export default function ClassInfo({
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     backgroundColor: "#181818",
                 },
             }}
         >
-            <Stack direction={"row"} gap={1} alignItems={"center"} paddingBottom={1}>
+            <Stack
+                direction={"row"}
+                sx={{
+                    gap: 1,
+                    alignItems: "center",
+                    paddingBottom: 1,
+                }}
+            >
                 <Box
                     sx={{
                         borderRadius: "50%",
                         height: "1.5rem",
                         width: "1.5rem",
                         backgroundColor: color(false),
-                        '[data-mui-color-scheme="dark"] &': {
+                        '[data-color-scheme="dark"] &': {
                             backgroundColor: color(true),
                         },
                     }}
@@ -252,7 +259,11 @@ export default function ClassInfo({
                 </Alert>
             )}
             {_class.activity.image && (
-                <Box pt={2}>
+                <Box
+                    sx={{
+                        pt: 2,
+                    }}
+                >
                     <Image
                         src={_class.activity.image}
                         alt={_class.activity.name}
@@ -272,7 +283,13 @@ export default function ClassInfo({
                     ></Image>
                 </Box>
             )}
-            <Typography pt={2}>{_class.activity.description}</Typography>
+            <Typography
+                sx={{
+                    pt: 2,
+                }}
+            >
+                {_class.activity.description}
+            </Typography>
             {user &&
                 userConfig != undefined &&
                 !userConfigLoading &&

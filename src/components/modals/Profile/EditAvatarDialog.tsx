@@ -26,7 +26,7 @@ function EditAvatarDialog({
                 sx: {
                     minWidth: 300,
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         backgroundColor: "black",
                     },
                 },
@@ -48,7 +48,12 @@ function EditAvatarDialog({
                         }}
                     >
                         <ImageRounded />
-                        <Typography variant={"body1"} color={"text.secondary"}>
+                        <Typography
+                            variant={"body1"}
+                            sx={{
+                                color: "text.secondary",
+                            }}
+                        >
                             Velg nytt bilde
                         </Typography>
                         <VisuallyHiddenInput

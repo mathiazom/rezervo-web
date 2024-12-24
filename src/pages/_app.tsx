@@ -1,9 +1,8 @@
 import "@/styles/globals.css";
 import "@/styles/animations.css";
 import "@/components/schedule/class/ClassCard.css";
-
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-import { CssBaseline, Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import type { AppProps } from "next/app";
@@ -19,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     useEffect(() => setShowSnow(checkSantaTime()), []);
 
     return (
-        <CssVarsProvider theme={theme} defaultMode={"system"}>
+        <ThemeProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
             <UserProvider>
                 <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="nb-NO">
@@ -38,7 +37,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                 </LocalizationProvider>
             </UserProvider>
-        </CssVarsProvider>
+        </ThemeProvider>
     );
 }
 

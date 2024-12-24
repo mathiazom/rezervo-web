@@ -77,23 +77,33 @@ export default function WeekNavigator({
     }
 
     return (
-        <Stack direction={"row"} justifyContent={"center"} alignItems={"center"} mb={1} sx={{ position: "relative" }}>
+        <Stack
+            direction={"row"}
+            sx={{
+                justifyContent: "center",
+                alignItems: "center",
+                mb: 1,
+                position: "relative",
+            }}
+        >
             <Button
                 startIcon={<FilterAltRoundedIcon />}
-                sx={{
-                    mr: 1,
-                    position: { xs: "absolute", md: "inherit" },
-                    left: { xs: 10, md: "inherit" },
-                    height: "100%",
-                    ...(isFiltered
+                sx={[
+                    {
+                        mr: 1,
+                        position: { xs: "absolute", md: "inherit" },
+                        left: { xs: 10, md: "inherit" },
+                        height: "100%",
+                    },
+                    isFiltered
                         ? {}
                         : {
                               minWidth: 0,
                               ".MuiButton-startIcon": {
                                   margin: 0,
                               },
-                          }),
-                }}
+                          },
+                ]}
                 variant={"outlined"}
                 size={"small"}
                 onClick={() => setIsScheduleFiltersOpen(true)}
@@ -166,7 +176,13 @@ export default function WeekNavigator({
             >
                 <ArrowBack />
             </LoadingButton>
-            <Typography sx={{ opacity: 0.7 }} mx={2} variant={"subtitle2"}>{`UKE ${weekNumber}`}</Typography>
+            <Typography
+                variant={"subtitle2"}
+                sx={{
+                    mx: 2,
+                    opacity: 0.7,
+                }}
+            >{`UKE ${weekNumber}`}</Typography>
             <LoadingButton
                 loading={isLoadingNextWeek}
                 variant={"outlined"}

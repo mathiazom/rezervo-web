@@ -65,28 +65,14 @@ export default function CalendarFeed() {
                         }
                         disabled={userCalendarFeedUrlLoading || userCalendarFeedUrlError}
                         sx={{ width: "100%" }}
-                        InputProps={{
-                            readOnly: true,
-                            endAdornment: (
-                                <InputAdornment position="end" sx={{ margin: "0 auto" }}>
-                                    {!isSupported || userCalendarFeedUrlError ? (
-                                        <IconButton
-                                            disabled={true}
-                                            sx={{
-                                                root: {
-                                                    "&.Mui-disabled": {
-                                                        pointerEvents: "auto",
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            <ContentCopyIcon />
-                                        </IconButton>
-                                    ) : (
-                                        <Tooltip title={isCopiedToClipboard ? "Kopiert" : "Kopier URL"}>
+                        slotProps={{
+                            input: {
+                                readOnly: true,
+                                endAdornment: (
+                                    <InputAdornment position="end" sx={{ margin: "0 auto" }}>
+                                        {!isSupported || userCalendarFeedUrlError ? (
                                             <IconButton
-                                                role={"button"}
-                                                onClick={() => copyToClipboard(userCalendarFeedUrl || "")}
+                                                disabled={true}
                                                 sx={{
                                                     root: {
                                                         "&.Mui-disabled": {
@@ -95,16 +81,32 @@ export default function CalendarFeed() {
                                                     },
                                                 }}
                                             >
-                                                {isCopiedToClipboard ? (
-                                                    <Check color={"primary"} />
-                                                ) : (
-                                                    <ContentCopyIcon />
-                                                )}
+                                                <ContentCopyIcon />
                                             </IconButton>
-                                        </Tooltip>
-                                    )}
-                                </InputAdornment>
-                            ),
+                                        ) : (
+                                            <Tooltip title={isCopiedToClipboard ? "Kopiert" : "Kopier URL"}>
+                                                <IconButton
+                                                    role={"button"}
+                                                    onClick={() => copyToClipboard(userCalendarFeedUrl || "")}
+                                                    sx={{
+                                                        root: {
+                                                            "&.Mui-disabled": {
+                                                                pointerEvents: "auto",
+                                                            },
+                                                        },
+                                                    }}
+                                                >
+                                                    {isCopiedToClipboard ? (
+                                                        <Check color={"primary"} />
+                                                    ) : (
+                                                        <ContentCopyIcon />
+                                                    )}
+                                                </IconButton>
+                                            </Tooltip>
+                                        )}
+                                    </InputAdornment>
+                                ),
+                            },
                         }}
                     />
                 </FormLabel>
@@ -118,7 +120,7 @@ export default function CalendarFeed() {
                         />
                     }
                     label="Inkluder gjennomførte timer"
-                    componentsProps={{
+                    slotProps={{
                         typography: {
                             sx: {
                                 userSelect: "none",
