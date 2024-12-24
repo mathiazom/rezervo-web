@@ -26,7 +26,7 @@ function EditAvatarDialog({
                 sx: {
                     minWidth: 300,
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         backgroundColor: "black",
                     },
                 },

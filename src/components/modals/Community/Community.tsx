@@ -80,7 +80,7 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     backgroundColor: "#111",
                 },
             }}

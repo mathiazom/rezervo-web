@@ -110,7 +110,7 @@ export default function ClassInfo({
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                '[data-color-scheme="dark"] &': {
                     backgroundColor: "#181818",
                 },
             }}
@@ -129,7 +129,7 @@ export default function ClassInfo({
                         height: "1.5rem",
                         width: "1.5rem",
                         backgroundColor: color(false),
-                        '[data-mui-color-scheme="dark"] &': {
+                        '[data-color-scheme="dark"] &': {
                             backgroundColor: color(true),
                         },
                     }}

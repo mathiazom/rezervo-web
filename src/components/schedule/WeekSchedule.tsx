@@ -56,7 +56,7 @@ function WeekSchedule({
                                     dayIsToday
                                         ? {
                                               backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                                              '[data-mui-color-scheme="dark"] &': {
+                                              '[data-color-scheme="dark"] &': {
                                                   backgroundColor: alpha(theme.palette.primary.main, 0.2),
                                               },
                                           }

@@ -126,7 +126,7 @@ const MembershipLoginModal = ({
             PaperProps={{
                 sx: {
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    '[data-color-scheme="dark"] &': {
                         backgroundColor: "black",
                     },
                 },
