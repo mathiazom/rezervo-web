@@ -6,8 +6,9 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import type { AppProps } from "next/app";
+import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import React, { useEffect, useState } from "react";
-import Snowfall from "react-snowfall";
+import { Snowfall } from "react-snowfall";
 
 import theme from "@/lib/theme";
 import { checkSantaTime } from "@/lib/utils/santaUtils";
@@ -34,7 +35,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                             }}
                         />
                     )}
-                    <Component {...pageProps} />
+                    <NuqsAdapter>
+                        <Component {...pageProps} />
+                    </NuqsAdapter>
                 </LocalizationProvider>
             </UserProvider>
         </ThemeProvider>
