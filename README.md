@@ -9,9 +9,9 @@ Web client for [`rezervo`](https://github.com/mathiazom/rezervo), including book
 
 #### 🧑‍🔧 Setup
 
-1. Install dependencies using Yarn
+1. Install dependencies using pnpm
    ```shell
-   yarn install
+   pnpm install
    ```
 2. Define your own `.env.local` from [`.env.local.example`](.env.local.example)
 
@@ -23,14 +23,14 @@ Web client for [`rezervo`](https://github.com/mathiazom/rezervo), including book
 
 3. Setup and start the [rezervo](https://github.com/mathiazom/rezervo) backend
 
-#### 🧶 Run with Yarn
+#### 📦 Run with pnpm
 
 ```shell
-yarn dev
+pnpm dev
 
 # or
 
-yarn prod
+pnpm prod
 ```
 
 #### 🐋 Run with Docker
@@ -44,8 +44,8 @@ yarn prod
 #### 🧹 Code style, lint and type checking
 
 ```shell
-yarn check
+pnpm check
 
 # automatic fixes
-yarn fix
+pnpm fix
 ```

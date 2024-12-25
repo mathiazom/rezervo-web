@@ -1,7 +1,7 @@
 "use client";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import InitColorSchemeScript from "@mui/system/InitColorSchemeScript";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { Roboto } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import React from "react";

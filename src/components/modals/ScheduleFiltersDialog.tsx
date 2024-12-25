@@ -182,7 +182,6 @@ export default function ScheduleFiltersDialog({
                 </Tabs>
             </DialogHeader>
             <DialogContent sx={{ padding: 0, margin: 0 }}>
-                {/* @ts-expect-error: https://github.com/oliviertassinari/react-swipeable-views/issues/678 */}
                 <SwipeableViews index={tab} onChangeIndex={handleChangeIndex}>
                     <TabPanel value={tab} index={0} dir={theme.direction}>
                         <LocationFilters
