@@ -21,9 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ThemeProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
-            <SessionProvider
-                refetchInterval={Number.parseInt(process.env["NEXT_PUBLIC_REFRESH_INTERVAL_SECONDS"] ?? "0")}
-            >
+            <SessionProvider refetchInterval={3600}>
                 <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="nb-NO">
                     {showSnow && (
                         <Snowfall

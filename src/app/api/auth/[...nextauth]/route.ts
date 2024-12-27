@@ -12,9 +12,9 @@ function requireEnv(env: string): string {
     return value;
 }
 
-const TOKEN_REFRESH_BUFFER_SECONDS = Number.parseInt(process.env["NEXT_PUBLIC_REFRESH_INTERVAL_SECONDS"] ?? "60000");
+const TOKEN_REFRESH_BUFFER_SECONDS = 60000;
 
-const FUSIONAUTH_URL = requireEnv("NEXT_PUBLIC_FUSIONAUTH_URL");
+const FUSIONAUTH_URL = requireEnv("FUSIONAUTH_URL");
 
 const HOST = requireEnv("HOST");
 
@@ -26,7 +26,7 @@ const authOptions: AuthOptions = {
     providers: [
         buildFusionAuthProvider(
             requireEnv("FUSIONAUTH_ISSUER"),
-            requireEnv("NEXT_PUBLIC_FUSIONAUTH_CLIENT_ID"),
+            requireEnv("FUSIONAUTH_CLIENT_ID"),
             requireEnv("FUSIONAUTH_CLIENT_SECRET"),
             FUSIONAUTH_URL,
             `${HOST}/fusionauth_logo_white_orange.png`,

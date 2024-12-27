@@ -11,7 +11,6 @@ import EditAvatarDialog from "@/components/modals/Profile/EditAvatarDialog";
 import ProfileAvatar from "@/components/modals/Profile/ProfileAvatar";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
-import { buildFusionAuthSignOutUrl } from "@/lib/helpers/auth/fusionAuth";
 import { destroy, put } from "@/lib/helpers/requests";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
 import { useUser } from "@/lib/hooks/useUser";
@@ -128,7 +127,7 @@ function Profile({
 
     async function federatedSignOut() {
         await signOut({ redirect: false }); // clears local session
-        window.location.replace(buildFusionAuthSignOutUrl()); // actually logs out of FusionAuth application
+        window.location.replace(await (await fetch("/api/auth/sign-out-url")).json()); // actually logs out of FusionAuth application
     }
 
     return (

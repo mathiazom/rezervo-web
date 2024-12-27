@@ -1,13 +1,26 @@
+import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-import { destroy, post, put } from "@/lib/helpers/requests";
+import { destroy, get, post, put } from "@/lib/helpers/requests";
 import { useUser } from "@/lib/hooks/useUser";
 
 export function usePushNotificationSubscription() {
     const { token } = useUser();
 
+    const publicKeyApiUrl = `notifications/push/public-key`;
     const subscriptionApiUrl = `notifications/push`;
     const subscriptionVerifyApiUrl = `notifications/push/verify`;
+
+    const {
+        data: publicKey,
+        error: publicKeyError,
+        isLoading: publicKeyLoading,
+    } = useSWR<string>(token ? publicKeyApiUrl : null, async () => {
+        if (!token) {
+            throw new Error("Not authenticated");
+        }
+        return await (await get(publicKeyApiUrl, { mode: "client", accessToken: token })).json();
+    });
 
     function subscribe(url: string, token: string, { arg: subscription }: { arg: PushSubscription }) {
         return put(url, { body: JSON.stringify(subscription, null, 2), mode: "client", accessToken: token }).then((r) =>
@@ -62,6 +75,9 @@ export function usePushNotificationSubscription() {
     );
 
     return {
+        pushNotificationPublicKey: publicKey,
+        pushNotificationPublicKeyError: publicKeyError,
+        pushNotificationPublicKeyLoading: publicKeyLoading,
         subscribeToPush: triggerSubscribe,
         unsubscribeFromPush: triggerUnsubscribe,
         isSubscribingToPush: isSubscribing,

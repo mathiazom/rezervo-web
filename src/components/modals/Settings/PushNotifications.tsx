@@ -12,11 +12,16 @@ const PushNotifications = () => {
     const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
     const [isWebPushSupported, setIsWebPushSupported] = useState(false);
 
-    const { subscribeToPush, unsubscribeFromPush, verifySubscription } = usePushNotificationSubscription();
+    const {
+        pushNotificationPublicKey,
+        pushNotificationPublicKeyError,
+        pushNotificationPublicKeyLoading,
+        subscribeToPush,
+        unsubscribeFromPush,
+        verifySubscription,
+    } = usePushNotificationSubscription();
 
-    const pushNotificationPublicKey = process.env["NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY"];
-
-    if (!pushNotificationPublicKey) {
+    if (pushNotificationPublicKeyError || (!pushNotificationPublicKey && !pushNotificationPublicKeyLoading)) {
         throw new Error("Web push public key must be set as an environment variable");
     }
 

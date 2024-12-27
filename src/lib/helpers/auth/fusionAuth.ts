@@ -2,21 +2,6 @@ import { jwtDecode } from "jwt-decode";
 import FusionAuthProvider from "next-auth/providers/fusionauth";
 
 import { CustomJWT } from "@/lib/helpers/auth/auth";
-
-export function buildFusionAuthSignOutUrl() {
-    const baseUrl = process.env["NEXT_PUBLIC_FUSIONAUTH_URL"];
-    if (baseUrl == null) {
-        throw new Error("FUSIONAUTH_URL not set");
-    }
-    const signOutUrl = new URL("/oauth2/logout", baseUrl);
-    const clientId = process.env["NEXT_PUBLIC_FUSIONAUTH_CLIENT_ID"];
-    if (clientId == null) {
-        throw new Error("FUSIONAUTH_CLIENT_ID not set");
-    }
-    signOutUrl.searchParams.append("client_id", clientId);
-    return signOutUrl.toString();
-}
-
 export function buildFusionAuthProvider(
     issuer: string,
     clientId: string,
