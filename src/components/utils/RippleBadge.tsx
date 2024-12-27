@@ -8,7 +8,7 @@ const RippleBadge = styled(Badge, {
         backgroundColor: rippleColor,
         color: rippleColor,
         boxShadow: "0 0 0 2px white",
-        '[data-color-scheme="dark"] &': {
+        '[data-mui-color-scheme="dark"] &': {
             boxShadow: "0 0 0 2px #191919",
         },
         "&::after": {

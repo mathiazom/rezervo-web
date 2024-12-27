@@ -148,7 +148,7 @@ function Profile({
                         boxShadow: 24,
                         p: 4,
                         backgroundColor: "white",
-                        '[data-color-scheme="dark"] &': {
+                        '[data-mui-color-scheme="dark"] &': {
                             backgroundColor: "#111",
                         },
                     }}

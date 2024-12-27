@@ -72,7 +72,7 @@ export function UserAvatar({
                         justifyContent: "center",
                         position: "absolute",
                         backgroundColor: avatarColor(username),
-                        '[data-color-scheme="dark"] &': {
+                        '[data-mui-color-scheme="dark"] &': {
                             backgroundColor: avatarColor(username, true),
                         },
                     }}

@@ -84,7 +84,7 @@ export default function AgendaSession({
                     position: "relative",
                     borderLeft: `0.4rem solid ${classColorRGB(false)}`,
                     backgroundColor: "white",
-                    '[data-color-scheme="dark"] &': {
+                    '[data-mui-color-scheme="dark"] &': {
                         borderLeft: `0.4rem solid ${classColorRGB(true)}`,
                         backgroundColor: "#111",
                     },
@@ -268,7 +268,7 @@ export default function AgendaSession({
                         width: "100%",
                         zIndex: -1,
                         backgroundColor: "white",
-                        '[data-color-scheme="dark"] &': {
+                        '[data-mui-color-scheme="dark"] &': {
                             backgroundColor: "#111",
                         },
                     }}

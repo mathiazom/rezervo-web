@@ -104,7 +104,7 @@ export default function ScheduleFiltersDialog({
                 sx: {
                     height: "100%",
                     backgroundColor: "white",
-                    '[data-color-scheme="dark"] &': {
+                    '[data-mui-color-scheme="dark"] &': {
                         backgroundColor: "#111",
                         backgroundImage: "none",
                     },

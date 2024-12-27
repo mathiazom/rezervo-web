@@ -95,7 +95,7 @@ const ClassCard = ({
         <Card
             sx={{
                 background: hexWithOpacityToRgb("#ffffff", isInThePast ? 0.6 : 1, 255),
-                '[data-color-scheme="dark"] &': {
+                '[data-mui-color-scheme="dark"] &': {
                     background: hexWithOpacityToRgb("#191919", isInThePast ? 0.6 : 1, 0),
                 },
             }}
@@ -108,7 +108,7 @@ const ClassCard = ({
                     background: "none",
                     position: "relative",
                     borderLeft: `0.4rem solid ${classColorRGB(false)}`,
-                    '[data-color-scheme="dark"] &': {
+                    '[data-mui-color-scheme="dark"] &': {
                         borderLeft: `0.4rem solid ${classColorRGB(true)}`,
                     },
                 }}
@@ -125,7 +125,7 @@ const ClassCard = ({
                             height: "100%",
                             width: "100%",
                             backgroundColor: classColorRGB(false),
-                            '[data-color-scheme="dark"] &': {
+                            '[data-mui-color-scheme="dark"] &': {
                                 backgroundColor: classColorRGB(true),
                             },
                         }}
@@ -201,7 +201,7 @@ const ClassCard = ({
                                             height: AVATAR_SIZE,
                                             fontSize: 12,
                                             borderColor: "white",
-                                            '[data-color-scheme="dark"] &': {
+                                            '[data-mui-color-scheme="dark"] &': {
                                                 borderColor: "#191919",
                                             },
                                         },

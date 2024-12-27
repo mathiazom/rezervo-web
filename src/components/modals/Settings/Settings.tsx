@@ -36,14 +36,14 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
     "& .MuiSwitch-switchBase": {
         "&.Mui-checked": {
             "& + .MuiSwitch-track": {
-                '[data-color-scheme="light"] &': {
+                '[data-mui-color-scheme="light"] &': {
                     backgroundColor: theme.palette.primary.main,
                 },
             },
         },
     },
     "& .MuiSwitch-track": {
-        '[data-color-scheme="light"] &': {
+        '[data-mui-color-scheme="light"] &': {
             backgroundColor: "#000",
         },
     },
@@ -192,7 +192,7 @@ export default function Settings({
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-color-scheme="dark"] &': {
+                '[data-mui-color-scheme="dark"] &': {
                     backgroundColor: "#111",
                 },
             }}

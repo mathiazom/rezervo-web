@@ -29,7 +29,7 @@ export default function CurrentTimeDivider() {
                     borderTopStyle: "solid",
                     borderTopColor: alpha(theme.palette.primary.main, 0.5),
 
-                    '[data-color-scheme="dark"] &': {
+                    '[data-mui-color-scheme="dark"] &': {
                         borderTopColor: alpha(theme.palette.primary.main, 0.5),
                     },
                 }}

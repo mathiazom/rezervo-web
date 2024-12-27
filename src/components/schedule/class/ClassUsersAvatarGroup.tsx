@@ -30,7 +30,7 @@ export default function ClassUsersAvatarGroup({
                     height: AVATAR_SIZE,
                     fontSize: 12,
                     borderColor: "white",
-                    '[data-color-scheme="dark"] &': {
+                    '[data-mui-color-scheme="dark"] &': {
                         borderColor: "#191919",
                     },
                 },
