@@ -1,8 +1,9 @@
 import { Vibration } from "@mui/icons-material";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
-import { Box, CircularProgress, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
+import { Box, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import SwitchWrapper from "@/components/modals/Settings/SwitchWrapper";
 import SubHeader from "@/components/modals/SubHeader";
 import { usePushNotificationSubscription } from "@/lib/hooks/usePushNotificationSubscription";
 import { base64ToUint8Array } from "@/lib/utils/base64Utils";
@@ -83,36 +84,16 @@ const PushNotifications = () => {
             <FormGroup>
                 <SubHeader title={"Push-varsler"} startIcon={<Vibration fontSize={"small"} />} />
                 <FormLabel disabled={!isWebPushSupported || subscriptionIsLoading}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
-                        <Typography
-                            sx={{
-                                userSelect: "none",
+                    <SwitchWrapper label={"Bookinger og venneforespørsler"} loading={subscriptionIsLoading}>
+                        <Switch
+                            disabled={!isWebPushSupported}
+                            checked={subscription !== null}
+                            onChange={(_, checked) => (checked ? subscribe() : unsubscribe())}
+                            inputProps={{
+                                "aria-label": "push-varsler-aktiv",
                             }}
-                        >
-                            Bookinger og venneforespørsler
-                        </Typography>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "right",
-                                flexGrow: 1,
-                            }}
-                        >
-                            {subscriptionIsLoading ? (
-                                <CircularProgress size={22} thickness={4} sx={{ margin: "1rem" }} />
-                            ) : (
-                                <Switch
-                                    disabled={!isWebPushSupported}
-                                    checked={subscription !== null}
-                                    onChange={(_, checked) => (checked ? subscribe() : unsubscribe())}
-                                    inputProps={{
-                                        "aria-label": "push-varsler-aktiv",
-                                    }}
-                                />
-                            )}
-                        </Box>
-                    </Box>
+                        />
+                    </SwitchWrapper>
                 </FormLabel>
                 {!isWebPushSupported && !subscriptionIsLoading && (
                     <FormLabel>

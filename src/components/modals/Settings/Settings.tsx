@@ -4,7 +4,6 @@ import {
     AlertTitle,
     Box,
     Button,
-    CircularProgress,
     Divider,
     FormControl,
     FormGroup,
@@ -24,6 +23,7 @@ import ModalWrapper from "@/components/modals/ModalWrapper";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import Memberships from "@/components/modals/Settings/Memberships/Memberships";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
+import SwitchWrapper from "@/components/modals/Settings/SwitchWrapper";
 import SubHeader from "@/components/modals/SubHeader";
 import { INSTALL_PROMPT_DESCRIPTION } from "@/components/utils/PWAInstallPrompt";
 import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
@@ -212,32 +212,15 @@ export default function Settings({
                                     }
                                 />
                                 <FormLabel>
-                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
-                                        <Typography
-                                            sx={{
-                                                userSelect: "none",
+                                    <SwitchWrapper label={"Påminnelse om time"} loading={notificationsConfigLoading}>
+                                        <Switch
+                                            checked={reminderActive}
+                                            onChange={(_, checked) => handleReminderActiveChanged(checked)}
+                                            inputProps={{
+                                                "aria-label": "påminnelse-aktiv",
                                             }}
-                                        >
-                                            Påminnelse om time
-                                        </Typography>
-                                        <Box
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "right",
-                                                flexGrow: 1,
-                                            }}
-                                        >
-                                            {notificationsConfigLoading && <CircularProgress size="1rem" />}
-                                            <Switch
-                                                checked={reminderActive}
-                                                onChange={(_, checked) => handleReminderActiveChanged(checked)}
-                                                inputProps={{
-                                                    "aria-label": "påminnelse-aktiv",
-                                                }}
-                                            />
-                                        </Box>
-                                    </Box>
+                                        />
+                                    </SwitchWrapper>
                                 </FormLabel>
                                 <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", pb: 1 }}>
                                     <FormControl>
