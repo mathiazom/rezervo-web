@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 import "@/styles/animations.css";
 import "@/components/schedule/class/ClassCard.css";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
@@ -10,6 +9,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import React, { useEffect, useState } from "react";
 import { Snowfall } from "react-snowfall";
 
+import AuthProvider from "@/lib/authProvider";
 import theme from "@/lib/theme";
 import { checkSantaTime } from "@/lib/utils/santaUtils";
 
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ThemeProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
-            <UserProvider>
+            <AuthProvider>
                 <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="nb-NO">
                     {showSnow && (
                         <Snowfall
@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Component {...pageProps} />
                     </NuqsAdapter>
                 </LocalizationProvider>
-            </UserProvider>
+            </AuthProvider>
         </ThemeProvider>
     );
 }

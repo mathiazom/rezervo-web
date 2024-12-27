@@ -1,18 +1,29 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
-import { fetcher } from "@/lib/utils/fetchUtils";
+import { useUser } from "@/lib/hooks/useUser";
+import { authedFetcher } from "@/lib/utils/fetchUtils";
+
+function calendarFeedUrlWithToken(token: string, includePast: boolean) {
+    const calendarFeedUrl = new URL(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/cal`);
+    calendarFeedUrl.searchParams.set("include_past", includePast.toString());
+    calendarFeedUrl.searchParams.set("token", token);
+    return calendarFeedUrl.toString();
+}
 
 export function useUserCalendarFeedUrl(includePast: boolean) {
-    const { user } = useUser();
+    const { isAuthenticated, token } = useUser();
 
-    const userCalendarFeedTokenUrl = `cal-url?include_past=${includePast}`;
+    const userCalendarFeedToken = `cal-token`;
 
-    const { data: url, error: urlError, isLoading } = useSWR<string>(user ? userCalendarFeedTokenUrl : null, fetcher);
+    const {
+        data: calendarToken,
+        error: urlError,
+        isLoading,
+    } = useSWR<string>(isAuthenticated ? userCalendarFeedToken : null, authedFetcher(token ?? ""));
 
-    return url != null && urlError == null
+    return calendarToken != undefined && urlError == null
         ? {
-              userCalendarFeedUrl: url,
+              userCalendarFeedUrl: calendarFeedUrlWithToken(calendarToken, includePast),
               userCalendarFeedUrlError: false,
               userCalendarFeedUrlLoading: isLoading,
           }

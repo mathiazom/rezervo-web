@@ -1,5 +1,4 @@
 "use client";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
 import { Roboto } from "next/font/google";
@@ -21,11 +20,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <ThemeProvider theme={theme} defaultMode={"system"}>
                 <CssBaseline enableColorScheme />
-                <UserProvider>
-                    <NuqsAdapter>
-                        <body>{children}</body>
-                    </NuqsAdapter>
-                </UserProvider>
+                <NuqsAdapter>
+                    <body>{children}</body>
+                </NuqsAdapter>
             </ThemeProvider>
         </html>
     );

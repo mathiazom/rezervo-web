@@ -1,10 +1,5 @@
-import { RezervoClass, RezervoDaySchedule, RezervoSchedule, RezervoWeekSchedule } from "@/types/chain";
-import {
-    RezervoClassDTO,
-    RezervoDayScheduleDTO,
-    RezervoScheduleDTO,
-    RezervoWeekScheduleDTO,
-} from "@/types/serialization";
+import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
+import { RezervoClassDTO, RezervoDayScheduleDTO, RezervoWeekScheduleDTO } from "@/types/serialization";
 
 function serializeClass(_class: RezervoClass): RezervoClassDTO {
     return {
@@ -26,18 +21,4 @@ export function serializeWeekSchedule(weekSchedule: RezervoWeekSchedule): Rezerv
         locationIds: weekSchedule.locationIds,
         days: weekSchedule.days.map((daySchedule) => serializeDaySchedule(daySchedule)),
     };
-}
-
-export function serializeSchedule(schedule: RezervoSchedule): RezervoScheduleDTO {
-    return Object.keys(schedule)
-        .map((compactISOWeek) => {
-            const weekSchedule = schedule[compactISOWeek];
-            if (weekSchedule === undefined) {
-                throw new Error(`Invalid week schedule for week ${compactISOWeek}`);
-            }
-            return {
-                [compactISOWeek]: serializeWeekSchedule(weekSchedule),
-            };
-        })
-        .reduce((acc, next) => ({ ...acc, ...next }), {});
 }

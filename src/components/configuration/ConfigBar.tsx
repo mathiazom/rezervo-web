@@ -1,4 +1,5 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
+"use client";
+
 import { CalendarMonth, CalendarToday, PauseCircleRounded, People } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
@@ -8,11 +9,13 @@ import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import React, { useEffect, useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";
-import { buildAuthProxyPath, put } from "@/lib/helpers/requests";
+import { put } from "@/lib/helpers/requests";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { useMyUserId } from "@/stores/userStore";
+import { useUser } from "@/lib/hooks/useUser";
+import { useMyUser } from "@/stores/userStore";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
@@ -40,9 +43,11 @@ function ConfigBar({
     onProfileOpen: () => void;
 }) {
     const theme = useTheme();
-    const { user, isLoading: isLoadingUser } = useUser();
+    const { token, user, authStatus, logIn } = useUser();
     const [isUserUpserted, setIsUserUpserted] = useState(false);
-    const setMyUserId = useMyUserId((state) => state.setUserId);
+    const [setUserId, userName, setUserName] = useMyUser(
+        useShallow((state) => [state.setUserId, state.userName, state.setUserName]),
+    );
     const { community } = useCommunity();
     const friendRequestCount =
         community?.users.filter((cu) => cu.relationship === UserRelationship.REQUEST_RECEIVED).length ?? 0;
@@ -54,20 +59,30 @@ function ConfigBar({
     }, [chainConfigs]);
 
     useEffect(() => {
-        if (user == undefined) return;
-        put("user", { mode: "authProxy" }).then(async (res) => {
+        if (token == null) return;
+        put("user", { accessToken: token }).then(async (res) => {
             if (!res.ok) return;
-            setMyUserId(await res.json());
-            await onRefetchConfig();
-            setIsUserUpserted(true);
+            const userData = await res.json();
+            if ("id" in userData && "name" in userData) {
+                setUserId(userData["id"]);
+                setUserName(userData["name"]);
+                await onRefetchConfig();
+                setIsUserUpserted(true);
+            }
         });
-    }, [user, setMyUserId, onRefetchConfig]);
+    }, [token, setUserId, setUserName, onRefetchConfig]);
+
+    useEffect(() => {
+        if (user?.name) {
+            setUserName(user.name);
+        }
+    }, [user?.name, setUserName]);
 
     return (
-        !isLoadingUser && (
+        authStatus != "loading" && (
             <>
-                {user == undefined ? (
-                    <Button endIcon={<LoginIcon />} href={buildAuthProxyPath("auth/login")}>
+                {authStatus === "unauthenticated" ? (
+                    <Button endIcon={<LoginIcon />} onClick={() => logIn()}>
                         Logg inn
                     </Button>
                 ) : (
@@ -169,11 +184,11 @@ function ConfigBar({
                                 </Box>
                             </>
                         )}
-                        {user.name && (
-                            <Tooltip title={user.name}>
+                        {userName && (
+                            <Tooltip title={userName}>
                                 <Box sx={{ position: "relative" }}>
                                     <IconButton onClick={() => onProfileOpen()} sx={{ padding: 0 }}>
-                                        <UserAvatar userId={"me"} username={user.name} />
+                                        <UserAvatar userId={"me"} username={userName} />
                                     </IconButton>
                                 </Box>
                             </Tooltip>

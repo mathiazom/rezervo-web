@@ -4,7 +4,7 @@ import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { UserAvatar } from "@/components/utils/UserAvatar";
-import { useMyUserId } from "@/stores/userStore";
+import { useMyUser } from "@/stores/userStore";
 import { StatusColors } from "@/types/userSessions";
 
 export default function ClassUserAvatar({
@@ -26,7 +26,7 @@ export default function ClassUserAvatar({
     loading?: boolean;
     withSelfPrefix?: boolean;
 }) {
-    const myUserId = useMyUserId((state) => state.userId);
+    const myUserId = useMyUser((state) => state.userId);
     const avatar = <UserAvatar userId={userId} username={username} {...(size ? { size: size } : {})} />;
 
     return (

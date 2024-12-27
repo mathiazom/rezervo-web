@@ -3,7 +3,6 @@ import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { Box, CircularProgress, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-import { usePushNotificationPublicKey } from "@/lib/hooks/usePushNotificationPublicKey";
 import { usePushNotificationSubscription } from "@/lib/hooks/usePushNotificationSubscription";
 import { base64ToUint8Array } from "@/lib/utils/base64Utils";
 
@@ -13,10 +12,14 @@ const PushNotifications = () => {
     const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
     const [isWebPushSupported, setIsWebPushSupported] = useState(false);
 
-    const { subscribeToPush, unsubscribeFromPush, verifySubscription } = usePushNotificationSubscription();
-
-    const { pushNotificationPublicKey, pushNotificationPublicKeyLoading, pushNotificationPublicKeyError } =
-        usePushNotificationPublicKey();
+    const {
+        pushNotificationPublicKey,
+        pushNotificationPublicKeyError,
+        pushNotificationPublicKeyLoading,
+        subscribeToPush,
+        unsubscribeFromPush,
+        verifySubscription,
+    } = usePushNotificationSubscription();
 
     if (pushNotificationPublicKeyError || (!pushNotificationPublicKey && !pushNotificationPublicKeyLoading)) {
         throw new Error("Web push public key must be set as an environment variable");

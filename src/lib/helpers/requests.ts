@@ -24,26 +24,27 @@ function createRequestInit(method: HTTP_METHOD, options?: RequestOptions): Reque
 }
 
 function buildInternalBackendPath(path: string): string {
-    const host = process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
+    const host = global.process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
     return `${host}/${path}`;
 }
 
-function buildPublicBackendPath(path: string): string {
+export function buildPublicBackendPath(path: string): string {
     const host = process.env["NEXT_PUBLIC_CONFIG_HOST"];
     return `${host}/${path}`;
 }
 
-export function buildAuthProxyPath(path: string): string {
-    return `/api/${path}`;
+export async function fetchProtectedImageAsDataUrl(imageUrl: string, authToken: string) {
+    const headers = new Headers();
+    headers.set("Authorization", `Bearer ${authToken}`);
+    const response = await fetch(imageUrl, { headers });
+    const binaryData = await response.arrayBuffer();
+    const base64 = btoa(String.fromCharCode(...Array.from(new Uint8Array(binaryData))));
+    return `data:image/png;base64,${base64}`;
 }
 
 export function createRequest(path: string, requestInit?: RequestInit, options?: RequestOptions): Promise<Response> {
     return fetch(
-        options?.mode === "authProxy"
-            ? buildAuthProxyPath(path)
-            : options?.mode === "server"
-              ? buildInternalBackendPath(path)
-              : buildPublicBackendPath(path),
+        options?.mode === "server" ? buildInternalBackendPath(path) : buildPublicBackendPath(path),
         requestInit,
     );
 }
