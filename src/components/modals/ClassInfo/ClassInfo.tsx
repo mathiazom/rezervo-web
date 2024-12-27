@@ -15,13 +15,14 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
+import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
 import React, { useState } from "react";
 
 import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
 import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
+import ModalWrapper from "@/components/modals/ModalWrapper";
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
@@ -98,33 +99,9 @@ export default function ClassInfo({
     const positionedUsersInWaitList = usersOnWaitlist.filter((u) => u.positionInWaitList);
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "95%",
-                maxHeight: "80%",
-                overflowY: "auto",
-                maxWidth: 600,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "0.25em",
-                boxShadow: 24,
-                p: 4,
-                backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#181818",
-                },
-            }}
-        >
-            <Stack
-                direction={"row"}
-                sx={{
-                    gap: 1,
-                    alignItems: "center",
-                    paddingBottom: 1,
-                }}
-            >
+        <ModalWrapper
+            title={_class.activity.name}
+            icon={
                 <Box
                     sx={{
                         borderRadius: "50%",
@@ -136,10 +113,9 @@ export default function ClassInfo({
                         },
                     }}
                 />
-                <Typography variant="h6" component="h2">
-                    {_class.activity.name}
-                </Typography>
-            </Stack>
+            }
+            titleAlignment={"left"}
+        >
             {_class.isCancelled && (
                 <Alert severity={"error"} icon={<CancelRounded />}>
                     {_class.cancelText ? (
@@ -372,6 +348,6 @@ export default function ClassInfo({
                 chain={chain}
                 _class={_class}
             />
-        </Box>
+        </ModalWrapper>
     );
 }

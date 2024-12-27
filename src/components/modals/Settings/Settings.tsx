@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import ModalWrapper from "@/components/modals/ModalWrapper";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import Memberships from "@/components/modals/Settings/Memberships/Memberships";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
@@ -178,39 +179,7 @@ export default function Settings({
     );
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "90%",
-                maxHeight: "80%",
-                overflowY: "auto",
-                maxWidth: 520,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "0.25em",
-                boxShadow: 24,
-                p: 4,
-                backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#111",
-                },
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 1,
-                    paddingBottom: 2,
-                }}
-            >
-                <SettingsRounded />
-                <Typography variant="h6" component="h2">
-                    Innstillinger
-                </Typography>
-            </Box>
+        <ModalWrapper title={"Innstillinger"} icon={<SettingsRounded />}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                 {!isPWAInstalled && (
                     <>
@@ -327,6 +296,6 @@ export default function Settings({
                     <CalendarFeed />
                 </FormGroup>
             </Box>
-        </Box>
+        </ModalWrapper>
     );
 }

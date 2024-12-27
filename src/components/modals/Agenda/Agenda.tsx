@@ -10,6 +10,7 @@ import { Alert, AlertTitle, Avatar, Box, Stack, Typography, useTheme } from "@mu
 import React from "react";
 
 import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
+import ModalWrapper from "@/components/modals/ModalWrapper";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
@@ -111,40 +112,7 @@ export default function Agenda({
     const inactiveChains = Object.keys(chainConfigs).filter((chain) => !chainConfigs[chain]?.active);
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "95%",
-                maxHeight: "80%",
-                overflowY: "auto",
-                maxWidth: 500,
-                minHeight: 300,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "0.25em",
-                boxShadow: 24,
-                p: 4,
-                backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#181818",
-                },
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 1,
-                    paddingBottom: 2,
-                }}
-            >
-                {userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}
-                <Typography variant="h6" component="h2">
-                    Min timeplan
-                </Typography>
-            </Box>
+        <ModalWrapper title={"Agenda"} icon={userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}>
             {Object.keys(chainConfigs).length === 0 ? (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>Mangler medlemskap</AlertTitle>
@@ -276,6 +244,6 @@ export default function Agenda({
                     </Stack>
                 </Box>
             )}
-        </Box>
+        </ModalWrapper>
     );
 }

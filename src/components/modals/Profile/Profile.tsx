@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
+import ModalWrapper from "@/components/modals/ModalWrapper";
 import AvatarMutateAlert from "@/components/modals/Profile/AvatarMutateAlert";
 import EditAvatarDialog from "@/components/modals/Profile/EditAvatarDialog";
 import ProfileAvatar from "@/components/modals/Profile/ProfileAvatar";
@@ -135,41 +136,7 @@ function Profile({
             }}
         >
             {({ getRootProps: getDialogRootProps }) => (
-                <Box
-                    {...getDialogRootProps()}
-                    sx={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        width: "90%",
-                        maxHeight: "80%",
-                        overflowY: "auto",
-                        maxWidth: 420,
-                        minHeight: 300,
-                        transform: "translate(-50%, -50%)",
-                        borderRadius: "0.25em",
-                        boxShadow: 24,
-                        p: 4,
-                        backgroundColor: "white",
-                        '[data-mui-color-scheme="dark"] &': {
-                            backgroundColor: "#111",
-                        },
-                    }}
-                >
-                    <Box
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: 1,
-                            paddingBottom: 2,
-                        }}
-                    >
-                        <PersonRounded />
-                        <Typography variant="h6" component="h2">
-                            Profil
-                        </Typography>
-                    </Box>
+                <ModalWrapper {...getDialogRootProps()} title={"Profil"} icon={<PersonRounded />}>
                     <AvatarMutateAlert
                         visible={showAvatarMutateError}
                         error={avatarMutateError}
@@ -309,7 +276,7 @@ function Profile({
                             deleteAvatar();
                         }}
                     />
-                </Box>
+                </ModalWrapper>
             )}
         </Dropzone>
     );

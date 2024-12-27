@@ -1,8 +1,9 @@
 import { People } from "@mui/icons-material";
-import { Alert, Badge, Box, Divider, Tooltip, Typography, useTheme } from "@mui/material";
+import { Alert, Badge, Box, Divider, Tooltip, Typography } from "@mui/material";
 import React, { ReactNode } from "react";
 
 import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
+import ModalWrapper from "@/components/modals/ModalWrapper";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { ChainProfile } from "@/types/chain";
 import { CommunityUser, UserRelationship } from "@/types/community";
@@ -43,7 +44,6 @@ const CommunityUserList = ({
 
 const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
     const { community, communityLoading, communityError } = useCommunity();
-    const theme = useTheme();
 
     const friendRequests =
         community?.users.filter((user) => user.relationship === UserRelationship.REQUEST_RECEIVED) ?? [];
@@ -66,60 +66,11 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
     };
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "90%",
-                maxHeight: "80%",
-                overflowY: "auto",
-                maxWidth: 520,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "0.25em",
-                boxShadow: 24,
-                p: 4,
-                backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#111",
-                },
-            }}
+        <ModalWrapper
+            title={"Venner"}
+            icon={<People />}
+            description={"Venner kan se hverandres bookinger og timeplaner"}
         >
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 1,
-                    paddingBottom: 1,
-                }}
-            >
-                <Box
-                    sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1,
-                    }}
-                >
-                    <People />
-                    <Typography variant="h6" component="h2">
-                        Venner
-                    </Typography>
-                </Box>
-                <Typography
-                    variant="body2"
-                    style={{
-                        color: theme.palette.grey[600],
-                        fontSize: 15,
-                    }}
-                    sx={{
-                        textAlign: "center",
-                        mb: 2.5,
-                    }}
-                >
-                    Venner kan se hverandres bookinger og timeplaner
-                </Typography>
-            </Box>
             {communityError ? (
                 <Alert severity="error">
                     <Typography>Klarte ikke laste inn venner.</Typography>
@@ -155,7 +106,7 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                     )}
                 </Box>
             )}
-        </Box>
+        </ModalWrapper>
     );
 };
 
