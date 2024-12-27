@@ -52,4 +52,5 @@ jobs:
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
               env:
-                  NEXT_PUBLIC_CONFIG_HOST: https://api.rezervo.no
+                  # TODO: revert to https://api.rezervo.no for production
+                  NEXT_PUBLIC_CONFIG_HOST: https://fa-api.rezervo.no
