@@ -1,15 +1,15 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import useSWR from "swr";
 
+import { useUser } from "@/lib/hooks/useUser";
 import { fetcher } from "@/lib/utils/fetchUtils";
 import { Features } from "@/types/features";
 
 export function useFeatures() {
-    const { user } = useUser();
+    const { isAuthenticated } = useUser();
 
     const featuresApiUrl = `features`;
 
-    const { data, error, isLoading } = useSWR<Features>(user ? featuresApiUrl : null, fetcher);
+    const { data, error, isLoading } = useSWR<Features>(isAuthenticated ? featuresApiUrl : null, fetcher);
 
     return {
         features: data,

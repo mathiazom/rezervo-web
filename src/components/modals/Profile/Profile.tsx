@@ -1,8 +1,8 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { PersonRounded } from "@mui/icons-material";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
+import { signOut, useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 
@@ -11,8 +11,10 @@ import EditAvatarDialog from "@/components/modals/Profile/EditAvatarDialog";
 import ProfileAvatar from "@/components/modals/Profile/ProfileAvatar";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
-import { buildAuthProxyPath, destroy, put } from "@/lib/helpers/requests";
+import { buildFusionAuthSignOutUrl } from "@/lib/helpers/auth/fusionAuth";
+import { destroy, put } from "@/lib/helpers/requests";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
+import { useUser } from "@/lib/hooks/useUser";
 import { useMyAvatar } from "@/stores/userStore";
 import { Position } from "@/types/math";
 
@@ -31,7 +33,8 @@ function Profile({
 }) {
     const theme = useTheme();
 
-    const { user } = useUser();
+    const { data: session } = useSession();
+    const { token } = useUser();
 
     const updateMyAvatarLastModified = useMyAvatar((state) => state.updateLastModifiedTimestamp);
 
@@ -74,6 +77,7 @@ function Profile({
     }
 
     async function uploadAvatarFile(file: File) {
+        if (token == null) return; // TODO: error handling
         setShowAvatarMutateError(false);
         setIsAvatarUpdating(true);
         setEditAvatarDialogOpen(false);
@@ -83,7 +87,8 @@ function Profile({
         const res = await put("user/me/avatar", {
             body: formData,
             withContentType: "NO_CONTENT_TYPE",
-            mode: "authProxy",
+            mode: "client",
+            accessToken: token,
         });
         if (res.ok) {
             updateMyAvatarLastModified();
@@ -98,7 +103,8 @@ function Profile({
     }
 
     function deleteAvatar() {
-        destroy("user/me/avatar", { mode: "authProxy" })
+        if (token == null) return; // TODO: error handling
+        destroy("user/me/avatar", { mode: "client", accessToken: token })
             .then((res) => {
                 if (!res.ok) {
                     onAvatarMutateError(AvatarMutateError.UNKNOWN);
@@ -119,6 +125,11 @@ function Profile({
         position: avatarDropzonePosition,
         recalculate: recalculateDropzonePosition,
     } = usePositionFromBounds();
+
+    async function federatedSignOut() {
+        await signOut({ redirect: false }); // clears local session
+        window.location.replace(buildFusionAuthSignOutUrl()); // actually logs out of FusionAuth application
+    }
 
     return (
         <Dropzone
@@ -207,7 +218,7 @@ function Profile({
                                         ]}
                                     >
                                         <ProfileAvatar
-                                            username={user?.name ?? ""}
+                                            username={session?.user?.name ?? ""}
                                             previewDataURL={avatarPreviewDataURL ?? null}
                                             isAvailable={isAvatarAvailable}
                                             isUpdating={isAvatarUpdating}
@@ -233,7 +244,7 @@ function Profile({
                                     textAlign: "center",
                                 }}
                             >
-                                {user?.name}
+                                {session?.user?.name}
                             </Typography>
                             <Typography
                                 variant="h6"
@@ -243,7 +254,7 @@ function Profile({
                                     fontSize: 14,
                                 }}
                             >
-                                {user?.email}
+                                {session?.user?.email}
                             </Typography>
                         </Box>
                         <Box
@@ -277,7 +288,7 @@ function Profile({
                                 variant={"outlined"}
                                 color={"error"}
                                 startIcon={<LogoutRoundedIcon />}
-                                href={buildAuthProxyPath("auth/logout")}
+                                onClick={() => federatedSignOut()}
                             >
                                 Logg ut
                             </Button>

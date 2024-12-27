@@ -1,4 +1,3 @@
-import { useUser } from "@auth0/nextjs-auth0/client";
 import {
     Add,
     CancelRounded,
@@ -19,6 +18,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import { Alert, AlertTitle, Box, Stack, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 
 import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
@@ -31,6 +31,7 @@ import { isClassInThePast } from "@/lib/helpers/date";
 import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { post } from "@/lib/helpers/requests";
+import { useUser } from "@/lib/hooks/useUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
@@ -50,7 +51,8 @@ export default function ClassInfo({
     classPopularity: ClassPopularity;
     onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
-    const { user } = useUser();
+    const { status: sessionStatus } = useSession();
+    const { token } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
@@ -82,10 +84,12 @@ export default function ClassInfo({
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
     async function book() {
+        if (token == null) return; // TODO: error handling
         setBookingLoading(true);
         await post(`${chain}/book`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "authProxy",
+            mode: "client",
+            accessToken: token,
         });
         await mutateSessionsIndex();
         await mutateUserSessions();
@@ -238,12 +242,12 @@ export default function ClassInfo({
                 badgeIcon={<NoShowBadgeIcon />}
                 text={"booket plass, men møtte ikke opp!"}
             />
-            {user === undefined && !isInThePast && (
+            {sessionStatus === "unauthenticated" && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1.5 }} icon={<Login fontSize={"small"} />}>
                     Du må logge inn for å kunne booke eller legge til timer i timeplanen
                 </Alert>
             )}
-            {user !== undefined && userConfig === undefined && !isInThePast && (
+            {sessionStatus === "authenticated" && userConfig === undefined && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>
                         Koble til <b>{chain.toUpperCase()}</b>-medlemskap
@@ -290,7 +294,7 @@ export default function ClassInfo({
             >
                 {_class.activity.description}
             </Typography>
-            {user &&
+            {sessionStatus === "authenticated" &&
                 userConfig != undefined &&
                 !userConfigLoading &&
                 !userConfigError &&

@@ -1,11 +1,11 @@
 import "@/styles/globals.css";
 import "@/styles/animations.css";
 import "@/components/schedule/class/ClassCard.css";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import type { AppProps } from "next/app";
+import { SessionProvider } from "next-auth/react";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import React, { useEffect, useState } from "react";
 import { Snowfall } from "react-snowfall";
@@ -21,7 +21,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <ThemeProvider theme={theme} defaultMode={"system"}>
             <CssBaseline enableColorScheme />
-            <UserProvider>
+            <SessionProvider
+                refetchInterval={Number.parseInt(process.env["NEXT_PUBLIC_REFRESH_INTERVAL_SECONDS"] ?? "0")}
+            >
                 <LocalizationProvider dateAdapter={AdapterLuxon} adapterLocale="nb-NO">
                     {showSnow && (
                         <Snowfall
@@ -39,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <Component {...pageProps} />
                     </NuqsAdapter>
                 </LocalizationProvider>
-            </UserProvider>
+            </SessionProvider>
         </ThemeProvider>
     );
 }

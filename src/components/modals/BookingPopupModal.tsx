@@ -7,6 +7,7 @@ import React, { useState } from "react";
 
 import { hasWaitingList } from "@/lib/helpers/popularity";
 import { post } from "@/lib/helpers/requests";
+import { useUser } from "@/lib/hooks/useUser";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
@@ -22,6 +23,7 @@ const BookingPopupModal = ({
     _class: RezervoClass;
     action: BookingPopupAction;
 }) => {
+    const { token } = useUser();
     const { mutateSessionsIndex } = useUserSessionsIndex(chain);
     const { mutateUserSessions } = useUserSessions();
     const [bookingLoading, setBookingLoading] = useState(false);
@@ -31,10 +33,12 @@ const BookingPopupModal = ({
     )})`;
 
     async function book() {
+        if (token == null) return; // TODO: error handling
         setBookingLoading(true);
         await post(`${chain}/book`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "authProxy",
+            mode: "client",
+            accessToken: token,
         });
         await mutateSessionsIndex();
         await mutateUserSessions();
@@ -43,10 +47,12 @@ const BookingPopupModal = ({
     }
 
     async function cancelBooking() {
+        if (token == null) return; // TODO: error handling
         setBookingLoading(true);
         await post(`${chain}/cancel-booking`, {
             body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "authProxy",
+            mode: "client",
+            accessToken: token,
         });
         await mutateSessionsIndex();
         await mutateUserSessions();
