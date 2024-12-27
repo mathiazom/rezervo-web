@@ -11,6 +11,7 @@ import React from "react";
 
 import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
 import ModalWrapper from "@/components/modals/ModalWrapper";
+import SubHeader from "@/components/modals/SubHeader";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
@@ -147,9 +148,7 @@ export default function Agenda({
                                 {PLANNED_SESSIONS_NEXT_WHOLE_WEEKS} ukene. Kontroller at planen din stemmer overens med
                                 treningssenteret sin timeplan.
                             </Alert>
-                            <Typography variant="h6" sx={{ fontSize: 18 }}>
-                                Utdaterte timer
-                            </Typography>
+                            <SubHeader title={"Utdaterte timer"} />
                             {Object.entries(missingClassConfigs).flatMap(([chain, classConfigs]) =>
                                 classConfigs.map((classConfig) => (
                                     <AgendaEntry
@@ -161,31 +160,14 @@ export default function Agenda({
                             )}
                         </Box>
                     )}
-                    <Box>
-                        <Typography variant="h6" sx={{ fontSize: 18 }}>
-                            Mine bookinger
-                        </Typography>
-                        {Object.keys(bookedSessionsDayMap).length === 0 && (
-                            <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
-                                Du har ingen bookinger
-                            </Typography>
-                        )}
-                    </Box>
+                    <SubHeader
+                        title={"Mine bookinger"}
+                        placeholder={"Du har ingen bookinger"}
+                        showPlaceholder={Object.keys(bookedSessionsDayMap).length === 0}
+                    />
                     <AgendaDays dayMap={bookedSessionsDayMap} />
-                    <Box>
-                        <Typography variant="h6" sx={{ fontSize: 18, pt: 2 }}>
-                            Planlagte timer
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            style={{
-                                color: theme.palette.grey[600],
-                                fontSize: 15,
-                            }}
-                        >
-                            Disse timene vil bli booket automatisk
-                        </Typography>
-                    </Box>
+                    <Box height={2} />
+                    <SubHeader title={"Planlagte timer"} description={"Disse timene vil bli booket automatisk"} />
                     {inactiveChains.length > 0 &&
                         (inactiveChains.length === Object.keys(chainConfigs).length ? (
                             <Alert severity={"info"} icon={<PauseCircleRounded />}>

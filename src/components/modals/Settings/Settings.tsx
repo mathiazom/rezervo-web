@@ -24,6 +24,7 @@ import ModalWrapper from "@/components/modals/ModalWrapper";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
 import Memberships from "@/components/modals/Settings/Memberships/Memberships";
 import PushNotifications from "@/components/modals/Settings/PushNotifications";
+import SubHeader from "@/components/modals/SubHeader";
 import { INSTALL_PROMPT_DESCRIPTION } from "@/components/utils/PWAInstallPrompt";
 import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
@@ -202,14 +203,14 @@ export default function Settings({
                     {features && features.classReminderNotifications && (
                         <>
                             <FormGroup sx={{ py: 2 }}>
-                                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, pb: 1 }}>
-                                    <SvgIcon fontSize={"small"} sx={{ color: theme.palette.primary.contrastText }}>
-                                        <SlackSvgIcon />
-                                    </SvgIcon>
-                                    <Typography variant="h6" sx={{ fontSize: 18 }}>
-                                        Slack
-                                    </Typography>
-                                </Box>
+                                <SubHeader
+                                    title={"Slack"}
+                                    startIcon={
+                                        <SvgIcon fontSize={"small"} sx={{ color: theme.palette.primary.contrastText }}>
+                                            <SlackSvgIcon />
+                                        </SvgIcon>
+                                    }
+                                />
                                 <FormLabel>
                                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                                         <Typography

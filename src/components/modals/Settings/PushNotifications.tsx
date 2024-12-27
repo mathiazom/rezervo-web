@@ -3,6 +3,7 @@ import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { Box, CircularProgress, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
+import SubHeader from "@/components/modals/SubHeader";
 import { usePushNotificationSubscription } from "@/lib/hooks/usePushNotificationSubscription";
 import { base64ToUint8Array } from "@/lib/utils/base64Utils";
 
@@ -80,12 +81,7 @@ const PushNotifications = () => {
     return (
         <>
             <FormGroup>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, pb: 1 }}>
-                    <Vibration fontSize={"small"} />
-                    <Typography variant="h6" sx={{ fontSize: 18 }}>
-                        Push-varsler
-                    </Typography>
-                </Box>
+                <SubHeader title={"Push-varsler"} startIcon={<Vibration fontSize={"small"} />} />
                 <FormLabel disabled={!isWebPushSupported || subscriptionIsLoading}>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                         <Typography

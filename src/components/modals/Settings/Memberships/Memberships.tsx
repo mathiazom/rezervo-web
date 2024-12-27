@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import AddMembershipDialog from "@/components/modals/Settings/Memberships/AddMembershipDialog";
 import ChainMembership from "@/components/modals/Settings/Memberships/ChainMembership";
 import MembershipLoginModal from "@/components/modals/Settings/Memberships/MembershipLoginModal";
+import SubHeader from "@/components/modals/SubHeader";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
 
@@ -29,9 +30,7 @@ function Memberships({
     const hasAllMemberships = Object.keys(chainConfigs).length === chainProfiles.length;
     return (
         <>
-            <Typography variant="h6" sx={{ fontSize: 18 }}>
-                Mine medlemskap
-            </Typography>
+            <SubHeader title={"Mine medlemskap"} sx={{}} />
             {Object.keys(chainConfigs).length === 0 && (
                 <Alert severity={"info"}>
                     <AlertTitle>

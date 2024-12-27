@@ -4,36 +4,32 @@ import React, { ReactNode } from "react";
 
 import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
 import ModalWrapper from "@/components/modals/ModalWrapper";
+import SubHeader from "@/components/modals/SubHeader";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { ChainProfile } from "@/types/chain";
 import { CommunityUser, UserRelationship } from "@/types/community";
 
 const CommunityUserList = ({
     title,
-    defaultText,
+    placeholder,
     communityUsers,
     chainProfiles,
     badge,
 }: {
     title: string;
-    defaultText: string;
+    placeholder: string;
     communityUsers: CommunityUser[];
     chainProfiles: ChainProfile[];
     badge?: ReactNode;
 }) => {
     return (
         <Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography variant="h6" sx={{ fontSize: 18 }}>
-                    {title}
-                </Typography>
-                {badge}
-            </Box>
-            {communityUsers.length === 0 && (
-                <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
-                    {defaultText}
-                </Typography>
-            )}
+            <SubHeader
+                title={title}
+                endIcon={badge}
+                placeholder={placeholder}
+                showPlaceholder={communityUsers.length === 0}
+            />
             {communityUsers.length > 0 && <Divider sx={{ mt: 1 }} />}
             {communityUsers.map((cu) => (
                 <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
@@ -51,13 +47,13 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
         return (
             <CommunityUserList
                 title={"Venneforespørsler"}
-                defaultText={"Du har ingen ubesvarte venneforespørsler"}
+                placeholder={"Du har ingen ubesvarte venneforespørsler"}
                 communityUsers={friendRequests}
                 chainProfiles={chainProfiles}
                 badge={
                     friendRequests.length > 0 && (
                         <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
-                            <Badge sx={{ ml: 2 }} badgeContent={friendRequests.length} color={"error"} />
+                            <Badge sx={{ ml: 0.3 }} badgeContent={friendRequests.length} color={"error"} />
                         </Tooltip>
                     )
                 }
@@ -82,7 +78,7 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                             {friendRequests.length > 0 && <FriendRequests />}
                             <CommunityUserList
                                 title={"Dine venner"}
-                                defaultText={"Du har ingen venner"}
+                                placeholder={"Du har ingen venner"}
                                 communityUsers={
                                     community?.users.filter((user) => user.relationship === UserRelationship.FRIEND) ??
                                     []
@@ -91,7 +87,7 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                             />
                             <CommunityUserList
                                 title={"Personer du kanskje kjenner"}
-                                defaultText={"Du har ingen venneforslag"}
+                                placeholder={"Du har ingen venneforslag"}
                                 communityUsers={
                                     community?.users.filter(
                                         (user) =>
