@@ -24,7 +24,7 @@ function createRequestInit(method: HTTP_METHOD, options?: RequestOptions): Reque
 }
 
 function buildInternalBackendPath(path: string): string {
-    const host = process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
+    const host = global.process.env["INTERNAL_CONFIG_HOST"] ?? process.env["NEXT_PUBLIC_CONFIG_HOST"];
     return `${host}/${path}`;
 }
 

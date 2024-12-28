@@ -1,13 +1,18 @@
+import { unstable_noStore as noStore } from "next/cache";
+
+function requireEnv(env: string): string {
+    noStore();
+    const value = global.process.env[env];
+    if (!value) {
+        throw new Error(`Missing environment variable: ${env}`);
+    }
+    return value;
+}
+
 export const GET = async () => {
-    const baseUrl = process.env["FUSIONAUTH_URL"];
-    if (baseUrl == null) {
-        throw new Error("FUSIONAUTH_URL not set");
-    }
+    const baseUrl = requireEnv("FUSIONAUTH_URL");
     const signOutUrl = new URL("/oauth2/logout", baseUrl);
-    const clientId = process.env["FUSIONAUTH_CLIENT_ID"];
-    if (clientId == null) {
-        throw new Error("FUSIONAUTH_CLIENT_ID not set");
-    }
+    const clientId = requireEnv("FUSIONAUTH_CLIENT_ID");
     signOutUrl.searchParams.append("client_id", clientId);
     return Response.json(signOutUrl.toString());
 };

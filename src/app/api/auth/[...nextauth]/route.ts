@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from "next/cache";
 import NextAuth, { Account, AuthOptions, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
@@ -5,7 +6,8 @@ import { CustomJWT, CustomSession, isCustomJWT } from "@/lib/helpers/auth/auth";
 import { buildFusionAuthProvider, refreshTokenWithFusionAuth } from "@/lib/helpers/auth/fusionAuth";
 
 function requireEnv(env: string): string {
-    const value = process.env[env];
+    noStore();
+    const value = global.process.env[env];
     if (!value) {
         throw new Error(`Missing environment variable: ${env}`);
     }

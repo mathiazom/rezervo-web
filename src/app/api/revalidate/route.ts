@@ -6,7 +6,7 @@ import { fetchActiveChains } from "@/lib/helpers/fetchers";
 export const GET = async (req: NextRequest) => {
     const secret = req.nextUrl.searchParams.get("secret");
 
-    if (secret !== process.env["REVALIDATION_SECRET_TOKEN"]) {
+    if (secret !== global.process.env["REVALIDATION_SECRET_TOKEN"]) {
         return Response.json({ message: "Invalid secret" }, { status: 401 });
     }
 
