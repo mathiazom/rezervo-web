@@ -38,14 +38,14 @@ const Switch = styled(MaterialUISwitch)(({ theme }) => ({
     "& .MuiSwitch-switchBase": {
         "&.Mui-checked": {
             "& + .MuiSwitch-track": {
-                '[data-mui-color-scheme="light"] &': {
+                "@media (prefers-color-scheme: dark)": {
                     backgroundColor: theme.palette.primary.main,
                 },
             },
         },
     },
     "& .MuiSwitch-track": {
-        '[data-mui-color-scheme="light"] &': {
+        "@media (prefers-color-scheme: dark)": {
             backgroundColor: "#000",
         },
     },

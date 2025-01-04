@@ -32,7 +32,7 @@ export default function ModalWrapper({
                 boxShadow: 24,
                 p: 4,
                 backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
+                "@media (prefers-color-scheme: dark)": {
                     backgroundColor: "#111",
                 },
             }}

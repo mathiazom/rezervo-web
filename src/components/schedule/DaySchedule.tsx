@@ -90,7 +90,7 @@ function DaySchedule({
                     dayIsToday
                         ? {
                               backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.1, 255),
-                              '[data-mui-color-scheme="dark"] &': {
+                              "@media (prefers-color-scheme: dark)": {
                                   backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.2, 0),
                               },
                           }

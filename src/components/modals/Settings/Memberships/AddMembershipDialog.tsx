@@ -25,7 +25,7 @@ function AddMembershipDialog({
             PaperProps={{
                 sx: {
                     backgroundColor: "white",
-                    '[data-mui-color-scheme="dark"] &': {
+                    "@media (prefers-color-scheme: dark)": {
                         backgroundColor: "black",
                     },
                 },

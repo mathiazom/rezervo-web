@@ -110,7 +110,7 @@ export default function ClassInfo({
                         height: "1.5rem",
                         width: "1.5rem",
                         backgroundColor: color(false),
-                        '[data-mui-color-scheme="dark"] &': {
+                        "@media (prefers-color-scheme: dark)": {
                             backgroundColor: color(true),
                         },
                     }}

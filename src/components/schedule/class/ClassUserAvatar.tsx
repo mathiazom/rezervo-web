@@ -48,7 +48,7 @@ export default function ClassUserAvatar({
                                     },
                                     borderColor: "white",
                                     backgroundColor: "white",
-                                    '[data-mui-color-scheme="dark"] &': {
+                                    "@media (prefers-color-scheme: dark)": {
                                         borderColor: "#191919",
                                         backgroundColor: "#191919",
                                     },

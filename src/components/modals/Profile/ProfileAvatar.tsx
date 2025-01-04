@@ -79,7 +79,7 @@ function ProfileAvatar({
                                 color: blue[500],
                                 borderColor: "white",
                                 backgroundColor: "white",
-                                '[data-mui-color-scheme="dark"] &': {
+                                "@media (prefers-color-scheme: dark)": {
                                     borderColor: "#191919",
                                     backgroundColor: "#191919",
                                 },
@@ -103,7 +103,7 @@ function ProfileAvatar({
                                     backgroundColor: blue[500],
                                     color: "white",
                                     borderColor: "white",
-                                    '[data-mui-color-scheme="dark"] &': {
+                                    "@media (prefers-color-scheme: dark)": {
                                         borderColor: "#191919",
                                         color: "#191919",
                                     },
@@ -128,7 +128,7 @@ function ProfileAvatar({
                                     backgroundColor: blue[500],
                                     color: "white",
                                     borderColor: "white",
-                                    '[data-mui-color-scheme="dark"] &': {
+                                    "@media (prefers-color-scheme: dark)": {
                                         borderColor: "#191919",
                                         color: "#191919",
                                     },
@@ -176,7 +176,7 @@ function ProfileAvatar({
                                 fontSize: 14,
                                 color: "white",
 
-                                '[data-mui-color-scheme="dark"] &': {
+                                "@media (prefers-color-scheme: dark)": {
                                     color: "#191919",
                                 },
                             }}
