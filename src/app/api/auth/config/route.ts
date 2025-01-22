@@ -1,3 +1,5 @@
+import { TAuthConfig } from "react-oauth2-code-pkce/dist/types";
+
 import { requireServerEnv } from "@/lib/helpers/env";
 
 export const GET = () => {
@@ -7,5 +9,7 @@ export const GET = () => {
         logoutEndpoint: `${requireServerEnv("FUSIONAUTH_URL")}/oauth2/logout`,
         logoutRedirect: requireServerEnv("HOST"),
         redirectUri: requireServerEnv("HOST"),
-    });
+        // TODO: retrieve from FusionAuth
+        refreshTokenExpiresIn: Number(requireServerEnv("FUSIONAUTH_REFRESH_TOKEN_EXPIRES_IN_SECONDS")),
+    } satisfies Partial<TAuthConfig>);
 };
