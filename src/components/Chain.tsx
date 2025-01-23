@@ -1,5 +1,5 @@
 import { Box, Divider, Stack } from "@mui/material";
-import { parseAsBoolean, useQueryState } from "nuqs";
+import { parseAsBoolean, parseAsString, useQueryState } from "nuqs";
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -88,21 +88,13 @@ function Chain({
     const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFilter[]>([]);
     const [selectedChain, setSelectedChain] = useState<string | null>(null);
 
-    const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
+    const [weekParam] = useQueryState(
+        ISO_WEEK_QUERY_PARAM,
+        parseAsString.withDefault(compactISOWeekString(LocalizedDateTime.now())),
+    );
 
     const [classIdParam, setClassIdParam] = useQueryState(CLASS_ID_QUERY_PARAM);
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
-
-    useEffect(
-        () => {
-            if (weekParam === null) {
-                setWeekParam(compactISOWeekString(LocalizedDateTime.now()));
-            }
-        },
-        // TODO: experiencing frozen Chromium if using proper deps array...
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [],
-    );
 
     useEffect(() => {
         const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;

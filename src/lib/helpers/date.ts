@@ -1,9 +1,12 @@
 import { DateTime, Info, Settings } from "luxon";
+import { IfValid } from "luxon/src/_util";
 
 import { ExcludeClassTimeFilter, RezervoClass } from "@/types/chain";
 
-export const compactISOWeekString = (date: DateTime): string | null =>
-    date.toISOWeekDate()?.replace("-", "").slice(0, 7) ?? null;
+export const compactISOWeekString = <IsValid extends boolean>(
+    date: DateTime<IsValid>,
+): IfValid<string, null, IsValid> =>
+    date.toISOWeekDate()?.replace("-", "").slice(0, 7) as IfValid<string, null, IsValid>;
 
 export const fromCompactISOWeekString = (weekString: string): DateTime | null =>
     LocalizedDateTime.fromObject({
