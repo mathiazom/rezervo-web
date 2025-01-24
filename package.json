@@ -44,6 +44,8 @@
         "zustand": "^5.0.2"
     },
     "devDependencies": {
+        "@tsconfig/next": "^2.0.3",
+        "@tsconfig/strictest": "^2.0.5",
         "@types/js-cookie": "^3.0.6",
         "@types/luxon": "^3.4.2",
         "@types/node": "^22.10.2",
