@@ -1,5 +1,5 @@
 import { PWAInstallElement } from "@khmyznikov/pwa-install";
-import PWAInstall from "@khmyznikov/pwa-install/dist/pwa-install.react.js";
+import PWAInstall from "@khmyznikov/pwa-install/react-legacy";
 import React, { useEffect, useRef } from "react";
 
 import { getStoredPWAInstallDismissed, storePWAInstallDismissed } from "@/lib/helpers/storage";
@@ -18,11 +18,8 @@ function PWAInstallPrompt({
 }) {
     const pwaInstallRef = useRef<PWAInstallElement | null>(null);
 
-    const isAppleDevice =
-        // @ts-expect-error https://github.com/khmyznikov/pwa-install?tab=readme-ov-file#supported-properties-readonly
-        pwaInstallRef.current?.isAppleMobilePlatform || pwaInstallRef.current?.isAppleDesktopPlatform;
+    const isAppleDevice = pwaInstallRef.current?.isAppleMobilePlatform || pwaInstallRef.current?.isAppleDesktopPlatform;
     const isInstalled =
-        // @ts-expect-error https://github.com/khmyznikov/pwa-install?tab=readme-ov-file#supported-properties-readonly
         pwaInstallRef.current?.isUnderStandaloneMode || pwaInstallRef.current?.isInstallAvailable === false;
 
     useEffect(() => {

@@ -1,34 +1,11 @@
 {
+    "extends": ["@tsconfig/strictest/tsconfig.json", "@tsconfig/next/tsconfig.json"],
     "compilerOptions": {
         "target": "es5",
         "lib": ["dom", "dom.iterable", "webworker", "esnext"],
-        "allowJs": true,
-        "skipLibCheck": true,
         "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "exactOptionalPropertyTypes": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUncheckedIndexedAccess": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "allowUnusedLabels": false,
-        "allowUnreachableCode": false,
         "forceConsistentCasingInFileNames": true,
-        "noEmit": true,
-        "esModuleInterop": true,
-        "module": "esnext",
-        "moduleResolution": "bundler",
         "resolveJsonModule": true,
-        "isolatedModules": true,
-        "jsx": "preserve",
-        "incremental": true,
-        "plugins": [
-            {
-                "name": "next"
-            }
-        ],
         "types": ["@serwist/next/typings"],
         "paths": {
             "@/*": ["./src/*"]
