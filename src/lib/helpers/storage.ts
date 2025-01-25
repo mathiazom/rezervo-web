@@ -62,13 +62,15 @@ export function getStoredExcludeClassTimeFilters(): ExcludeClassTimeFiltersType 
     if (!Array.isArray(storedExcludeClassTimeFilters)) {
         return storedExcludeClassTimeFilters;
     } else {
-        storedExcludeClassTimeFilters.map((excludeClassTimeFilter) => {
-            if (excludeClassTimeFilter.enabled === undefined) {
-                excludeClassTimeFilter.enabled = true;
-            }
-            return excludeClassTimeFilter;
-        });
-        return { enabled: true, filters: storedExcludeClassTimeFilters };
+        const filters = {
+            enabled: true,
+            filters: storedExcludeClassTimeFilters.map((f) => ({
+                ...f,
+                enabled: f.enabled ?? true,
+            })),
+        };
+        storeExcludeClassTimeFilters(filters);
+        return filters;
     }
 }
 
