@@ -9,7 +9,7 @@ Web client for [`rezervo`](https://github.com/mathiazom/rezervo), including book
 
 #### 🧑‍🔧 Setup
 
-1. Install dependencies using pnpm
+1. Install dependencies using [pnpm](https://pnpm.io/)
    ```shell
    pnpm install
    ```
