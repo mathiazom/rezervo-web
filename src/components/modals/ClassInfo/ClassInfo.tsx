@@ -31,6 +31,7 @@ import { isClassInThePast } from "@/lib/helpers/date";
 import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { post } from "@/lib/helpers/requests";
+import { useLiveClassData } from "@/lib/hooks/useLiveClassData";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
@@ -42,17 +43,18 @@ import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 export default function ClassInfo({
     chain,
-    _class,
+    initialClassData,
     classPopularity,
     onUpdateConfig,
 }: {
     chain: ChainIdentifier;
-    _class: RezervoClass;
+    initialClassData: RezervoClass;
     classPopularity: ClassPopularity;
     onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
     const { token, authStatus } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
+    const { liveClassData: _class } = useLiveClassData(chain, initialClassData);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
         useUserSessionsIndex(chain);

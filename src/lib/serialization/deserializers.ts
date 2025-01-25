@@ -8,7 +8,7 @@ import {
 } from "@/types/serialization";
 import { BaseUserSession } from "@/types/userSessions";
 
-function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
+export function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
     return {
         ...classDTO,
         startTime: LocalizedDateTime.fromISO(classDTO.startTime),

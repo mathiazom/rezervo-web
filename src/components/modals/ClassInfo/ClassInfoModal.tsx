@@ -25,7 +25,7 @@ const ClassInfoModal = ({
                 {classInfoClass && (
                     <ClassInfo
                         chain={chain}
-                        _class={classInfoClass}
+                        initialClassData={classInfoClass}
                         classPopularity={
                             classPopularityIndex[classRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
                         }
