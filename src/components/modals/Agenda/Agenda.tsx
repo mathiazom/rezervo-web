@@ -10,6 +10,8 @@ import { Alert, AlertTitle, Avatar, Box, Stack, Typography, useTheme } from "@mu
 import React from "react";
 
 import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
+import ModalWrapper from "@/components/modals/ModalWrapper";
+import SubHeader from "@/components/modals/SubHeader";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
@@ -111,40 +113,7 @@ export default function Agenda({
     const inactiveChains = Object.keys(chainConfigs).filter((chain) => !chainConfigs[chain]?.active);
 
     return (
-        <Box
-            sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                width: "95%",
-                maxHeight: "80%",
-                overflowY: "auto",
-                maxWidth: 500,
-                minHeight: 300,
-                transform: "translate(-50%, -50%)",
-                borderRadius: "0.25em",
-                boxShadow: 24,
-                p: 4,
-                backgroundColor: "white",
-                '[data-mui-color-scheme="dark"] &': {
-                    backgroundColor: "#181818",
-                },
-            }}
-        >
-            <Box
-                sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: 1,
-                    paddingBottom: 2,
-                }}
-            >
-                {userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}
-                <Typography variant="h6" component="h2">
-                    Min timeplan
-                </Typography>
-            </Box>
+        <ModalWrapper title={"Min timeplan"} icon={userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}>
             {Object.keys(chainConfigs).length === 0 ? (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>Mangler medlemskap</AlertTitle>
@@ -179,9 +148,7 @@ export default function Agenda({
                                 {PLANNED_SESSIONS_NEXT_WHOLE_WEEKS} ukene. Kontroller at planen din stemmer overens med
                                 treningssenteret sin timeplan.
                             </Alert>
-                            <Typography variant="h6" sx={{ fontSize: 18 }}>
-                                Utdaterte timer
-                            </Typography>
+                            <SubHeader title={"Utdaterte timer"} />
                             {Object.entries(missingClassConfigs).flatMap(([chain, classConfigs]) =>
                                 classConfigs.map((classConfig) => (
                                     <AgendaEntry
@@ -193,31 +160,14 @@ export default function Agenda({
                             )}
                         </Box>
                     )}
-                    <Box>
-                        <Typography variant="h6" sx={{ fontSize: 18 }}>
-                            Mine bookinger
-                        </Typography>
-                        {Object.keys(bookedSessionsDayMap).length === 0 && (
-                            <Typography variant={"body2"} sx={{ opacity: 0.6, fontStyle: "italic" }}>
-                                Du har ingen bookinger
-                            </Typography>
-                        )}
-                    </Box>
+                    <SubHeader
+                        title={"Mine bookinger"}
+                        placeholder={"Du har ingen bookinger"}
+                        showPlaceholder={Object.keys(bookedSessionsDayMap).length === 0}
+                    />
                     <AgendaDays dayMap={bookedSessionsDayMap} />
-                    <Box>
-                        <Typography variant="h6" sx={{ fontSize: 18, pt: 2 }}>
-                            Planlagte timer
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            style={{
-                                color: theme.palette.grey[600],
-                                fontSize: 15,
-                            }}
-                        >
-                            Disse timene vil bli booket automatisk
-                        </Typography>
-                    </Box>
+                    <Box height={2} />
+                    <SubHeader title={"Planlagte timer"} description={"Disse timene vil bli booket automatisk"} />
                     {inactiveChains.length > 0 &&
                         (inactiveChains.length === Object.keys(chainConfigs).length ? (
                             <Alert severity={"info"} icon={<PauseCircleRounded />}>
@@ -276,6 +226,6 @@ export default function Agenda({
                     </Stack>
                 </Box>
             )}
-        </Box>
+        </ModalWrapper>
     );
 }
