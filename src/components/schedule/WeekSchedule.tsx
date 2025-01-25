@@ -3,7 +3,7 @@ import React from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { isToday } from "@/lib/helpers/date";
-import { ChainIdentifier, ExcludeClassTimeFilter, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
+import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
 import { ClassPopularityIndex } from "@/types/popularity";
 
 function WeekSchedule({
@@ -23,7 +23,7 @@ function WeekSchedule({
     weekSchedule: RezervoWeekSchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
-    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;

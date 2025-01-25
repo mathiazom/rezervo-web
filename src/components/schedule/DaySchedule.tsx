@@ -6,14 +6,14 @@ import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
 import {
     getCapitalizedWeekday,
     isClassInThePast,
-    isClassExcludedByTimeFilter,
     isDayPassed,
     isToday,
     LocalizedDateTime,
+    isClassExcludedByTimeFilters,
 } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { ChainIdentifier, ExcludeClassTimeFilter, RezervoClass, RezervoDaySchedule } from "@/types/chain";
+import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoDaySchedule } from "@/types/chain";
 import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({
@@ -33,7 +33,7 @@ function DaySchedule({
     daySchedule: RezervoDaySchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
-    excludeClassTimeFilters: ExcludeClassTimeFilter[];
+    excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
@@ -49,7 +49,7 @@ function DaySchedule({
                 (c) =>
                     selectedLocationIds.includes(c.location.id) &&
                     selectedCategories.includes(c.activity.category) &&
-                    !excludeClassTimeFilters.some((filter) => isClassExcludedByTimeFilter(c, filter)),
+                    !isClassExcludedByTimeFilters(c, excludeClassTimeFilters),
             ),
         [daySchedule.classes, selectedLocationIds, selectedCategories, excludeClassTimeFilters],
     );

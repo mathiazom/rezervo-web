@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 
-import { ChainIdentifier, ExcludeClassTimeFilter } from "@/types/chain";
+import { ChainIdentifier, ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/chain";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
 const STORAGE_KEYS = {
@@ -49,12 +49,29 @@ export function getStoredSelectedCategories(chainIdentifier: string): string[] |
     return getStoredValue<string[]>(STORAGE_KEYS.selectedCategories(chainIdentifier), true);
 }
 
-export function storeExcludeClassTimeFilters(excludeClassTimeFilters: ExcludeClassTimeFilter[]) {
+export function storeExcludeClassTimeFilters(excludeClassTimeFilters: ExcludeClassTimeFiltersType) {
     storeValue(STORAGE_KEYS.excludeClassTimeFilters, excludeClassTimeFilters);
 }
 
-export function getStoredExcludeClassTimeFilters(): ExcludeClassTimeFilter[] | null {
-    return getStoredValue<ExcludeClassTimeFilter[]>(STORAGE_KEYS.excludeClassTimeFilters, true);
+export function getStoredExcludeClassTimeFilters(): ExcludeClassTimeFiltersType | null {
+    const storedExcludeClassTimeFilters = getStoredValue<ExcludeClassTimeFiltersType | ExcludeClassTimeFilter[]>(
+        STORAGE_KEYS.excludeClassTimeFilters,
+        true,
+    );
+    // todo: this is to migrate old client-side data, remove else-case once users have been given time to migrate
+    if (!Array.isArray(storedExcludeClassTimeFilters)) {
+        return storedExcludeClassTimeFilters;
+    } else {
+        const filters = {
+            enabled: true,
+            filters: storedExcludeClassTimeFilters.map((f) => ({
+                ...f,
+                enabled: f.enabled ?? true,
+            })),
+        };
+        storeExcludeClassTimeFilters(filters);
+        return filters;
+    }
 }
 
 export function storePreLoginPath(path: string) {
