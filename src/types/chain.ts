@@ -112,4 +112,10 @@ export type ExcludeClassTimeFilter = {
     startMinute: MinuteNumbers;
     endHour: HourNumbers;
     endMinute: MinuteNumbers;
+    enabled: boolean;
+};
+
+export type ExcludeClassTimeFiltersType = {
+    enabled: boolean;
+    filters: ExcludeClassTimeFilter[];
 };

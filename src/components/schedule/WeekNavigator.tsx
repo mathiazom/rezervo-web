@@ -12,7 +12,7 @@ import ScheduleFiltersDialog, {
 } from "@/components/modals/ScheduleFiltersDialog";
 import { ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
-import { ActivityCategory, ExcludeClassTimeFilter, RezervoChain } from "@/types/chain";
+import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
 
 export default function WeekNavigator({
     chain,
@@ -36,8 +36,8 @@ export default function WeekNavigator({
     allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
-    excludeClassTimeFilters: ExcludeClassTimeFilter[];
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFiltersType;
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
 }) {
     const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
     const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
@@ -52,7 +52,7 @@ export default function WeekNavigator({
     }, [selectedCategories, allCategories]);
 
     const isClassTimeFiltered = useMemo(() => {
-        return excludeClassTimeFilters.length > 0;
+        return excludeClassTimeFilters.enabled && excludeClassTimeFilters.filters.some((filter) => filter.enabled);
     }, [excludeClassTimeFilters]);
 
     const isFiltered = isLocationFiltered || isCategoryFiltered || isClassTimeFiltered;
@@ -149,7 +149,7 @@ export default function WeekNavigator({
                                     backgroundColor: EXCLUDE_CLASS_TIME_COLOR[500],
                                 }}
                             >
-                                {excludeClassTimeFilters.length}
+                                {excludeClassTimeFilters.filters.filter((filter) => filter.enabled).length}
                             </Avatar>
                         )}
                     </Box>

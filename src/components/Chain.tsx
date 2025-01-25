@@ -34,7 +34,7 @@ import {
     BookingPopupAction,
     BookingPopupState,
     ChainProfile,
-    ExcludeClassTimeFilter,
+    ExcludeClassTimeFiltersType,
     RezervoChain,
     RezervoClass,
     RezervoWeekSchedule,
@@ -85,7 +85,10 @@ function Chain({
 
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
     const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
-    const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFilter[]>([]);
+    const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFiltersType>({
+        enabled: true,
+        filters: [],
+    });
     const [selectedChain, setSelectedChain] = useState<string | null>(null);
 
     const [weekParam] = useQueryState(
@@ -102,7 +105,7 @@ function Chain({
         setSelectedCategories(
             getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories.map((ac) => ac.name),
         );
-        setExcludeClassTimeFilters(getStoredExcludeClassTimeFilters() ?? []);
+        setExcludeClassTimeFilters(getStoredExcludeClassTimeFilters() ?? { enabled: true, filters: [] });
         setSelectedChain(chain.profile.identifier);
     }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
 

@@ -1,7 +1,7 @@
 import { DateTime, Info, Settings } from "luxon";
 import { IfValid } from "luxon/src/_util";
 
-import { ExcludeClassTimeFilter, RezervoClass } from "@/types/chain";
+import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType, RezervoClass } from "@/types/chain";
 
 export const compactISOWeekString = <IsValid extends boolean>(
     date: DateTime<IsValid>,
@@ -62,10 +62,26 @@ export const LocalizedDateTime: typeof DateTime = (() => {
     return DateTime;
 })();
 
+export const isClassExcludedByTimeFilters = (
+    _class: RezervoClass,
+    excludeClassTimeFilters: ExcludeClassTimeFiltersType,
+): boolean => {
+    if (!excludeClassTimeFilters.enabled) {
+        return false;
+    }
+    return excludeClassTimeFilters.filters.some((filter) => {
+        return isClassExcludedByTimeFilter(_class, filter);
+    });
+};
+
 export const isClassExcludedByTimeFilter = (
     _class: RezervoClass,
     excludeClassTimeFilter: ExcludeClassTimeFilter,
 ): boolean => {
+    if (!excludeClassTimeFilter.enabled) {
+        return false;
+    }
+
     if (
         _class.startTime.weekday !== excludeClassTimeFilter.weekday &&
         _class.endTime.weekday !== excludeClassTimeFilter.weekday

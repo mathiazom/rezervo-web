@@ -10,7 +10,7 @@ import SwipeableViews from "react-swipeable-views";
 import CategoryFilters from "@/components/modals/CategoryFilters";
 import ExcludeClassTimeFilters from "@/components/modals/ExcludeClassTimeFilters";
 import LocationFilters from "@/components/modals/LocationFilters";
-import { ActivityCategory, ExcludeClassTimeFilter, RezervoChain } from "@/types/chain";
+import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
 
 function a11yProps(index: number) {
     return {
@@ -74,8 +74,8 @@ export default function ScheduleFiltersDialog({
     allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: Dispatch<SetStateAction<string[]>>;
-    excludeClassTimeFilters: ExcludeClassTimeFilter[];
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFiltersType;
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
 }) {
     const theme = useTheme();
     const [tab, setTab] = useState(0);

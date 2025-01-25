@@ -1,6 +1,8 @@
 import { Add, DeleteForeverRounded, DeleteRounded, RemoveRounded } from "@mui/icons-material";
 import {
+    Box,
     Button,
+    Collapse,
     Divider,
     FormControl,
     FormGroup,
@@ -9,6 +11,7 @@ import {
     MenuItem,
     Select,
     Stack,
+    Switch,
     Tooltip,
     Typography,
     useTheme,
@@ -20,14 +23,14 @@ import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { storeExcludeClassTimeFilters } from "@/lib/helpers/storage";
-import { ExcludeClassTimeFilter } from "@/types/chain";
+import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/chain";
 
 export default function ExcludeClassTimeFilters({
     excludeClassTimeFilters,
     setExcludeClassTimeFilters,
 }: {
-    excludeClassTimeFilters: ExcludeClassTimeFilter[];
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFilter[]>>;
+    excludeClassTimeFilters: ExcludeClassTimeFiltersType;
+    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
 }) {
     const theme = useTheme();
 
@@ -45,7 +48,7 @@ export default function ExcludeClassTimeFilters({
             excludeClassTimeEndTime !== null &&
             excludeClassTimeEndTime.isValid &&
             excludeClassTimeStartTime < excludeClassTimeEndTime &&
-            !excludeClassTimeFilters.some(
+            !excludeClassTimeFilters.filters.some(
                 (it) =>
                     it.weekday === excludeClassTimeWeekday &&
                     it.startHour === excludeClassTimeStartTime.hour &&
@@ -60,6 +63,7 @@ export default function ExcludeClassTimeFilters({
                 startMinute: excludeClassTimeStartTime.minute as MinuteNumbers,
                 endHour: excludeClassTimeEndTime.hour as HourNumbers,
                 endMinute: excludeClassTimeEndTime.minute as MinuteNumbers,
+                enabled: true,
             };
         } else {
             return false;
@@ -74,10 +78,30 @@ export default function ExcludeClassTimeFilters({
             return;
         }
 
-        setExcludeClassTimeFilters((filters) => {
-            const newFilters = [...filters, validInput];
+        setExcludeClassTimeFilters((prevState) => {
+            const newFilters = { ...prevState, filters: [...prevState.filters, validInput] };
             storeExcludeClassTimeFilters(newFilters);
             return newFilters;
+        });
+    };
+
+    const toggleFilter = (excludeClassTimeFilter: ExcludeClassTimeFilter) => {
+        setExcludeClassTimeFilters((prevState) => {
+            for (const filter of prevState.filters) {
+                if (equalFilters(filter, excludeClassTimeFilter)) {
+                    filter.enabled = !filter.enabled;
+                }
+            }
+            storeExcludeClassTimeFilters(prevState);
+            return { ...prevState };
+        });
+    };
+
+    const toggleAllFilters = () => {
+        setExcludeClassTimeFilters((prevState) => {
+            const newState = { ...prevState, enabled: !prevState.enabled };
+            storeExcludeClassTimeFilters(newState);
+            return newState;
         });
     };
 
@@ -87,23 +111,27 @@ export default function ExcludeClassTimeFilters({
             a.startHour === b.startHour &&
             a.startMinute === b.startMinute &&
             a.endHour === b.endHour &&
-            a.endMinute === b.endMinute
+            a.endMinute === b.endMinute &&
+            a.enabled === b.enabled
         );
     };
 
     const removeFilter = (filter: ExcludeClassTimeFilter) => {
-        setExcludeClassTimeFilters((filters) => {
-            const newFilters = filters.filter((it) => !equalFilters(filter, it));
-            storeExcludeClassTimeFilters(newFilters);
-            return newFilters;
+        setExcludeClassTimeFilters((prevState) => {
+            const newState = {
+                ...prevState,
+                filters: prevState.filters.filter((it) => !equalFilters(filter, it)),
+            };
+            storeExcludeClassTimeFilters(newState);
+            return newState;
         });
     };
 
     const clearFilters = () => {
-        setExcludeClassTimeFilters(() => {
-            const empty: ExcludeClassTimeFilter[] = [];
-            storeExcludeClassTimeFilters(empty);
-            return empty;
+        setExcludeClassTimeFilters((prevState) => {
+            const newState = { ...prevState, filters: [] };
+            storeExcludeClassTimeFilters(newState);
+            return newState;
         });
     };
 
@@ -129,19 +157,26 @@ export default function ExcludeClassTimeFilters({
                     gap: 0.5,
                 }}
             >
-                <Typography
-                    variant="h6"
-                    sx={{
-                        textAlign: "center",
-                        fontSize: 18,
-                    }}
-                >
-                    Skjul tidsrom
-                </Typography>
+                <Box sx={{ position: "relative", alignItems: "center" }}>
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            textAlign: "left",
+                            fontSize: 18,
+                        }}
+                    >
+                        Skjul tidsrom
+                    </Typography>
+                    <Switch
+                        checked={excludeClassTimeFilters.enabled}
+                        onChange={toggleAllFilters}
+                        sx={{ position: "absolute", right: 0, top: 0, marginTop: -0.5 }}
+                    />
+                </Box>
                 <Typography
                     variant="body2"
                     sx={{
-                        textAlign: "center",
+                        textAlign: "left",
                         color: theme.palette.grey[600],
                         fontSize: 14,
                         mb: 1,
@@ -150,169 +185,181 @@ export default function ExcludeClassTimeFilters({
                     Legg til tidsrom du vil skjule fra timeplanen.
                 </Typography>
             </Stack>
-            <form
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    addFilter();
-                }}
-            >
-                <FormControl component="fieldset">
-                    <FormGroup sx={{ mt: 1 }}>
-                        <Stack
-                            direction={"column"}
-                            sx={{
-                                gap: 2,
-                            }}
-                        >
-                            <InputLabel id="exclude-class-time-filter-weekday">Ukedag</InputLabel>
-                            <Select
-                                labelId="exclude-class-time-filter-weekday"
-                                id="exclude-class-time-select"
-                                value={excludeClassTimeWeekday}
-                                label="Ukedag"
-                                onChange={({ target: { value } }) => {
-                                    if (typeof value === "string") return;
-                                    setExcludeClassTimeWeekday(() => value);
-                                }}
-                            >
-                                {weekdays.map((day, i) => (
-                                    <MenuItem key={i} value={i + 1}>
-                                        {day}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            <Stack
-                                direction={"row"}
-                                sx={{
-                                    gap: 2,
-                                    alignItems: "center",
-                                }}
-                            >
-                                <TimePicker
-                                    label="Fra"
-                                    views={["hours", "minutes"]}
-                                    value={excludeClassTimeStartTime}
-                                    onChange={(newValue) => setExcludeClassTimeStartTime(newValue)}
-                                />
-                                <RemoveRounded />
-                                <TimePicker
-                                    label="Til"
-                                    views={["hours", "minutes"]}
-                                    value={excludeClassTimeEndTime}
-                                    onChange={(newValue) => setExcludeClassTimeEndTime(newValue)}
-                                />
-                            </Stack>
-                            <Stack
-                                direction={"row"}
-                                sx={{
-                                    gap: 1,
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Button
-                                    startIcon={<Add />}
-                                    variant={"outlined"}
-                                    type={"submit"}
-                                    disabled={!inputValid}
-                                    size="large"
-                                    fullWidth
-                                >
-                                    Skjul tidsrom
-                                </Button>
-                            </Stack>
-                        </Stack>
-                    </FormGroup>
-                </FormControl>
-            </form>
-            <Divider />
-            <Stack>
-                <Typography
-                    variant="h6"
-                    sx={{
-                        textAlign: "center",
-                        fontSize: 18,
-                    }}
-                >
-                    Skjulte tidsrom
-                </Typography>
-                <Grid2 container rowSpacing={1}>
-                    {toSortedFilters(excludeClassTimeFilters).map((filter) => (
-                        <>
-                            <Grid2
-                                size={4}
-                                sx={{
-                                    textAlign: "left",
-                                    alignContent: "center",
-                                }}
-                            >
-                                <Typography>{weekdays[filter.weekday - 1]}</Typography>
-                            </Grid2>
-                            <Grid2
-                                size={{
-                                    xs: 6,
-                                    sm: 4,
-                                }}
-                                sx={{
-                                    textAlign: "center",
-                                    alignContent: "center",
-                                }}
-                            >
-                                <Typography>
-                                    {filter.startHour.toFixed(0).padStart(2, "0")}:
-                                    {filter.startMinute.toFixed(0).padStart(2, "0")}
-                                    {" – "}
-                                    {filter.endHour.toFixed(0).padStart(2, "0")}:
-                                    {filter.endMinute.toFixed(0).padStart(2, "0")}
-                                </Typography>
-                            </Grid2>
-                            <Grid2
-                                size={{
-                                    xs: 2,
-                                    sm: 4,
-                                }}
-                                sx={{
-                                    textAlign: "right",
-                                    alignContent: "center",
-                                }}
-                            >
-                                <Tooltip title="Fjern tidsrom">
-                                    <IconButton
-                                        onClick={(event) => {
-                                            event.preventDefault();
-                                            removeFilter(filter);
-                                        }}
-                                        sx={{ opacity: 0.5 }}
-                                    >
-                                        <DeleteRounded />
-                                    </IconButton>
-                                </Tooltip>
-                            </Grid2>
-                        </>
-                    ))}
-                </Grid2>
-                {excludeClassTimeFilters.length === 0 ? (
-                    <Typography
-                        variant={"body2"}
-                        sx={{
-                            textAlign: "center",
-                            opacity: 0.6,
-                            fontStyle: "italic",
+            <Collapse in={excludeClassTimeFilters.enabled} sx={{ paddingTop: 1 }}>
+                <>
+                    <form
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            addFilter();
                         }}
                     >
-                        Du har ikke eksludert noen tidsrom.
-                    </Typography>
-                ) : (
-                    <Button
-                        startIcon={<DeleteForeverRounded />}
-                        variant={"outlined"}
-                        color={"error"}
-                        onClick={clearFilters}
-                        sx={{ mt: 2 }}
+                        <FormControl component="fieldset">
+                            <FormGroup sx={{ mt: 1 }}>
+                                <Stack
+                                    direction={"column"}
+                                    sx={{
+                                        gap: 2,
+                                    }}
+                                >
+                                    <InputLabel id="exclude-class-time-filter-weekday">Ukedag</InputLabel>
+                                    <Select
+                                        labelId="exclude-class-time-filter-weekday"
+                                        id="exclude-class-time-select"
+                                        value={excludeClassTimeWeekday}
+                                        label="Ukedag"
+                                        onChange={({ target: { value } }) => {
+                                            if (typeof value === "string") return;
+                                            setExcludeClassTimeWeekday(() => value);
+                                        }}
+                                    >
+                                        {weekdays.map((day, i) => (
+                                            <MenuItem key={i} value={i + 1}>
+                                                {day}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <Stack
+                                        direction={"row"}
+                                        sx={{
+                                            gap: 2,
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <TimePicker
+                                            label="Fra"
+                                            views={["hours", "minutes"]}
+                                            value={excludeClassTimeStartTime}
+                                            onChange={(newValue) => setExcludeClassTimeStartTime(newValue)}
+                                        />
+                                        <RemoveRounded />
+                                        <TimePicker
+                                            label="Til"
+                                            views={["hours", "minutes"]}
+                                            value={excludeClassTimeEndTime}
+                                            onChange={(newValue) => setExcludeClassTimeEndTime(newValue)}
+                                        />
+                                    </Stack>
+                                    <Stack
+                                        direction={"row"}
+                                        sx={{
+                                            gap: 1,
+                                            justifyContent: "center",
+                                        }}
+                                    >
+                                        <Button
+                                            startIcon={<Add />}
+                                            variant={"outlined"}
+                                            type={"submit"}
+                                            disabled={!inputValid}
+                                            size="large"
+                                            fullWidth
+                                        >
+                                            Skjul tidsrom
+                                        </Button>
+                                    </Stack>
+                                </Stack>
+                            </FormGroup>
+                        </FormControl>
+                    </form>
+                    <Stack
+                        sx={{
+                            justifyContent: "center",
+                            height: 50,
+                        }}
                     >
-                        Fjern alle
-                    </Button>
-                )}
-            </Stack>
+                        <Divider />
+                    </Stack>
+                    <Stack>
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                textAlign: "left",
+                                fontSize: 18,
+                            }}
+                        >
+                            Skjulte tidsrom
+                        </Typography>
+                        <Grid2 container rowSpacing={1}>
+                            {toSortedFilters(excludeClassTimeFilters.filters).map((filter) => (
+                                <>
+                                    <Grid2
+                                        size={{
+                                            xs: 2,
+                                            sm: 4,
+                                        }}
+                                        sx={{
+                                            textAlign: "left",
+                                            alignContent: "center",
+                                        }}
+                                    >
+                                        <Typography variant="body2">{weekdays[filter.weekday - 1]}</Typography>
+                                    </Grid2>
+                                    <Grid2
+                                        size={{
+                                            xs: 6,
+                                            sm: 4,
+                                        }}
+                                        sx={{
+                                            textAlign: "center",
+                                            alignContent: "center",
+                                        }}
+                                    >
+                                        <Typography variant="body2">
+                                            {filter.startHour.toFixed(0).padStart(2, "0")}:
+                                            {filter.startMinute.toFixed(0).padStart(2, "0")}
+                                            {" – "}
+                                            {filter.endHour.toFixed(0).padStart(2, "0")}:
+                                            {filter.endMinute.toFixed(0).padStart(2, "0")}
+                                        </Typography>
+                                    </Grid2>
+                                    <Grid2
+                                        size={4}
+                                        sx={{
+                                            textAlign: "right",
+                                            alignContent: "center",
+                                        }}
+                                    >
+                                        <Switch checked={filter.enabled} onChange={() => toggleFilter(filter)} />
+                                        <Tooltip title="Fjern tidsrom">
+                                            <IconButton
+                                                onClick={(event) => {
+                                                    event.preventDefault();
+                                                    removeFilter(filter);
+                                                }}
+                                                sx={{ opacity: 0.5 }}
+                                            >
+                                                <DeleteRounded />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid2>
+                                </>
+                            ))}
+                        </Grid2>
+                        {excludeClassTimeFilters.filters.length === 0 ? (
+                            <Typography
+                                variant={"body2"}
+                                sx={{
+                                    textAlign: "center",
+                                    opacity: 0.6,
+                                    fontStyle: "italic",
+                                }}
+                            >
+                                Du har ikke eksludert noen tidsrom.
+                            </Typography>
+                        ) : (
+                            <Button
+                                startIcon={<DeleteForeverRounded />}
+                                variant={"outlined"}
+                                color={"error"}
+                                onClick={clearFilters}
+                                sx={{ mt: 2 }}
+                            >
+                                Fjern alle
+                            </Button>
+                        )}
+                    </Stack>
+                </>
+            </Collapse>
         </Stack>
     );
 }
