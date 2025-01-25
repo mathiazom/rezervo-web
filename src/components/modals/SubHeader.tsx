@@ -8,7 +8,7 @@ export default function SubHeader({
     description,
     placeholder,
     showPlaceholder,
-    sx = { mb: 1 },
+    sx,
 }: {
     title: string;
     startIcon?: ReactNode;
@@ -20,7 +20,7 @@ export default function SubHeader({
 }) {
     const theme = useTheme();
     return (
-        <Box sx={sx}>
+        <Box sx={{ mb: 1, ...sx }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 {startIcon}
                 <Typography variant="h6" sx={{ fontSize: 18 }}>
