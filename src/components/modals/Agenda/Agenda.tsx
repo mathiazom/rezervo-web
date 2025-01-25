@@ -113,7 +113,7 @@ export default function Agenda({
     const inactiveChains = Object.keys(chainConfigs).filter((chain) => !chainConfigs[chain]?.active);
 
     return (
-        <ModalWrapper title={"Agenda"} icon={userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}>
+        <ModalWrapper title={"Min timeplan"} icon={userSessions.length > 0 ? <CalendarMonth /> : <CalendarToday />}>
             {Object.keys(chainConfigs).length === 0 ? (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>Mangler medlemskap</AlertTitle>
