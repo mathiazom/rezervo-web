@@ -30,7 +30,7 @@ function Memberships({
     const hasAllMemberships = Object.keys(chainConfigs).length === chainProfiles.length;
     return (
         <>
-            <SubHeader title={"Mine medlemskap"} sx={{}} />
+            <SubHeader title={"Mine medlemskap"} sx={{ mb: 0 }} />
             {Object.keys(chainConfigs).length === 0 && (
                 <Alert severity={"info"}>
                     <AlertTitle>
