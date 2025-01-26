@@ -1,6 +1,5 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
@@ -167,7 +166,7 @@ export default function WeekNavigator({
                 excludeClassTimeFilters={excludeClassTimeFilters}
                 setExcludeClassTimeFilters={setExcludeClassTimeFilters}
             />
-            <LoadingButton
+            <Button
                 loading={isLoadingPreviousWeek}
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
@@ -175,7 +174,7 @@ export default function WeekNavigator({
                 onClick={() => offsetWeekNumber(-1)}
             >
                 <ArrowBack />
-            </LoadingButton>
+            </Button>
             <Typography
                 variant={"subtitle2"}
                 sx={{
@@ -183,7 +182,7 @@ export default function WeekNavigator({
                     opacity: 0.7,
                 }}
             >{`UKE ${weekNumber}`}</Typography>
-            <LoadingButton
+            <Button
                 loading={isLoadingNextWeek}
                 variant={"outlined"}
                 sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
@@ -191,7 +190,7 @@ export default function WeekNavigator({
                 onClick={() => offsetWeekNumber(1)}
             >
                 <ArrowForward />
-            </LoadingButton>
+            </Button>
             <Button
                 sx={{
                     ml: 1,

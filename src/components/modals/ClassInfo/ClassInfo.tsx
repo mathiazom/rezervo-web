@@ -14,7 +14,6 @@ import AccessTimeRoundedIcon from "@mui/icons-material/AccessTimeRounded";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
@@ -278,7 +277,7 @@ export default function ClassInfo({
                 !_class.isCancelled && (
                     <>
                         {selfBookedOrOnWaitlist ? (
-                            <LoadingButton
+                            <Button
                                 startIcon={<Clear />}
                                 sx={{ mt: 2, mr: 1 }}
                                 variant={"outlined"}
@@ -288,10 +287,10 @@ export default function ClassInfo({
                                 loading={bookingLoading}
                             >
                                 Avbestill
-                            </LoadingButton>
+                            </Button>
                         ) : (
                             !_class.isCancelled && (
-                                <LoadingButton
+                                <Button
                                     startIcon={hasWaitingList(_class) ? <HourglassTop /> : <Add />}
                                     color={hasWaitingList(_class) ? "warning" : "primary"}
                                     sx={{ mt: 2, mr: 1 }}
@@ -301,7 +300,7 @@ export default function ClassInfo({
                                     loading={bookingLoading}
                                 >
                                     {hasWaitingList(_class) ? "Sett meg på venteliste" : "Book nå"}
-                                </LoadingButton>
+                                </Button>
                             )
                         )}
                         {classInUserConfig ? (

@@ -1,6 +1,5 @@
 import { PasswordRounded, SmsRounded } from "@mui/icons-material";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
-import LoadingButton from "@mui/lab/LoadingButton";
 import {
     Alert,
     AlertTitle,
@@ -270,7 +269,7 @@ const MembershipLoginModal = ({
                     authenticationState === AuthenticationState.TOTP &&
                     authenticationStatus === AuthenticationStatus.FAILED
                 ) && (
-                    <LoadingButton
+                    <Button
                         loading={isMutating}
                         disabled={
                             authenticationState === AuthenticationState.TOTP
@@ -289,7 +288,7 @@ const MembershipLoginModal = ({
                         }}
                     >
                         {authenticationState === AuthenticationState.TOTP ? "Bekreft" : "Logg inn"}
-                    </LoadingButton>
+                    </Button>
                 )}
             </DialogActions>
         </Dialog>

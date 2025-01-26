@@ -1,5 +1,4 @@
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { Avatar, Box, CircularProgress, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import React, { useState } from "react";
@@ -41,14 +40,14 @@ const CommunityUserCard = ({
         switch (relationship) {
             case UserRelationship.FRIEND:
                 return (
-                    <LoadingButton
+                    <Button
                         loading={isLoading}
                         startIcon={<PersonRemove />}
                         color={"error"}
                         onClick={() => showConfirmDialog(UserRelationshipAction.REMOVE_FRIEND)}
                     >
                         Fjern venn
-                    </LoadingButton>
+                    </Button>
                 );
             case UserRelationship.REQUEST_RECEIVED:
                 return (
@@ -89,13 +88,13 @@ const CommunityUserCard = ({
             case UserRelationship.UNKNOWN:
             default:
                 return (
-                    <LoadingButton
+                    <Button
                         loading={isLoading}
                         startIcon={<PersonAdd />}
                         onClick={() => updateUserRelationship(UserRelationshipAction.ADD_FRIEND)}
                     >
                         Legg til venn
-                    </LoadingButton>
+                    </Button>
                 );
         }
     };

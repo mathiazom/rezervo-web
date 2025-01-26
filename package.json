@@ -24,7 +24,6 @@
         "@emotion/styled": "^11.14.0",
         "@khmyznikov/pwa-install": "^0.5.2",
         "@mui/icons-material": "^6.4.1",
-        "@mui/lab": "^6.0.0-beta.24",
         "@mui/material": "^6.4.1",
         "@mui/material-nextjs": "^6.3.0",
         "@mui/x-date-pickers": "^7.24.1",

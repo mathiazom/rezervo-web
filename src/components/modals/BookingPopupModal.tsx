@@ -1,5 +1,4 @@
 import { Add, Clear, HourglassTop } from "@mui/icons-material";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
@@ -85,7 +84,7 @@ const BookingPopupModal = ({
                         <Button disabled={bookingLoading} onClick={onClose} color={"inherit"}>
                             Nei takk
                         </Button>
-                        <LoadingButton
+                        <Button
                             startIcon={isCancellation ? <Clear /> : hasWaitingList(_class) ? <HourglassTop /> : <Add />}
                             color={isCancellation ? "error" : hasWaitingList(_class) ? "warning" : "primary"}
                             variant={"outlined"}
@@ -93,7 +92,7 @@ const BookingPopupModal = ({
                             loading={bookingLoading}
                         >
                             {isCancellation ? "Avbestill" : hasWaitingList(_class) ? "Sett på venteliste" : "Book nå"}
-                        </LoadingButton>
+                        </Button>
                     </DialogActions>
                 </>
             )}
