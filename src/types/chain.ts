@@ -1,5 +1,7 @@
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 
+import { CheckInLocation } from "@/components/utils/CheckIn";
+
 export type ChainIdentifier = string;
 
 export type ChainProfileImages = {
@@ -31,9 +33,16 @@ export type RezervoBranch = {
     locations: RezervoLocation[];
 };
 
+export type CheckInTerminal = {
+    id: string;
+    label: string;
+    hasPrinter: boolean;
+};
+
 export type RezervoLocation = {
     identifier: string;
     name: string;
+    checkInTerminals: CheckInTerminal[];
 };
 
 export type RezervoInstructor = {
@@ -118,4 +127,9 @@ export type ExcludeClassTimeFilter = {
 export type ExcludeClassTimeFiltersType = {
     enabled: boolean;
     filters: ExcludeClassTimeFilter[];
+};
+
+export type CheckInConfiguration = {
+    previousLocation: CheckInLocation | undefined;
+    previousTerminal: CheckInTerminal | undefined;
 };
