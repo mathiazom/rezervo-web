@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { TAuthConfig } from "react-oauth2-code-pkce";
-import useSWR from "swr";
 
 import { popStoredPreLoginPath, storePreLoginPath } from "@/lib/helpers/storage";
 
@@ -13,25 +12,17 @@ const DynamicAuthProvider = dynamic(() => import("react-oauth2-code-pkce").then(
 
 export type BaseAuthConfig = Pick<
     TAuthConfig,
-    "clientId" | "authorizationEndpoint" | "logoutEndpoint" | "logoutRedirect" | "redirectUri"
+    "clientId" | "authorizationEndpoint" | "logoutEndpoint" | "logoutRedirect" | "redirectUri" | "refreshTokenExpiresIn"
 >;
 
-export default function AuthProvider({ children }: { children: ReactNode }) {
+export default function AuthProvider({ config, children }: { config: BaseAuthConfig; children: ReactNode }) {
     const router = useRouter();
     const pathname = usePathname();
-
-    const { data: authConfig } = useSWR<BaseAuthConfig>("api/auth/config", async (path: string) =>
-        (await fetch(path)).json(),
-    );
-
-    if (!authConfig) {
-        return <>{children}</>;
-    }
 
     return (
         <DynamicAuthProvider
             authConfig={{
-                ...authConfig,
+                ...config,
                 autoLogin: false,
                 clearURL: false,
                 tokenEndpoint: "/api/auth/token",

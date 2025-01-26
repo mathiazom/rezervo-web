@@ -9,6 +9,7 @@ import React from "react";
 
 import AuthProvider from "@/lib/authProvider";
 import DatePickerLocalizationProvider from "@/lib/datePickerLocalizationProvider";
+import { requireServerAuthConfig } from "@/lib/helpers/env";
 import SnowfallProvider from "@/lib/snowfallProvider";
 import theme from "@/lib/theme";
 
@@ -65,11 +66,13 @@ const roboto = Roboto({
 });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+    const authConfig = requireServerAuthConfig();
+
     return (
         <html lang="no" className={roboto.className}>
             <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
                 <CssBaseline enableColorScheme />
-                <AuthProvider>
+                <AuthProvider config={authConfig}>
                     <DatePickerLocalizationProvider>
                         <SnowfallProvider />
                         <NuqsAdapter>
