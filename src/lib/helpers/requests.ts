@@ -20,6 +20,9 @@ function createRequestInit(method: HTTP_METHOD, options?: RequestOptions): Reque
     if (options?.cache) {
         requestInit.cache = options.cache;
     }
+    if (options?.revalidate) {
+        requestInit.next = { revalidate: options.revalidate };
+    }
     return requestInit;
 }
 
@@ -36,7 +39,7 @@ export function buildPublicBackendPath(path: string): string {
 export async function fetchProtectedImageAsDataUrl(imageUrl: string, authToken: string) {
     const headers = new Headers();
     headers.set("Authorization", `Bearer ${authToken}`);
-    const response = await fetch(imageUrl, { headers });
+    const response = await fetch(imageUrl, { headers, next: { revalidate: 60 * 60 } });
     const binaryData = await response.arrayBuffer();
     const base64 = btoa(String.fromCharCode(...Array.from(new Uint8Array(binaryData))));
     return `data:image/png;base64,${base64}`;
@@ -54,9 +57,6 @@ export function createRequestFromOptions(path: string, method: HTTP_METHOD, opti
 }
 
 export function get(path: string, options?: RequestOptions): Promise<Response> {
-    if (options) {
-        options.cache ??= "no-store";
-    }
     return createRequestFromOptions(path, "GET", options);
 }
 

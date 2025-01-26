@@ -1,4 +1,6 @@
-import { extendTheme } from "@mui/material";
+"use client";
+
+import { createTheme } from "@mui/material";
 // @ts-expect-error: undetected usage below
 import { TypeBackground } from "@mui/material/styles/createPalette";
 
@@ -12,7 +14,11 @@ declare module "@mui/material/styles/createPalette" {
     }
 }
 
-const theme = extendTheme({
+const theme = createTheme({
+    cssVariables: true,
+    typography: {
+        fontFamily: "var(--font-roboto)",
+    },
     colorSchemes: {
         light: {
             palette: {

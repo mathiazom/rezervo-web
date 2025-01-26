@@ -1,31 +1,11 @@
-import type { GetStaticPaths, NextPage } from "next";
-import React, { useEffect, useMemo } from "react";
+"use client";
+
+import React, { Suspense, useEffect, useMemo } from "react";
 import { Middleware, SWRConfig, useSWRConfig } from "swr";
 
 import Chain from "@/components/Chain";
-import PageHead from "@/components/utils/PageHead";
-import { fetchActiveChains, fetchChain, fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
 import { storeSelectedChain } from "@/lib/helpers/storage";
-import { ChainPageParams } from "@/types/chain";
 import { ChainPageProps, RezervoWeekScheduleDTO } from "@/types/serialization";
-
-export const getStaticPaths: GetStaticPaths = async () => {
-    return {
-        paths: (await fetchActiveChains()).map((chain) => ({
-            params: {
-                chain: chain.profile.identifier,
-            },
-        })),
-        fallback: false,
-    };
-};
-
-export async function getStaticProps({ params }: { params: ChainPageParams }): Promise<{
-    revalidate: number;
-    props: ChainPageProps;
-}> {
-    return fetchChain(params.chain).then(fetchChainPageStaticProps);
-}
 
 /**
  * Middleware to reduce cache misses by allowing schedule data from a superset of the requested locations.
@@ -85,14 +65,14 @@ const SWRCacheInjector = <T,>({ cacheData }: { cacheData: { [_: string]: T } }) 
     return null;
 };
 
-const ChainPage: NextPage<ChainPageProps> = ({
+const ChainPage = ({
     chain,
     chainProfiles,
     swrPrefetched,
     activityCategories,
     classPopularityIndex,
     error,
-}) => {
+}: ChainPageProps) => {
     useEffect(() => {
         storeSelectedChain(chain.profile.identifier);
     }, [chain.profile.identifier]);
@@ -107,16 +87,17 @@ const ChainPage: NextPage<ChainPageProps> = ({
                 use: [scheduleFetchMiddleware],
             }}
         >
-            <PageHead title={`${chain.profile.identifier}-rezervo`} />
             <SWRCacheInjector<RezervoWeekScheduleDTO> cacheData={swrPrefetched} />
-            <Chain
-                classPopularityIndex={classPopularityIndex}
-                chain={chain}
-                chainProfiles={chainProfiles}
-                initialLocationIds={defaultLocationIds}
-                activityCategories={activityCategories}
-                error={error}
-            />
+            <Suspense>
+                <Chain
+                    classPopularityIndex={classPopularityIndex}
+                    chain={chain}
+                    chainProfiles={chainProfiles}
+                    initialLocationIds={defaultLocationIds}
+                    activityCategories={activityCategories}
+                    error={error}
+                />
+            </Suspense>
         </SWRConfig>
     );
 };

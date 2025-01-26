@@ -19,7 +19,9 @@ export function usePushNotificationSubscription() {
         if (!token) {
             throw new Error("Not authenticated");
         }
-        return await (await get(publicKeyApiUrl, { mode: "client", accessToken: token })).json();
+        return await (
+            await get(publicKeyApiUrl, { mode: "client", accessToken: token, revalidate: 60 * 60 * 24 })
+        ).json();
     });
 
     function subscribe(url: string, token: string, { arg: subscription }: { arg: PushSubscription }) {

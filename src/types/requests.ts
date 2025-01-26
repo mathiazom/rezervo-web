@@ -6,4 +6,5 @@ export type RequestOptions = {
     cache?: RequestCache;
     withContentType?: string | "NO_CONTENT_TYPE";
     mode?: RequestMode;
+    revalidate?: number;
 };

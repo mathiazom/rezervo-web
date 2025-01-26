@@ -1,31 +1,18 @@
+"use client";
+
 import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
-import type { NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
-import PageHead from "@/components/utils/PageHead";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
-import { fetchActiveChains } from "@/lib/helpers/fetchers";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { ChainIdentifier } from "@/types/chain";
 import { IndexPageProps } from "@/types/serialization";
 
-export async function getStaticProps(): Promise<{
-    revalidate: number;
-    props: IndexPageProps;
-}> {
-    return {
-        revalidate: 60,
-        props: {
-            chainProfiles: (await fetchActiveChains()).map((chain) => chain.profile),
-        },
-    };
-}
-
-const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
+const IndexPage = ({ chainProfiles }: IndexPageProps) => {
     const theme = useTheme();
     const router = useRouter();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
@@ -46,7 +33,6 @@ const IndexPage: NextPage<IndexPageProps> = ({ chainProfiles }) => {
 
     return (
         <>
-            <PageHead title={"rezervo"} />
             <PWAInstallPrompt />
             <Box
                 sx={{

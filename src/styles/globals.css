@@ -18,7 +18,7 @@ body {
 }
 
 /* Required to achieve scrollable schedule and fixed top bar */
-#__next {
+#root {
     height: 100%;
     overflow: hidden;
 }

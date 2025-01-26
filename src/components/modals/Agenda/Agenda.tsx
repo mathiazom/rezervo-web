@@ -220,8 +220,8 @@ export default function Agenda({
                             }}
                         >
                             {PLANNED_SESSIONS_NEXT_WHOLE_WEEKS > 1
-                                ? `Viser planlagte bookinger kun for de neste\u00A0${PLANNED_SESSIONS_NEXT_WHOLE_WEEKS}\u00A0ukene`
-                                : `Viser planlagte bookinger kun til og med neste\u00A0uke`}
+                                ? `Viser planlagte bookinger for de neste\u00A0${PLANNED_SESSIONS_NEXT_WHOLE_WEEKS}\u00A0ukene`
+                                : `Viser planlagte bookinger for denne og neste\u00A0uke`}
                         </Typography>
                     </Stack>
                 </Box>

@@ -16,10 +16,7 @@ export function constructScheduleUrl(chainIdentifier: string, compactISOWeek: st
     return `schedule/${chainIdentifier}/${compactISOWeek}?${searchParams.toString()}`;
 }
 
-export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
-    revalidate: number;
-    props: ChainPageProps;
-}> {
+export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<ChainPageProps> {
     let initialSchedule: RezervoSchedule | undefined;
     // TODO: consider not fetching all locations
     const locationIdentifiers = chain.branches.flatMap((branch) =>
@@ -41,32 +38,28 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
         console.error(e);
         const firstDateOfWeek = firstDateOfWeekByOffset(0);
         return {
-            props: {
-                chain: chain,
-                chainProfiles: chainProfiles,
-                swrPrefetched: {
-                    ...(emptyWeekScheduleFallbackKey !== null
-                        ? {
-                              [emptyWeekScheduleFallbackKey]: serializeWeekSchedule({
-                                  locationIds: locationIdentifiers,
-                                  days: Array.from({ length: 7 }, (_, i) => ({
-                                      date: firstDateOfWeek.plus({ day: i }),
-                                      classes: [],
-                                  })),
-                              }),
-                          }
-                        : {}),
-                },
-                activityCategories: activityCategories,
-                classPopularityIndex: {},
-                error: RezervoError.CHAIN_SCHEDULE_UNAVAILABLE,
+            chain: chain,
+            chainProfiles: chainProfiles,
+            swrPrefetched: {
+                ...(emptyWeekScheduleFallbackKey !== null
+                    ? {
+                          [emptyWeekScheduleFallbackKey]: serializeWeekSchedule({
+                              locationIds: locationIdentifiers,
+                              days: Array.from({ length: 7 }, (_, i) => ({
+                                  date: firstDateOfWeek.plus({ day: i }),
+                                  classes: [],
+                              })),
+                          }),
+                      }
+                    : {}),
             },
-            revalidate: 1,
+            activityCategories: activityCategories,
+            classPopularityIndex: {},
+            error: RezervoError.CHAIN_SCHEDULE_UNAVAILABLE,
         };
     }
 
     const classPopularityIndex = createClassPopularityIndex(initialSchedule[compactISOWeeks[0]!]!);
-    const invalidationTimeInSeconds = 5 * 60;
 
     const swrPrefetched = Object.entries(initialSchedule).reduce((acc, [compactISOWeek, weekSchedule]) => {
         const key = scheduleUrlKey(chain.profile.identifier, compactISOWeek, locationIdentifiers);
@@ -74,19 +67,19 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<{
     }, {}) as SWRPrefetchedCacheData<RezervoWeekScheduleDTO>;
 
     return {
-        props: {
-            chain: chain,
-            chainProfiles: chainProfiles,
-            swrPrefetched: swrPrefetched,
-            activityCategories: activityCategories,
-            classPopularityIndex: classPopularityIndex,
-        },
-        revalidate: invalidationTimeInSeconds,
+        chain: chain,
+        chainProfiles: chainProfiles,
+        swrPrefetched: swrPrefetched,
+        activityCategories: activityCategories,
+        classPopularityIndex: classPopularityIndex,
     };
 }
 
-export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
-    return get(`chains/${chainIdentifier}`, { mode: "server" }).then((res) => {
+export async function fetchChain(
+    chainIdentifier: ChainIdentifier,
+    revalidate: number = 60 * 60,
+): Promise<RezervoChain> {
+    return get(`chains/${chainIdentifier}`, { mode: "server", revalidate }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
         }
@@ -94,8 +87,8 @@ export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<Reze
     });
 }
 
-export async function fetchActiveChains(): Promise<RezervoChain[]> {
-    return get("chains", { mode: "server" }).then((res) => {
+export async function fetchActiveChains(revalidate: number = 60 * 60 * 24): Promise<RezervoChain[]> {
+    return get("chains", { mode: "server", revalidate }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -107,6 +100,7 @@ export async function fetchRezervoWeekSchedule(
     chainIdentifier: string,
     compactISOWeek: string,
     locationIdentifiers: string[],
+    revalidate: number = 5 * 60,
 ): Promise<RezervoWeekSchedule> {
     return deserializeWeekSchedule({
         locationIds: locationIdentifiers,
@@ -115,7 +109,7 @@ export async function fetchRezervoWeekSchedule(
                 `schedule/${chainIdentifier}/${compactISOWeek}${
                     locationIdentifiers.length > 0 ? `?location=${locationIdentifiers.join("&location=")}` : ""
                 }`,
-                { mode: "server" },
+                { mode: "server", revalidate },
             )
         ).json()),
     }) as RezervoWeekSchedule;
@@ -141,8 +135,8 @@ export async function fetchRezervoSchedule(
     ).reduce((acc, next) => ({ ...acc, ...next }), {});
 }
 
-export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
-    return get("categories", { mode: "server" }).then((res) => {
+export async function fetchActivityCategories(revalidate: number = 60 * 60 * 24): Promise<ActivityCategory[]> {
+    return get("categories", { mode: "server", revalidate }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }
