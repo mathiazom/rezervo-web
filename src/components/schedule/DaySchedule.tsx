@@ -37,7 +37,7 @@ function DaySchedule({
     classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
-    scrollToTodayRef: React.MutableRefObject<HTMLDivElement | null>;
+    scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
     onInfo: (c: RezervoClass) => void;
 }) {

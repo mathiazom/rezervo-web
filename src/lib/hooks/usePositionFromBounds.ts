@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Position } from "@/types/math";
 
 export function usePositionFromBounds() {
-    const boundsRef = useRef<HTMLDivElement>();
+    const boundsRef = useRef<HTMLDivElement>(undefined);
     const [position, setPosition] = useState<Position | null>(null);
 
     function recalculate() {
