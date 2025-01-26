@@ -5,6 +5,8 @@ type Props = { params: Promise<{ chain: string }> };
 
 export const dynamicParams = false;
 
+export const revalidate = 300;
+
 export async function generateStaticParams() {
     return (await fetchActiveChains()).map((chain) => ({
         chain: chain.profile.identifier,
