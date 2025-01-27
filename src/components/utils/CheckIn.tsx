@@ -82,7 +82,7 @@ export default function CheckIn({
     const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
     const [loading, setLoading] = useState(false);
     const [checkInResult, setCheckInResult] = useState<CheckInResult | undefined>();
-    const [successMessage, setSuccessMessage] = useState<string>();
+    const [successMessage, setSuccessMessage] = useState<string | undefined>();
     const timerRef = useRef<number | null>(null);
 
     const { token } = useUser();
