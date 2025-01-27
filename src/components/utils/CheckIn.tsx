@@ -49,7 +49,7 @@ const checkInMessages = [
 
 function getRandomCheckInMessage() {
     const randomIndex = Math.floor(Math.random() * checkInMessages.length);
-    return checkInMessages[randomIndex] ?? "";
+    return checkInMessages[randomIndex];
 }
 
 function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationIds: string[]) {
@@ -68,7 +68,6 @@ function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationId
     );
 }
 
-// TODO after merged: Check whether you can actually check in to a class *without* printing a ticket, aka. that you are registered as attending even without printing a ticket
 export default function CheckIn({
     chain,
     selectedLocationIds,
@@ -83,7 +82,7 @@ export default function CheckIn({
     const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
     const [loading, setLoading] = useState(false);
     const [checkInResult, setCheckInResult] = useState<CheckInResult | undefined>();
-    const [successMessage, setSuccessMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState<string>();
     const timerRef = useRef<number | null>(null);
 
     const { token } = useUser();
@@ -122,14 +121,20 @@ export default function CheckIn({
     }
 
     function validateForm() {
-        const validationErrors: ValidationError[] = [];
+        if (location !== undefined && terminal !== undefined) {
+            return { location, terminal, errors: null };
+        }
+
+        const errors: ValidationError[] = [];
+
         if (location === undefined) {
-            validationErrors.push(ValidationError.LOCATION_MISSING);
+            errors.push(ValidationError.LOCATION_MISSING);
         }
         if (terminal === undefined) {
-            validationErrors.push(ValidationError.TERMINAL_MISSING);
+            errors.push(ValidationError.TERMINAL_MISSING);
         }
-        return validationErrors;
+
+        return { errors };
     }
 
     function handleSuccess() {
@@ -143,10 +148,11 @@ export default function CheckIn({
     async function handleSubmit() {
         if (checkInResult === CheckInResult.SUCCESS) return;
         clearCheckInResult();
+        const validatedForm = validateForm();
 
-        const validationErrors = validateForm();
-        setValidationErrors(validationErrors);
-        if (validationErrors.length > 0) return;
+        if (validatedForm.errors) {
+            return setValidationErrors(validatedForm.errors);
+        }
 
         setLoading(true);
 
@@ -157,7 +163,15 @@ export default function CheckIn({
 
         try {
             const response = await post(`${chain.profile.identifier}/check-in`, {
-                body: JSON.stringify({ location: location?.id, terminalId: terminal?.id, printTicket }, null, 2),
+                body: JSON.stringify(
+                    {
+                        location: validatedForm.location.id,
+                        terminalId: validatedForm.terminal.id,
+                        printTicket,
+                    },
+                    null,
+                    2,
+                ),
                 mode: "client",
                 accessToken: token!,
             });
