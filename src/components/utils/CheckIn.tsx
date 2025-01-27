@@ -157,7 +157,7 @@ export default function CheckIn({
 
         try {
             const response = await post(`${chain.profile.identifier}/check-in`, {
-                body: JSON.stringify({ location: location?.id, terminal: terminal?.id, printTicket }, null, 2),
+                body: JSON.stringify({ location: location?.id, terminalId: terminal?.id, printTicket }, null, 2),
                 mode: "client",
                 accessToken: token!,
             });
