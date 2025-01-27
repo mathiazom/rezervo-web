@@ -1,6 +1,11 @@
 import Cookies from "js-cookie";
 
-import { ChainIdentifier, ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/chain";
+import {
+    ChainIdentifier,
+    CheckInConfiguration,
+    ExcludeClassTimeFilter,
+    ExcludeClassTimeFiltersType,
+} from "@/types/chain";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
 const STORAGE_KEYS = {
@@ -10,6 +15,7 @@ const STORAGE_KEYS = {
     selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
     excludeClassTimeFilters: `${STORAGE_KEY_PREFIX}excludeClassTimeFilters`,
     preLoginPath: `${STORAGE_KEY_PREFIX}preLoginPath`,
+    checkInConfiguration: `${STORAGE_KEY_PREFIX}checkInConfiguration`,
 };
 
 function storeValue<T>(key: string, value: T) {
@@ -72,6 +78,14 @@ export function getStoredExcludeClassTimeFilters(): ExcludeClassTimeFiltersType 
         storeExcludeClassTimeFilters(filters);
         return filters;
     }
+}
+
+export function storeCheckInConfiguration(checkInConfiguration: CheckInConfiguration) {
+    storeValue(STORAGE_KEYS.checkInConfiguration, checkInConfiguration);
+}
+
+export function getStoredCheckInConfiguration(): CheckInConfiguration | null {
+    return getStoredValue<CheckInConfiguration>(STORAGE_KEYS.checkInConfiguration, true);
 }
 
 export function storePreLoginPath(path: string) {

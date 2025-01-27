@@ -13,6 +13,7 @@ import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
+import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
@@ -286,6 +287,7 @@ function Chain({
                     <ErrorMessage error={error} chainProfile={chain.profile} />
                 )}
             </Stack>
+            <CheckIn chain={chain} selectedLocationIds={selectedLocationIds} />
             <ClassInfoModal
                 chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}

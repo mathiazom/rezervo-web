@@ -10,7 +10,7 @@ export default function ModalWrapper({
 }: {
     children: ReactNode;
     title: string;
-    icon: ReactNode;
+    icon?: ReactNode;
     titleAlignment?: "left" | "center";
     description?: string;
 }) {
