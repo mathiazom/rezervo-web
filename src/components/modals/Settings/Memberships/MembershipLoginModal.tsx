@@ -8,6 +8,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    Stack,
     Typography,
     useMediaQuery,
     useTheme,
@@ -41,8 +42,14 @@ const MembershipLoginModal = ({
 }) => {
     const theme = useTheme();
 
-    const { chainUser, putChainUser, putChainUserTotp, putChainUserIsMutating, putChainUserTotpIsMutating } =
-        useChainUser(chainProfile.identifier);
+    const {
+        chainUser,
+        putChainUser,
+        destroyChainUser,
+        putChainUserTotp,
+        putChainUserIsMutating,
+        putChainUserTotpIsMutating,
+    } = useChainUser(chainProfile.identifier);
 
     const [authenticationState, setAuthenticationState] = useState<AuthenticationState>(
         AuthenticationState.USERNAME_PASSWORD,
@@ -163,13 +170,22 @@ const MembershipLoginModal = ({
                         textAlign: "center",
                     }}
                 >
-                    Koble til <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
+                    {chainUser ? "Administrer" : "Koble til"} <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
                 </Typography>
                 <Typography
                     variant={"subtitle2"}
                     sx={{ color: theme.palette.grey[600], textAlign: "center", maxWidth: "18rem", margin: "0 auto" }}
                 >
-                    Logg inn med brukeren din fra <b>{chainProfile.name}</b> for å koble den til <b>rezervo</b>
+                    {chainUser ? (
+                        <>
+                            Du har allerede koblet <b>{chainProfile.name}</b>-brukeren din til <b>rezervo</b>. Du kan
+                            oppdatere kontoinformasjonen eller logge ut.
+                        </>
+                    ) : (
+                        <>
+                            Logg inn med brukeren din fra <b>{chainProfile.name}</b> for å koble den til <b>rezervo</b>
+                        </>
+                    )}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
                     {authenticationState === AuthenticationState.TOTP ? (
@@ -262,34 +278,52 @@ const MembershipLoginModal = ({
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button color={"inherit"} disabled={isMutating} onClick={() => onClose()}>
-                    {authenticationState === AuthenticationState.TOTP ? "Avbryt" : "Lukk"}
-                </Button>
-                {!(
-                    authenticationState === AuthenticationState.TOTP &&
-                    authenticationStatus === AuthenticationStatus.FAILED
-                ) && (
-                    <Button
-                        loading={isMutating}
-                        disabled={
-                            authenticationState === AuthenticationState.TOTP
-                                ? totp.trim() == ""
-                                : !isUsernamePasswordValid
-                        }
-                        onClick={() => {
-                            if (authenticationState === AuthenticationState.TOTP) {
-                                submitTotp(totp);
-                            } else if (isUsernamePasswordValid) {
-                                submitUsernamePassword({
-                                    username,
-                                    password,
-                                });
-                            }
-                        }}
-                    >
-                        {authenticationState === AuthenticationState.TOTP ? "Bekreft" : "Logg inn"}
+                <Stack direction={"row"} sx={{ width: "100%" }}>
+                    {chainUser && (
+                        <Button
+                            color={"error"}
+                            onClick={async () => {
+                                await destroyChainUser();
+                                onClose();
+                            }}
+                        >
+                            Logg ut
+                        </Button>
+                    )}
+                    <Box sx={{ flexGrow: 1 }} />
+                    <Button color={"inherit"} disabled={isMutating} onClick={() => onClose()}>
+                        {authenticationState === AuthenticationState.TOTP ? "Avbryt" : "Lukk"}
                     </Button>
-                )}
+                    {!(
+                        authenticationState === AuthenticationState.TOTP &&
+                        authenticationStatus === AuthenticationStatus.FAILED
+                    ) && (
+                        <Button
+                            loading={isMutating}
+                            disabled={
+                                authenticationState === AuthenticationState.TOTP
+                                    ? totp.trim() == ""
+                                    : !isUsernamePasswordValid
+                            }
+                            onClick={() => {
+                                if (authenticationState === AuthenticationState.TOTP) {
+                                    submitTotp(totp);
+                                } else if (isUsernamePasswordValid) {
+                                    submitUsernamePassword({
+                                        username,
+                                        password,
+                                    });
+                                }
+                            }}
+                        >
+                            {authenticationState === AuthenticationState.TOTP
+                                ? "Bekreft"
+                                : chainUser
+                                  ? "Oppdater"
+                                  : "Logg inn"}
+                        </Button>
+                    )}
+                </Stack>
             </DialogActions>
         </Dialog>
     );
