@@ -1,5 +1,5 @@
 import { DateTime, Info, Settings } from "luxon";
-import { IfValid } from "luxon/src/_util";
+import { IfValid, Valid } from "luxon/src/_util";
 
 import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType, RezervoClass } from "@/types/chain";
 
@@ -8,7 +8,7 @@ export const compactISOWeekString = <IsValid extends boolean>(
 ): IfValid<string, null, IsValid> =>
     date.toISOWeekDate()?.replace("-", "").slice(0, 7) as IfValid<string, null, IsValid>;
 
-export const fromCompactISOWeekString = (weekString: string): DateTime | null =>
+export const fromCompactISOWeekString = (weekString: string) =>
     LocalizedDateTime.fromObject({
         weekYear: Number.parseInt(weekString.slice(0, 4)),
         weekNumber: Number.parseInt(weekString.slice(5, 7)),
@@ -19,7 +19,9 @@ export const calculateMondayOffset = () => LocalizedDateTime.now().weekday - 1;
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
 export const capitalizeFirstCharacter = (text: string) => {
-    return `${text[0]!.toUpperCase()}${text.slice(1)}`;
+    const first = text[0];
+    if (first === undefined) return "";
+    return `${first.toUpperCase()}${text.slice(1)}`;
 };
 
 export const getCapitalizedWeekday = (date: DateTime): string => {
@@ -50,7 +52,7 @@ export function isDayPassed(date: DateTime) {
     return date.endOf("day") > LocalizedDateTime.now();
 }
 
-export function firstDateOfWeekByOffset(weekOffset: number): DateTime {
+export function firstDateOfWeekByOffset(weekOffset: number): DateTime<Valid> {
     return LocalizedDateTime.now()
         .startOf("day")
         .plus({ day: weekOffset * 7 - calculateMondayOffset() });

@@ -33,7 +33,7 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
     const theme = useTheme();
     return (
         <>
-            {Object.keys(dayMap).map((prettyDate) => (
+            {Object.entries(dayMap).map(([prettyDate, sessions]) => (
                 <Box key={prettyDate}>
                     <Typography
                         variant="h6"
@@ -47,7 +47,7 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
                     >
                         {prettyDate}
                     </Typography>
-                    {dayMap[prettyDate]!.map((userSession) => (
+                    {sessions.map((userSession) => (
                         <Box
                             key={userSession.classData.id}
                             sx={{

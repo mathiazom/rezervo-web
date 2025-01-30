@@ -20,3 +20,9 @@ export function formatNameArray(a: string[], max?: number, plusSelf = false) {
 export function userNameWithIsSelfComparator(a: UserNameWithIsSelf, b: UserNameWithIsSelf) {
     return a.isSelf ? -1 : b.isSelf ? 1 : a.userName.localeCompare(b.userName);
 }
+
+export type NonEmptyArray<T> = [T, ...T[]];
+
+export function isNonEmptyArray<T>(arr: T[]): arr is NonEmptyArray<T> {
+    return arr.length > 0;
+}

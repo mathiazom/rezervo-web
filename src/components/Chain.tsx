@@ -81,7 +81,8 @@ function Chain({
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
     const defaultLocationIds = useMemo(() => {
-        return chain.branches.length > 0 ? chain.branches[0]!.locations.map(({ identifier }) => identifier) : [];
+        const firstBranch = chain.branches[0];
+        return firstBranch ? firstBranch.locations.map(({ identifier }) => identifier) : [];
     }, [chain.branches]);
 
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);

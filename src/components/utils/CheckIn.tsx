@@ -146,6 +146,10 @@ export default function CheckIn({
     }
 
     async function handleSubmit() {
+        if (!token) {
+            setCheckInResult(CheckInResult.FAILURE);
+            return;
+        }
         if (checkInResult === CheckInResult.SUCCESS) return;
         clearCheckInResult();
         const validatedForm = validateForm();
@@ -173,7 +177,7 @@ export default function CheckIn({
                     2,
                 ),
                 mode: "client",
-                accessToken: token!,
+                accessToken: token,
             });
 
             if (response.ok && response.status === 200) {
@@ -201,10 +205,10 @@ export default function CheckIn({
     }, [availableCheckInLocations]);
 
     useEffect(() => {
-        if (availableCheckInLocations.length === 1) {
-            const location = availableCheckInLocations[0]!;
-            setLocation(location);
-            setTerminalIfOnlyOneAvailable(location);
+        const firstLocation = availableCheckInLocations[0];
+        if (firstLocation) {
+            setLocation(firstLocation);
+            setTerminalIfOnlyOneAvailable(firstLocation);
         }
         applyStoredCheckInConfiguration();
     }, [availableCheckInLocations, applyStoredCheckInConfiguration]);

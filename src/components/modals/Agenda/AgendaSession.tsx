@@ -33,17 +33,17 @@ export default function AgendaSession({
             ? hexWithOpacityToRgb(userSession?.classData.activity.color, 0.6, dark ? 0 : 255)
             : "#111";
 
-    const displayName = userSession?.classData.activity.name ?? classConfig!.displayName;
+    const displayName = userSession ? userSession.classData.activity.name : classConfig.displayName;
 
     function hoursAndMinutesToClockString(hours: number, minutes: number) {
         return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
     }
 
-    const timeFrom = userSession?.classData.startTime
-        ? userSession?.classData.startTime.toFormat("HH:mm")
-        : `${getCapitalizedWeekdays()[classConfig!.weekday]}er\n${hoursAndMinutesToClockString(
-              classConfig!.startTime.hour,
-              classConfig!.startTime.minute,
+    const timeFrom = userSession
+        ? userSession.classData.startTime.toFormat("HH:mm")
+        : `${getCapitalizedWeekdays()[classConfig.weekday]}er\n${hoursAndMinutesToClockString(
+              classConfig.startTime.hour,
+              classConfig.startTime.minute,
           )}`;
 
     const timeTo = userSession?.classData?.endTime ? userSession?.classData.endTime.toFormat("HH:mm") : null;
@@ -57,10 +57,10 @@ export default function AgendaSession({
         const weekday = userSession
             ? zeroIndexedWeekday(userSession.classData.startTime.weekday)
             : classConfig?.weekday;
-        const startTimeHour = userSession?.classData.startTime.hour ?? classConfig!.startTime.hour;
-        const startTimeMinute = userSession?.classData.startTime.minute ?? classConfig!.startTime.minute;
-        const activityId = userSession?.classData.activity.id.toString() ?? classConfig!.activityId;
-        const locationId = userSession?.classData.location.id ?? classConfig!.locationId;
+        const startTimeHour = userSession ? userSession.classData.startTime.hour : classConfig.startTime.hour;
+        const startTimeMinute = userSession ? userSession.classData.startTime.minute : classConfig.startTime.minute;
+        const activityId = userSession ? userSession.classData.activity.id.toString() : classConfig.activityId;
+        const locationId = userSession ? userSession.classData.location.id : classConfig.locationId;
         await putUserConfig({
             active: config.active,
             recurringBookings: config.recurringBookings.filter(

@@ -31,6 +31,7 @@ import { INSTALL_PROMPT_DESCRIPTION } from "@/components/utils/PWAInstallPrompt"
 import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
 import { usePreferences } from "@/lib/hooks/usePreferences";
+import { isNonEmptyArray } from "@/lib/utils/arrayUtils";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig, NotificationsConfig, PreferencesPayload } from "@/types/config";
 import { Features } from "@/types/features";
@@ -197,7 +198,9 @@ export default function Settings({
                         </Button>
                     </>
                 )}
-                <Memberships chainProfiles={chainProfiles} chainConfigs={chainConfigs} />
+                {isNonEmptyArray(chainProfiles) && (
+                    <Memberships chainProfiles={chainProfiles} chainConfigs={chainConfigs} />
+                )}
                 <Divider sx={{ mt: 1 }} />
                 <PushNotifications />
                 <FormGroup>

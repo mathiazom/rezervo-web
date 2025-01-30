@@ -7,6 +7,7 @@ import AddMembershipDialog from "@/components/modals/Settings/Memberships/AddMem
 import ChainMembership from "@/components/modals/Settings/Memberships/ChainMembership";
 import MembershipLoginModal from "@/components/modals/Settings/Memberships/MembershipLoginModal";
 import SubHeader from "@/components/modals/SubHeader";
+import { NonEmptyArray } from "@/lib/utils/arrayUtils";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
 
@@ -19,15 +20,16 @@ function Memberships({
     chainProfiles,
     chainConfigs,
 }: {
-    chainProfiles: ChainProfile[];
+    chainProfiles: NonEmptyArray<ChainProfile>;
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
 }) {
     const [showAddMembershipDialog, setShowAddMembershipDialog] = useState(false);
     const [membershipLoginState, setMembershipLoginState] = useState<MemberShipLoginState>({
         open: false,
-        chainProfile: chainProfiles[0]!,
+        chainProfile: chainProfiles[0],
     });
-    const hasAllMemberships = Object.keys(chainConfigs).length === chainProfiles.length;
+    const chainsWithMembership = Object.keys(chainConfigs);
+    const hasAllMemberships = chainProfiles.every((p) => chainsWithMembership.includes(p.identifier));
     return (
         <>
             <SubHeader title={"Mine medlemskap"} sx={{ mb: 0 }} />
@@ -43,13 +45,16 @@ function Memberships({
             {Object.keys(chainConfigs)
                 .sort((a, b) => a.localeCompare(b))
                 .map((chain) => {
-                    const chainProfile = chainProfiles.find((chainProfile) => chainProfile.identifier === chain)!;
+                    const chainProfile = chainProfiles.find((chainProfile) => chainProfile.identifier === chain);
+                    console.log("chainProfiles", chainProfiles, chain);
                     return (
-                        <ChainMembership
-                            key={chain}
-                            chainProfile={chainProfile}
-                            openMembershipLoginModal={() => setMembershipLoginState({ open: true, chainProfile })}
-                        />
+                        chainProfile && (
+                            <ChainMembership
+                                key={chain}
+                                chainProfile={chainProfile}
+                                openMembershipLoginModal={() => setMembershipLoginState({ open: true, chainProfile })}
+                            />
+                        )
                     );
                 })}
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>

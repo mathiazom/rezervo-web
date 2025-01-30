@@ -22,12 +22,12 @@ export function determineClassPopularity(_class: RezervoClass) {
 export function createClassPopularityIndex(previousWeekSchedule: RezervoWeekSchedule): ClassPopularityIndex {
     return previousWeekSchedule.days
         .flatMap((d) => d.classes)
-        .reduce(
+        .reduce<ClassPopularityIndex>(
             (popularityIndex, _class) => ({
                 ...popularityIndex,
                 [classRecurrentId(_class)]: determineClassPopularity(_class),
             }),
-            {} as ClassPopularityIndex,
+            {},
         );
 }
 

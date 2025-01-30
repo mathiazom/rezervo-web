@@ -24,12 +24,14 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<Ch
     );
     const chainProfiles = (await fetchActiveChains()).map((chain) => chain.profile);
     const activityCategories = await fetchActivityCategories();
-    const compactISOWeeks = [-1, 0, 1, 2, 3].map(
-        (weekOffset) => compactISOWeekString(firstDateOfWeekByOffset(weekOffset))!,
+    const currentCompactIsoWeek = compactISOWeekString(firstDateOfWeekByOffset(0));
+    const previousCompactIsoWeek = compactISOWeekString(firstDateOfWeekByOffset(1));
+    const compactISOWeeks = [previousCompactIsoWeek, currentCompactIsoWeek].concat(
+        [1, 2, 3].map((weekOffset) => compactISOWeekString(firstDateOfWeekByOffset(weekOffset))),
     );
     const emptyWeekScheduleFallbackKey = scheduleUrlKey(
         chain.profile.identifier,
-        compactISOWeeks[1]!,
+        currentCompactIsoWeek,
         locationIdentifiers,
     );
     try {
@@ -59,7 +61,8 @@ export async function fetchChainPageStaticProps(chain: RezervoChain): Promise<Ch
         };
     }
 
-    const classPopularityIndex = createClassPopularityIndex(initialSchedule[compactISOWeeks[0]!]!);
+    const previousWeekSchedule = initialSchedule[previousCompactIsoWeek];
+    const classPopularityIndex = previousWeekSchedule ? createClassPopularityIndex(previousWeekSchedule) : {};
 
     const swrPrefetched = Object.entries(initialSchedule).reduce((acc, [compactISOWeek, weekSchedule]) => {
         const key = scheduleUrlKey(chain.profile.identifier, compactISOWeek, locationIdentifiers);
@@ -145,10 +148,6 @@ export async function fetchActivityCategories(revalidate: number = 60 * 60 * 24)
 }
 
 export function scheduleUrlKey(chainIdentifier: string, compactISOWeek: string, locationIds: string[]) {
-    if (locationIds == undefined) {
-        // make sure conditional fetching check fails
-        return null;
-    }
     return constructScheduleUrl(
         chainIdentifier,
         compactISOWeek,
