@@ -20,13 +20,11 @@ export type UserNameSessionStatus = UserNameWithIsSelf & {
     status: SessionStatus;
     positionInWaitList: number | null;
 };
-export type UserSessionsIndex = {
-    [classId: string]: UserNameSessionStatus[];
-};
+export type UserSessionsIndex = Record<string, UserNameSessionStatus[]>;
 
-export type BaseUserSession = {
+export interface BaseUserSession {
     chain: ChainIdentifier;
     status: SessionStatus;
     positionInWaitList: number | null;
     classData: RezervoClass;
-};
+}

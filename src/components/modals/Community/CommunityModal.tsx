@@ -1,5 +1,5 @@
 import { Modal } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import Community from "@/components/modals/Community/Community";
 import { ChainProfile } from "@/types/chain";

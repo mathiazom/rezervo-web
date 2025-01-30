@@ -19,7 +19,7 @@ import {
 import Grid2 from "@mui/material/Grid2";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
-import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { storeExcludeClassTimeFilters } from "@/lib/helpers/storage";

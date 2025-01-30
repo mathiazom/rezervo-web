@@ -1,7 +1,6 @@
 import QuestionMarkRoundedIcon from "@mui/icons-material/QuestionMarkRounded";
 import SpeedRoundedIcon from "@mui/icons-material/SpeedRounded";
 import { Tooltip } from "@mui/material";
-import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { isClassInThePast } from "@/lib/helpers/date";

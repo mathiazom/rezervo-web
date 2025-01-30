@@ -5,6 +5,4 @@ export enum ClassPopularity {
     High = "Denne timen er vanligvis full",
 }
 
-export type ClassPopularityIndex = {
-    [recurrentId: string]: ClassPopularity;
-};
+export type ClassPopularityIndex = Record<string, ClassPopularity>;

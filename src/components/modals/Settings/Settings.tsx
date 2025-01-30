@@ -1,3 +1,5 @@
+/* eslint-disable react-compiler/react-compiler */
+
 import { GetApp, SettingsRounded } from "@mui/icons-material";
 import {
     Alert,
@@ -17,7 +19,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";

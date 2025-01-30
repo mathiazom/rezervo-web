@@ -1,7 +1,7 @@
 import { Vibration } from "@mui/icons-material";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { Box, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import SwitchWrapper from "@/components/modals/Settings/SwitchWrapper";
 import SubHeader from "@/components/modals/SubHeader";

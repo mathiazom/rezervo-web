@@ -2,7 +2,7 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
 import { parseAsBoolean, useQueryState } from "nuqs";
-import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,

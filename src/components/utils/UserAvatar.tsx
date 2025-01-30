@@ -1,6 +1,6 @@
 import { Avatar, Box } from "@mui/material";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { buildPublicBackendPath, fetchProtectedImageAsDataUrl } from "@/lib/helpers/requests";
 import { useUser } from "@/lib/hooks/useUser";

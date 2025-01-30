@@ -13,7 +13,7 @@ import {
     useTheme,
 } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";

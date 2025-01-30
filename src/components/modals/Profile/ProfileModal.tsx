@@ -1,5 +1,5 @@
 import { Modal } from "@mui/material";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Dropzone from "react-dropzone";
 
 import Profile from "@/components/modals/Profile/Profile";

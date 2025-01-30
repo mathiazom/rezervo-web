@@ -2,7 +2,7 @@ import { Clear, EventBusy, HourglassTopRounded } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Chip, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";

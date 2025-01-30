@@ -1,6 +1,5 @@
 import GavelRoundedIcon from "@mui/icons-material/GavelRounded";
 import { useTheme } from "@mui/material";
-import React from "react";
 
 export function NoShowBadgeIcon() {
     const theme = useTheme();

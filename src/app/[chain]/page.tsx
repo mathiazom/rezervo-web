@@ -1,7 +1,9 @@
 import ChainPage from "@/app/[chain]/chainPage";
 import { fetchActiveChains, fetchChain, fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
 
-type Props = { params: Promise<{ chain: string }> };
+interface Props {
+    params: Promise<{ chain: string }>;
+}
 
 export const dynamicParams = false;
 

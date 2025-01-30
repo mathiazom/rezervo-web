@@ -1,5 +1,4 @@
 import { alpha, Box, Stack, useTheme } from "@mui/material";
-import React from "react";
 
 export default function CurrentTimeDivider() {
     const theme = useTheme();

@@ -1,6 +1,8 @@
+/* eslint-disable react-compiler/react-compiler */
+
 import { PWAInstallElement } from "@khmyznikov/pwa-install";
 import PWAInstall from "@khmyznikov/pwa-install/react-legacy";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { getStoredPWAInstallDismissed, storePWAInstallDismissed } from "@/lib/helpers/storage";
 
@@ -9,7 +11,9 @@ export const INSTALL_PROMPT_DESCRIPTION =
 
 function PWAInstallPrompt({
     show = true,
+    // eslint-disable-next-line  @typescript-eslint/no-empty-function
     onClose = () => {},
+    // eslint-disable-next-line  @typescript-eslint/no-empty-function
     onIsInstalledChanged = () => {},
 }: {
     show?: boolean;

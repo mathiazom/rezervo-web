@@ -29,9 +29,9 @@ self.addEventListener("notificationclick", (event) => {
         self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(function (clientList) {
             if (clientList.length > 0) {
                 let client = clientList[0];
-                for (let i = 0; i < clientList.length; i++) {
-                    if (clientList?.[i]?.focused) {
-                        client = clientList[i];
+                for (const c of clientList) {
+                    if (c.focused) {
+                        client = c;
                     }
                 }
                 return client?.focus();

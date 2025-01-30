@@ -2,7 +2,6 @@ import { DeleteRounded, ImageRounded } from "@mui/icons-material";
 import { Box, Dialog, ListItemButton, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
 import DialogTitle from "@mui/material/DialogTitle";
-import React from "react";
 
 import { VisuallyHiddenInput } from "@/components/utils/VisuallyHiddenInput";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";

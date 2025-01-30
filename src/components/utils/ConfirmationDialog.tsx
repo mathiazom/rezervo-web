@@ -4,10 +4,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import * as React from "react";
 import { ReactNode } from "react";
 
-export type ConfirmationDialogProps = {
+export interface ConfirmationDialogProps {
     open: boolean;
     title: string;
     description: ReactNode;
@@ -15,7 +14,7 @@ export type ConfirmationDialogProps = {
     cancelText?: string;
     onCancel: () => void;
     onConfirm: () => void;
-};
+}
 
 export default function ConfirmationDialog({
     open,

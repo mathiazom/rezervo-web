@@ -1,6 +1,6 @@
 import { Box, Divider, Stack } from "@mui/material";
 import { parseAsBoolean, parseAsString, useQueryState } from "nuqs";
-import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -149,7 +149,7 @@ function Chain({
         const ghostClassesConfigs =
             userConfig?.recurringBookings
                 ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
-                .reduce<{ [id: string]: ClassConfig }>(
+                .reduce<Record<string, ClassConfig>>(
                     (o, c) => ({
                         ...o,
                         [classConfigRecurrentId(c)]: c,
@@ -190,7 +190,7 @@ function Chain({
         });
     };
 
-    const scrollToTodayRef = React.useRef<HTMLDivElement | null>(null);
+    const scrollToTodayRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         setSelectedClassIds(userConfig?.recurringBookings?.map(classConfigRecurrentId) ?? null);

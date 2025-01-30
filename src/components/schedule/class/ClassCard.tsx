@@ -11,7 +11,7 @@ import {
     Typography,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";

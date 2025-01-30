@@ -1,6 +1,5 @@
 import { BrokenImageRounded, ErrorRounded, ScaleRounded } from "@mui/icons-material";
 import { Alert, AlertTitle, Box, Collapse, Typography } from "@mui/material";
-import React from "react";
 
 import { AvatarMutateError } from "@/components/modals/Profile/Profile";
 

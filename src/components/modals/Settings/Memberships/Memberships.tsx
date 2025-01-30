@@ -1,7 +1,7 @@
 import { Add } from "@mui/icons-material";
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import AddMembershipDialog from "@/components/modals/Settings/Memberships/AddMembershipDialog";
 import ChainMembership from "@/components/modals/Settings/Memberships/ChainMembership";
@@ -10,10 +10,10 @@ import SubHeader from "@/components/modals/SubHeader";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
 
-type MemberShipLoginState = {
+interface MemberShipLoginState {
     open: boolean;
     chainProfile: ChainProfile;
-};
+}
 
 function Memberships({
     chainProfiles,

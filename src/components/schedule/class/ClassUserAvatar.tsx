@@ -1,6 +1,5 @@
 import { Badge, CircularProgress, circularProgressClasses } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
-import React from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { UserAvatar } from "@/components/utils/UserAvatar";

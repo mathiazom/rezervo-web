@@ -12,7 +12,7 @@ import {
     useTheme,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import RippleBadge from "@/components/utils/RippleBadge";
 import { useChainUser } from "@/lib/hooks/useChainUser";

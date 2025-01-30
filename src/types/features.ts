@@ -1,3 +1,3 @@
-export type Features = {
+export interface Features {
     classReminderNotifications: boolean;
-};
+}

@@ -1,5 +1,4 @@
 import { Modal } from "@mui/material";
-import React from "react";
 
 import ClassInfo from "@/components/modals/ClassInfo/ClassInfo";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";

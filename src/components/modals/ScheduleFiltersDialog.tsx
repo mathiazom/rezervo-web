@@ -4,7 +4,7 @@ import { blue, pink, purple } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { DialogHeader } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 
 import CategoryFilters from "@/components/modals/CategoryFilters";

@@ -3,42 +3,38 @@ import { RezervoError } from "@/types/errors";
 import { ClassPopularityIndex } from "@/types/popularity";
 import { SessionStatus } from "@/types/userSessions";
 
-export type RezervoScheduleDTO = {
-    [compactISOWeek: string]: RezervoWeekScheduleDTO;
-};
-export type RezervoWeekScheduleDTO = {
+export type RezervoScheduleDTO = Record<string, RezervoWeekScheduleDTO>;
+export interface RezervoWeekScheduleDTO {
     locationIds: string[];
     days: RezervoDayScheduleDTO[];
-};
-export type RezervoDayScheduleDTO = {
+}
+export interface RezervoDayScheduleDTO {
     date: string;
     classes: RezervoClassDTO[];
-};
+}
 export type RezervoClassDTO = RezervoClassBase & {
     startTime: string;
     endTime: string;
 };
 
-export type SWRPrefetchedCacheData<T> = {
-    [key: string]: T;
-};
+export type SWRPrefetchedCacheData<T> = Record<string, T>;
 
-export type ChainPageProps = {
+export interface ChainPageProps {
     chain: RezervoChain;
     chainProfiles: ChainProfile[];
     swrPrefetched: SWRPrefetchedCacheData<RezervoWeekScheduleDTO>;
     activityCategories: ActivityCategory[];
     classPopularityIndex: ClassPopularityIndex;
     error?: RezervoError;
-};
+}
 
-export type IndexPageProps = {
+export interface IndexPageProps {
     chainProfiles: ChainProfile[];
-};
+}
 
-export type BaseUserSessionDTO = {
+export interface BaseUserSessionDTO {
     chain: ChainIdentifier;
     status: SessionStatus;
     positionInWaitList: number | null;
     classData: RezervoClassDTO;
-};
+}

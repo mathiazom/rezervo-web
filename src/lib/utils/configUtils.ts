@@ -4,7 +4,7 @@ import { RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 
 export function buildConfigMapFromClasses(classes: RezervoClass[]) {
-    return classes.reduce<{ [id: string]: ClassConfig }>((o, c) => {
+    return classes.reduce<Record<string, ClassConfig>>((o, c) => {
         const { hour, minute, weekday } = c.startTime;
         return {
             ...o,

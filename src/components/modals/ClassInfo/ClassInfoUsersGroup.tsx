@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
 
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import { formatNameArray, userNameWithIsSelfComparator } from "@/lib/utils/arrayUtils";
