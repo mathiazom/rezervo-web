@@ -12,7 +12,7 @@ export function useUser(): {
     logIn: IAuthContext["logIn"];
     logOut: IAuthContext["logOut"];
 } {
-    const { token, tokenData, loginInProgress, logIn, logOut } = useContext<IAuthContext>(AuthContext);
+    const { token, idTokenData, loginInProgress, logIn, logOut } = useContext<IAuthContext>(AuthContext);
 
     const [ready, setReady] = useState(false);
 
@@ -32,8 +32,8 @@ export function useUser(): {
         authStatus,
         token,
         user: {
-            email: tokenData?.["email"],
-            name: tokenData?.["name"],
+            email: idTokenData?.["email"],
+            name: idTokenData?.["preferred_username"],
         },
         logIn,
         logOut,
