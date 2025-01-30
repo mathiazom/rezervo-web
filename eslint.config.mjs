@@ -36,7 +36,6 @@ export default tseslint.config(
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
       ...hooksPlugin.configs.recommended.rules,
-      "@typescript-eslint/no-non-null-assertion": "off",
       "no-relative-import-paths/no-relative-import-paths": "error",
       "react-compiler/react-compiler": "error",
       /** @see https://medium.com/weekly-webtips/how-to-sort-imports-like-a-pro-in-typescript-4ee8afd7258a */
