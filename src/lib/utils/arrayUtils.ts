@@ -1,10 +1,10 @@
 import { UserNameWithIsSelf } from "@/types/config";
 
-export function randomElementFromArray<T>(array: Array<T>) {
+export function randomElementFromArray<T>(array: T[]) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-export function formatNameArray(a: string[], max?: number, plusSelf: boolean = false) {
+export function formatNameArray(a: string[], max?: number, plusSelf = false) {
     if (a.length === 0) {
         return plusSelf ? "Du" : "";
     }

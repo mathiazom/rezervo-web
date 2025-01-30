@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextField from "@mui/material/TextField";
 import Tooltip from "@mui/material/Tooltip";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import SubHeader from "@/components/modals/SubHeader";
 import { useCopyToClipboard } from "@/lib/hooks/useCopyToClipboard";

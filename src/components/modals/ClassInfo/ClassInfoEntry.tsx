@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 function ClassInfoEntry({ icon, label, cancelled }: { icon: ReactNode; label: string; cancelled: boolean }) {
     return (

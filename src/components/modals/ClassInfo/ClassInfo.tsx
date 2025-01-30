@@ -17,7 +17,7 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
 import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";

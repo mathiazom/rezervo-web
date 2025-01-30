@@ -1,6 +1,6 @@
 import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";

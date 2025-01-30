@@ -1,6 +1,6 @@
 import { People } from "@mui/icons-material";
 import { Alert, Badge, Box, Divider, Tooltip, Typography } from "@mui/material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
 import ModalWrapper from "@/components/modals/ModalWrapper";

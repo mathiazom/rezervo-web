@@ -1,25 +1,25 @@
-export type ClassTimeConfig = {
+export interface ClassTimeConfig {
     hour: number;
     minute: number;
-};
+}
 
-export type ClassConfig = {
+export interface ClassConfig {
     activityId: string;
     locationId: string;
     weekday: number;
     startTime: ClassTimeConfig;
     displayName: string;
-};
+}
 
-export type ChainConfig = {
+export interface ChainConfig {
     active: boolean;
     recurringBookings: ClassConfig[];
-};
+}
 export type ChainConfigPayload = ChainConfig;
 
-export type ChainUser = {
+export interface ChainUser {
     username: string;
-};
+}
 
 export type ChainUserProfile = ChainUser & {
     isAuthVerified: boolean;
@@ -29,26 +29,24 @@ export type ChainUserPayload = ChainUser & {
     password: string;
 };
 
-export type ChainUserTotpPayload = {
+export interface ChainUserTotpPayload {
     totp: string;
-};
+}
 
-export type NotificationsConfig = {
+export interface NotificationsConfig {
     reminderHoursBefore: number | null;
-};
+}
 
-export type Preferences = {
+export interface Preferences {
     notifications: NotificationsConfig | null;
-};
+}
 
 export type PreferencesPayload = Preferences;
 
-export type UserNameWithIsSelf = {
+export interface UserNameWithIsSelf {
     isSelf: boolean;
     userId: string;
     userName: string;
-};
+}
 
-export type AllConfigsIndex = {
-    [recurrentClassId: string]: UserNameWithIsSelf[];
-};
+export type AllConfigsIndex = Record<string, UserNameWithIsSelf[]>;

@@ -2,7 +2,7 @@ import { PersonRounded } from "@mui/icons-material";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import { useState } from "react";
 import Dropzone from "react-dropzone";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";

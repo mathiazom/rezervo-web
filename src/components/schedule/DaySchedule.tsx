@@ -1,5 +1,5 @@
 import { Box, Chip, Divider, Typography, useTheme } from "@mui/material";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";

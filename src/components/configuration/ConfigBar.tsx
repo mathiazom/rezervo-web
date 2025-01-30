@@ -8,7 +8,7 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";

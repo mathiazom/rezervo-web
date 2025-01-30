@@ -2,7 +2,6 @@ import { AddPhotoAlternateRounded, DoubleArrowRounded, EditRounded, UploadRounde
 import { Avatar, Badge, Box, CircularProgress, circularProgressClasses, Typography } from "@mui/material";
 import { blue, orange } from "@mui/material/colors";
 import IconButton from "@mui/material/IconButton";
-import React from "react";
 import { DropzoneInputProps } from "react-dropzone";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";

@@ -2,7 +2,7 @@ import { Add, Clear, HourglassTop } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { hasWaitingList } from "@/lib/helpers/popularity";
 import { post } from "@/lib/helpers/requests";

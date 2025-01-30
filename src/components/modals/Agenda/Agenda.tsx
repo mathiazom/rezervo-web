@@ -7,7 +7,6 @@ import {
     SettingsRounded,
 } from "@mui/icons-material";
 import { Alert, AlertTitle, Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
-import React from "react";
 
 import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
 import ModalWrapper from "@/components/modals/ModalWrapper";

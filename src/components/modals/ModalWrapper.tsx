@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "@mui/material";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 
 export default function ModalWrapper({
     children,

@@ -1,10 +1,10 @@
 export type RequestMode = "client" | "server";
 
-export type RequestOptions = {
+export interface RequestOptions {
     accessToken?: string | undefined;
     body?: BodyInit | undefined;
     cache?: RequestCache;
     withContentType?: string | "NO_CONTENT_TYPE";
     mode?: RequestMode;
     revalidate?: number;
-};
+}

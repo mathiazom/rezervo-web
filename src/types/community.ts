@@ -1,6 +1,6 @@
-export type RezervoCommunity = {
+export interface RezervoCommunity {
     users: CommunityUser[];
-};
+}
 
 export enum UserRelationship {
     UNKNOWN = "UNKNOWN",
@@ -16,9 +16,9 @@ export enum UserRelationshipAction {
     REMOVE_FRIEND = "REMOVE_FRIEND",
 }
 
-export type CommunityUser = {
+export interface CommunityUser {
     userId: string;
     name: string;
     chains: string[];
     relationship: UserRelationship;
-};
+}

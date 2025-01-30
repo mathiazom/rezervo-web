@@ -16,7 +16,7 @@ import {
     Tooltip,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import { post } from "@/lib/helpers/requests";

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { Suspense, useEffect, useMemo } from "react";
+import { Suspense, useEffect, useMemo } from "react";
 import { Middleware, SWRConfig, useSWRConfig } from "swr";
 
 import Chain from "@/components/Chain";
@@ -53,7 +53,7 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
     return useSWRNext(key, fetcher, config);
 };
 
-const SWRCacheInjector = <T,>({ cacheData }: { cacheData: { [_: string]: T } }) => {
+const SWRCacheInjector = <T,>({ cacheData }: { cacheData: Record<string, T> }) => {
     const { mutate } = useSWRConfig();
 
     useEffect(() => {

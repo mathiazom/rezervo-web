@@ -6,7 +6,7 @@ export function hexWithOpacityToRgb(hex: string, opacity: number, brightness: nu
     return `rgb(${hexWithOpacityToRgbArray(hex, opacity, brightness).join(",")})`;
 }
 
-export function avatarColor(username: string, darkMode: boolean = false) {
+export function avatarColor(username: string, darkMode = false) {
     return hexWithOpacityToRgb(hexColorHash(username), darkMode ? 0.85 : 1, darkMode ? 255 : 0);
 }
 

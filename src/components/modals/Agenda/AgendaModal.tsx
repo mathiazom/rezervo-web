@@ -1,5 +1,5 @@
 import { Modal } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";

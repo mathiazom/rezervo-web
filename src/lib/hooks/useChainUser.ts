@@ -9,15 +9,15 @@ import { authedFetcher } from "@/lib/utils/fetchUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { ChainUser, ChainUserPayload, ChainUserProfile, ChainUserTotpPayload } from "@/types/config";
 
-type ChainUserUpdatedResponse = {
+interface ChainUserUpdatedResponse {
     status: "updated";
     profile: ChainUser;
-};
+}
 
-type ChainUserTotpFlowInitiatedResponse = {
+interface ChainUserTotpFlowInitiatedResponse {
     status: "initiated_totp_flow";
     totpRegex: string;
-};
+}
 
 type ChainUserMutationResponse = ChainUserUpdatedResponse | ChainUserTotpFlowInitiatedResponse;
 

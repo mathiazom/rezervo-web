@@ -1,5 +1,5 @@
 import { Modal } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import Settings from "@/components/modals/Settings/Settings";
 import { useFeatures } from "@/lib/hooks/useFeatures";

@@ -5,7 +5,6 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import React from "react";
 
 import AuthProvider from "@/lib/authProvider";
 import DatePickerLocalizationProvider from "@/lib/datePickerLocalizationProvider";

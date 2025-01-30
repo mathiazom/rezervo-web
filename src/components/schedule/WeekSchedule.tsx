@@ -1,5 +1,4 @@
 import { alpha, Box, Stack, useTheme } from "@mui/material";
-import React from "react";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { isToday } from "@/lib/helpers/date";

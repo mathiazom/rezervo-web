@@ -1,7 +1,7 @@
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { Avatar, Box, CircularProgress, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
 import { UserAvatar } from "@/components/utils/UserAvatar";
@@ -98,10 +98,11 @@ const CommunityUserCard = ({
                 );
         }
     };
-    const confirmDialogPropsMap: {
-        [key in ConfirmDialogAction]: Required<Pick<ConfirmationDialogProps, "title" | "confirmText" | "description">> &
-            Partial<ConfirmationDialogProps>;
-    } = {
+    const confirmDialogPropsMap: Record<
+        ConfirmDialogAction,
+        Required<Pick<ConfirmationDialogProps, "title" | "confirmText" | "description">> &
+            Partial<ConfirmationDialogProps>
+    > = {
         [UserRelationshipAction.REMOVE_FRIEND]: {
             title: "Fjerne venn?",
             confirmText: "Fjern venn",

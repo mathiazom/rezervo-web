@@ -1,5 +1,5 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/material";
-import React, { Dispatch, Fragment, SetStateAction } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 
 import { LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
 import { storeSelectedLocations } from "@/lib/helpers/storage";

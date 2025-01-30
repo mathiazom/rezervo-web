@@ -1,5 +1,4 @@
 import { AvatarGroup } from "@mui/material";
-import React from "react";
 
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import { UserNameWithIsSelf } from "@/types/config";

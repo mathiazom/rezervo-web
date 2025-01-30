@@ -4,7 +4,7 @@ import { CheckInLocation } from "@/components/utils/CheckIn";
 
 export type ChainIdentifier = string;
 
-export type ChainProfileImages = {
+export interface ChainProfileImages {
     light: {
         largeLogo: string;
     };
@@ -14,56 +14,54 @@ export type ChainProfileImages = {
     common: {
         smallLogo: string;
     };
-};
+}
 
-export type ChainProfile = {
+export interface ChainProfile {
     identifier: ChainIdentifier;
     name: string;
     images: ChainProfileImages;
-};
+}
 
-export type RezervoChain = {
+export interface RezervoChain {
     profile: ChainProfile;
     branches: RezervoBranch[];
-};
+}
 
-export type RezervoBranch = {
+export interface RezervoBranch {
     identifier: string;
     name: string;
     locations: RezervoLocation[];
-};
+}
 
-export type CheckInTerminal = {
+export interface CheckInTerminal {
     id: string;
     label: string;
     hasPrinter: boolean;
-};
+}
 
-export type RezervoLocation = {
+export interface RezervoLocation {
     identifier: string;
     name: string;
     checkInTerminals: CheckInTerminal[];
-};
+}
 
-export type RezervoInstructor = {
+export interface RezervoInstructor {
     name: string;
-};
+}
 
-export type RezervoSchedule = {
-    [compactISOWeek: string]: RezervoWeekSchedule;
-};
+export type RezervoSchedule = Record<string, RezervoWeekSchedule>;
 
-export type RezervoWeekSchedule = {
+export interface RezervoWeekSchedule {
     locationIds: string[];
     days: RezervoDaySchedule[];
-};
+}
 
-export type RezervoDaySchedule = {
+export interface RezervoDaySchedule {
     date: DateTime;
     classes: RezervoClass[];
-};
+}
 
-export type RezervoClassBase = {
+export interface RezervoClassBase {
     id: string;
     location: {
         id: string;
@@ -78,14 +76,14 @@ export type RezervoClassBase = {
     waitingListCount: number | null;
     activity: RezervoActivity;
     instructors: RezervoInstructor[];
-};
+}
 
 export type RezervoClass = RezervoClassBase & {
     startTime: DateTime;
     endTime: DateTime;
 };
 
-export type RezervoActivity = {
+export interface RezervoActivity {
     id: number;
     name: string;
     category: string;
@@ -93,43 +91,43 @@ export type RezervoActivity = {
     additionalInformation: string | null;
     color: string;
     image: string | null;
-};
+}
 
-export type ChainPageParams = {
+export interface ChainPageParams {
     chain: ChainIdentifier;
-};
+}
 
-export type ActivityCategory = {
+export interface ActivityCategory {
     name: string;
     color: string;
-};
+}
 
 export enum BookingPopupAction {
     BOOK = "BOOK",
     CANCEL = "CANCEL",
 }
 
-export type BookingPopupState = {
+export interface BookingPopupState {
     chain: ChainIdentifier;
     _class: RezervoClass;
     action: BookingPopupAction;
-};
+}
 
-export type ExcludeClassTimeFilter = {
+export interface ExcludeClassTimeFilter {
     weekday: WeekdayNumbers;
     startHour: HourNumbers;
     startMinute: MinuteNumbers;
     endHour: HourNumbers;
     endMinute: MinuteNumbers;
     enabled: boolean;
-};
+}
 
-export type ExcludeClassTimeFiltersType = {
+export interface ExcludeClassTimeFiltersType {
     enabled: boolean;
     filters: ExcludeClassTimeFilter[];
-};
+}
 
-export type CheckInConfiguration = {
+export interface CheckInConfiguration {
     previousLocation: CheckInLocation | undefined;
     previousTerminal: CheckInTerminal | undefined;
-};
+}

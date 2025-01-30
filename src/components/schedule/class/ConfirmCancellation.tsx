@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { post } from "@/lib/helpers/requests";
