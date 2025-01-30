@@ -46,7 +46,6 @@ function Memberships({
                 .sort((a, b) => a.localeCompare(b))
                 .map((chain) => {
                     const chainProfile = chainProfiles.find((chainProfile) => chainProfile.identifier === chain);
-                    console.log("chainProfiles", chainProfiles, chain);
                     return (
                         chainProfile && (
                             <ChainMembership
