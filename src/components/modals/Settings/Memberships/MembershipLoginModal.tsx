@@ -170,7 +170,7 @@ const MembershipLoginModal = ({
                         textAlign: "center",
                     }}
                 >
-                    {chainUser ? "Administrer" : "Koble til"} <b>{chainProfile.identifier.toUpperCase()}</b>-medlemskap
+                    {chainUser ? "Administrer" : "Koble til"} <b>{chainProfile.name}</b>-medlemskap
                 </Typography>
                 <Typography
                     variant={"subtitle2"}
