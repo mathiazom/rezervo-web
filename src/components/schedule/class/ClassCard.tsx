@@ -1,15 +1,5 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
-import {
-    AvatarGroup,
-    Badge,
-    Box,
-    Card,
-    CardActionArea,
-    CardContent,
-    Collapse,
-    Tooltip,
-    Typography,
-} from "@mui/material";
+import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useEffect, useState } from "react";
 
@@ -100,8 +90,7 @@ const ClassCard = ({
                 },
             }}
         >
-            <CardActionArea
-                disableRipple
+            <Box
                 onClick={onInfo}
                 sx={{
                     opacity: isInThePast || _class.isCancelled ? 0.5 : 1,
@@ -293,7 +282,7 @@ const ClassCard = ({
                         )}
                     </Box>
                 </CardContent>
-            </CardActionArea>
+            </Box>
         </Card>
     );
 };
