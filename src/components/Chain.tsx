@@ -1,6 +1,6 @@
 import { Box, Divider, Stack } from "@mui/material";
 import { parseAsBoolean, parseAsString, useQueryState } from "nuqs";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -86,7 +86,9 @@ function Chain({
     }, [chain.branches]);
 
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
+    const deferredSelectedLocationIds = useDeferredValue(selectedLocationIds);
     const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
+    const deferredSelectedCategories = useDeferredValue(selectedCategories);
     const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFiltersType>({
         enabled: true,
         filters: [],
@@ -115,7 +117,7 @@ function Chain({
         isLoadingPreviousWeek,
         isLoadingNextWeek,
         weekSchedule: currentWeekSchedule,
-    } = useSchedule(selectedChain, weekParam, selectedLocationIds);
+    } = useSchedule(selectedChain, weekParam, deferredSelectedLocationIds);
 
     const classes = useMemo(
         () => currentWeekSchedule?.days.flatMap((daySchedule) => daySchedule.classes) ?? [],
@@ -273,8 +275,8 @@ function Chain({
                         <WeekScheduleMemo
                             chain={chain.profile.identifier}
                             weekSchedule={currentWeekSchedule}
-                            selectedLocationIds={selectedLocationIds}
-                            selectedCategories={selectedCategories}
+                            selectedLocationIds={deferredSelectedLocationIds}
+                            selectedCategories={deferredSelectedCategories}
                             excludeClassTimeFilters={excludeClassTimeFilters}
                             classPopularityIndex={classPopularityIndex}
                             selectable={userConfig != undefined && !userConfigError}
@@ -288,7 +290,7 @@ function Chain({
                     <ErrorMessage error={error} chainProfile={chain.profile} />
                 )}
             </Stack>
-            <CheckIn chain={chain} selectedLocationIds={selectedLocationIds} />
+            <CheckIn chain={chain} selectedLocationIds={deferredSelectedLocationIds} />
             <ClassInfoModal
                 chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
