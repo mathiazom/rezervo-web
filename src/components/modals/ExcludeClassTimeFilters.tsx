@@ -269,7 +269,7 @@ export default function ExcludeClassTimeFilters({
                     >
                         <Divider />
                     </Stack>
-                    <Stack>
+                    <Stack sx={{ gap: 2 }}>
                         <Typography
                             variant="h6"
                             sx={{
@@ -352,7 +352,6 @@ export default function ExcludeClassTimeFilters({
                                 variant={"outlined"}
                                 color={"error"}
                                 onClick={clearFilters}
-                                sx={{ mt: 2 }}
                             >
                                 Fjern alle
                             </Button>
