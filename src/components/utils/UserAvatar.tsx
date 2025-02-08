@@ -46,6 +46,8 @@ export function UserAvatar({
         );
     }, [realUserId, imgSrcSize, token]);
 
+    const imageUrl = previewOverride ?? avatarUrl;
+
     return (
         <Avatar
             sx={{
@@ -53,18 +55,20 @@ export function UserAvatar({
                 height: size,
             }}
         >
-            <Image
-                src={previewOverride ?? avatarUrl ?? ""}
-                alt={username}
-                width={size}
-                height={size}
-                onError={() => doSetPictureAvailable(false)}
-                onLoad={() => doSetPictureAvailable(true)}
-                style={{
-                    objectFit: "cover",
-                }}
-                unoptimized={true} // ensures fresh avatars
-            />
+            {imageUrl && (
+                <Image
+                    src={imageUrl}
+                    alt={username}
+                    width={size}
+                    height={size}
+                    onError={() => doSetPictureAvailable(false)}
+                    onLoad={() => doSetPictureAvailable(true)}
+                    style={{
+                        objectFit: "cover",
+                    }}
+                    unoptimized={true} // ensures fresh avatars
+                />
+            )}
             {isAvatarAvailable === false && (
                 <Box
                     sx={{
