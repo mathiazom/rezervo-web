@@ -26,3 +26,11 @@ export type NonEmptyArray<T> = [T, ...T[]];
 export function isNonEmptyArray<T>(arr: T[]): arr is NonEmptyArray<T> {
     return arr.length > 0;
 }
+
+export function updateValueSelection<T>(selectedValues: T[], value: T, isSelected: boolean): T[] {
+    return isSelected
+        ? selectedValues.includes(value)
+            ? selectedValues
+            : [...selectedValues, value]
+        : selectedValues.filter((c) => c != value);
+}

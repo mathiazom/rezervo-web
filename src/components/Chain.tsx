@@ -29,6 +29,7 @@ import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
+import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
 import {
     ActivityCategory,
@@ -73,6 +74,7 @@ function Chain({
     const [userConfigActive, setUserConfigActive] = useState(true);
 
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
+    const deferredSelectedClassIds = useDeferredValue(selectedClassIds);
 
     const [isCommunityOpen, setIsCommunityOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -183,9 +185,8 @@ function Chain({
                 });
             }
         }
-        const s = selectedClassIds;
-        const newSelectedClassIds =
-            s == null ? s : selected ? (s.includes(classId) ? s : [...s, classId]) : s.filter((c) => c != classId);
+        if (deferredSelectedClassIds == null) return;
+        const newSelectedClassIds = updateValueSelection(deferredSelectedClassIds, classId, selected);
         setSelectedClassIds(newSelectedClassIds);
         return await putUserConfig({
             active: userConfigActive,
