@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@mui/material";
+import { Avatar, Box, Skeleton } from "@mui/material";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -49,13 +49,13 @@ export function UserAvatar({
     const imageUrl = previewOverride ?? avatarUrl;
 
     return (
-        <Avatar
+        <Box
             sx={{
                 width: size,
                 height: size,
             }}
         >
-            {imageUrl && (
+            {imageUrl ? (
                 <Image
                     src={imageUrl}
                     alt={username}
@@ -64,13 +64,13 @@ export function UserAvatar({
                     onError={() => doSetPictureAvailable(false)}
                     onLoad={() => doSetPictureAvailable(true)}
                     style={{
+                        borderRadius: "50%",
                         objectFit: "cover",
                     }}
                     unoptimized={true} // ensures fresh avatars
                 />
-            )}
-            {isAvatarAvailable === false && (
-                <Box
+            ) : isAvatarAvailable === false ? (
+                <Avatar
                     sx={{
                         top: 0,
                         left: 0,
@@ -87,8 +87,10 @@ export function UserAvatar({
                     }}
                 >
                     {username[0]}
-                </Box>
+                </Avatar>
+            ) : (
+                <Skeleton variant={"circular"} width={size} height={size} />
             )}
-        </Avatar>
+        </Box>
     );
 }
