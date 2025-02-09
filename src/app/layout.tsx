@@ -4,7 +4,6 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import AuthProvider from "@/lib/authProvider";
 import DatePickerLocalizationProvider from "@/lib/datePickerLocalizationProvider";
@@ -74,13 +73,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <AuthProvider config={authConfig}>
                     <DatePickerLocalizationProvider>
                         <SnowfallProvider />
-                        <NuqsAdapter>
-                            <body className={roboto.variable}>
-                                <div id="root">
-                                    <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
-                                </div>
-                            </body>
-                        </NuqsAdapter>
+                        <body className={roboto.variable}>
+                            <div id="root">
+                                <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+                            </div>
+                        </body>
                     </DatePickerLocalizationProvider>
                 </AuthProvider>
             </ThemeProvider>

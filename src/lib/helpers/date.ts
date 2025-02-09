@@ -14,7 +14,7 @@ export const fromCompactISOWeekString = (weekString: string) =>
         weekNumber: Number.parseInt(weekString.slice(5, 7)),
     });
 
-export const calculateMondayOffset = () => LocalizedDateTime.now().weekday - 1;
+export const calculateMondayOffset = (date: DateTime<true>) => date.weekday - 1;
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
@@ -52,10 +52,8 @@ export function isDayPassed(date: DateTime) {
     return date.endOf("day") > LocalizedDateTime.now();
 }
 
-export function firstDateOfWeekByOffset(weekOffset: number): DateTime<Valid> {
-    return LocalizedDateTime.now()
-        .startOf("day")
-        .plus({ day: weekOffset * 7 - calculateMondayOffset() });
+export function firstDateOfWeekByOffset(reference: DateTime<Valid>, weekOffset: number): DateTime<Valid> {
+    return reference.startOf("day").plus({ day: weekOffset * 7 - calculateMondayOffset(reference) });
 }
 
 export const LocalizedDateTime: typeof DateTime = (() => {

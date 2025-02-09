@@ -1,5 +1,7 @@
+"use client";
+
 import { Box, Divider, Stack } from "@mui/material";
-import { parseAsBoolean, parseAsString, useQueryState } from "nuqs";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -16,7 +18,7 @@ import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
+import { CLASS_ID_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import {
@@ -50,6 +52,9 @@ import { SessionStatus } from "@/types/userSessions";
 const WeekScheduleMemo = memo(WeekSchedule);
 
 function Chain({
+    weekParam,
+    scrollToNow,
+    showClassId,
     classPopularityIndex,
     chain,
     chainProfiles,
@@ -57,6 +62,9 @@ function Chain({
     activityCategories,
     error,
 }: {
+    weekParam: string;
+    scrollToNow: boolean;
+    showClassId: string | undefined;
     classPopularityIndex: ClassPopularityIndex;
     chain: RezervoChain;
     chainProfiles: ChainProfile[];
@@ -64,6 +72,9 @@ function Chain({
     activityCategories: ActivityCategory[];
     error: RezervoError | undefined;
 }) {
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
         chain.profile.identifier,
     );
@@ -96,13 +107,6 @@ function Chain({
         filters: [],
     });
     const [selectedChain, setSelectedChain] = useState<string | null>(null);
-
-    const [weekParam] = useQueryState(
-        ISO_WEEK_QUERY_PARAM,
-        parseAsString.withDefault(compactISOWeekString(LocalizedDateTime.now())),
-    );
-
-    const [classIdParam, setClassIdParam] = useQueryState(CLASS_ID_QUERY_PARAM);
     const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
 
     useEffect(() => {
@@ -119,7 +123,11 @@ function Chain({
         isLoadingPreviousWeek,
         isLoadingNextWeek,
         weekSchedule: currentWeekSchedule,
-    } = useSchedule(selectedChain, weekParam, deferredSelectedLocationIds);
+    } = useSchedule(
+        selectedChain,
+        weekParam ?? compactISOWeekString(LocalizedDateTime.now()),
+        deferredSelectedLocationIds,
+    );
 
     const classes = useMemo(
         () => currentWeekSchedule?.days.flatMap((daySchedule) => daySchedule.classes) ?? [],
@@ -127,22 +135,25 @@ function Chain({
     );
 
     useEffect(() => {
-        if (classIdParam === null) {
+        if (showClassId === null) {
             setClassInfoClass(null);
             return;
         }
-        const linkedClass = classes.find((_class) => _class.id === classIdParam);
+        const linkedClass = classes.find((_class) => _class.id === showClassId);
         if (linkedClass !== undefined) {
             setClassInfoClass(linkedClass);
         }
-    }, [classIdParam, classes, setClassInfoClass]);
+    }, [showClassId, classes, setClassInfoClass]);
 
     const onSetClassInfoClass = useCallback(
         (c: RezervoClass | null) => {
-            setClassIdParam(c?.id ?? null);
+            const newSearchParams = new URLSearchParams(searchParams);
+            if (c !== null) newSearchParams.set(CLASS_ID_QUERY_PARAM, c.id);
+            else newSearchParams.delete(CLASS_ID_QUERY_PARAM);
+            router.replace(pathname + "?" + newSearchParams.toString());
             setClassInfoClass(c);
         },
-        [setClassIdParam],
+        [pathname, router, searchParams],
     );
 
     // Pre-generate all non-ghost class config strings
@@ -205,14 +216,13 @@ function Chain({
         scrollToToday();
     }, [scrollToTodayRef]);
 
-    const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
-
     useEffect(() => {
-        if (scrollToNowParam) {
-            scrollToToday();
-            setTimeout(() => setScrollToNowParam(null), 3000);
-        }
-    }, [scrollToNowParam, setScrollToNowParam]);
+        if (!scrollToNow) return;
+        scrollToToday();
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.delete(SCROLL_TO_NOW_QUERY_PARAM);
+        router.replace(pathname + "?" + newSearchParams.toString());
+    }, [pathname, router, scrollToNow, searchParams]);
 
     function scrollToToday() {
         const target = scrollToTodayRef.current;
@@ -257,6 +267,7 @@ function Chain({
                     {error === undefined && currentWeekSchedule != null && (
                         <WeekNavigator
                             chain={chain}
+                            weekParam={weekParam}
                             isLoadingPreviousWeek={isLoadingPreviousWeek}
                             isLoadingNextWeek={isLoadingNextWeek}
                             weekNumber={getWeekNumber(currentWeekSchedule)}

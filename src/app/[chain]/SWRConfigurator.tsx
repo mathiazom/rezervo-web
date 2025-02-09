@@ -1,11 +1,26 @@
 "use client";
 
-import { Suspense, useEffect, useMemo } from "react";
+import { PropsWithChildren } from "react";
 import { Middleware, SWRConfig, useSWRConfig } from "swr";
 
-import Chain from "@/components/Chain";
-import { storeSelectedChain } from "@/lib/helpers/storage";
-import { ChainPageProps, RezervoWeekScheduleDTO } from "@/types/serialization";
+import { SWRCacheInjector } from "@/app/[chain]/SWRCacheInjector";
+import { RezervoWeekScheduleDTO } from "@/types/serialization";
+
+export default function SWRConfigurator({
+    scheduleCache,
+    children,
+}: { scheduleCache: Record<string, RezervoWeekScheduleDTO> | undefined } & PropsWithChildren) {
+    return (
+        <SWRConfig
+            value={{
+                use: [scheduleFetchMiddleware],
+            }}
+        >
+            {scheduleCache && <SWRCacheInjector cacheData={scheduleCache} />}
+            {children}
+        </SWRConfig>
+    );
+}
 
 /**
  * Middleware to reduce cache misses by allowing schedule data from a superset of the requested locations.
@@ -52,54 +67,3 @@ const scheduleFetchMiddleware: Middleware = (useSWRNext) => (key, fetcher, confi
     }
     return useSWRNext(key, fetcher, config);
 };
-
-const SWRCacheInjector = <T,>({ cacheData }: { cacheData: Record<string, T> }) => {
-    const { mutate } = useSWRConfig();
-
-    useEffect(() => {
-        for (const [key, value] of Object.entries(cacheData)) {
-            mutate(key, value);
-        }
-    }, [mutate, cacheData]);
-
-    return null;
-};
-
-const ChainPage = ({
-    chain,
-    chainProfiles,
-    swrPrefetched,
-    activityCategories,
-    classPopularityIndex,
-    error,
-}: ChainPageProps) => {
-    useEffect(() => {
-        storeSelectedChain(chain.profile.identifier);
-    }, [chain.profile.identifier]);
-
-    const defaultLocationIds = useMemo(() => {
-        return chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));
-    }, [chain.branches]);
-
-    return (
-        <SWRConfig
-            value={{
-                use: [scheduleFetchMiddleware],
-            }}
-        >
-            <SWRCacheInjector<RezervoWeekScheduleDTO> cacheData={swrPrefetched} />
-            <Suspense>
-                <Chain
-                    classPopularityIndex={classPopularityIndex}
-                    chain={chain}
-                    chainProfiles={chainProfiles}
-                    initialLocationIds={defaultLocationIds}
-                    activityCategories={activityCategories}
-                    error={error}
-                />
-            </Suspense>
-        </SWRConfig>
-    );
-};
-
-export default ChainPage;

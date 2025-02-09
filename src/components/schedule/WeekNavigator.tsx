@@ -1,7 +1,7 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
-import { Avatar, AvatarGroup, Button, Stack, Typography } from "@mui/material";
-import { parseAsBoolean, useQueryState } from "nuqs";
+import { Avatar, AvatarGroup, Box, Button, Stack, Typography } from "@mui/material";
+import Link from "next/link";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 import ScheduleFiltersDialog, {
@@ -15,6 +15,7 @@ import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/t
 
 export default function WeekNavigator({
     chain,
+    weekParam,
     isLoadingPreviousWeek,
     isLoadingNextWeek,
     weekNumber,
@@ -27,6 +28,7 @@ export default function WeekNavigator({
     setExcludeClassTimeFilters,
 }: {
     chain: RezervoChain;
+    weekParam: string;
     isLoadingPreviousWeek: boolean;
     isLoadingNextWeek: boolean;
     weekNumber: number;
@@ -38,9 +40,6 @@ export default function WeekNavigator({
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
 }) {
-    const [weekParam, setWeekParam] = useQueryState(ISO_WEEK_QUERY_PARAM);
-    const [scrollToNowParam, setScrollToNowParam] = useQueryState(SCROLL_TO_NOW_QUERY_PARAM, parseAsBoolean);
-
     const isLocationFiltered = useMemo(() => {
         const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
         return selectedLocationIds.length < totalLocations;
@@ -58,21 +57,16 @@ export default function WeekNavigator({
 
     const [isScheduleFiltersOpen, setIsScheduleFiltersOpen] = useState(false);
 
-    function offsetWeekNumber(offset: number) {
+    function offsetWeekParam(offset: number) {
         const firstDayOfWeek = weekParam
             ? fromCompactISOWeekString(weekParam)
             : LocalizedDateTime.now().startOf("week");
-        if (firstDayOfWeek === null) return;
-        setScrollToNowParam(null);
-        setWeekParam(compactISOWeekString(firstDayOfWeek.plus({ weeks: offset })));
+        if (firstDayOfWeek === null) return null;
+        return compactISOWeekString(firstDayOfWeek.plus({ weeks: offset }));
     }
 
-    async function goToNow() {
-        setWeekParam(compactISOWeekString(LocalizedDateTime.now()));
-        if (scrollToNowParam) {
-            await setScrollToNowParam(null);
-        }
-        setScrollToNowParam(true);
+    function nowSearchParams() {
+        return `${ISO_WEEK_QUERY_PARAM}=${compactISOWeekString(LocalizedDateTime.now())}&${SCROLL_TO_NOW_QUERY_PARAM}`;
     }
 
     return (
@@ -167,15 +161,17 @@ export default function WeekNavigator({
                 excludeClassTimeFilters={excludeClassTimeFilters}
                 setExcludeClassTimeFilters={setExcludeClassTimeFilters}
             />
-            <Button
-                loading={isLoadingPreviousWeek}
-                variant={"outlined"}
-                sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
-                size={"small"}
-                onClick={() => offsetWeekNumber(-1)}
-            >
-                <ArrowBack />
-            </Button>
+            <Link href={`/${chain.profile.identifier}?w=${offsetWeekParam(-1)}`} prefetch={true}>
+                <Button
+                    component={"div"}
+                    loading={isLoadingPreviousWeek}
+                    variant={"outlined"}
+                    sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
+                    size={"small"}
+                >
+                    <ArrowBack />
+                </Button>
+            </Link>
             <Typography
                 variant={"subtitle2"}
                 sx={{
@@ -183,27 +179,30 @@ export default function WeekNavigator({
                     opacity: 0.7,
                 }}
             >{`UKE ${weekNumber}`}</Typography>
-            <Button
-                loading={isLoadingNextWeek}
-                variant={"outlined"}
-                sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
-                size={"small"}
-                onClick={() => offsetWeekNumber(1)}
-            >
-                <ArrowForward />
-            </Button>
-            <Button
+            <Link href={`/${chain.profile.identifier}?w=${offsetWeekParam(1)}`} prefetch={true}>
+                <Button
+                    component={"div"}
+                    loading={isLoadingNextWeek}
+                    variant={"outlined"}
+                    sx={{ minWidth: { xs: "2rem", md: "4rem" } }}
+                    size={"small"}
+                >
+                    <ArrowForward />
+                </Button>
+            </Link>
+            <Box
                 sx={{
                     ml: 1,
                     position: { xs: "absolute", md: "inherit" },
                     right: { xs: 10, md: "inherit" },
                 }}
-                variant={"outlined"}
-                size={"small"}
-                onClick={() => goToNow()}
             >
-                I dag
-            </Button>
+                <Link href={`/${chain.profile.identifier}?${nowSearchParams()}`} prefetch={true}>
+                    <Button component={"div"} variant={"outlined"} size={"small"}>
+                        I dag
+                    </Button>
+                </Link>
+            </Box>
         </Stack>
     );
 }
