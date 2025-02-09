@@ -24,7 +24,9 @@ export function UserAvatar({
     const myUserId = useMyUser((state) => state.userId);
     const realUserId = userId === "me" ? myUserId : userId;
 
+    const [isLoadingAvatar, setIsLoadingAvatar] = useState(true);
     const [isAvatarAvailable, setIsAvatarAvailable] = useState<boolean | null>(null);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
     const imgSrcSize = size <= 75 ? "small" : "medium";
 
@@ -35,13 +37,12 @@ export function UserAvatar({
         }
     }
 
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-
     useEffect(() => {
         if (realUserId == null || token == null) return;
         fetchProtectedImageAsDataUrl(buildPublicBackendPath(`user/${realUserId}/avatar/${imgSrcSize}`), token).then(
             (url) => {
                 setAvatarUrl(url);
+                setIsLoadingAvatar(false);
             },
         );
     }, [realUserId, imgSrcSize, token]);
@@ -55,31 +56,30 @@ export function UserAvatar({
                 height: size,
             }}
         >
-            {imageUrl ? (
-                <Image
-                    src={imageUrl}
-                    alt={username}
-                    width={size}
-                    height={size}
-                    onError={() => doSetPictureAvailable(false)}
-                    onLoad={() => doSetPictureAvailable(true)}
-                    style={{
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                    }}
-                    unoptimized={true} // ensures fresh avatars
-                />
-            ) : isAvatarAvailable === false ? (
+            {isAvatarAvailable !== false ? (
+                <>
+                    {imageUrl && (
+                        <Image
+                            src={imageUrl}
+                            alt={username}
+                            width={size}
+                            height={size}
+                            onError={() => doSetPictureAvailable(false)}
+                            onLoad={() => doSetPictureAvailable(true)}
+                            style={{
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                            }}
+                            unoptimized={true} // ensures fresh avatars
+                        />
+                    )}
+                    {isLoadingAvatar && <Skeleton variant={"circular"} width={size} height={size} />}
+                </>
+            ) : (
                 <Avatar
                     sx={{
-                        top: 0,
-                        left: 0,
                         width: "100%",
                         height: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        position: "absolute",
                         backgroundColor: avatarColor(username),
                         "@media (prefers-color-scheme: dark)": {
                             backgroundColor: avatarColor(username, true),
@@ -88,8 +88,6 @@ export function UserAvatar({
                 >
                     {username[0]}
                 </Avatar>
-            ) : (
-                <Skeleton variant={"circular"} width={size} height={size} />
             )}
         </Box>
     );
