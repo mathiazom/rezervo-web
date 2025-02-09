@@ -179,7 +179,7 @@ export default function WeekNavigator({
             <Typography
                 variant={"subtitle2"}
                 sx={{
-                    mx: 2,
+                    mx: { xs: 1, md: 2 },
                     opacity: 0.7,
                 }}
             >{`UKE ${weekNumber}`}</Typography>
