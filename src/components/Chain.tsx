@@ -302,7 +302,7 @@ function Chain({
             <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
             {userSessions !== null && userChainConfigs !== null && (
                 <AgendaModal
-                    userSession={userSessions}
+                    userSessions={userSessions}
                     chainConfigs={userChainConfigs}
                     chainProfiles={chainProfiles}
                     open={isAgendaOpen}

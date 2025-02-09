@@ -7,13 +7,13 @@ import { ChainConfig } from "@/types/config";
 import { BaseUserSession } from "@/types/userSessions";
 
 const AgendaModal = ({
-    userSession,
+    userSessions,
     chainConfigs,
     chainProfiles,
     open,
     setOpen,
 }: {
-    userSession: BaseUserSession[];
+    userSessions: BaseUserSession[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     chainProfiles: ChainProfile[];
     open: boolean;
@@ -21,7 +21,7 @@ const AgendaModal = ({
 }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <Agenda userSessions={userSession} chainConfigs={chainConfigs} chainProfiles={chainProfiles} />
+            <Agenda userSessions={userSessions} chainConfigs={chainConfigs} chainProfiles={chainProfiles} />
         </Modal>
     );
 };
