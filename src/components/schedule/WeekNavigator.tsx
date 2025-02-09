@@ -1,6 +1,6 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
-import { Avatar, Box, Button, Stack, Typography } from "@mui/material";
+import { Avatar, AvatarGroup, Button, Stack, Typography } from "@mui/material";
 import { parseAsBoolean, useQueryState } from "nuqs";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 
@@ -108,7 +108,8 @@ export default function WeekNavigator({
                 onClick={() => setIsScheduleFiltersOpen(true)}
             >
                 {isFiltered && (
-                    <Box
+                    <AvatarGroup
+                        spacing={12}
                         sx={{
                             display: "flex",
                             gap: 0.5,
@@ -151,7 +152,7 @@ export default function WeekNavigator({
                                 {excludeClassTimeFilters.filters.filter((filter) => filter.enabled).length}
                             </Avatar>
                         )}
-                    </Box>
+                    </AvatarGroup>
                 )}
             </Button>
             <ScheduleFiltersDialog
