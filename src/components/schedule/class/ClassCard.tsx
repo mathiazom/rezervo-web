@@ -174,12 +174,7 @@ const ClassCard = ({
                             </Typography>
                         )}
                         <Collapse in={showUsersPlanned}>
-                            <Box
-                                sx={{
-                                    pl: 0.75,
-                                    pt: 1,
-                                }}
-                            >
+                            <Box sx={{ pt: 1 }}>
                                 <AvatarGroup
                                     max={4}
                                     sx={{
