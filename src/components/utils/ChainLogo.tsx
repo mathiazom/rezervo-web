@@ -1,6 +1,7 @@
 import { Box, useMediaQuery } from "@mui/material";
 import Image from "next/image";
 
+import { shimmerPlaceholder } from "@/lib/helpers/image";
 import { ChainProfile } from "@/types/chain";
 
 function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
@@ -16,8 +17,7 @@ function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
                     objectFit: "contain",
                     objectPosition: "center",
                 }}
-                priority={true}
-                unoptimized // png image optimization fails for production builds
+                placeholder={shimmerPlaceholder(900, 300)}
             />
         </Box>
     );
