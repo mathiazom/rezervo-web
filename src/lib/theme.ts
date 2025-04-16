@@ -4,7 +4,7 @@ import { createTheme } from "@mui/material";
 // @ts-expect-error: undetected usage below
 import { TypeBackground } from "@mui/material/styles/createPalette";
 
-declare module "@mui/material/styles" {
+declare module "@mui/material/styles/createPalette" {
     interface Palette {
         secondaryBackground: Partial<TypeBackground>;
     }

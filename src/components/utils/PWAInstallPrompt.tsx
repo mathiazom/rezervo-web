@@ -1,3 +1,5 @@
+/* eslint-disable react-compiler/react-compiler */
+
 import { PWAInstallElement } from "@khmyznikov/pwa-install";
 import PWAInstall from "@khmyznikov/pwa-install/react-legacy";
 import { useEffect, useRef } from "react";
