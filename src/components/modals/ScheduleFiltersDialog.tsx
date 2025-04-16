@@ -3,7 +3,7 @@ import { Box, Button, Dialog, Tab, Tabs, Typography, useTheme } from "@mui/mater
 import { blue, pink, purple } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { DialogHeader } from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
+import { DialogHeader } from "next/dist/client/components/react-dev-overlay/ui/components/dialog";
 import { Dispatch, SetStateAction, useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 
