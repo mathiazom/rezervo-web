@@ -2,7 +2,8 @@
 import eslint from "@eslint/js";
 import nextPlugin from "@next/eslint-plugin-next";
 import eslintConfigPrettier from "eslint-config-prettier";
-import importPlugin from "eslint-plugin-import";
+import { createTypeScriptImportResolver } from "eslint-import-resolver-typescript";
+import { importX } from "eslint-plugin-import-x";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import noRelativeImportPathsPlugin from "eslint-plugin-no-relative-import-paths";
 import reactPlugin from "eslint-plugin-react";
@@ -17,20 +18,25 @@ export default tseslint.config(
   reactPlugin.configs.flat.recommended,
   reactPlugin.configs.flat["jsx-runtime"],
   jsxA11y.flatConfigs.recommended,
-  importPlugin.flatConfigs.typescript,
+  importX.flatConfigs.recommended,
+  importX.flatConfigs.typescript,
   {
     files: ["**/*.{js,jsx,mjs,cjs,ts,tsx}"],
     plugins: {
       "@next/next": nextPlugin,
       "react-hooks": hooksPlugin,
       "no-relative-import-paths": noRelativeImportPathsPlugin,
-      import: importPlugin,
       "react-compiler": reactCompiler,
     },
     settings: {
       react: {
         version: "detect",
       },
+      "import-x/resolver-next": [
+        createTypeScriptImportResolver({
+          project: "tsconfig.json",
+        }),
+      ],
     },
     rules: {
       ...nextPlugin.configs.recommended.rules,
@@ -39,7 +45,7 @@ export default tseslint.config(
       "no-relative-import-paths/no-relative-import-paths": "error",
       "react-compiler/react-compiler": "error",
       /** @see https://medium.com/weekly-webtips/how-to-sort-imports-like-a-pro-in-typescript-4ee8afd7258a */
-      "import/order": [
+      "import-x/order": [
         "error",
         {
           groups: [
