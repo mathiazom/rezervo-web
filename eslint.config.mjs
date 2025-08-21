@@ -8,6 +8,7 @@ import jsxA11y from "eslint-plugin-jsx-a11y";
 import noRelativeImportPathsPlugin from "eslint-plugin-no-relative-import-paths";
 import reactPlugin from "eslint-plugin-react";
 import reactCompiler from "eslint-plugin-react-compiler";
+// eslint-disable-next-line import-x/default
 import hooksPlugin from "eslint-plugin-react-hooks";
 import tseslint from "typescript-eslint";
 
@@ -44,6 +45,7 @@ export default tseslint.config(
       ...hooksPlugin.configs.recommended.rules,
       "no-relative-import-paths/no-relative-import-paths": "error",
       "react-compiler/react-compiler": "error",
+      "import-x/no-named-as-default-member": "off",
       /** @see https://medium.com/weekly-webtips/how-to-sort-imports-like-a-pro-in-typescript-4ee8afd7258a */
       "import-x/order": [
         "error",

@@ -29,6 +29,7 @@ export default function AuthProvider({ config, children }: { config: BaseAuthCon
                 scope: "openid offline_access email profile",
                 // redirect back to original path after login has completed
                 preLogin: () => storePreLoginPath(pathname == null || pathname == "/login" ? "/" : pathname),
+                // @ts-expect-error TODO: bad route type
                 postLogin: () => router.replace(popStoredPreLoginPath() || ""),
             }}
         >

@@ -72,7 +72,6 @@ const IndexPage = ({ chainProfiles }: IndexPageProps) => {
                                 href={`/${chainProfile.identifier}`}
                                 style={{ width: "100%" }}
                                 passHref
-                                legacyBehavior
                             >
                                 <Button
                                     sx={{
