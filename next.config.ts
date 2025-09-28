@@ -6,7 +6,7 @@ const withSerwist = withSerwistInit({
 });
 
 export default withSerwist({
-    reactStrictMode: true,
+    typedRoutes: true,
     staticPageGenerationTimeout: 120,
     ...(global.process.env["BUILD_STANDALONE"] === "true" ? { output: "standalone" } : {}),
     async redirects() {
@@ -29,7 +29,7 @@ export default withSerwist({
         remotePatterns: [
             {
                 protocol: "https",
-                hostname: new URL(global.process.env["NEXT_PUBLIC_CONFIG_HOST"]!).hostname,
+                hostname: new URL(global.process.env["NEXT_PUBLIC_CONFIG_HOST"] ?? "").hostname,
             },
             {
                 protocol: "https",

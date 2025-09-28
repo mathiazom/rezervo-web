@@ -3,7 +3,6 @@ import { Box, Button, Dialog, Tab, Tabs, Typography, useTheme } from "@mui/mater
 import { blue, pink, purple } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import { DialogHeader } from "next/dist/client/components/react-dev-overlay/ui/components/dialog";
 import { Dispatch, SetStateAction, useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 
@@ -111,76 +110,74 @@ export default function ScheduleFiltersDialog({
                 },
             }}
         >
-            <DialogHeader>
-                <Tabs
-                    value={tab}
-                    onChange={handleChange}
-                    indicatorColor={"primary"}
-                    textColor="inherit"
-                    variant="fullWidth"
-                    aria-label="schedule-filters-tabs"
-                    TabIndicatorProps={{
-                        style: {
-                            backgroundColor: currentTabColor,
+            <Tabs
+                value={tab}
+                onChange={handleChange}
+                indicatorColor={"primary"}
+                textColor="inherit"
+                variant="fullWidth"
+                aria-label="schedule-filters-tabs"
+                TabIndicatorProps={{
+                    style: {
+                        backgroundColor: currentTabColor,
+                    },
+                }}
+            >
+                <Tab
+                    label={"Sentre"}
+                    icon={<PlaceRounded fontSize={"small"} />}
+                    iconPosition={"start"}
+                    sx={[
+                        {
+                            minHeight: "3rem",
                         },
-                    }}
-                >
-                    <Tab
-                        label={"Sentre"}
-                        icon={<PlaceRounded fontSize={"small"} />}
-                        iconPosition={"start"}
-                        sx={[
-                            {
-                                minHeight: "3rem",
-                            },
-                            tab == 0
-                                ? {
-                                      color: LOCATIONS_COLOR[500],
-                                  }
-                                : {
-                                      color: null,
-                                  },
-                        ]}
-                        {...a11yProps(0)}
-                    />
-                    <Tab
-                        label={"Kategorier"}
-                        icon={<CategoryRounded fontSize={"small"} />}
-                        iconPosition={"start"}
-                        sx={[
-                            {
-                                minHeight: "3rem",
-                            },
-                            tab == 1
-                                ? {
-                                      color: CATEGORIES_COLOR[500],
-                                  }
-                                : {
-                                      color: null,
-                                  },
-                        ]}
-                        {...a11yProps(1)}
-                    />
-                    <Tab
-                        label={"Tidsrom"}
-                        icon={<AccessTimeRounded fontSize={"small"} />}
-                        iconPosition={"start"}
-                        sx={[
-                            {
-                                minHeight: "3rem",
-                            },
-                            tab == 2
-                                ? {
-                                      color: EXCLUDE_CLASS_TIME_COLOR[500],
-                                  }
-                                : {
-                                      color: null,
-                                  },
-                        ]}
-                        {...a11yProps(2)}
-                    />
-                </Tabs>
-            </DialogHeader>
+                        tab == 0
+                            ? {
+                                  color: LOCATIONS_COLOR[500],
+                              }
+                            : {
+                                  color: null,
+                              },
+                    ]}
+                    {...a11yProps(0)}
+                />
+                <Tab
+                    label={"Kategorier"}
+                    icon={<CategoryRounded fontSize={"small"} />}
+                    iconPosition={"start"}
+                    sx={[
+                        {
+                            minHeight: "3rem",
+                        },
+                        tab == 1
+                            ? {
+                                  color: CATEGORIES_COLOR[500],
+                              }
+                            : {
+                                  color: null,
+                              },
+                    ]}
+                    {...a11yProps(1)}
+                />
+                <Tab
+                    label={"Tidsrom"}
+                    icon={<AccessTimeRounded fontSize={"small"} />}
+                    iconPosition={"start"}
+                    sx={[
+                        {
+                            minHeight: "3rem",
+                        },
+                        tab == 2
+                            ? {
+                                  color: EXCLUDE_CLASS_TIME_COLOR[500],
+                              }
+                            : {
+                                  color: null,
+                              },
+                    ]}
+                    {...a11yProps(2)}
+                />
+            </Tabs>
             <DialogContent sx={{ padding: 0, margin: 0 }}>
                 <SwipeableViews index={tab} onChangeIndex={handleChangeIndex}>
                     <TabPanel value={tab} index={0} dir={theme.direction}>

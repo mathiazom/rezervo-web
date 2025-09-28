@@ -67,32 +67,26 @@ const IndexPage = ({ chainProfiles }: IndexPageProps) => {
                 >
                     {chainProfiles.map((chainProfile) => {
                         return (
-                            <Link
+                            <Button
                                 key={chainProfile.identifier}
+                                sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    padding: "1.75rem",
+                                    height: "6rem",
+                                    width: "18rem",
+                                }}
+                                disableTouchRipple
+                                component={Link}
                                 href={`/${chainProfile.identifier}`}
-                                style={{ width: "100%" }}
-                                passHref
-                                legacyBehavior
+                                onClick={() => setChainLoading(chainProfile.identifier)}
                             >
-                                <Button
-                                    sx={{
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        padding: "1.75rem",
-                                        height: "6rem",
-                                        width: "18rem",
-                                    }}
-                                    disableTouchRipple
-                                    component={"a"}
-                                    onClick={() => setChainLoading(chainProfile.identifier)}
-                                >
-                                    {chainLoading !== chainProfile.identifier ? (
-                                        <ChainLogo chainProfile={chainProfile} />
-                                    ) : (
-                                        <ChainLogoSpinner chainProfile={chainProfile} />
-                                    )}
-                                </Button>
-                            </Link>
+                                {chainLoading !== chainProfile.identifier ? (
+                                    <ChainLogo chainProfile={chainProfile} />
+                                ) : (
+                                    <ChainLogoSpinner chainProfile={chainProfile} />
+                                )}
+                            </Button>
                         );
                     })}
                 </Box>

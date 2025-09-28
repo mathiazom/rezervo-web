@@ -1,4 +1,6 @@
 import { DateTime, Info, Settings } from "luxon";
+// @ts-expect-error bad internal import
+// eslint-disable-next-line import-x/no-unresolved
 import { IfValid, Valid } from "luxon/src/_util";
 
 import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType, RezervoClass } from "@/types/chain";

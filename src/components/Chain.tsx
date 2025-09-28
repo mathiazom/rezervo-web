@@ -150,6 +150,7 @@ function Chain({
             const newSearchParams = new URLSearchParams(searchParams);
             if (c !== null) newSearchParams.set(CLASS_ID_QUERY_PARAM, c.id);
             else newSearchParams.delete(CLASS_ID_QUERY_PARAM);
+            // @ts-expect-error TODO: bad route type
             router.replace(pathname + "?" + newSearchParams.toString());
             setClassInfoClass(c);
         },
@@ -221,6 +222,7 @@ function Chain({
         scrollToToday();
         const newSearchParams = new URLSearchParams(searchParams);
         newSearchParams.delete(SCROLL_TO_NOW_QUERY_PARAM);
+        // @ts-expect-error TODO: bad route type
         router.replace(pathname + "?" + newSearchParams.toString());
     }, [pathname, router, scrollToNow, searchParams]);
 

@@ -4,15 +4,6 @@ import Chain from "@/components/Chain";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { fetchActiveChains, fetchChain, fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
 
-interface Props {
-    params: Promise<{ chain: string }>;
-    searchParams: Promise<{
-        [ISO_WEEK_QUERY_PARAM]: string | undefined;
-        [SCROLL_TO_NOW_QUERY_PARAM]: string | undefined;
-        [CLASS_ID_QUERY_PARAM]: string | undefined;
-    }>;
-}
-
 export const dynamicParams = false;
 
 export const revalidate = 300;
@@ -23,7 +14,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export default async function Page({ params, searchParams }: Props) {
+export default async function Page({ params, searchParams }: PageProps<"/[chain]">) {
     const chainIdentifier = (await params).chain;
     const {
         [ISO_WEEK_QUERY_PARAM]: rawWeekParam,
@@ -31,7 +22,9 @@ export default async function Page({ params, searchParams }: Props) {
         [CLASS_ID_QUERY_PARAM]: showClassId,
     } = await searchParams;
     const { chain, weekParam, chainProfiles, scheduleCache, activityCategories, classPopularityIndex, error } =
-        await fetchChain(chainIdentifier).then((c) => fetchChainPageStaticProps(c, rawWeekParam));
+        await fetchChain(chainIdentifier).then((c) =>
+            fetchChainPageStaticProps(c, Array.isArray(rawWeekParam) ? rawWeekParam[0] : rawWeekParam),
+        );
 
     const defaultLocationIds = chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));
 
@@ -41,7 +34,7 @@ export default async function Page({ params, searchParams }: Props) {
             <Chain
                 weekParam={weekParam}
                 scrollToNow={scrollToNowParam !== undefined}
-                showClassId={showClassId}
+                showClassId={Array.isArray(showClassId) ? showClassId[0] : showClassId}
                 chain={chain}
                 classPopularityIndex={classPopularityIndex ?? {}}
                 chainProfiles={chainProfiles}

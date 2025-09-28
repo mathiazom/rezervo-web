@@ -66,7 +66,6 @@ function ChainSwitcher({
                                     }}
                                     style={{ width: "100%" }}
                                     passHref
-                                    legacyBehavior
                                 >
                                     <ListItemButton
                                         sx={[
