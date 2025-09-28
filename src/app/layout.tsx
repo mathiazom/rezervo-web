@@ -68,19 +68,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
     return (
         <html lang="no" className={roboto.className}>
-            <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
-                <CssBaseline enableColorScheme />
-                <AuthProvider config={authConfig}>
-                    <DatePickerLocalizationProvider>
-                        <SnowfallProvider />
-                        <body className={roboto.variable}>
+            <body className={roboto.variable}>
+                <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
+                    <CssBaseline enableColorScheme />
+                    <AuthProvider config={authConfig}>
+                        <DatePickerLocalizationProvider>
+                            <SnowfallProvider />
                             <div id="root">
                                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
                             </div>
-                        </body>
-                    </DatePickerLocalizationProvider>
-                </AuthProvider>
-            </ThemeProvider>
+                        </DatePickerLocalizationProvider>
+                    </AuthProvider>
+                </ThemeProvider>
+            </body>
         </html>
     );
 }

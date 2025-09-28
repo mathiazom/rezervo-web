@@ -266,7 +266,7 @@ export default function Settings({
                                                         value as ReminderTimeBeforeInputUnit,
                                                     );
                                                 }}
-                                                inputProps={{ "aria-label": "Without label" }}
+                                                inputProps={{ "aria-label": "enhet" }}
                                                 size={"small"}
                                             >
                                                 <MenuItem value={ReminderTimeBeforeInputUnit.HOURS}>timer</MenuItem>
