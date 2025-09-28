@@ -20,18 +20,16 @@ const ClassInfoModal = ({
 }) => {
     return (
         <Modal open={classInfoClass != null} onClose={() => onClose()}>
-            <>
-                {classInfoClass && (
-                    <ClassInfo
-                        chain={chain}
-                        initialClassData={classInfoClass}
-                        classPopularity={
-                            classPopularityIndex[classRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown
-                        }
-                        onUpdateConfig={onUpdateConfig}
-                    />
-                )}
-            </>
+            {classInfoClass ? (
+                <ClassInfo
+                    chain={chain}
+                    initialClassData={classInfoClass}
+                    classPopularity={classPopularityIndex[classRecurrentId(classInfoClass)] ?? ClassPopularity.Unknown}
+                    onUpdateConfig={onUpdateConfig}
+                />
+            ) : (
+                <></>
+            )}
         </Modal>
     );
 };

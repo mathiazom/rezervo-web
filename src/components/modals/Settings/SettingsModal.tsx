@@ -25,15 +25,13 @@ const SettingsModal = ({
 
     return (
         <Modal open={open} onClose={() => setOpen(false)}>
-            <>
-                <Settings
-                    chainProfiles={chainProfiles}
-                    chainConfigs={chainConfigs}
-                    features={features}
-                    isPWAInstalled={isPWAInstalled}
-                    showPWAInstall={showPWAInstall}
-                />
-            </>
+            <Settings
+                chainProfiles={chainProfiles}
+                chainConfigs={chainConfigs}
+                features={features}
+                isPWAInstalled={isPWAInstalled}
+                showPWAInstall={showPWAInstall}
+            />
         </Modal>
     );
 };
