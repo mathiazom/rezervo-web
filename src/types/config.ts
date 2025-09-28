@@ -33,8 +33,19 @@ export interface ChainUserTotpPayload {
     totp: string;
 }
 
+export interface HourAndMinute {
+    hour: number;
+    minute: number;
+}
+
+export interface AllowedTimeWindow {
+    notBefore: HourAndMinute;
+    notAfter: HourAndMinute;
+}
+
 export interface NotificationsConfig {
     reminderHoursBefore: number | null;
+    reminderAllowedTimeWindow: AllowedTimeWindow | null;
 }
 
 export interface Preferences {

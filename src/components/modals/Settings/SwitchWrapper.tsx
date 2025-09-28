@@ -27,7 +27,11 @@ export default function SwitchWrapper({
                     flexGrow: 1,
                 }}
             >
-                {loading ? <CircularProgress size={22} thickness={4} sx={{ margin: "1rem" }} /> : children}
+                {loading ? (
+                    <CircularProgress size={22} thickness={4} sx={{ marginY: "0.5rem", marginX: "1rem" }} />
+                ) : (
+                    children
+                )}
             </Box>
         </Box>
     );
