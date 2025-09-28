@@ -19,6 +19,8 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers";
+import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";
@@ -30,10 +32,11 @@ import SubHeader from "@/components/modals/SubHeader";
 import { INSTALL_PROMPT_DESCRIPTION } from "@/components/utils/PWAInstallPrompt";
 import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";
+import { LocalizedDateTime } from "@/lib/helpers/date";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { isNonEmptyArray } from "@/lib/utils/arrayUtils";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { ChainConfig, NotificationsConfig, PreferencesPayload } from "@/types/config";
+import { AllowedTimeWindow, ChainConfig, HourAndMinute, NotificationsConfig, PreferencesPayload } from "@/types/config";
 import { Features } from "@/types/features";
 
 // Fix track not visible with "system" color scheme
@@ -75,12 +78,19 @@ export default function Settings({
     const theme = useTheme();
 
     const { preferences, putPreferences } = usePreferences();
-    const [notificationsConfigLoading, setNotificationsConfigLoading] = useState<boolean>(false);
+    const [reminderHoursBeforeLoading, setReminderHoursBeforeLoading] = useState<boolean>(true);
+    const [reminderWindowLoading, setReminderWindowLoading] = useState<boolean>(true);
     const [reminderActive, setReminderActive] = useState(preferences?.notifications?.reminderHoursBefore != null);
     const [reminderHoursBefore, setReminderHoursBefore] = useState<number | null>(null);
     const [reminderTimeBeforeInput, setReminderTimeBeforeInput] = useState<string | null>(null);
     const [reminderTimeBeforeInputUnit, setReminderTimeBeforeInputUnit] = useState<ReminderTimeBeforeInputUnit | null>(
         null,
+    );
+    const [reminderWindowActive, setReminderWindowActive] = useState(
+        preferences?.notifications?.reminderAllowedTimeWindow != null,
+    );
+    const [reminderWindow, setReminderWindow] = useState(
+        preferences?.notifications?.reminderAllowedTimeWindow ?? DEFAULT_REMINDER_WINDOW,
     );
 
     function handleReminderActiveChanged(active: boolean) {
@@ -91,7 +101,6 @@ export default function Settings({
             setReminderTimeBeforeInputUnit(ReminderTimeBeforeInputUnit.HOURS);
         }
         onNotificationsConfigChanged({
-            ...(preferences?.notifications ?? {}),
             reminderHoursBefore: active ? (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS) : null,
         });
     }
@@ -143,17 +152,63 @@ export default function Settings({
             ).toString(),
         );
         onNotificationsConfigChanged({
-            ...(preferences?.notifications ?? {}),
             reminderHoursBefore: reminderActive ? newReminderHoursBefore : null,
         });
     }
 
-    function onNotificationsConfigChanged(notificationsConfig: NotificationsConfig) {
-        setNotificationsConfigLoading(true);
+    function handleReminderWindowActiveChanged(active: boolean) {
+        setReminderWindowActive(active);
+        onNotificationsConfigChanged({
+            reminderAllowedTimeWindow: active ? reminderWindow : null,
+        });
+    }
+
+    function handleReminderWindowNotBeforeChanged(notBefore: DateTime | null) {
+        if (notBefore == null) return;
+        handleReminderWindowChanged({
+            ...reminderWindow,
+            notBefore: {
+                hour: notBefore.hour,
+                minute: notBefore.minute,
+            },
+        });
+    }
+
+    function handleReminderWindowNotAfterChanged(notAfter: DateTime | null) {
+        if (notAfter == null) return;
+        handleReminderWindowChanged({
+            ...reminderWindow,
+            notAfter: {
+                hour: notAfter.hour,
+                minute: notAfter.minute,
+            },
+        });
+    }
+
+    function handleReminderWindowChanged(window: AllowedTimeWindow) {
+        setReminderWindow(window);
+        onNotificationsConfigChanged({
+            reminderAllowedTimeWindow: window,
+        });
+    }
+
+    function onNotificationsConfigChanged(notificationsConfig: Partial<NotificationsConfig>) {
+        if (notificationsConfig.reminderHoursBefore !== undefined) {
+            setReminderHoursBeforeLoading(true);
+        }
+        if (notificationsConfig.reminderAllowedTimeWindow !== undefined) {
+            setReminderWindowLoading(true);
+        }
         return putPreferences({
             ...preferences,
-            notifications: notificationsConfig,
-        } as PreferencesPayload).then(() => setNotificationsConfigLoading(false));
+            notifications: {
+                ...(preferences?.notifications ?? {}),
+                ...notificationsConfig,
+            },
+        } as PreferencesPayload).then(() => {
+            setReminderHoursBeforeLoading(false);
+            setReminderWindowLoading(false);
+        });
     }
 
     useEffect(
@@ -177,10 +232,22 @@ export default function Settings({
                     : newReminderHoursBefore
                 ).toString(),
             );
+            setReminderHoursBeforeLoading(false);
         },
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [preferences?.notifications?.reminderHoursBefore],
     );
+
+    useEffect(() => {
+        const newWindow = preferences?.notifications?.reminderAllowedTimeWindow;
+        if (newWindow == null) {
+            setReminderWindowActive(false);
+            return;
+        }
+        setReminderWindowActive(true);
+        setReminderWindow(newWindow);
+        setReminderWindowLoading(false);
+    }, [preferences?.notifications?.reminderAllowedTimeWindow]);
 
     return (
         <ModalWrapper title={"Innstillinger"} icon={<SettingsRounded />}>
@@ -216,8 +283,8 @@ export default function Settings({
                                         </SvgIcon>
                                     }
                                 />
-                                <FormLabel>
-                                    <SwitchWrapper label={"Påminnelse om time"} loading={notificationsConfigLoading}>
+                                <FormLabel disabled={reminderHoursBeforeLoading}>
+                                    <SwitchWrapper label={"Påminnelse om time"} loading={reminderHoursBeforeLoading}>
                                         <Switch
                                             checked={reminderActive}
                                             onChange={(_, checked) => handleReminderActiveChanged(checked)}
@@ -230,7 +297,11 @@ export default function Settings({
                                 <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", pb: 1 }}>
                                     <FormControl>
                                         <TextField
-                                            disabled={!reminderActive || reminderHoursBefore == null}
+                                            disabled={
+                                                reminderHoursBeforeLoading ||
+                                                !reminderActive ||
+                                                reminderHoursBefore == null
+                                            }
                                             value={
                                                 reminderTimeBeforeInput ??
                                                 (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
@@ -251,10 +322,14 @@ export default function Settings({
                                             }}
                                         />
                                     </FormControl>
-                                    <FormLabel disabled={!reminderActive}>
+                                    <FormLabel disabled={reminderHoursBeforeLoading || !reminderActive}>
                                         <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
                                             <Select
-                                                disabled={!reminderActive || reminderHoursBefore == null}
+                                                disabled={
+                                                    reminderHoursBeforeLoading ||
+                                                    !reminderActive ||
+                                                    reminderHoursBefore == null
+                                                }
                                                 value={
                                                     reminderTimeBeforeInputUnit ??
                                                     reminderTimeBeforeInputUnitFromHours(
@@ -278,6 +353,51 @@ export default function Settings({
                                         </Box>
                                     </FormLabel>
                                 </Box>
+                                <FormLabel disabled={reminderWindowLoading}>
+                                    <SwitchWrapper label={"Varslingsvindu"} loading={reminderWindowLoading}>
+                                        <Switch
+                                            checked={reminderWindowActive}
+                                            onChange={(_, checked) => handleReminderWindowActiveChanged(checked)}
+                                        />
+                                    </SwitchWrapper>
+                                </FormLabel>
+                                <Box sx={{ display: "flex", gap: 1, alignItems: "center", pb: 1 }}>
+                                    <FormControl>
+                                        <TimePicker
+                                            disabled={
+                                                reminderWindowLoading || !reminderWindowActive || reminderWindow == null
+                                            }
+                                            value={dateTimeFromHourAndMinute(
+                                                reminderWindow?.notBefore ?? DEFAULT_REMINDER_WINDOW.notBefore,
+                                            )}
+                                            onChange={(value) => handleReminderWindowNotBeforeChanged(value)}
+                                            sx={{ width: "7rem" }}
+                                            slotProps={{
+                                                textField: {
+                                                    size: "small",
+                                                },
+                                            }}
+                                        />
+                                    </FormControl>
+                                    <Typography variant="body1">-</Typography>
+                                    <FormControl>
+                                        <TimePicker
+                                            disabled={
+                                                reminderWindowLoading || !reminderWindowActive || reminderWindow == null
+                                            }
+                                            value={dateTimeFromHourAndMinute(
+                                                reminderWindow?.notAfter ?? DEFAULT_REMINDER_WINDOW.notAfter,
+                                            )}
+                                            onChange={(value) => handleReminderWindowNotAfterChanged(value)}
+                                            sx={{ width: "7rem" }}
+                                            slotProps={{
+                                                textField: {
+                                                    size: "small",
+                                                },
+                                            }}
+                                        />
+                                    </FormControl>
+                                </Box>
                             </FormGroup>
                             <Divider />
                         </>
@@ -287,4 +407,22 @@ export default function Settings({
             </Box>
         </ModalWrapper>
     );
+}
+
+const DEFAULT_REMINDER_WINDOW: AllowedTimeWindow = {
+    notBefore: {
+        hour: 8,
+        minute: 0,
+    },
+    notAfter: {
+        hour: 21,
+        minute: 0,
+    },
+};
+
+function dateTimeFromHourAndMinute(hourAndMinute: HourAndMinute) {
+    return LocalizedDateTime.fromObject({
+        hour: hourAndMinute.hour,
+        minute: hourAndMinute.minute,
+    });
 }
