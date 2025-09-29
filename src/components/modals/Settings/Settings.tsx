@@ -239,6 +239,7 @@ export default function Settings({
     );
 
     useEffect(() => {
+        setReminderWindowLoading(false);
         const newWindow = preferences?.notifications?.reminderAllowedTimeWindow;
         if (newWindow == null) {
             setReminderWindowActive(false);
@@ -246,7 +247,6 @@ export default function Settings({
         }
         setReminderWindowActive(true);
         setReminderWindow(newWindow);
-        setReminderWindowLoading(false);
     }, [preferences?.notifications?.reminderAllowedTimeWindow]);
 
     return (
