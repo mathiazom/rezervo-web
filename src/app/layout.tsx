@@ -70,9 +70,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="no" className={roboto.className}>
             <body className={roboto.variable}>
                 <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
-                    <CssBaseline enableColorScheme />
                     <AuthProvider config={authConfig}>
                         <DatePickerLocalizationProvider>
+                            <CssBaseline enableColorScheme />
                             <SnowfallProvider />
                             <div id="root">
                                 <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
