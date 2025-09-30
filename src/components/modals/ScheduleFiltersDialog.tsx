@@ -4,7 +4,6 @@ import { blue, pink, purple } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { Dispatch, SetStateAction, useState } from "react";
-import SwipeableViews from "react-swipeable-views";
 
 import CategoryFilters from "@/components/modals/CategoryFilters";
 import ExcludeClassTimeFilters from "@/components/modals/ExcludeClassTimeFilters";
@@ -81,10 +80,6 @@ export default function ScheduleFiltersDialog({
 
     const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
         setTab(newValue);
-    };
-
-    const handleChangeIndex = (index: number) => {
-        setTab(index);
     };
 
     const currentTabColor = tabColors[tab];
@@ -175,29 +170,27 @@ export default function ScheduleFiltersDialog({
                 />
             </Tabs>
             <DialogContent sx={{ padding: 0, margin: 0 }}>
-                <SwipeableViews index={tab} onChangeIndex={handleChangeIndex}>
-                    <TabPanel value={tab} index={0} dir={theme.direction}>
-                        <LocationFilters
-                            chain={chain}
-                            selectedLocationIds={selectedLocationIds}
-                            setSelectedLocationIds={setSelectedLocationIds}
-                        />
-                    </TabPanel>
-                    <TabPanel value={tab} index={1} dir={theme.direction}>
-                        <CategoryFilters
-                            chain={chain}
-                            allCategories={allCategories}
-                            selectedCategories={selectedCategories}
-                            setSelectedCategories={setSelectedCategories}
-                        />
-                    </TabPanel>
-                    <TabPanel value={tab} index={2} dir={theme.direction}>
-                        <ExcludeClassTimeFilters
-                            excludeClassTimeFilters={excludeClassTimeFilters}
-                            setExcludeClassTimeFilters={setExcludeClassTimeFilters}
-                        />
-                    </TabPanel>
-                </SwipeableViews>
+                <TabPanel value={tab} index={0} dir={theme.direction}>
+                    <LocationFilters
+                        chain={chain}
+                        selectedLocationIds={selectedLocationIds}
+                        setSelectedLocationIds={setSelectedLocationIds}
+                    />
+                </TabPanel>
+                <TabPanel value={tab} index={1} dir={theme.direction}>
+                    <CategoryFilters
+                        chain={chain}
+                        allCategories={allCategories}
+                        selectedCategories={selectedCategories}
+                        setSelectedCategories={setSelectedCategories}
+                    />
+                </TabPanel>
+                <TabPanel value={tab} index={2} dir={theme.direction}>
+                    <ExcludeClassTimeFilters
+                        excludeClassTimeFilters={excludeClassTimeFilters}
+                        setExcludeClassTimeFilters={setExcludeClassTimeFilters}
+                    />
+                </TabPanel>
             </DialogContent>
             <DialogActions>
                 <Button color={"inherit"} onClick={() => handleDialogClose()}>

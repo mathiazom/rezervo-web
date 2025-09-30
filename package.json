@@ -37,7 +37,6 @@
         "react-dropzone": "^14.3.8",
         "react-oauth2-code-pkce": "^1.23.1",
         "react-snowfall": "^2.3.0",
-        "react-swipeable-views": "^0.14.0",
         "sharp": "^0.34.3",
         "swr": "^2.3.6",
         "zustand": "^5.0.8"
