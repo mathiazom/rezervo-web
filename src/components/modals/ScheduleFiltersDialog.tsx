@@ -1,5 +1,5 @@
 import { AccessTimeRounded, CategoryRounded, PlaceRounded } from "@mui/icons-material";
-import { Box, Button, Dialog, Tab, Tabs, Typography, useTheme } from "@mui/material";
+import { Box, Button, Dialog, Tab, Tabs, useTheme } from "@mui/material";
 import { blue, pink, purple } from "@mui/material/colors";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -36,11 +36,7 @@ function TabPanel(props: TabPanelProps) {
             aria-labelledby={`full-width-tab-${index}`}
             {...other}
         >
-            {value === index && (
-                <Box sx={{ py: 1 }}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
+            {value === index && <Box sx={{ py: 1 }}>{children}</Box>}
         </div>
     );
 }
