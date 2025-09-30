@@ -57,44 +57,39 @@ function ChainSwitcher({
                                     (isCurrentChain ? setOpen(false) : setChainLoading(chainProfile.identifier))
                                 }
                             >
-                                <Link
+                                <ListItemButton
                                     href={{
                                         pathname: `/${chainProfile.identifier}`,
                                         query: {
                                             [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(LocalizedDateTime.now()),
                                         },
                                     }}
-                                    style={{ width: "100%" }}
-                                    passHref
+                                    sx={[
+                                        {
+                                            display: "flex",
+                                            justifyContent: "center",
+                                            padding: "1.75rem",
+                                            height: "6rem",
+                                            width: "100%",
+                                        },
+                                        isLoading || isCurrentChain
+                                            ? {
+                                                  pointerEvents: "none",
+                                                  touchEvents: "none",
+                                              }
+                                            : {},
+                                    ]}
+                                    disableTouchRipple
+                                    disabled={isLoading && !isCurrentLoadingChain}
+                                    selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}
+                                    component={Link}
                                 >
-                                    <ListItemButton
-                                        sx={[
-                                            {
-                                                display: "flex",
-                                                justifyContent: "center",
-                                                padding: "1.75rem",
-                                                height: "6rem",
-                                                width: "100%",
-                                            },
-                                            isLoading || isCurrentChain
-                                                ? {
-                                                      pointerEvents: "none",
-                                                      touchEvents: "none",
-                                                  }
-                                                : {},
-                                        ]}
-                                        disableTouchRipple
-                                        disabled={isLoading && !isCurrentLoadingChain}
-                                        selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}
-                                        component={"a"}
-                                    >
-                                        {!isLoading || chainLoading !== chainProfile.identifier ? (
-                                            <ChainLogo chainProfile={chainProfile} />
-                                        ) : (
-                                            <ChainLogoSpinner chainProfile={chainProfile} />
-                                        )}
-                                    </ListItemButton>
-                                </Link>
+                                    {!isLoading || chainLoading !== chainProfile.identifier ? (
+                                        <ChainLogo chainProfile={chainProfile} />
+                                    ) : (
+                                        <ChainLogoSpinner chainProfile={chainProfile} />
+                                    )}
+                                </ListItemButton>
                             </ListItem>
                         );
                     })}
