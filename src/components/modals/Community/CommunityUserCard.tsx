@@ -1,5 +1,5 @@
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
-import { Avatar, Box, CircularProgress, TableCell, TableRow, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, Divider, Tooltip, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
@@ -130,14 +130,15 @@ const CommunityUserCard = ({
     };
     return (
         <>
-            <TableRow sx={{ display: "flex" }}>
-                <TableCell
+            <Box sx={{ display: "flex" }}>
+                <Box
                     sx={{
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center",
                         width: "100%",
                         px: 0,
+                        py: 2,
                     }}
                 >
                     <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -183,8 +184,9 @@ const CommunityUserCard = ({
                         </Box>
                     </Box>
                     {renderRelationshipActions(communityUser.relationship)}
-                </TableCell>
-            </TableRow>
+                </Box>
+            </Box>
+            <Divider />
             {confirmDialogAction != null && (
                 <ConfirmationDialog
                     open={confirmDialogOpen}
