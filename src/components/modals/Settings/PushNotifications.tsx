@@ -1,7 +1,7 @@
 import { Vibration } from "@mui/icons-material";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { Box, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Activity, useEffect, useState } from "react";
 
 import SwitchWrapper from "@/components/modals/Settings/SwitchWrapper";
 import SubHeader from "@/components/modals/SubHeader";
@@ -30,6 +30,8 @@ const PushNotifications = () => {
     useEffect(() => {
         if (navigator.serviceWorker === undefined) {
             // not available (e.g. outside Secure Context)
+            // TODO: setState should not be called directly an in a useEffect
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSubscriptionIsLoading(false);
             return;
         }
@@ -95,14 +97,14 @@ const PushNotifications = () => {
                         />
                     </SwitchWrapper>
                 </FormLabel>
-                {!isWebPushSupported && !subscriptionIsLoading && (
+                <Activity mode={!isWebPushSupported && !subscriptionIsLoading ? "visible" : "hidden"}>
                     <FormLabel>
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1, pb: 1 }}>
                             <ErrorRoundedIcon color={"error"} />
                             <Typography>Nettleseren din støtter ikke push-varsler</Typography>
                         </Box>
                     </FormLabel>
-                )}
+                </Activity>
             </FormGroup>
         </>
     );

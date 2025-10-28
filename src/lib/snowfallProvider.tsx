@@ -1,5 +1,6 @@
 "use client";
 
+import { Activity } from "react";
 import { Snowfall } from "react-snowfall";
 
 import { checkSantaTime } from "@/lib/utils/santaUtils";
@@ -8,7 +9,7 @@ export default function SnowfallProvider() {
     const show = checkSantaTime();
 
     return (
-        show && (
+        <Activity mode={show ? "visible" : "hidden"}>
             <Snowfall
                 speed={[0.5, 1.0]}
                 wind={[0, 0.5]}
@@ -19,6 +20,6 @@ export default function SnowfallProvider() {
                     height: "100vh",
                 }}
             />
-        )
+        </Activity>
     );
 }

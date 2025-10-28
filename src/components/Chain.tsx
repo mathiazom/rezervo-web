@@ -111,6 +111,8 @@ function Chain({
 
     useEffect(() => {
         const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
+        // TODO: setState should not be called directly an in a useEffect
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedLocationIds(locationIds);
         setSelectedCategories(
             getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories.map((ac) => ac.name),
@@ -136,6 +138,8 @@ function Chain({
 
     useEffect(() => {
         if (showClassId === null) {
+            // TODO: setState should not be called directly an in a useEffect
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setClassInfoClass(null);
             return;
         }
@@ -209,10 +213,22 @@ function Chain({
     const scrollToTodayRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
+        // TODO: setState should not be called directly an in a useEffect
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSelectedClassIds(userConfig?.recurringBookings?.map(classConfigRecurrentId) ?? null);
         setUserConfigActive(userConfig?.active ?? false);
     }, [userConfig?.active, userConfig?.recurringBookings]);
 
+    function scrollToToday() {
+        const target = scrollToTodayRef.current;
+        if (target != null) {
+            target.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+                inline: "center",
+            });
+        }
+    }
     useEffect(() => {
         scrollToToday();
     }, [scrollToTodayRef]);
@@ -225,17 +241,6 @@ function Chain({
         // @ts-expect-error TODO: bad route type
         router.replace(pathname + "?" + newSearchParams.toString());
     }, [pathname, router, scrollToNow, searchParams]);
-
-    function scrollToToday() {
-        const target = scrollToTodayRef.current;
-        if (target != null) {
-            target.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "center",
-            });
-        }
-    }
 
     const refetchConfig = useCallback(async () => {
         await mutateUserConfig();

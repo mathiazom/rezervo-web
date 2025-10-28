@@ -16,7 +16,7 @@ import {
     Tooltip,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Activity, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import { post } from "@/lib/helpers/requests";
@@ -207,18 +207,16 @@ export default function CheckIn({
     useEffect(() => {
         const firstLocation = availableCheckInLocations[0];
         if (firstLocation) {
+            // TODO: setState should not be called directly an in a useEffect
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setLocation(firstLocation);
             setTerminalIfOnlyOneAvailable(firstLocation);
         }
         applyStoredCheckInConfiguration();
     }, [availableCheckInLocations, applyStoredCheckInConfiguration]);
 
-    if (!chainUser || availableCheckInLocations.length === 0) {
-        return <></>;
-    }
-
     return (
-        <>
+        <Activity mode={chainUser && availableCheckInLocations.length > 0 ? "visible" : "hidden"}>
             <Tooltip title={"Sjekk inn"}>
                 <Fab
                     color={"primary"}
@@ -352,6 +350,6 @@ export default function CheckIn({
                     </Stack>
                 </ModalWrapper>
             </Modal>
-        </>
+        </Activity>
     );
 }

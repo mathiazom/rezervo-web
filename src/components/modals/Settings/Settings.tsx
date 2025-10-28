@@ -1,5 +1,3 @@
-/* eslint-disable react-compiler/react-compiler */
-
 import { GetApp, SettingsRounded } from "@mui/icons-material";
 import {
     Alert,
@@ -21,7 +19,7 @@ import {
 } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
-import { useEffect, useState } from "react";
+import { Activity, useEffect, useState } from "react";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
@@ -272,136 +270,128 @@ export default function Settings({
                 <PushNotifications />
                 <FormGroup>
                     <Divider orientation="horizontal" />
-                    {features && features.classReminderNotifications && (
-                        <>
-                            <FormGroup sx={{ py: 2 }}>
-                                <SubHeader
-                                    title={"Slack"}
-                                    startIcon={
-                                        <SvgIcon fontSize={"small"} sx={{ color: theme.palette.primary.contrastText }}>
-                                            <SlackSvgIcon />
-                                        </SvgIcon>
-                                    }
-                                />
-                                <FormLabel disabled={reminderHoursBeforeLoading}>
-                                    <SwitchWrapper label={"Påminnelse om time"} loading={reminderHoursBeforeLoading}>
-                                        <Switch
-                                            checked={reminderActive}
-                                            onChange={(_, checked) => handleReminderActiveChanged(checked)}
-                                            inputProps={{
-                                                "aria-label": "påminnelse-aktiv",
-                                            }}
-                                        />
-                                    </SwitchWrapper>
-                                </FormLabel>
-                                <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", pb: 1 }}>
-                                    <FormControl>
-                                        <TextField
+                    <Activity mode={features?.classReminderNotifications ? "visible" : "hidden"}>
+                        <FormGroup sx={{ py: 2 }}>
+                            <SubHeader
+                                title={"Slack"}
+                                startIcon={
+                                    <SvgIcon fontSize={"small"} sx={{ color: theme.palette.primary.contrastText }}>
+                                        <SlackSvgIcon />
+                                    </SvgIcon>
+                                }
+                            />
+                            <FormLabel disabled={reminderHoursBeforeLoading}>
+                                <SwitchWrapper label={"Påminnelse om time"} loading={reminderHoursBeforeLoading}>
+                                    <Switch
+                                        checked={reminderActive}
+                                        onChange={(_, checked) => handleReminderActiveChanged(checked)}
+                                        inputProps={{
+                                            "aria-label": "påminnelse-aktiv",
+                                        }}
+                                    />
+                                </SwitchWrapper>
+                            </FormLabel>
+                            <Box sx={{ display: "flex", gap: 0.5, alignItems: "center", pb: 1 }}>
+                                <FormControl>
+                                    <TextField
+                                        disabled={
+                                            reminderHoursBeforeLoading || !reminderActive || reminderHoursBefore == null
+                                        }
+                                        value={
+                                            reminderTimeBeforeInput ??
+                                            (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
+                                        }
+                                        onChange={({ target: { value } }) => setReminderTimeBeforeInput(value)}
+                                        onBlur={() =>
+                                            reminderTimeBeforeInput != null &&
+                                            reminderTimeBeforeInputUnit != null &&
+                                            handleReminderHoursChanged(
+                                                reminderTimeBeforeInput,
+                                                reminderTimeBeforeInputUnit,
+                                            )
+                                        }
+                                        sx={{ width: "4rem" }}
+                                        size={"small"}
+                                        slotProps={{
+                                            htmlInput: { inputMode: "numeric" },
+                                        }}
+                                    />
+                                </FormControl>
+                                <FormLabel disabled={reminderHoursBeforeLoading || !reminderActive}>
+                                    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                                        <Select
                                             disabled={
                                                 reminderHoursBeforeLoading ||
                                                 !reminderActive ||
                                                 reminderHoursBefore == null
                                             }
                                             value={
-                                                reminderTimeBeforeInput ??
-                                                (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS).toString()
-                                            }
-                                            onChange={({ target: { value } }) => setReminderTimeBeforeInput(value)}
-                                            onBlur={() =>
-                                                reminderTimeBeforeInput != null &&
-                                                reminderTimeBeforeInputUnit != null &&
-                                                handleReminderHoursChanged(
-                                                    reminderTimeBeforeInput,
-                                                    reminderTimeBeforeInputUnit,
+                                                reminderTimeBeforeInputUnit ??
+                                                reminderTimeBeforeInputUnitFromHours(
+                                                    reminderHoursBefore ?? DEFAULT_REMINDER_HOURS,
                                                 )
                                             }
-                                            sx={{ width: "4rem" }}
+                                            onChange={({ target: { value } }) => {
+                                                handleReminderHoursUnitChanged(value as ReminderTimeBeforeInputUnit);
+                                            }}
+                                            inputProps={{ "aria-label": "enhet" }}
                                             size={"small"}
-                                            slotProps={{
-                                                htmlInput: { inputMode: "numeric" },
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <FormLabel disabled={reminderHoursBeforeLoading || !reminderActive}>
-                                        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                                            <Select
-                                                disabled={
-                                                    reminderHoursBeforeLoading ||
-                                                    !reminderActive ||
-                                                    reminderHoursBefore == null
-                                                }
-                                                value={
-                                                    reminderTimeBeforeInputUnit ??
-                                                    reminderTimeBeforeInputUnitFromHours(
-                                                        reminderHoursBefore ?? DEFAULT_REMINDER_HOURS,
-                                                    )
-                                                }
-                                                onChange={({ target: { value } }) => {
-                                                    handleReminderHoursUnitChanged(
-                                                        value as ReminderTimeBeforeInputUnit,
-                                                    );
-                                                }}
-                                                inputProps={{ "aria-label": "enhet" }}
-                                                size={"small"}
-                                            >
-                                                <MenuItem value={ReminderTimeBeforeInputUnit.HOURS}>timer</MenuItem>
-                                                <MenuItem value={ReminderTimeBeforeInputUnit.MINUTES}>
-                                                    minutter
-                                                </MenuItem>
-                                            </Select>
-                                            <Typography>før start</Typography>
-                                        </Box>
-                                    </FormLabel>
-                                </Box>
-                                <FormLabel disabled={reminderWindowLoading}>
-                                    <SwitchWrapper label={"Varslingsvindu"} loading={reminderWindowLoading}>
-                                        <Switch
-                                            checked={reminderWindowActive}
-                                            onChange={(_, checked) => handleReminderWindowActiveChanged(checked)}
-                                        />
-                                    </SwitchWrapper>
+                                        >
+                                            <MenuItem value={ReminderTimeBeforeInputUnit.HOURS}>timer</MenuItem>
+                                            <MenuItem value={ReminderTimeBeforeInputUnit.MINUTES}>minutter</MenuItem>
+                                        </Select>
+                                        <Typography>før start</Typography>
+                                    </Box>
                                 </FormLabel>
-                                <Box sx={{ display: "flex", gap: 1, alignItems: "center", pb: 1 }}>
-                                    <FormControl>
-                                        <TimePicker
-                                            disabled={
-                                                reminderWindowLoading || !reminderWindowActive || reminderWindow == null
-                                            }
-                                            value={dateTimeFromHourAndMinute(
-                                                reminderWindow?.notBefore ?? DEFAULT_REMINDER_WINDOW.notBefore,
-                                            )}
-                                            onChange={(value) => handleReminderWindowNotBeforeChanged(value)}
-                                            sx={{ width: "7rem" }}
-                                            slotProps={{
-                                                textField: {
-                                                    size: "small",
-                                                },
-                                            }}
-                                        />
-                                    </FormControl>
-                                    <Typography variant="body1">-</Typography>
-                                    <FormControl>
-                                        <TimePicker
-                                            disabled={
-                                                reminderWindowLoading || !reminderWindowActive || reminderWindow == null
-                                            }
-                                            value={dateTimeFromHourAndMinute(
-                                                reminderWindow?.notAfter ?? DEFAULT_REMINDER_WINDOW.notAfter,
-                                            )}
-                                            onChange={(value) => handleReminderWindowNotAfterChanged(value)}
-                                            sx={{ width: "7rem" }}
-                                            slotProps={{
-                                                textField: {
-                                                    size: "small",
-                                                },
-                                            }}
-                                        />
-                                    </FormControl>
-                                </Box>
-                            </FormGroup>
-                            <Divider />
-                        </>
-                    )}
+                            </Box>
+                            <FormLabel disabled={reminderWindowLoading}>
+                                <SwitchWrapper label={"Varslingsvindu"} loading={reminderWindowLoading}>
+                                    <Switch
+                                        checked={reminderWindowActive}
+                                        onChange={(_, checked) => handleReminderWindowActiveChanged(checked)}
+                                    />
+                                </SwitchWrapper>
+                            </FormLabel>
+                            <Box sx={{ display: "flex", gap: 1, alignItems: "center", pb: 1 }}>
+                                <FormControl>
+                                    <TimePicker
+                                        disabled={
+                                            reminderWindowLoading || !reminderWindowActive || reminderWindow == null
+                                        }
+                                        value={dateTimeFromHourAndMinute(
+                                            reminderWindow?.notBefore ?? DEFAULT_REMINDER_WINDOW.notBefore,
+                                        )}
+                                        onChange={(value) => handleReminderWindowNotBeforeChanged(value)}
+                                        sx={{ width: "7rem" }}
+                                        slotProps={{
+                                            textField: {
+                                                size: "small",
+                                            },
+                                        }}
+                                    />
+                                </FormControl>
+                                <Typography variant="body1">-</Typography>
+                                <FormControl>
+                                    <TimePicker
+                                        disabled={
+                                            reminderWindowLoading || !reminderWindowActive || reminderWindow == null
+                                        }
+                                        value={dateTimeFromHourAndMinute(
+                                            reminderWindow?.notAfter ?? DEFAULT_REMINDER_WINDOW.notAfter,
+                                        )}
+                                        onChange={(value) => handleReminderWindowNotAfterChanged(value)}
+                                        sx={{ width: "7rem" }}
+                                        slotProps={{
+                                            textField: {
+                                                size: "small",
+                                            },
+                                        }}
+                                    />
+                                </FormControl>
+                            </Box>
+                        </FormGroup>
+                        <Divider />
+                    </Activity>
                     <CalendarFeed />
                 </FormGroup>
             </Box>
