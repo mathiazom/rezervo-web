@@ -1,6 +1,6 @@
 import { People } from "@mui/icons-material";
 import { Alert, Badge, Box, Divider, Tooltip, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { Activity, ReactNode } from "react";
 
 import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
 import ModalWrapper from "@/components/modals/ModalWrapper";
@@ -38,28 +38,35 @@ const CommunityUserList = ({
     );
 };
 
+const FriendRequests = ({
+    chainProfiles,
+    friendRequests,
+}: {
+    chainProfiles: ChainProfile[];
+    friendRequests: CommunityUser[];
+}) => {
+    return (
+        <CommunityUserList
+            title={"Venneforespørsler"}
+            placeholder={"Du har ingen ubesvarte venneforespørsler"}
+            communityUsers={friendRequests}
+            chainProfiles={chainProfiles}
+            badge={
+                friendRequests.length > 0 && (
+                    <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
+                        <Badge sx={{ ml: 0.3 }} badgeContent={friendRequests.length} color={"error"} />
+                    </Tooltip>
+                )
+            }
+        />
+    );
+};
+
 const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
     const { community, communityLoading, communityError } = useCommunity();
 
     const friendRequests =
         community?.users.filter((user) => user.relationship === UserRelationship.REQUEST_RECEIVED) ?? [];
-    const FriendRequests = () => {
-        return (
-            <CommunityUserList
-                title={"Venneforespørsler"}
-                placeholder={"Du har ingen ubesvarte venneforespørsler"}
-                communityUsers={friendRequests}
-                chainProfiles={chainProfiles}
-                badge={
-                    friendRequests.length > 0 && (
-                        <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
-                            <Badge sx={{ ml: 0.3 }} badgeContent={friendRequests.length} color={"error"} />
-                        </Tooltip>
-                    )
-                }
-            />
-        );
-    };
 
     return (
         <ModalWrapper
@@ -67,41 +74,43 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
             icon={<People />}
             description={"Venner kan se hverandres bookinger og timeplaner"}
         >
-            {communityError ? (
+            <Activity mode={communityError ? "visible" : "hidden"}>
                 <Alert severity="error">
                     <Typography>Klarte ikke laste inn venner.</Typography>
                 </Alert>
-            ) : (
+            </Activity>
+            <Activity mode={!communityError ? "visible" : "hidden"}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    {community && !communityLoading && (
-                        <>
-                            {friendRequests.length > 0 && <FriendRequests />}
-                            <CommunityUserList
-                                title={"Dine venner"}
-                                placeholder={"Du har ingen venner"}
-                                communityUsers={
-                                    community?.users.filter((user) => user.relationship === UserRelationship.FRIEND) ??
-                                    []
-                                }
-                                chainProfiles={chainProfiles}
-                            />
-                            <CommunityUserList
-                                title={"Personer du kanskje kjenner"}
-                                placeholder={"Du har ingen venneforslag"}
-                                communityUsers={
-                                    community?.users.filter(
-                                        (user) =>
-                                            user.relationship === UserRelationship.REQUEST_SENT ||
-                                            user.relationship === UserRelationship.UNKNOWN,
-                                    ) ?? []
-                                }
-                                chainProfiles={chainProfiles}
-                            />
-                            {friendRequests.length === 0 && <FriendRequests />}
-                        </>
-                    )}
+                    <Activity mode={community && !communityLoading ? "visible" : "hidden"}>
+                        <Activity mode={friendRequests.length > 0 ? "visible" : "hidden"}>
+                            <FriendRequests chainProfiles={chainProfiles} friendRequests={friendRequests} />
+                        </Activity>
+                        <CommunityUserList
+                            title={"Dine venner"}
+                            placeholder={"Du har ingen venner"}
+                            communityUsers={
+                                community?.users.filter((user) => user.relationship === UserRelationship.FRIEND) ?? []
+                            }
+                            chainProfiles={chainProfiles}
+                        />
+                        <CommunityUserList
+                            title={"Personer du kanskje kjenner"}
+                            placeholder={"Du har ingen venneforslag"}
+                            communityUsers={
+                                community?.users.filter(
+                                    (user) =>
+                                        user.relationship === UserRelationship.REQUEST_SENT ||
+                                        user.relationship === UserRelationship.UNKNOWN,
+                                ) ?? []
+                            }
+                            chainProfiles={chainProfiles}
+                        />
+                        <Activity mode={friendRequests.length === 0 ? "visible" : "hidden"}>
+                            <FriendRequests chainProfiles={chainProfiles} friendRequests={friendRequests} />
+                        </Activity>
+                    </Activity>
                 </Box>
-            )}
+            </Activity>
         </ModalWrapper>
     );
 };

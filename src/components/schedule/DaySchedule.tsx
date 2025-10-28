@@ -1,5 +1,5 @@
 import { Box, Chip, Divider, Typography, useTheme } from "@mui/material";
-import { useMemo } from "react";
+import { Activity, useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
@@ -111,7 +111,7 @@ function DaySchedule({
                         sx={{ fontSize: "1.125rem", display: "flex", alignItems: "center", gap: "0.4rem" }}
                     >
                         {getCapitalizedWeekday(daySchedule.date)}{" "}
-                        {dayIsToday && (
+                        <Activity mode={dayIsToday ? "visible" : "hidden"}>
                             <Chip
                                 size={"small"}
                                 sx={{
@@ -122,7 +122,7 @@ function DaySchedule({
                                 }}
                                 label="I dag"
                             />
-                        )}
+                        </Activity>
                     </Typography>
                     <Typography
                         variant="h6"

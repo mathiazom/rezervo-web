@@ -44,6 +44,8 @@ function ChainMembership({
         setBookingActiveLoading(false);
     }
     useEffect(() => {
+        // TODO: setState should not be called directly an in a useEffect
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setBookingActive(userConfig?.active ?? null);
     }, [userConfig]);
     return (

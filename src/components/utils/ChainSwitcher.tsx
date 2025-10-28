@@ -21,6 +21,8 @@ function ChainSwitcher({
     const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
 
     useEffect(() => {
+        // TODO: setState should not be called directly an in a useEffect
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setOpen(false);
         setTimeout(() => setChainLoading(null), 250);
     }, [currentChainProfile.identifier]);

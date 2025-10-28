@@ -4,10 +4,6 @@ import Chain from "@/components/Chain";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { fetchActiveChains, fetchChain, fetchChainPageStaticProps } from "@/lib/helpers/fetchers";
 
-export const dynamicParams = false;
-
-export const revalidate = 300;
-
 export async function generateStaticParams() {
     return (await fetchActiveChains()).map((chain) => ({
         chain: chain.profile.identifier,

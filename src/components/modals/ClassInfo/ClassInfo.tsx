@@ -17,7 +17,7 @@ import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import Image from "next/image";
-import { useState } from "react";
+import { Activity, useState } from "react";
 
 import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
 import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
@@ -117,7 +117,7 @@ export default function ClassInfo({
             }
             titleAlignment={"left"}
         >
-            {_class.isCancelled && (
+            <Activity mode={_class.isCancelled ? "visible" : "hidden"}>
                 <Alert severity={"error"} icon={<CancelRounded />}>
                     {_class.cancelText ? (
                         <>
@@ -128,7 +128,7 @@ export default function ClassInfo({
                         `Timen ${isInThePast ? "ble" : "er"} avlyst!`
                     )}
                 </Alert>
-            )}
+            </Activity>
             <ClassInfoEntry
                 icon={<CalendarMonthIcon />}
                 label={_class.startTime.toFormat("EEEE d. LLLL")}
@@ -144,61 +144,71 @@ export default function ClassInfo({
                 label={`${_class.location.studio}${_class.location.room && _class.location.room.length > 0 ? `, ${_class.location.room}` : ""}`}
                 cancelled={_class.isCancelled}
             />
-            {_class.instructors.length > 0 && (
+            <Activity mode={_class.instructors.length > 0 ? "visible" : "hidden"}>
                 <ClassInfoEntry
                     icon={<PersonRoundedIcon />}
                     label={_class.instructors.map((i) => i.name).join(", ")}
                     cancelled={_class.isCancelled}
                 />
-            )}
-            {_class.totalSlots !== null && ((!_class.isBookable && !isInThePast) || _class.isCancelled) && (
+            </Activity>
+            <Activity
+                mode={
+                    _class.totalSlots !== null && ((!_class.isBookable && !isInThePast) || _class.isCancelled)
+                        ? "visible"
+                        : "hidden"
+                }
+            >
                 <ClassInfoEntry
                     icon={<Diversity3Rounded />}
                     label={`${_class.totalSlots} plasser`}
                     cancelled={_class.isCancelled}
                 />
-            )}
-            {!_class.isCancelled && _class.totalSlots !== null && _class.availableSlots !== null && (
+            </Activity>
+            <Activity
+                mode={
+                    !_class.isCancelled && _class.totalSlots !== null && _class.availableSlots !== null
+                        ? "visible"
+                        : "hidden"
+                }
+            >
                 <ClassInfoEntry
                     icon={<ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />}
                     label={stringifyClassPopularity(_class, classPopularity) ?? ""}
                     cancelled={_class.isCancelled}
                 />
-            )}
-            {!isInThePast && (
-                <>
-                    <ClassInfoUsersGroup
-                        users={usersPlanned}
-                        badgeIcon={_class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined}
-                        loading={userSessionsLoading}
-                        text={
-                            _class.isBookable
-                                ? "har planlagt denne timen, men ikke booket plass!"
-                                : _class.isCancelled
-                                  ? "skulle på denne timen"
-                                  : "skal på denne timen"
-                        }
-                    />
-                    <ClassInfoUsersGroup
-                        users={usersOnWaitlist}
-                        rippleColor={StatusColors.WAITLIST}
-                        isCancelled={_class.isCancelled}
-                        text={
-                            _class.isCancelled
-                                ? "var på venteliste for denne timen"
-                                : "er på venteliste for denne timen" +
-                                  (positionedUsersInWaitList.length > 0
-                                      ? ` (${positionedUsersInWaitList
-                                            .map(
-                                                (u) =>
-                                                    `${u.isSelf ? "din plassering" : u.userName}: ${u.positionInWaitList}.`,
-                                            )
-                                            .join(", ")})`
-                                      : "")
-                        }
-                    />
-                </>
-            )}
+            </Activity>
+            <Activity mode={!isInThePast ? "visible" : "hidden"}>
+                <ClassInfoUsersGroup
+                    users={usersPlanned}
+                    badgeIcon={_class.isBookable ? <PlannedNotBookedBadgeIcon /> : undefined}
+                    loading={userSessionsLoading}
+                    text={
+                        _class.isBookable
+                            ? "har planlagt denne timen, men ikke booket plass!"
+                            : _class.isCancelled
+                              ? "skulle på denne timen"
+                              : "skal på denne timen"
+                    }
+                />
+                <ClassInfoUsersGroup
+                    users={usersOnWaitlist}
+                    rippleColor={StatusColors.WAITLIST}
+                    isCancelled={_class.isCancelled}
+                    text={
+                        _class.isCancelled
+                            ? "var på venteliste for denne timen"
+                            : "er på venteliste for denne timen" +
+                              (positionedUsersInWaitList.length > 0
+                                  ? ` (${positionedUsersInWaitList
+                                        .map(
+                                            (u) =>
+                                                `${u.isSelf ? "din plassering" : u.userName}: ${u.positionInWaitList}.`,
+                                        )
+                                        .join(", ")})`
+                                  : "")
+                    }
+                />
+            </Activity>
             <ClassInfoUsersGroup
                 users={usersBooked}
                 rippleColor={StatusColors.ACTIVE}
@@ -217,12 +227,14 @@ export default function ClassInfo({
                 badgeIcon={<NoShowBadgeIcon />}
                 text={"booket plass, men møtte ikke opp!"}
             />
-            {authStatus === "unauthenticated" && !isInThePast && (
+            <Activity mode={authStatus === "unauthenticated" && !isInThePast ? "visible" : "hidden"}>
                 <Alert severity="info" sx={{ mt: 1.5 }} icon={<Login fontSize={"small"} />}>
                     Du må logge inn for å kunne booke eller legge til timer i timeplanen
                 </Alert>
-            )}
-            {authStatus === "authenticated" && userConfig === undefined && !isInThePast && (
+            </Activity>
+            <Activity
+                mode={authStatus === "authenticated" && userConfig === undefined && !isInThePast ? "visible" : "hidden"}
+            >
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>
                         Koble til <b>{chain.toUpperCase()}</b>-medlemskap
@@ -231,12 +243,12 @@ export default function ClassInfo({
                     eller legge til timer i timeplanen. Trykk på{" "}
                     <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger for å komme i gang.
                 </Alert>
-            )}
-            {_class.activity.additionalInformation && (
+            </Activity>
+            <Activity mode={_class.activity.additionalInformation ? "visible" : "hidden"}>
                 <Alert sx={{ mt: 1.5 }} severity={"info"}>
                     {_class.activity.additionalInformation}
                 </Alert>
-            )}
+            </Activity>
             {_class.activity.image && (
                 <Box
                     sx={{

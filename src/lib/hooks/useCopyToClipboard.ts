@@ -21,6 +21,8 @@ export function useCopyToClipboard(
     }, [isCopied, successDuration]);
 
     useEffect(() => {
+        // TODO: setState should not be called directly an in a useEffect
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setIsCopied(false);
     }, [text]);
 

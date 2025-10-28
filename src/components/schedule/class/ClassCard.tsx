@@ -1,7 +1,7 @@
 import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
 import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { useEffect, useState } from "react";
+import { Activity, useEffect, useState } from "react";
 
 import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
@@ -50,6 +50,8 @@ const ClassCard = ({
 
     useEffect(() => {
         if (selected) {
+            // TODO: setState should not be called directly an in a useEffect
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setSelectAnimation(randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null);
         }
     }, [selected]);
@@ -102,7 +104,7 @@ const ClassCard = ({
                     },
                 }}
             >
-                {!isInThePast && selectAnimation && (
+                <Activity mode={!isInThePast && selectAnimation ? "visible" : "hidden"}>
                     <Box
                         className={
                             selectAnimation ? (showSelected ? selectAnimation.enter : selectAnimation.leave) : ""
@@ -119,7 +121,7 @@ const ClassCard = ({
                             },
                         }}
                     />
-                )}
+                </Activity>
                 <CardContent
                     sx={{
                         zIndex: 1,
@@ -191,9 +193,8 @@ const ClassCard = ({
                                         },
                                     }}
                                 >
-                                    {!isInThePast &&
-                                        usersPlanned.length > 0 &&
-                                        usersPlanned.map(({ userId, userName }) => (
+                                    <Activity mode={!isInThePast && usersPlanned.length > 0 ? "visible" : "hidden"}>
+                                        {usersPlanned.map(({ userId, userName }) => (
                                             <ClassUserAvatar
                                                 key={userId}
                                                 userId={userId}
@@ -205,8 +206,9 @@ const ClassCard = ({
                                                 loading={userSessionsLoading}
                                             />
                                         ))}
-                                    {userSessions.length > 0 &&
-                                        userSessions.map(({ userId, userName, status }) => (
+                                    </Activity>
+                                    <Activity mode={userSessions.length > 0 ? "visible" : "hidden"}>
+                                        {userSessions.map(({ userId, userName, status }) => (
                                             <Box key={userId}>
                                                 <ClassUserAvatar
                                                     userId={userId}
@@ -229,6 +231,7 @@ const ClassCard = ({
                                                 />
                                             </Box>
                                         ))}
+                                    </Activity>
                                 </AvatarGroup>
                             </Box>
                         </Collapse>
@@ -248,7 +251,7 @@ const ClassCard = ({
                                 <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
                             )
                         )}
-                        {showScheduleAction && (
+                        <Activity mode={showScheduleAction ? "visible" : "hidden"}>
                             <Tooltip
                                 title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}
                                 // Hide the tooltip when clicked
@@ -274,7 +277,7 @@ const ClassCard = ({
                                     {selected ? <EventBusy /> : <EventRepeat />}
                                 </IconButton>
                             </Tooltip>
-                        )}
+                        </Activity>
                     </Box>
                 </CardContent>
             </Box>
