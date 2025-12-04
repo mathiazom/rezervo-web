@@ -30,7 +30,7 @@
         "js-cookie": "^3.0.5",
         "jwt-decode": "^4.0.0",
         "luxon": "^3.7.1",
-        "next": "15.5.2",
+        "next": "15.5.7",
         "react": "^19.1.1",
         "react-device-detect": "^2.2.3",
         "react-dom": "^19.1.1",
