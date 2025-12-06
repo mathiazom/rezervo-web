@@ -57,3 +57,6 @@ jobs:
               run: pnpm install
             - name: Build
               run: pnpm build
+              env:
+                  # dummy values to pass build
+                  FUSIONAUTH_CLIENT_ID: '123a575b-8803-457f-ab74-4ed8880cac20'
