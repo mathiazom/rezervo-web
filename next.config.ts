@@ -7,7 +7,14 @@ const withSerwist = withSerwistInit({
 
 export default withSerwist({
     typedRoutes: true,
+    reactCompiler: true,
+    cacheComponents: true,
     staticPageGenerationTimeout: 120,
+    turbopack: {
+        resolveAlias: {
+            "@/*": "./src/*",
+        },
+    },
     ...(global.process.env["BUILD_STANDALONE"] === "true" ? { output: "standalone" } : {}),
     async redirects() {
         return [
@@ -50,6 +57,10 @@ export default withSerwist({
             {
                 protocol: "https",
                 hostname: "images.ctfassets.net",
+            },
+            {
+                protocol: "http",
+                hostname: "localhost",
             },
         ],
     },

@@ -20,8 +20,12 @@ function PWAInstallPrompt({
 }) {
     const pwaInstallRef = useRef<PWAInstallElement | null>(null);
 
+    // TODO: avoid accessing ref during render
+    // eslint-disable-next-line react-hooks/refs
     const isAppleDevice = pwaInstallRef.current?.isAppleMobilePlatform || pwaInstallRef.current?.isAppleDesktopPlatform;
     const isInstalled =
+        // TODO: avoid accessing ref during render
+        // eslint-disable-next-line react-hooks/refs
         pwaInstallRef.current?.isUnderStandaloneMode || pwaInstallRef.current?.isInstallAvailable === false;
 
     useEffect(() => {
@@ -34,6 +38,8 @@ function PWAInstallPrompt({
         } else {
             pwaInstallRef.current?.hideDialog();
         }
+        // TODO: avoid accessing ref during render
+        // eslint-disable-next-line react-hooks/refs
     }, [show, isAppleDevice]);
 
     useEffect(() => {
@@ -53,6 +59,8 @@ function PWAInstallPrompt({
 
     useEffect(() => {
         onIsInstalledChanged(isInstalled);
+        // TODO: avoid accessing ref during render
+        // eslint-disable-next-line react-hooks/refs
     }, [isInstalled, onIsInstalledChanged]);
 
     return <PWAInstall ref={pwaInstallRef} install-description={INSTALL_PROMPT_DESCRIPTION} />;

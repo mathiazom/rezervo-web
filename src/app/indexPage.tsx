@@ -23,6 +23,8 @@ const IndexPage = ({ chainProfiles }: IndexPageProps) => {
         if (storedChain !== null) {
             router.push(`/${storedChain}`);
         } else {
+            // TODO: setState should not be called directly an in a useEffect
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             setCheckedLocalStorage(true);
         }
     }, [router]);

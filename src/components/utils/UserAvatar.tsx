@@ -1,6 +1,6 @@
 import { Avatar, Box, Skeleton } from "@mui/material";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Activity, useEffect, useState } from "react";
 
 import { buildPublicBackendPath, fetchProtectedImageAsDataUrl } from "@/lib/helpers/requests";
 import { useUser } from "@/lib/hooks/useUser";
@@ -56,26 +56,25 @@ export function UserAvatar({
                 height: size,
             }}
         >
-            {isAvatarAvailable !== false ? (
-                <>
-                    {imageUrl && (
-                        <Image
-                            src={imageUrl}
-                            alt={username}
-                            width={size}
-                            height={size}
-                            onError={() => doSetPictureAvailable(false)}
-                            onLoad={() => doSetPictureAvailable(true)}
-                            style={{
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                            }}
-                            unoptimized={true} // ensures fresh avatars
-                        />
-                    )}
-                    {isLoadingAvatar && <Skeleton variant={"circular"} width={size} height={size} />}
-                </>
-            ) : (
+            <Activity mode={isAvatarAvailable ? "visible" : "hidden"}>
+                {imageUrl && (
+                    <Image
+                        src={imageUrl}
+                        alt={username}
+                        width={size}
+                        height={size}
+                        onError={() => doSetPictureAvailable(false)}
+                        onLoad={() => doSetPictureAvailable(true)}
+                        style={{
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                        }}
+                        unoptimized={true} // ensures fresh avatars
+                    />
+                )}
+                {isLoadingAvatar && <Skeleton variant={"circular"} width={size} height={size} />}
+            </Activity>
+            <Activity mode={isAvatarAvailable === false ? "visible" : "hidden"}>
                 <Avatar
                     sx={{
                         width: "100%",
@@ -88,7 +87,7 @@ export function UserAvatar({
                 >
                     {username[0]}
                 </Avatar>
-            )}
+            </Activity>
         </Box>
     );
 }
