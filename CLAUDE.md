@@ -7,7 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 `rezervo-web` is the Next.js (App Router) web client for [`rezervo`](https://github.com/mathiazom/rezervo),
 a service for automatic booking of group fitness classes. It renders booking schedules per gym **chain**
 and lets authenticated users manage recurring-booking preferences. All domain data comes from the separate
-`rezervo` backend — this repo contains no database; it is a presentation + light API-proxy layer.
+`rezervo` backend, which owns the database (PostgreSQL via SQLAlchemy + Alembic). This web repo is stateless —
+it has no database of its own; it is a presentation + light API-proxy layer over the backend.
 
 ## Commands
 
