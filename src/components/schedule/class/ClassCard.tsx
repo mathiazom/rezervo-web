@@ -39,7 +39,7 @@ const ClassCard = ({
     onInfo: () => void;
 }) => {
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex(chain);
-    const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
+    const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
     const userSessions = userSessionsIndex?.[_class.id]?.sort(userNameWithIsSelfComparator) ?? [];
     const { allConfigsIndex } = useUserConfig(chain);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];

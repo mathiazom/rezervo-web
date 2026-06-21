@@ -1,18 +1,17 @@
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
 
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher } from "@/lib/utils/fetchUtils";
+import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
 import { Features } from "@/types/features";
 
 export function useFeatures() {
     const { isAuthenticated, token } = useUser();
 
-    const featuresApiUrl = `features`;
-
-    const { data, error, isLoading } = useSWR<Features>(
-        isAuthenticated ? featuresApiUrl : null,
-        authedFetcher(token ?? ""),
-    );
+    const { data, error, isLoading } = useQuery<Features, FetchError>({
+        queryKey: ["features"],
+        queryFn: () => authedFetcher(token ?? "")<Features>("features"),
+        enabled: isAuthenticated,
+    });
 
     return {
         features: data,

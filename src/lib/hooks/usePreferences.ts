@@ -1,45 +1,44 @@
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { put } from "@/lib/helpers/requests";
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher } from "@/lib/utils/fetchUtils";
+import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
 import { Preferences, PreferencesPayload } from "@/types/config";
-
-function putPreferences(url: string, token: string, { arg: preferences }: { arg: PreferencesPayload }) {
-    return put(url, { body: JSON.stringify(preferences, null, 2), mode: "client", accessToken: token }).then((r) =>
-        r.json(),
-    );
-}
 
 export function usePreferences() {
     const { isAuthenticated, token } = useUser();
+    const queryClient = useQueryClient();
 
     const preferencesApiUrl = `preferences`;
+    const queryKey = [preferencesApiUrl];
 
-    const { data, error, isLoading } = useSWR<Preferences>(
-        isAuthenticated ? preferencesApiUrl : null,
-        authedFetcher(token ?? ""),
-    );
+    const { data, error, isLoading } = useQuery<Preferences, FetchError>({
+        queryKey,
+        queryFn: () => authedFetcher(token ?? "")<Preferences>(preferencesApiUrl),
+        enabled: isAuthenticated,
+    });
 
-    const { trigger, isMutating } = useSWRMutation<Preferences, unknown, string, PreferencesPayload>(
-        preferencesApiUrl,
-        (url: string, { arg: preferences }: { arg: PreferencesPayload }) => {
+    const { mutateAsync, isPending } = useMutation<Preferences, FetchError, PreferencesPayload>({
+        mutationFn: (preferences) => {
             if (!token) {
                 throw new Error("Not authenticated");
             }
-            return putPreferences(url, token, { arg: preferences });
+            return put(preferencesApiUrl, {
+                body: JSON.stringify(preferences, null, 2),
+                mode: "client",
+                accessToken: token,
+            }).then((r) => r.json());
         },
-        {
-            populateCache: true, // use updated data from mutate response
-            revalidate: false,
+        onSuccess: (updated) => {
+            // use the updated data from the response instead of revalidating
+            queryClient.setQueryData(queryKey, updated);
         },
-    );
+    });
 
     return {
         preferences: data,
         preferencesError: error,
-        preferencesLoading: isLoading || isMutating,
-        putPreferences: trigger,
+        preferencesLoading: isLoading || isPending,
+        putPreferences: mutateAsync,
     };
 }

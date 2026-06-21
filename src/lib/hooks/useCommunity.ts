@@ -1,62 +1,45 @@
-import { useState } from "react";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { put } from "@/lib/helpers/requests";
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher } from "@/lib/utils/fetchUtils";
+import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
 import { RezervoCommunity, UserRelationship, UserRelationshipAction } from "@/types/community";
-
-function putRelationship(
-    url: string,
-    token: string,
-    { arg: relationship }: { arg: { userId: string; action: UserRelationshipAction } },
-) {
-    return put(url, {
-        body: JSON.stringify(relationship, null, 2),
-        accessToken: token,
-    }).then((r) => r.json());
-}
 
 export function useCommunity() {
     const { isAuthenticated, token } = useUser();
+    const queryClient = useQueryClient();
 
     const communityApiUrl = `community`;
     const relationshipApiUrl = `community/relationship`;
+    const queryKey = [communityApiUrl];
 
-    const { data, error, isLoading, mutate } = useSWR<RezervoCommunity>(
-        isAuthenticated ? communityApiUrl : null,
-        authedFetcher(token ?? ""),
-    );
+    const { data, error, isLoading } = useQuery<RezervoCommunity, FetchError>({
+        queryKey,
+        queryFn: () => authedFetcher(token ?? "")<RezervoCommunity>(communityApiUrl),
+        enabled: isAuthenticated,
+    });
 
-    const [isMutatingRelationship, setIsMutatingRelationship] = useState(false);
-
-    const { trigger: updateRelationship } = useSWRMutation<
-        UserRelationship,
-        unknown,
-        string | null,
+    const { mutateAsync: updateRelationship, isPending: isUpdatingRelationship } = useMutation<
+        UserRelationship | undefined,
+        FetchError,
         { userId: string; action: UserRelationshipAction }
-    >(
-        isAuthenticated ? relationshipApiUrl : null,
-        async (url, { arg: relationship }) => {
-            if (token == null) return;
-            setIsMutatingRelationship(true);
-            const res = await putRelationship(url, token, { arg: relationship });
-            await mutate();
-            setIsMutatingRelationship(false);
-            return res;
+    >({
+        mutationFn: (relationship) => {
+            if (token == null) return Promise.resolve(undefined);
+            return put(relationshipApiUrl, {
+                body: JSON.stringify(relationship, null, 2),
+                accessToken: token,
+            }).then((r) => r.json());
         },
-        {
-            revalidate: false,
-        },
-    );
+        onSuccess: () => queryClient.invalidateQueries({ queryKey }),
+    });
 
     return {
         community: data,
         communityError: error,
         communityLoading: isLoading,
-        mutateCommunity: mutate,
-        updateRelationship: updateRelationship,
-        isUpdatingRelationship: isMutatingRelationship,
+        mutateCommunity: () => queryClient.invalidateQueries({ queryKey }),
+        updateRelationship,
+        isUpdatingRelationship,
     };
 }
