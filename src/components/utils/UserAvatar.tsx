@@ -1,11 +1,12 @@
 import { Avatar, Box, Skeleton } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { buildPublicBackendPath, fetchProtectedImageAsDataUrl } from "@/lib/helpers/requests";
+import { useMyUser } from "@/lib/hooks/useMyUser";
 import { useUser } from "@/lib/hooks/useUser";
 import { avatarColor } from "@/lib/utils/colorUtils";
-import { useMyUser } from "@/stores/userStore";
 
 export function UserAvatar({
     userId,
@@ -21,12 +22,10 @@ export function UserAvatar({
     onIsAvatarAvailableChanged?: (available: boolean) => void;
 }) {
     const { token } = useUser();
-    const myUserId = useMyUser((state) => state.userId);
+    const { userId: myUserId } = useMyUser();
     const realUserId = userId === "me" ? myUserId : userId;
 
-    const [isLoadingAvatar, setIsLoadingAvatar] = useState(true);
     const [isAvatarAvailable, setIsAvatarAvailable] = useState<boolean | null>(null);
-    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
     const imgSrcSize = size <= 75 ? "small" : "medium";
 
@@ -37,17 +36,15 @@ export function UserAvatar({
         }
     }
 
-    useEffect(() => {
-        if (realUserId == null || token == null) return;
-        fetchProtectedImageAsDataUrl(buildPublicBackendPath(`user/${realUserId}/avatar/${imgSrcSize}`), token).then(
-            (url) => {
-                setAvatarUrl(url);
-                setIsLoadingAvatar(false);
-            },
-        );
-    }, [realUserId, imgSrcSize, token]);
+    const avatarQuery = useQuery({
+        queryKey: ["avatar", realUserId, imgSrcSize],
+        queryFn: () =>
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            fetchProtectedImageAsDataUrl(buildPublicBackendPath(`user/${realUserId}/avatar/${imgSrcSize}`), token!),
+        enabled: realUserId != null && token != null,
+    });
 
-    const imageUrl = previewOverride ?? avatarUrl;
+    const imageUrl = previewOverride ?? avatarQuery.data ?? null;
 
     return (
         <Box
@@ -73,7 +70,7 @@ export function UserAvatar({
                             unoptimized={true} // ensures fresh avatars
                         />
                     )}
-                    {isLoadingAvatar && <Skeleton variant={"circular"} width={size} height={size} />}
+                    {avatarQuery.isPending && <Skeleton variant={"circular"} width={size} height={size} />}
                 </>
             ) : (
                 <Avatar

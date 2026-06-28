@@ -25,6 +25,9 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# pnpm local store (created when global store is unavailable, e.g. in devcontainers)
+.pnpm-store/
+
 # local env files
 .env*.local
 

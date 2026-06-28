@@ -2,6 +2,7 @@ import { PersonRounded } from "@mui/icons-material";
 import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
 import { Box, Stack, Typography, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 
@@ -14,7 +15,6 @@ import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
 import { destroy, put } from "@/lib/helpers/requests";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
 import { useUser } from "@/lib/hooks/useUser";
-import { useMyAvatar } from "@/stores/userStore";
 import { Position } from "@/types/math";
 
 export enum AvatarMutateError {
@@ -34,7 +34,7 @@ function Profile({
 
     const { token, user, logOut } = useUser();
 
-    const updateMyAvatarLastModified = useMyAvatar((state) => state.updateLastModifiedTimestamp);
+    const queryClient = useQueryClient();
 
     const [editAvatarDialogOpen, setEditAvatarDialogOpen] = useState(false);
     const [confirmDeleteAvatarDialogOpen, setConfirmDeleteAvatarDialogOpen] = useState(false);
@@ -89,7 +89,7 @@ function Profile({
             accessToken: token,
         });
         if (res.ok) {
-            updateMyAvatarLastModified();
+            await queryClient.invalidateQueries({ queryKey: ["avatar"] });
         } else if (res.status === 413) {
             onAvatarMutateError(AvatarMutateError.TOO_LARGE);
         } else if (res.status === 415) {
@@ -100,22 +100,21 @@ function Profile({
         setIsAvatarUpdating(false);
     }
 
-    function deleteAvatar() {
+    async function deleteAvatar() {
         if (token == null) return; // TODO: error handling
-        destroy("user/me/avatar", { mode: "client", accessToken: token })
-            .then((res) => {
-                if (!res.ok) {
-                    onAvatarMutateError(AvatarMutateError.UNKNOWN);
-                    return;
-                }
-                setShowAvatarMutateError(false);
-                setAvatarPreviewDataURL(undefined);
-                setIsAvatarAvailable(false);
-                updateMyAvatarLastModified();
-            })
-            .finally(() => {
-                setEditAvatarDialogOpen(false);
-            });
+        try {
+            const res = await destroy("user/me/avatar", { mode: "client", accessToken: token });
+            if (!res.ok) {
+                onAvatarMutateError(AvatarMutateError.UNKNOWN);
+                return;
+            }
+            setShowAvatarMutateError(false);
+            setAvatarPreviewDataURL(undefined);
+            setIsAvatarAvailable(false);
+            await queryClient.invalidateQueries({ queryKey: ["avatar"] });
+        } finally {
+            setEditAvatarDialogOpen(false);
+        }
     }
 
     const {
