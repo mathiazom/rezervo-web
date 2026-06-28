@@ -99,7 +99,7 @@ fields that include dates/times, update both the DTO type and the serializer/des
 Client data fetching is centralized in `src/lib/hooks/use*.ts` using TanStack Query's `useQuery` / `useMutation`,
 e.g. `useScheduleWeek`, `useUserConfig`, `useUserSessions`, `useUserChainConfigs`. Authenticated hooks build a
 fetcher with `authedFetcher(token)` from `src/lib/utils/fetchUtils.ts` and gate the request on `isAuthenticated`
-via `enabled:` (rather than SWR's null-key trick). The shared `fetcher` throws a `FetchError` (`{ status,
+via `enabled:`. The shared `fetcher` throws a `FetchError` (`{ status,
 statusText }`) on non-OK responses — use it as the `useQuery` error type so consumers can branch on `error.status`
 (e.g. treating 404 as "no config yet" in `useUserConfig`). Mutations (e.g. `useUserConfig.putUserConfig`) update
 the cache in `onSuccess` with `queryClient.setQueryData(...)` and/or `invalidateQueries(...)`, and trigger dependent
