@@ -8,6 +8,7 @@ import { Roboto } from "next/font/google";
 import AuthProvider from "@/lib/authProvider";
 import DatePickerLocalizationProvider from "@/lib/datePickerLocalizationProvider";
 import { requireServerAuthConfig } from "@/lib/helpers/env";
+import QueryProvider from "@/lib/queryProvider";
 import SnowfallProvider from "@/lib/snowfallProvider";
 import theme from "@/lib/theme";
 
@@ -70,15 +71,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="no" className={roboto.className}>
             <body className={roboto.variable}>
                 <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
-                    <AuthProvider config={authConfig}>
-                        <DatePickerLocalizationProvider>
-                            <CssBaseline enableColorScheme />
-                            <SnowfallProvider />
-                            <div id="root">
-                                <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
-                            </div>
-                        </DatePickerLocalizationProvider>
-                    </AuthProvider>
+                    <QueryProvider>
+                        <AuthProvider config={authConfig}>
+                            <DatePickerLocalizationProvider>
+                                <CssBaseline enableColorScheme />
+                                <SnowfallProvider />
+                                <div id="root">
+                                    <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+                                </div>
+                            </DatePickerLocalizationProvider>
+                        </AuthProvider>
+                    </QueryProvider>
                 </ThemeProvider>
             </body>
         </html>

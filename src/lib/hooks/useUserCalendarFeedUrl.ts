@@ -1,7 +1,7 @@
-import useSWR from "swr";
+import { useQuery } from "@tanstack/react-query";
 
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher } from "@/lib/utils/fetchUtils";
+import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
 
 function calendarFeedUrlWithToken(token: string, includePast: boolean) {
     const calendarFeedUrl = new URL(`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/cal`);
@@ -13,13 +13,15 @@ function calendarFeedUrlWithToken(token: string, includePast: boolean) {
 export function useUserCalendarFeedUrl(includePast: boolean) {
     const { isAuthenticated, token } = useUser();
 
-    const userCalendarFeedToken = `cal-token`;
-
     const {
         data: calendarToken,
         error: urlError,
         isLoading,
-    } = useSWR<string>(isAuthenticated ? userCalendarFeedToken : null, authedFetcher(token ?? ""));
+    } = useQuery<string, FetchError>({
+        queryKey: ["cal-token"],
+        queryFn: () => authedFetcher(token ?? "")<string>("cal-token"),
+        enabled: isAuthenticated,
+    });
 
     return calendarToken != undefined && urlError == null
         ? {

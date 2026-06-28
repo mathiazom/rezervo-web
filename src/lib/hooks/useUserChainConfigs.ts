@@ -1,24 +1,26 @@
-import useSWR from "swr";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher } from "@/lib/utils/fetchUtils";
+import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { ChainConfig } from "@/types/config";
 
 export function useUserChainConfigs() {
     const { isAuthenticated, token } = useUser();
+    const queryClient = useQueryClient();
 
-    const userChainConfigsApiUrl = `user/chain-configs`;
+    const queryKey = ["user/chain-configs"];
 
-    const { data, error, isLoading, mutate } = useSWR<Record<ChainIdentifier, ChainConfig>>(
-        isAuthenticated ? userChainConfigsApiUrl : null,
-        authedFetcher(token ?? ""),
-    );
+    const { data, error, isLoading } = useQuery<Record<ChainIdentifier, ChainConfig>, FetchError>({
+        queryKey,
+        queryFn: () => authedFetcher(token ?? "")<Record<ChainIdentifier, ChainConfig>>("user/chain-configs"),
+        enabled: isAuthenticated,
+    });
 
     return {
         userChainConfigs: data ?? null,
         userChainConfigsError: error,
         userChainConfigsLoading: isLoading,
-        mutateUserChainConfigs: mutate,
+        mutateUserChainConfigs: () => queryClient.invalidateQueries({ queryKey }),
     };
 }

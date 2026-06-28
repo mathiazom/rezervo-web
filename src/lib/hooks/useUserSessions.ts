@@ -1,22 +1,24 @@
-import useSWR from "swr";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useUser } from "@/lib/hooks/useUser";
 import { deserializeUserSessions } from "@/lib/serialization/deserializers";
-import { authedFetcher } from "@/lib/utils/fetchUtils";
+import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
 import { BaseUserSessionDTO } from "@/types/serialization";
 
 export function useUserSessions() {
     const { isAuthenticated, token } = useUser();
+    const queryClient = useQueryClient();
 
-    const userSessionsApiUrl = `user/sessions`;
+    const queryKey = ["user/sessions"];
 
-    const { data, mutate } = useSWR<BaseUserSessionDTO[]>(
-        isAuthenticated ? userSessionsApiUrl : null,
-        authedFetcher(token ?? ""),
-    );
+    const { data } = useQuery<BaseUserSessionDTO[], FetchError>({
+        queryKey,
+        queryFn: () => authedFetcher(token ?? "")<BaseUserSessionDTO[]>("user/sessions"),
+        enabled: isAuthenticated,
+    });
 
     return {
         userSessions: data ? deserializeUserSessions(data) : null,
-        mutateUserSessions: mutate,
+        mutateUserSessions: () => queryClient.invalidateQueries({ queryKey }),
     };
 }

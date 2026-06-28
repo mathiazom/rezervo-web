@@ -58,7 +58,7 @@ export default function ClassInfo({
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
         useUserSessionsIndex(chain);
     const { mutateUserSessions } = useUserSessions();
-    const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError;
+    const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
     const color = (dark: boolean) => hexWithOpacityToRgb(_class.activity.color, 0.6, dark ? 0 : 255);
 
