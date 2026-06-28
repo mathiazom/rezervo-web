@@ -9,10 +9,6 @@ export const SCHEDULE_STALE_TIME_MS = 60 * 60 * 1000;
 export const ADJACENT_WEEK_OFFSETS = [-1, 1, 2, 3];
 
 export function constructScheduleUrl(chainIdentifier: string, compactISOWeek: string, locationIds: string[]) {
-    if (locationIds == undefined) {
-        // make sure conditional fetching check fails
-        return null;
-    }
     const searchParams = new URLSearchParams([...locationIds.map((locationId) => ["location", locationId])]);
     return `schedule/${chainIdentifier}/${compactISOWeek}?${searchParams.toString()}`;
 }
@@ -38,9 +34,6 @@ export async function fetchScheduleWeekDTO(
     locationIds: string[],
 ): Promise<RezervoWeekScheduleDTO> {
     const url = constructScheduleUrl(chainIdentifier, weekParam, locationIds);
-    if (url === null) {
-        throw new Error("Invalid schedule request");
-    }
     // The backend response does not include the requested locationIds, so inject them for deserialization.
     const dto = await fetcher<Omit<RezervoWeekScheduleDTO, "locationIds">>(url);
     return { ...dto, locationIds };

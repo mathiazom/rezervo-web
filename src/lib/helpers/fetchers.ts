@@ -16,9 +16,6 @@ export async function fetchScheduleWeekDTOServer(
     revalidate: number = 60 * 60,
 ): Promise<RezervoWeekScheduleDTO> {
     const url = constructScheduleUrl(chainIdentifier, weekParam, locationIds);
-    if (url === null) {
-        throw new Error("Invalid schedule request");
-    }
     const res = await get(url, { mode: "server", revalidate });
     if (!res.ok) {
         throw new Error(`Failed to fetch schedule for ${chainIdentifier} ${weekParam}: ${res.statusText}`);
