@@ -7,7 +7,7 @@ import {
     ADJACENT_WEEK_OFFSETS,
     fetchScheduleWeekDTO,
     offsetWeekParam,
-    SCHEDULE_STALE_TIME,
+    SCHEDULE_STALE_TIME_MS,
     scheduleQueryKey,
 } from "@/lib/helpers/schedule";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
@@ -42,7 +42,7 @@ export function useScheduleWeek(
         enabled,
         select: deserializeWeekSchedule,
         placeholderData: keepPreviousData,
-        staleTime: SCHEDULE_STALE_TIME,
+        staleTime: SCHEDULE_STALE_TIME_MS,
     });
 
     const [latestLoadedWeekParam, setLatestLoadedWeekParam] = useState<string | null>(null);
@@ -81,7 +81,7 @@ export function usePrefetchAdjacentWeeks(
             void queryClient.prefetchQuery({
                 queryKey: scheduleQueryKey(chainIdentifier, week),
                 queryFn: () => fetchScheduleWeekDTO(chainIdentifier, week, locationIds),
-                staleTime: SCHEDULE_STALE_TIME,
+                staleTime: SCHEDULE_STALE_TIME_MS,
             });
         }
     }, [queryClient, chainIdentifier, weekParam, locationIds, ready]);
@@ -100,7 +100,7 @@ export function useClassPopularityIndex(
         queryFn: () => fetchScheduleWeekDTO(chainIdentifier ?? "", previousWeekParam ?? "", locationIds ?? []),
         enabled,
         select: selectClassPopularityIndex,
-        staleTime: SCHEDULE_STALE_TIME,
+        staleTime: SCHEDULE_STALE_TIME_MS,
     });
 
     return data ?? EMPTY_POPULARITY_INDEX;

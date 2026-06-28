@@ -3,7 +3,7 @@ import { fetcher } from "@/lib/utils/fetchUtils";
 import { RezervoWeekScheduleDTO } from "@/types/serialization";
 
 // Schedule data is cached for an hour server-side; client queries reuse that window and silently refresh on load.
-export const SCHEDULE_STALE_TIME = 60 * 60 * 1000;
+export const SCHEDULE_STALE_TIME_MS = 60 * 60 * 1000;
 
 // Background-prefetched weeks relative to the current week: previous week + next 3 weeks.
 export const ADJACENT_WEEK_OFFSETS = [-1, 1, 2, 3];
