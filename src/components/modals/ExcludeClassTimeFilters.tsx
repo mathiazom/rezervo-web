@@ -193,12 +193,13 @@ export default function ExcludeClassTimeFilters({
                             addFilter();
                         }}
                     >
-                        <FormControl component="fieldset">
-                            <FormGroup sx={{ mt: 1 }}>
+                        <FormControl component="fieldset" fullWidth>
+                            <FormGroup sx={{ mt: 1, minWidth: 0, flexWrap: "nowrap" }}>
                                 <Stack
                                     direction={"column"}
                                     sx={{
                                         gap: 2,
+                                        minWidth: 0,
                                     }}
                                 >
                                     <InputLabel id="exclude-class-time-filter-weekday">Ukedag</InputLabel>
@@ -223,6 +224,7 @@ export default function ExcludeClassTimeFilters({
                                         sx={{
                                             gap: 2,
                                             alignItems: "center",
+                                            minWidth: 0,
                                         }}
                                     >
                                         <TimePicker
