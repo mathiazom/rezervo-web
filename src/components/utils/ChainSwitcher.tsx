@@ -36,7 +36,15 @@ function ChainSwitcher({
                 anchor={"left"}
                 open={open}
                 onClose={() => chainLoading == null && setOpen(false)}
-                PaperProps={{ sx: { width: "75%", maxWidth: "18rem", background: theme.palette.background.default } }}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            width: "75%",
+                            maxWidth: "18rem",
+                            background: (theme.vars ?? theme).palette.background.default,
+                        },
+                    },
+                }}
             >
                 <List>
                     <Typography variant={"h6"} sx={{ padding: "0.5rem", textAlign: "center" }}>

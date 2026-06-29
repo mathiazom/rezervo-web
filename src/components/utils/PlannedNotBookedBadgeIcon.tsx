@@ -8,7 +8,7 @@ export function PlannedNotBookedBadgeIcon() {
             fontSize={"small"}
             color={"error"}
             sx={{
-                backgroundColor: theme.palette.background.default,
+                backgroundColor: (theme.vars ?? theme).palette.background.default,
                 borderRadius: "50%",
                 fontSize: "1.1rem",
                 marginTop: "-0.2rem",

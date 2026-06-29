@@ -109,10 +109,10 @@ export default function AgendaSession({
                             ? {
                                   background: `repeating-linear-gradient(
                 -55deg,
-                ${theme.palette.background.default},
-                ${theme.palette.background.default} 10px,
-                ${theme.palette.background.paper} 10px,
-                ${theme.palette.background.paper} 20px)`,
+                ${(theme.vars ?? theme).palette.background.default},
+                ${(theme.vars ?? theme).palette.background.default} 10px,
+                ${(theme.vars ?? theme).palette.background.paper} 10px,
+                ${(theme.vars ?? theme).palette.background.paper} 20px)`,
                               }
                             : {
                                   background: null,

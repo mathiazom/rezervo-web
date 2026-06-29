@@ -21,11 +21,13 @@ function AddMembershipDialog({
             onClose={onClose}
             maxWidth={"xs"}
             fullWidth={true}
-            PaperProps={{
-                sx: {
-                    backgroundColor: "white",
-                    "@media (prefers-color-scheme: dark)": {
-                        backgroundColor: "black",
+            slotProps={{
+                paper: {
+                    sx: {
+                        backgroundColor: "white",
+                        "@media (prefers-color-scheme: dark)": {
+                            backgroundColor: "black",
+                        },
                     },
                 },
             }}

@@ -141,7 +141,8 @@ function ConfigBar({
                                                     color={"disabled"}
                                                     sx={{
                                                         cursor: "pointer",
-                                                        backgroundColor: theme.palette.background.default,
+                                                        backgroundColor: (theme.vars ?? theme).palette.background
+                                                            .default,
                                                         borderRadius: "50%",
                                                         marginTop: "-0.5rem",
                                                         marginLeft: "-0.5rem",

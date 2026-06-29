@@ -90,13 +90,15 @@ export default function ScheduleFiltersDialog({
             onClose={handleDialogClose}
             maxWidth={"xs"}
             fullWidth={true}
-            PaperProps={{
-                sx: {
-                    height: "100%",
-                    backgroundColor: "white",
-                    "@media (prefers-color-scheme: dark)": {
-                        backgroundColor: "#111",
-                        backgroundImage: "none",
+            slotProps={{
+                paper: {
+                    sx: {
+                        height: "100%",
+                        backgroundColor: "white",
+                        "@media (prefers-color-scheme: dark)": {
+                            backgroundColor: "#111",
+                            backgroundImage: "none",
+                        },
                     },
                 },
             }}
@@ -108,9 +110,11 @@ export default function ScheduleFiltersDialog({
                 textColor="inherit"
                 variant="fullWidth"
                 aria-label="schedule-filters-tabs"
-                TabIndicatorProps={{
-                    style: {
-                        backgroundColor: currentTabColor,
+                slotProps={{
+                    indicator: {
+                        style: {
+                            backgroundColor: currentTabColor,
+                        },
                     },
                 }}
             >

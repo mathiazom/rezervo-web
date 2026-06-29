@@ -89,8 +89,10 @@ const PushNotifications = () => {
                             disabled={!isWebPushSupported}
                             checked={subscription !== null}
                             onChange={(_, checked) => (checked ? subscribe() : unsubscribe())}
-                            inputProps={{
-                                "aria-label": "push-varsler-aktiv",
+                            slotProps={{
+                                input: {
+                                    "aria-label": "push-varsler-aktiv",
+                                },
                             }}
                         />
                     </SwitchWrapper>

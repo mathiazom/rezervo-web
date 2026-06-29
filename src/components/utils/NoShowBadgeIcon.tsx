@@ -8,7 +8,7 @@ export function NoShowBadgeIcon() {
             fontSize={"small"}
             color={"error"}
             sx={{
-                backgroundColor: theme.palette.background.default,
+                backgroundColor: (theme.vars ?? theme).palette.background.default,
                 borderRadius: "50%",
                 border: "0.1rem solid red",
                 fontSize: "1.1rem",

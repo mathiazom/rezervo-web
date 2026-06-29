@@ -165,7 +165,11 @@ export default function Agenda({
                         showPlaceholder={Object.keys(bookedSessionsDayMap).length === 0}
                     />
                     <AgendaDays dayMap={bookedSessionsDayMap} />
-                    <Box height={2} />
+                    <Box
+                        sx={{
+                            height: 2,
+                        }}
+                    />
                     <SubHeader title={"Planlagte timer"} description={"Disse timene vil bli booket automatisk"} />
                     {inactiveChains.length > 0 &&
                         (inactiveChains.length === Object.keys(chainConfigs).length ? (

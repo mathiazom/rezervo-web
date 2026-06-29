@@ -282,8 +282,10 @@ export default function Settings({
                                         <Switch
                                             checked={reminderActive}
                                             onChange={(_, checked) => handleReminderActiveChanged(checked)}
-                                            inputProps={{
-                                                "aria-label": "påminnelse-aktiv",
+                                            slotProps={{
+                                                input: {
+                                                    "aria-label": "påminnelse-aktiv",
+                                                },
                                             }}
                                         />
                                     </SwitchWrapper>

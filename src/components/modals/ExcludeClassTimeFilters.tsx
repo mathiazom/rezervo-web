@@ -16,7 +16,7 @@ import {
     Typography,
     useTheme,
 } from "@mui/material";
-import Grid2 from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -230,6 +230,7 @@ export default function ExcludeClassTimeFilters({
                                             views={["hours", "minutes"]}
                                             value={excludeClassTimeStartTime}
                                             onChange={(newValue) => setExcludeClassTimeStartTime(newValue)}
+                                            slotProps={{ textField: { sx: { flex: 1, minWidth: 0 } } }}
                                         />
                                         <RemoveRounded />
                                         <TimePicker
@@ -237,6 +238,7 @@ export default function ExcludeClassTimeFilters({
                                             views={["hours", "minutes"]}
                                             value={excludeClassTimeEndTime}
                                             onChange={(newValue) => setExcludeClassTimeEndTime(newValue)}
+                                            slotProps={{ textField: { sx: { flex: 1, minWidth: 0 } } }}
                                         />
                                     </Stack>
                                     <Stack
@@ -279,10 +281,10 @@ export default function ExcludeClassTimeFilters({
                         >
                             Skjulte tidsrom
                         </Typography>
-                        <Grid2 container rowSpacing={1}>
+                        <Grid container rowSpacing={1}>
                             {toSortedFilters(excludeClassTimeFilters.filters).map((filter) => (
                                 <>
-                                    <Grid2
+                                    <Grid
                                         size={{
                                             xs: 2,
                                             sm: 4,
@@ -293,8 +295,8 @@ export default function ExcludeClassTimeFilters({
                                         }}
                                     >
                                         <Typography variant="body2">{weekdays[filter.weekday - 1]}</Typography>
-                                    </Grid2>
-                                    <Grid2
+                                    </Grid>
+                                    <Grid
                                         size={{
                                             xs: 6,
                                             sm: 4,
@@ -311,8 +313,8 @@ export default function ExcludeClassTimeFilters({
                                             {filter.endHour.toFixed(0).padStart(2, "0")}:
                                             {filter.endMinute.toFixed(0).padStart(2, "0")}
                                         </Typography>
-                                    </Grid2>
-                                    <Grid2
+                                    </Grid>
+                                    <Grid
                                         size={4}
                                         sx={{
                                             textAlign: "right",
@@ -331,10 +333,10 @@ export default function ExcludeClassTimeFilters({
                                                 <DeleteRounded />
                                             </IconButton>
                                         </Tooltip>
-                                    </Grid2>
+                                    </Grid>
                                 </>
                             ))}
-                        </Grid2>
+                        </Grid>
                         {excludeClassTimeFilters.filters.length === 0 ? (
                             <Typography
                                 variant={"body2"}

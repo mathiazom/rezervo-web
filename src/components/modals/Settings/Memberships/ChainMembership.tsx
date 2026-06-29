@@ -51,7 +51,7 @@ function ChainMembership({
             <FormGroup
                 sx={{
                     paddingBottom: "0.75rem",
-                    backgroundColor: theme.palette.secondaryBackground.default,
+                    backgroundColor: (theme.vars ?? theme).palette.secondaryBackground.default,
                     padding: "1rem 1.25rem",
                     borderRadius: "6px",
                     width: "100%",
@@ -94,7 +94,7 @@ function ChainMembership({
                             sx={{
                                 flexGrow: 1,
                                 opacity: 0.6,
-                                color: theme.palette.primary.contrastText,
+                                color: (theme.vars ?? theme).palette.primary.contrastText,
                             }}
                         >
                             {chainUser?.username}
@@ -131,8 +131,10 @@ function ChainMembership({
                                 <Switch
                                     checked={bookingActive}
                                     onChange={(_, checked) => onBookingActiveChanged(checked)}
-                                    inputProps={{
-                                        "aria-label": "booking-aktiv",
+                                    slotProps={{
+                                        input: {
+                                            "aria-label": "booking-aktiv",
+                                        },
                                     }}
                                 />
                             )}

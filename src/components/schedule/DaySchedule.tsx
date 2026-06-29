@@ -90,7 +90,7 @@ function DaySchedule({
                               },
                           }
                         : {
-                              backgroundColor: theme.palette.background.default,
+                              backgroundColor: (theme.vars ?? theme).palette.background.default,
                           },
                 ]}
             >

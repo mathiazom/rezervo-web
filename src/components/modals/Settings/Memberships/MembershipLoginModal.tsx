@@ -118,22 +118,25 @@ const MembershipLoginModal = ({
         <Dialog
             open={open}
             onClose={() => authenticationState !== AuthenticationState.TOTP && onClose()}
-            TransitionProps={{
-                onExited: () => {
-                    setTotp("");
-                    setIsTotpValid(false);
-                    setPassword("");
-                    setAuthenticationStatus(AuthenticationStatus.INITIAL);
-                    setAuthenticationState(AuthenticationState.USERNAME_PASSWORD);
-                },
-            }}
             maxWidth={"xs"}
             fullWidth={true}
-            PaperProps={{
-                sx: {
-                    backgroundColor: "white",
-                    "@media (prefers-color-scheme: dark)": {
-                        backgroundColor: "black",
+            slotProps={{
+                transition: {
+                    onExited: () => {
+                        setTotp("");
+                        setIsTotpValid(false);
+                        setPassword("");
+                        setAuthenticationStatus(AuthenticationStatus.INITIAL);
+                        setAuthenticationState(AuthenticationState.USERNAME_PASSWORD);
+                    },
+                },
+
+                paper: {
+                    sx: {
+                        backgroundColor: "white",
+                        "@media (prefers-color-scheme: dark)": {
+                            backgroundColor: "black",
+                        },
                     },
                 },
             }}

@@ -302,7 +302,11 @@ export default function CheckIn({
                             </Select>
                         </FormControl>
 
-                        <Stack alignItems={"center"}>
+                        <Stack
+                            sx={{
+                                alignItems: "center",
+                            }}
+                        >
                             <FormControl sx={{ alignItems: "center" }}>
                                 <FormControlLabel
                                     disabled={loading || terminal?.hasPrinter === false}
