@@ -1,12 +1,15 @@
-import withSerwistInit from "@serwist/next";
+import { withSerwist } from "@serwist/turbopack";
 
-const withSerwist = withSerwistInit({
-    swSrc: "src/serviceworker/index.ts",
-    swDest: "public/sw.js",
-});
+const configHost = new URL(global.process.env["NEXT_PUBLIC_CONFIG_HOST"] ?? "");
+
+const isLocalConfigHost = ["localhost", "127.0.0.1", "0.0.0.0", "[::1]", "host.docker.internal"].includes(
+    configHost.hostname,
+);
 
 export default withSerwist({
     typedRoutes: true,
+    cacheComponents: true,
+    reactCompiler: true,
     staticPageGenerationTimeout: 120,
     ...(global.process.env["BUILD_STANDALONE"] === "true" ? { output: "standalone" } : {}),
     async redirects() {
@@ -26,10 +29,12 @@ export default withSerwist({
         ];
     },
     images: {
+        dangerouslyAllowLocalIP: isLocalConfigHost,
         remotePatterns: [
             {
-                protocol: "https",
-                hostname: new URL(global.process.env["NEXT_PUBLIC_CONFIG_HOST"] ?? "").hostname,
+                protocol: configHost.protocol.replace(":", "") as "http" | "https",
+                hostname: configHost.hostname,
+                ...(configHost.port ? { port: configHost.port } : {}),
             },
             {
                 protocol: "https",

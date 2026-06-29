@@ -1,5 +1,4 @@
 import { Box, Chip, Divider, Typography, useTheme } from "@mui/material";
-import { useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
@@ -43,20 +42,16 @@ function DaySchedule({
 }) {
     const theme = useTheme();
 
-    const filteredClasses = useMemo(
-        () =>
-            daySchedule.classes.filter(
-                (c) =>
-                    selectedLocationIds.includes(c.location.id) &&
-                    selectedCategories.includes(c.activity.category) &&
-                    !isClassExcludedByTimeFilters(c, excludeClassTimeFilters),
-            ),
-        [daySchedule.classes, selectedLocationIds, selectedCategories, excludeClassTimeFilters],
+    const filteredClasses = daySchedule.classes.filter(
+        (c) =>
+            selectedLocationIds.includes(c.location.id) &&
+            selectedCategories.includes(c.activity.category) &&
+            !isClassExcludedByTimeFilters(c, excludeClassTimeFilters),
     );
 
     const dayIsToday = isToday(daySchedule.date);
 
-    const scrollToTodayClassId = useMemo(() => {
+    const scrollToTodayClassId = (() => {
         if (!dayIsToday) return null;
         const now = LocalizedDateTime.now();
         let mostRecent = null;
@@ -69,7 +64,7 @@ function DaySchedule({
             }
         }
         return mostRecent?.id ?? null;
-    }, [dayIsToday, filteredClasses]);
+    })();
 
     return (
         <Box

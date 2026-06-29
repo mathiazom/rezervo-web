@@ -4,7 +4,6 @@
         "lib": ["dom", "webworker", "esnext"],
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
-        "types": ["@serwist/next/typings"],
         "paths": {
             "@/*": ["./src/*"]
         },

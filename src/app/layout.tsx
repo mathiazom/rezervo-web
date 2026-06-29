@@ -1,9 +1,8 @@
-// @ts-expect-error no type declarations for global CSS side-effect import
 import "@/styles/globals.css";
-// @ts-expect-error no type declarations for global CSS side-effect import
 import "@/styles/animations.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { SerwistProvider } from "@serwist/turbopack/react";
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
 
@@ -79,7 +78,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                                 <CssBaseline enableColorScheme />
                                 <SnowfallProvider />
                                 <div id="root">
-                                    <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
+                                    <AppRouterCacheProvider>
+                                        <SerwistProvider swUrl="/serwist/sw.js">{children}</SerwistProvider>
+                                    </AppRouterCacheProvider>
                                 </div>
                             </DatePickerLocalizationProvider>
                         </AuthProvider>

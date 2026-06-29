@@ -1,4 +1,4 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
@@ -11,6 +11,9 @@ export async function POST(request: NextRequest) {
 
         // Revalidate the entire cache
         revalidatePath("/", "layout");
+        revalidateTag("chains", "max");
+        revalidateTag("categories", "max");
+        revalidateTag("schedule", "max");
 
         return NextResponse.json({ revalidated: true, timestamp: Date.now() }, { status: 200 });
     } catch {

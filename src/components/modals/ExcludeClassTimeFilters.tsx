@@ -19,7 +19,7 @@ import {
 import Grid2 from "@mui/material/Grid2";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
 import { storeExcludeClassTimeFilters } from "@/lib/helpers/storage";
@@ -39,7 +39,7 @@ export default function ExcludeClassTimeFilters({
     const [excludeClassTimeStartTime, setExcludeClassTimeStartTime] = useState<DateTime | null>(null);
     const [excludeClassTimeEndTime, setExcludeClassTimeEndTime] = useState<DateTime | null>(null);
 
-    const validateInput: () => false | ExcludeClassTimeFilter = useCallback(() => {
+    const validateInput: () => false | ExcludeClassTimeFilter = () => {
         if (
             excludeClassTimeWeekday >= 1 &&
             excludeClassTimeWeekday <= 7 &&
@@ -68,9 +68,9 @@ export default function ExcludeClassTimeFilters({
         } else {
             return false;
         }
-    }, [excludeClassTimeFilters, excludeClassTimeWeekday, excludeClassTimeStartTime, excludeClassTimeEndTime]);
+    };
 
-    const inputValid = useMemo(() => validateInput() !== false, [validateInput]);
+    const inputValid = validateInput() !== false;
 
     const addFilter = () => {
         const validInput = validateInput();

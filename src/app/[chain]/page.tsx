@@ -1,5 +1,8 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
+import ChainPageFallback from "@/app/[chain]/ChainPageFallback";
 import StoreSelectedChain from "@/app/[chain]/storeSelectedChain";
 import Chain from "@/components/Chain";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
@@ -11,19 +14,24 @@ import {
 } from "@/lib/helpers/fetchers";
 import { scheduleQueryKey } from "@/lib/helpers/schedule";
 
-export const dynamicParams = false;
-
-export const revalidate = 300;
-
 export async function generateStaticParams() {
     return (await fetchActiveChains()).map((chain) => ({
         chain: chain.profile.identifier,
     }));
 }
 
-export default async function Page({ params, searchParams }: PageProps<"/[chain]">) {
-    const chainIdentifier = (await params).chain;
+async function ChainPageContent({
+    chainIdentifier,
+    searchParams,
+}: {
+    chainIdentifier: string;
+    searchParams: PageProps<"/[chain]">["searchParams"];
+}) {
     const { [ISO_WEEK_QUERY_PARAM]: rawWeekParam, [CLASS_ID_QUERY_PARAM]: showClassId } = await searchParams;
+    const activeChains = await fetchActiveChains();
+    if (!activeChains.some((c) => c.profile.identifier === chainIdentifier)) {
+        notFound();
+    }
     const { chain, weekParam, chainProfiles, activityCategories } = await fetchChain(chainIdentifier).then((c) =>
         fetchChainPageStaticProps(c, Array.isArray(rawWeekParam) ? rawWeekParam[0] : rawWeekParam),
     );
@@ -48,5 +56,14 @@ export default async function Page({ params, searchParams }: PageProps<"/[chain]
                 activityCategories={activityCategories}
             />
         </HydrationBoundary>
+    );
+}
+
+export default async function Page({ params, searchParams }: PageProps<"/[chain]">) {
+    const chainIdentifier = (await params).chain;
+    return (
+        <Suspense fallback={<ChainPageFallback />}>
+            <ChainPageContent chainIdentifier={chainIdentifier} searchParams={searchParams} />
+        </Suspense>
     );
 }

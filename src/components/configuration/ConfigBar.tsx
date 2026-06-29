@@ -8,7 +8,7 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
@@ -50,11 +50,8 @@ function ConfigBar({
     const friendRequestCount =
         community?.users.filter((cu) => cu.relationship === UserRelationship.REQUEST_RECEIVED).length ?? 0;
 
-    const bookingPaused = useMemo(() => {
-        if (chainConfigs == null) return false;
-        const configsArray = Object.values(chainConfigs);
-        return configsArray.length > 0 && configsArray.every((config) => !config.active);
-    }, [chainConfigs]);
+    const configsArray = chainConfigs == null ? [] : Object.values(chainConfigs);
+    const bookingPaused = configsArray.length > 0 && configsArray.every((config) => !config.active);
 
     useEffect(() => {
         if (myUserId != null && !configRefetchedRef.current) {

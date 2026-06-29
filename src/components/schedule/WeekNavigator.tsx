@@ -1,7 +1,7 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import { Avatar, AvatarGroup, Box, Button, Stack, Typography } from "@mui/material";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,
@@ -42,18 +42,13 @@ export default function WeekNavigator({
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
 }) {
-    const isLocationFiltered = useMemo(() => {
-        const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
-        return selectedLocationIds.length < totalLocations;
-    }, [selectedLocationIds, chain]);
+    const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
+    const isLocationFiltered = selectedLocationIds.length < totalLocations;
 
-    const isCategoryFiltered = useMemo(() => {
-        return selectedCategories.length < allCategories.length;
-    }, [selectedCategories, allCategories]);
+    const isCategoryFiltered = selectedCategories.length < allCategories.length;
 
-    const isClassTimeFiltered = useMemo(() => {
-        return excludeClassTimeFilters.enabled && excludeClassTimeFilters.filters.some((filter) => filter.enabled);
-    }, [excludeClassTimeFilters]);
+    const isClassTimeFiltered =
+        excludeClassTimeFilters.enabled && excludeClassTimeFilters.filters.some((filter) => filter.enabled);
 
     const isFiltered = isLocationFiltered || isCategoryFiltered || isClassTimeFiltered;
 

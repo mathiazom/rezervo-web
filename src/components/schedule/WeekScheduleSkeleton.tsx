@@ -1,6 +1,5 @@
 import { alpha, Box, Chip, Divider, Stack, Typography, useTheme } from "@mui/material";
 import { DateTime } from "luxon";
-import { useMemo } from "react";
 
 import ClassCardSkeleton from "@/components/schedule/class/ClassCardSkeleton";
 import {
@@ -86,7 +85,7 @@ function DayScheduleSkeleton({ date, cardCount }: { date: DateTime; cardCount: n
 
 export default function WeekScheduleSkeleton({ weekParam }: { weekParam: string }) {
     const theme = useTheme();
-    const days = useMemo(() => weekDates(weekParam), [weekParam]);
+    const days = weekDates(weekParam);
 
     return (
         <Box sx={{ display: "flex", flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>
