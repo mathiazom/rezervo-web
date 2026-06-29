@@ -14,7 +14,8 @@
         "lint": "oxlint",
         "lint:fix": "oxlint --fix",
         "typecheck": "tsc --noEmit",
-        "check": "run-p format:check lint typecheck",
+        "check": "run-s check:parallel",
+        "check:parallel": "run-p format:check lint typecheck",
         "fix": "run-s format lint:fix",
         "review": "run-s check prod"
     },
