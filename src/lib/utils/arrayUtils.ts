@@ -14,6 +14,7 @@ export function formatNameArray(a: string[], max?: number, plusSelf = false) {
     if (max && a.length > max) {
         return `${plusSelf ? "Du, " : ""}${a.slice(0, max - 1).join(", ")} og ${a.length - max + 1} andre`;
     }
+    // oxlint-disable-next-line typescript/restrict-template-expressions
     return `${plusSelf ? "Du, " : ""}${a.slice(0, -1).join(", ")} og ${a.slice(-1)}`;
 }
 

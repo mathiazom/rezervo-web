@@ -59,7 +59,7 @@ function ConfigBar({
     useEffect(() => {
         if (myUserId != null && !configRefetchedRef.current) {
             configRefetchedRef.current = true;
-            onRefetchConfig().then(() => setIsUserUpserted(true));
+            void onRefetchConfig().then(() => setIsUserUpserted(true));
         }
     }, [myUserId, onRefetchConfig]);
 

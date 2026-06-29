@@ -21,6 +21,7 @@ export function authedFetcher(token: string): typeof fetcher {
         fetcher(path, {
             ...init,
             headers: {
+                // oxlint-disable-next-line typescript/no-misused-spread
                 ...init?.headers,
                 Authorization: `Bearer ${token}`,
             },

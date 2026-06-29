@@ -1,5 +1,3 @@
-/* eslint-disable react-compiler/react-compiler */
-
 import { GetApp, SettingsRounded } from "@mui/icons-material";
 import {
     Alert,
@@ -100,7 +98,7 @@ export default function Settings({
             setReminderTimeBeforeInput(DEFAULT_REMINDER_HOURS.toString());
             setReminderTimeBeforeInputUnit(ReminderTimeBeforeInputUnit.HOURS);
         }
-        onNotificationsConfigChanged({
+        void onNotificationsConfigChanged({
             reminderHoursBefore: active ? (reminderHoursBefore ?? DEFAULT_REMINDER_HOURS) : null,
         });
     }
@@ -151,14 +149,14 @@ export default function Settings({
                 : newReminderHoursBefore
             ).toString(),
         );
-        onNotificationsConfigChanged({
+        void onNotificationsConfigChanged({
             reminderHoursBefore: reminderActive ? newReminderHoursBefore : null,
         });
     }
 
     function handleReminderWindowActiveChanged(active: boolean) {
         setReminderWindowActive(active);
-        onNotificationsConfigChanged({
+        void onNotificationsConfigChanged({
             reminderAllowedTimeWindow: active ? reminderWindow : null,
         });
     }
@@ -187,7 +185,7 @@ export default function Settings({
 
     function handleReminderWindowChanged(window: AllowedTimeWindow) {
         setReminderWindow(window);
-        onNotificationsConfigChanged({
+        void onNotificationsConfigChanged({
             reminderAllowedTimeWindow: window,
         });
     }
@@ -202,7 +200,7 @@ export default function Settings({
         return putPreferences({
             ...preferences,
             notifications: {
-                ...(preferences?.notifications ?? {}),
+                ...preferences?.notifications,
                 ...notificationsConfig,
             },
         } as PreferencesPayload).then(() => {
@@ -211,32 +209,28 @@ export default function Settings({
         });
     }
 
-    useEffect(
-        () => {
-            const newReminderHoursBefore = preferences?.notifications?.reminderHoursBefore;
-            if (newReminderHoursBefore == null) {
-                setReminderActive(false);
-                return;
-            }
-            setReminderActive(true);
-            setReminderHoursBefore(newReminderHoursBefore);
-            let unit = reminderTimeBeforeInputUnit;
-            if (reminderTimeBeforeInput == null) {
-                // assume this is initial load and convert to the appropriate unit
-                unit = reminderTimeBeforeInputUnitFromHours(newReminderHoursBefore);
-                setReminderTimeBeforeInputUnit(unit);
-            }
-            setReminderTimeBeforeInput(
-                (unit === ReminderTimeBeforeInputUnit.MINUTES
-                    ? Math.round(newReminderHoursBefore * 60)
-                    : newReminderHoursBefore
-                ).toString(),
-            );
-            setReminderHoursBeforeLoading(false);
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [preferences?.notifications?.reminderHoursBefore],
-    );
+    useEffect(() => {
+        const newReminderHoursBefore = preferences?.notifications?.reminderHoursBefore;
+        if (newReminderHoursBefore == null) {
+            setReminderActive(false);
+            return;
+        }
+        setReminderActive(true);
+        setReminderHoursBefore(newReminderHoursBefore);
+        let unit = reminderTimeBeforeInputUnit;
+        if (reminderTimeBeforeInput == null) {
+            // assume this is initial load and convert to the appropriate unit
+            unit = reminderTimeBeforeInputUnitFromHours(newReminderHoursBefore);
+            setReminderTimeBeforeInputUnit(unit);
+        }
+        setReminderTimeBeforeInput(
+            (unit === ReminderTimeBeforeInputUnit.MINUTES
+                ? Math.round(newReminderHoursBefore * 60)
+                : newReminderHoursBefore
+            ).toString(),
+        );
+        setReminderHoursBeforeLoading(false);
+    }, [preferences?.notifications?.reminderHoursBefore, reminderTimeBeforeInputUnit, reminderTimeBeforeInput]);
 
     useEffect(() => {
         setReminderWindowLoading(false);

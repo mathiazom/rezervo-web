@@ -18,10 +18,10 @@ Package manager is **pnpm only** (`preinstall` runs `only-allow pnpm`; npm/yarn 
 pnpm dev            # dev server with Turbopack
 pnpm build          # production build
 pnpm prod           # build + start
-pnpm check          # prettier:check + lint + typecheck, run in parallel (CI gate)
-pnpm fix            # prettier + eslint --fix
+pnpm check          # format:check + lint + typecheck, run in parallel (CI gate)
+pnpm fix            # format + oxlint --fix
 pnpm typecheck      # tsc --noEmit
-pnpm lint           # eslint
+pnpm lint           # oxlint
 ```
 
 There is **no test runner** in this project. `pnpm check` is the verification gate — run it before considering
@@ -126,9 +126,6 @@ generated and lint-ignored). Push-notification subscription logic is in `src/lib
 
 ## Conventions
 
-- **Imports**: use the `@/*` path alias (maps to `src/*`); relative import paths are forbidden by ESLint
-  (`no-relative-import-paths`). Import order is enforced and auto-fixable — run `pnpm fix`.
-- **React Compiler**: `eslint-plugin-react-compiler` runs as an error-level rule; avoid patterns it flags.
 - **UI**: MUI v6 (`@mui/material`) with Emotion; theme in `src/lib/theme.ts`, applied in `src/app/layout.tsx`.
   Dates/times use Luxon (`src/lib/helpers/date.ts`), with `@mui/x-date-pickers` localized in
   `src/lib/datePickerLocalizationProvider.tsx`. Locale/UI language is Norwegian (`lang="no"`).

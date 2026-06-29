@@ -8,7 +8,7 @@ on:
 
 jobs:
     code_style:
-        name: Prettier Check
+        name: Format Check
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
@@ -21,8 +21,8 @@ jobs:
                   cache: pnpm
             - name: Install dependencies
               run: pnpm install
-            - name: Prettier Check
-              run: pnpm run prettier:check
+            - name: Format Check
+              run: pnpm run format:check
 
     lint:
         name: Lint

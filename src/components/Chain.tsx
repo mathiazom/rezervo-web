@@ -47,6 +47,7 @@ import {
 import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { SessionStatus } from "@/types/userSessions";
+import type { Route } from "next";
 
 // Memoize to avoid redundant schedule re-render on class selection change
 const WeekScheduleMemo = memo(WeekSchedule);
@@ -151,8 +152,7 @@ function Chain({
             const newSearchParams = new URLSearchParams(searchParams);
             if (c !== null) newSearchParams.set(CLASS_ID_QUERY_PARAM, c.id);
             else newSearchParams.delete(CLASS_ID_QUERY_PARAM);
-            // @ts-expect-error TODO: bad route type
-            router.replace(pathname + "?" + newSearchParams.toString());
+            router.replace((pathname + "?" + newSearchParams.toString()) as Route);
             setClassInfoClass(c);
         },
         [pathname, router, searchParams],

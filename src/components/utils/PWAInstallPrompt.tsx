@@ -9,9 +9,7 @@ export const INSTALL_PROMPT_DESCRIPTION =
 
 function PWAInstallPrompt({
     show = true,
-    // eslint-disable-next-line  @typescript-eslint/no-empty-function
     onClose = () => {},
-    // eslint-disable-next-line  @typescript-eslint/no-empty-function
     onIsInstalledChanged = () => {},
 }: {
     show?: boolean;

@@ -15,7 +15,6 @@ export function useMyUser() {
     const { data } = useQuery<MyUser, FetchError>({
         queryKey: ["my-user"],
         queryFn: async (): Promise<MyUser> => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const res = await put("user", { accessToken: token! });
             if (!res.ok) {
                 throw { status: res.status, statusText: res.statusText } as FetchError;

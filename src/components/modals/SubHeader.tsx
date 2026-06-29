@@ -1,4 +1,4 @@
-import { Box, SxProps, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
 export default function SubHeader({
@@ -8,7 +8,7 @@ export default function SubHeader({
     description,
     placeholder,
     showPlaceholder,
-    sx,
+    mb = 1,
 }: {
     title: string;
     startIcon?: ReactNode;
@@ -16,11 +16,11 @@ export default function SubHeader({
     description?: string;
     placeholder?: string;
     showPlaceholder?: boolean;
-    sx?: SxProps;
+    mb?: number;
 }) {
     const theme = useTheme();
     return (
-        <Box sx={{ mb: 1, ...sx }}>
+        <Box sx={{ mb }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
                 {startIcon}
                 <Typography variant="h6" sx={{ fontSize: 18 }}>

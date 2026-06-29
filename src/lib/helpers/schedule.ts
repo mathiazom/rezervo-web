@@ -9,7 +9,7 @@ export const SCHEDULE_STALE_TIME_MS = 60 * 60 * 1000;
 export const ADJACENT_WEEK_OFFSETS = [-1, 1, 2, 3];
 
 export function constructScheduleUrl(chainIdentifier: string, compactISOWeek: string, locationIds: string[]) {
-    const searchParams = new URLSearchParams([...locationIds.map((locationId) => ["location", locationId])]);
+    const searchParams = new URLSearchParams(locationIds.map((locationId) => ["location", locationId]));
     return `schedule/${chainIdentifier}/${compactISOWeek}?${searchParams.toString()}`;
 }
 

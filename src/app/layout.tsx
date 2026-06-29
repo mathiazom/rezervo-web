@@ -1,4 +1,6 @@
+// @ts-expect-error no type declarations for global CSS side-effect import
 import "@/styles/globals.css";
+// @ts-expect-error no type declarations for global CSS side-effect import
 import "@/styles/animations.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
