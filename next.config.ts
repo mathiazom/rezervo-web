@@ -32,7 +32,7 @@ export default withSerwist({
         dangerouslyAllowLocalIP: isLocalConfigHost,
         remotePatterns: [
             {
-                protocol: configHost.protocol.replace(":", "") as "http" | "https",
+                protocol: configHost.protocol === "http:" ? "http" : "https",
                 hostname: configHost.hostname,
                 ...(configHost.port ? { port: configHost.port } : {}),
             },
