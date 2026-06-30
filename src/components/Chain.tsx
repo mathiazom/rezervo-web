@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Divider, Stack } from "@mui/material";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -19,7 +19,7 @@ import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
 import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
@@ -28,6 +28,7 @@ import {
     getStoredSelectedCategories,
     getStoredSelectedLocations,
 } from "@/lib/helpers/storage";
+import { useClassInfo } from "@/lib/hooks/useClassInfo";
 import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -42,12 +43,10 @@ import {
     ChainProfile,
     ExcludeClassTimeFiltersType,
     RezervoChain,
-    RezervoClass,
     RezervoWeekSchedule,
 } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { SessionStatus } from "@/types/userSessions";
-import type { Route } from "next";
 
 function Chain({
     weekParam,
@@ -66,7 +65,6 @@ function Chain({
 }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const router = useRouter();
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
         chain.profile.identifier,
     );
@@ -102,7 +100,6 @@ function Chain({
         enabled: true,
         filters: [],
     });
-    const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
 
     useEffect(() => {
         const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
@@ -129,24 +126,7 @@ function Chain({
         [currentWeekSchedule?.days],
     );
 
-    useEffect(() => {
-        if (showClassId === null) {
-            setClassInfoClass(null);
-            return;
-        }
-        const linkedClass = classes.find((_class) => _class.id === showClassId);
-        if (linkedClass !== undefined) {
-            setClassInfoClass(linkedClass);
-        }
-    }, [showClassId, classes, setClassInfoClass]);
-
-    const onSetClassInfoClass = (c: RezervoClass | null) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        if (c !== null) newSearchParams.set(CLASS_ID_QUERY_PARAM, c.id);
-        else newSearchParams.delete(CLASS_ID_QUERY_PARAM);
-        router.replace((pathname + "?" + newSearchParams.toString()) as Route);
-        setClassInfoClass(c);
-    };
+    const { classInfoClass, setClassInfoClass } = useClassInfo(showClassId, classes);
 
     const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
@@ -290,7 +270,7 @@ function Chain({
                         selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         onUpdateConfig={onUpdateConfig}
-                        onInfo={onSetClassInfoClass}
+                        setClassInfoClass={setClassInfoClass}
                         scrollToTodayRef={scrollToTodayRef}
                     />
                 ) : (
@@ -302,7 +282,7 @@ function Chain({
                 chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
                 onUpdateConfig={onUpdateConfig}
-                onClose={() => onSetClassInfoClass(null)}
+                onClose={() => setClassInfoClass(null)}
             />
             <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
             {userSessions !== null && userChainConfigs !== null && (

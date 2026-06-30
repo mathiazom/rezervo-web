@@ -24,7 +24,7 @@ function DaySchedule({
     selectedClassIds,
     scrollToTodayRef,
     onUpdateConfig,
-    onInfo,
+    setClassInfoClass,
 }: {
     chain: ChainIdentifier;
     daySchedule: RezervoDaySchedule;
@@ -35,7 +35,7 @@ function DaySchedule({
     selectedClassIds: string[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
-    onInfo: (c: RezervoClass) => void;
+    setClassInfoClass: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
 
@@ -155,7 +155,7 @@ function DaySchedule({
                                         selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))
                                     }
                                     onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
-                                    onInfo={() => onInfo(_class)}
+                                    onShowClassInfo={() => setClassInfoClass(_class)}
                                 />
                             </Box>
                         </Box>

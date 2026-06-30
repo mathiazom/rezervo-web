@@ -14,7 +14,7 @@ function WeekSchedule({
     selectedClassIds,
     scrollToTodayRef,
     onUpdateConfig,
-    onInfo,
+    setClassInfoClass,
 }: {
     chain: ChainIdentifier;
     weekSchedule: RezervoWeekSchedule;
@@ -25,7 +25,7 @@ function WeekSchedule({
     selectedClassIds: string[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
-    onInfo: (c: RezervoClass) => void;
+    setClassInfoClass: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
 
@@ -69,7 +69,7 @@ function WeekSchedule({
                                     selectedClassIds={selectedClassIds}
                                     scrollToTodayRef={scrollToTodayRef}
                                     onUpdateConfig={onUpdateConfig}
-                                    onInfo={onInfo}
+                                    setClassInfoClass={setClassInfoClass}
                                 />
                             </Box>
                         );

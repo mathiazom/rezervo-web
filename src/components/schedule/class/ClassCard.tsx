@@ -26,14 +26,14 @@ const ClassCard = ({
     selectable,
     selected,
     onUpdateConfig,
-    onInfo,
+    onShowClassInfo,
 }: {
     chain: ChainIdentifier;
     _class: RezervoClass;
     selectable: boolean;
     selected: boolean;
     onUpdateConfig: (selected: boolean) => void;
-    onInfo: () => void;
+    onShowClassInfo: () => void;
 }) => {
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex(chain);
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
@@ -88,7 +88,7 @@ const ClassCard = ({
             }}
         >
             <Box
-                onClick={onInfo}
+                onClick={onShowClassInfo}
                 sx={{
                     opacity: isInThePast || _class.isCancelled ? 0.5 : 1,
                     background: "none",
@@ -243,7 +243,7 @@ const ClassCard = ({
                             >
                                 <IconButton
                                     onClick={(event) => {
-                                        // Prevent onInfo()
+                                        // Prevent onShowClassInfo()
                                         event.stopPropagation();
                                         selectClass();
                                         setShowSelectClassTooltip(false);
