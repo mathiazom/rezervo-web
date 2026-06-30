@@ -1,20 +1,15 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
-
 import { CATEGORIES_COLOR } from "@/components/modals/ScheduleFiltersDialog";
-import { storeSelectedCategories } from "@/lib/helpers/storage";
-import { ActivityCategory, RezervoChain } from "@/types/chain";
+import { ActivityCategory } from "@/types/chain";
 
 export default function CategoryFilters({
-    chain,
     allCategories,
     selectedCategories,
     setSelectedCategories,
 }: {
-    chain: RezervoChain;
     allCategories: ActivityCategory[];
     selectedCategories: string[];
-    setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    setSelectedCategories: (value: string[]) => void;
 }) {
     const allChecked = allCategories.every((category) => selectedCategories.includes(category.name));
     const allIndeterminate =
@@ -37,11 +32,7 @@ export default function CategoryFilters({
                                     checked={allChecked}
                                     indeterminate={allIndeterminate}
                                     onChange={({ target: { checked } }) =>
-                                        setSelectedCategories(() => {
-                                            const newSelection = checked ? allCategories.map((ac) => ac.name) : [];
-                                            storeSelectedCategories(chain.profile.identifier, newSelection);
-                                            return newSelection;
-                                        })
+                                        setSelectedCategories(checked ? allCategories.map((ac) => ac.name) : [])
                                     }
                                     value={"Alle"}
                                     sx={{
@@ -65,13 +56,11 @@ export default function CategoryFilters({
                                     <Checkbox
                                         checked={selectedCategories.includes(category.name)}
                                         onChange={({ target: { checked } }) =>
-                                            setSelectedCategories((selected) => {
-                                                const newSelection = checked
-                                                    ? [...selected, category.name]
-                                                    : selected.filter((id) => id !== category.name);
-                                                storeSelectedCategories(chain.profile.identifier, newSelection);
-                                                return newSelection;
-                                            })
+                                            setSelectedCategories(
+                                                checked
+                                                    ? [...selectedCategories, category.name]
+                                                    : selectedCategories.filter((id) => id !== category.name),
+                                            )
                                         }
                                         value={category.name}
                                         sx={{

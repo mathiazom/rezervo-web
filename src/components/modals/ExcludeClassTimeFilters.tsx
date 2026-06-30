@@ -19,10 +19,9 @@ import {
 import Grid from "@mui/material/Grid";
 import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
-import { storeExcludeClassTimeFilters } from "@/lib/helpers/storage";
 import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/chain";
 
 export default function ExcludeClassTimeFilters({
@@ -30,7 +29,7 @@ export default function ExcludeClassTimeFilters({
     setExcludeClassTimeFilters,
 }: {
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
+    setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
     const theme = useTheme();
 
@@ -78,31 +77,23 @@ export default function ExcludeClassTimeFilters({
             return;
         }
 
-        setExcludeClassTimeFilters((prevState) => {
-            const newFilters = { ...prevState, filters: [...prevState.filters, validInput] };
-            storeExcludeClassTimeFilters(newFilters);
-            return newFilters;
+        setExcludeClassTimeFilters({
+            ...excludeClassTimeFilters,
+            filters: [...excludeClassTimeFilters.filters, validInput],
         });
     };
 
     const toggleFilter = (excludeClassTimeFilter: ExcludeClassTimeFilter) => {
-        setExcludeClassTimeFilters((prevState) => {
-            for (const filter of prevState.filters) {
-                if (equalFilters(filter, excludeClassTimeFilter)) {
-                    filter.enabled = !filter.enabled;
-                }
-            }
-            storeExcludeClassTimeFilters(prevState);
-            return { ...prevState };
+        setExcludeClassTimeFilters({
+            ...excludeClassTimeFilters,
+            filters: excludeClassTimeFilters.filters.map((filter) =>
+                equalFilters(filter, excludeClassTimeFilter) ? { ...filter, enabled: !filter.enabled } : filter,
+            ),
         });
     };
 
     const toggleAllFilters = () => {
-        setExcludeClassTimeFilters((prevState) => {
-            const newState = { ...prevState, enabled: !prevState.enabled };
-            storeExcludeClassTimeFilters(newState);
-            return newState;
-        });
+        setExcludeClassTimeFilters({ ...excludeClassTimeFilters, enabled: !excludeClassTimeFilters.enabled });
     };
 
     const equalFilters = (a: ExcludeClassTimeFilter, b: ExcludeClassTimeFilter) => {
@@ -117,22 +108,14 @@ export default function ExcludeClassTimeFilters({
     };
 
     const removeFilter = (filter: ExcludeClassTimeFilter) => {
-        setExcludeClassTimeFilters((prevState) => {
-            const newState = {
-                ...prevState,
-                filters: prevState.filters.filter((it) => !equalFilters(filter, it)),
-            };
-            storeExcludeClassTimeFilters(newState);
-            return newState;
+        setExcludeClassTimeFilters({
+            ...excludeClassTimeFilters,
+            filters: excludeClassTimeFilters.filters.filter((it) => !equalFilters(filter, it)),
         });
     };
 
     const clearFilters = () => {
-        setExcludeClassTimeFilters((prevState) => {
-            const newState = { ...prevState, filters: [] };
-            storeExcludeClassTimeFilters(newState);
-            return newState;
-        });
+        setExcludeClassTimeFilters({ ...excludeClassTimeFilters, filters: [] });
     };
 
     const toSortedFilters = (filters: ExcludeClassTimeFilter[]) => {

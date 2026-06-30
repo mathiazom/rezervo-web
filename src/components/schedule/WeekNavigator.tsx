@@ -1,7 +1,7 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import { Avatar, AvatarGroup, Box, Button, Stack, Typography } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,
@@ -35,12 +35,12 @@ export default function WeekNavigator({
     onChangeWeek: (weekParam: string) => void;
     onToday: () => void;
     selectedLocationIds: string[];
-    setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
+    setSelectedLocationIds: (value: string[]) => void;
     allCategories: ActivityCategory[];
     selectedCategories: string[];
-    setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
+    setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
     const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
     const isLocationFiltered = selectedLocationIds.length < totalLocations;

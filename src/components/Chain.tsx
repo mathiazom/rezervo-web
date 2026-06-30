@@ -23,12 +23,8 @@ import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
 import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import {
-    getStoredExcludeClassTimeFilters,
-    getStoredSelectedCategories,
-    getStoredSelectedLocations,
-} from "@/lib/helpers/storage";
 import { useClassInfo } from "@/lib/hooks/useClassInfo";
+import { useScheduleFilters } from "@/lib/hooks/useScheduleFilters";
 import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -41,7 +37,6 @@ import {
     BookingPopupAction,
     BookingPopupState,
     ChainProfile,
-    ExcludeClassTimeFiltersType,
     RezervoChain,
     RezervoWeekSchedule,
 } from "@/types/chain";
@@ -90,23 +85,16 @@ function Chain({
 
     const defaultLocationIds = useMemo(() => getDefaultLocationIds(chain), [chain]);
 
-    const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
-    const deferredSelectedLocationIds = useDeferredValue(selectedLocationIds);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
-    const deferredSelectedCategories = useDeferredValue(selectedCategories);
-    const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFiltersType>({
-        enabled: true,
-        filters: [],
-    });
-
-    useEffect(() => {
-        const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
-        setSelectedLocationIds(locationIds);
-        setSelectedCategories(
-            getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories.map((ac) => ac.name),
-        );
-        setExcludeClassTimeFilters(getStoredExcludeClassTimeFilters() ?? { enabled: true, filters: [] });
-    }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
+    const {
+        selectedLocationIds,
+        setSelectedLocationIds,
+        deferredSelectedLocationIds,
+        selectedCategories,
+        setSelectedCategories,
+        deferredSelectedCategories,
+        excludeClassTimeFilters,
+        setExcludeClassTimeFilters,
+    } = useScheduleFilters(chain.profile.identifier, activityCategories, initialLocationIds, defaultLocationIds);
 
     const {
         weekSchedule: currentWeekSchedule,

@@ -1,8 +1,7 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/material";
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Fragment } from "react";
 
 import { LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
-import { storeSelectedLocations } from "@/lib/helpers/storage";
 import { RezervoChain } from "@/types/chain";
 
 export default function LocationFilters({
@@ -12,7 +11,7 @@ export default function LocationFilters({
 }: {
     chain: RezervoChain;
     selectedLocationIds: string[];
-    setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
+    setSelectedLocationIds: (value: string[]) => void;
 }) {
     const allLocationIds = chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));
     const allChecked = chain.branches.every((branch) =>
@@ -34,11 +33,7 @@ export default function LocationFilters({
                                 checked={allChecked}
                                 indeterminate={allIndeterminate}
                                 onChange={({ target: { checked } }) =>
-                                    setSelectedLocationIds(() => {
-                                        const newSelection = checked ? allLocationIds : [];
-                                        storeSelectedLocations(chain.profile.identifier, newSelection);
-                                        return newSelection;
-                                    })
+                                    setSelectedLocationIds(checked ? allLocationIds : [])
                                 }
                                 value={"Alle"}
                                 sx={{
@@ -71,16 +66,14 @@ export default function LocationFilters({
                                             checked={branchChecked}
                                             indeterminate={indeterminate}
                                             onChange={({ target: { checked } }) =>
-                                                setSelectedLocationIds((selected) => {
-                                                    const newSelection = checked
+                                                setSelectedLocationIds(
+                                                    checked
                                                         ? [
-                                                              ...selected,
+                                                              ...selectedLocationIds,
                                                               ...branch.locations.map(({ identifier }) => identifier),
                                                           ]
-                                                        : selected.filter((id) => !locationIds.includes(id));
-                                                    storeSelectedLocations(chain.profile.identifier, newSelection);
-                                                    return newSelection;
-                                                })
+                                                        : selectedLocationIds.filter((id) => !locationIds.includes(id)),
+                                                )
                                             }
                                             value={branch.identifier}
                                             sx={{
@@ -105,16 +98,11 @@ export default function LocationFilters({
                                                 <Checkbox
                                                     checked={selectedLocationIds.includes(identifier)}
                                                     onChange={({ target: { checked } }) =>
-                                                        setSelectedLocationIds((selected) => {
-                                                            const newSelection = checked
-                                                                ? [...selected, identifier]
-                                                                : selected.filter((id) => id !== identifier);
-                                                            storeSelectedLocations(
-                                                                chain.profile.identifier,
-                                                                newSelection,
-                                                            );
-                                                            return newSelection;
-                                                        })
+                                                        setSelectedLocationIds(
+                                                            checked
+                                                                ? [...selectedLocationIds, identifier]
+                                                                : selectedLocationIds.filter((id) => id !== identifier),
+                                                        )
                                                     }
                                                     value={identifier}
                                                     sx={{
