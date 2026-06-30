@@ -90,7 +90,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <body className={roboto.variable}>
                 <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
                     <QueryProvider>
-                        <Suspense fallback={null}> {/* suspends connection() call in requireServerEnv */}
+                        <Suspense fallback={null}>
+                            {/* suspends connection() call in requireServerEnv */}
                             <AuthenticatedApp>{children}</AuthenticatedApp>
                         </Suspense>
                     </QueryProvider>
