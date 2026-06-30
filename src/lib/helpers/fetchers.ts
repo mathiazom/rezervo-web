@@ -1,3 +1,5 @@
+import { cacheTag } from "next/cache";
+
 import {
     compactISOWeekString,
     firstDateOfWeekByOffset,
@@ -13,10 +15,11 @@ export async function fetchScheduleWeekDTOServer(
     chainIdentifier: string,
     weekParam: string,
     locationIds: string[],
-    revalidate: number = 60 * 60,
 ): Promise<RezervoWeekScheduleDTO> {
+    "use cache";
+    cacheTag("schedule");
     const url = constructScheduleUrl(chainIdentifier, weekParam, locationIds);
-    const res = await get(url, { mode: "server", revalidate });
+    const res = await get(url, { mode: "server" });
     if (!res.ok) {
         throw new Error(`Failed to fetch schedule for ${chainIdentifier} ${weekParam}: ${res.statusText}`);
     }
@@ -41,11 +44,10 @@ export async function fetchChainPageStaticProps(
     };
 }
 
-export async function fetchChain(
-    chainIdentifier: ChainIdentifier,
-    revalidate: number = 60 * 60,
-): Promise<RezervoChain> {
-    return get(`chains/${chainIdentifier}`, { mode: "server", revalidate }).then((res) => {
+export async function fetchChain(chainIdentifier: ChainIdentifier): Promise<RezervoChain> {
+    "use cache";
+    cacheTag("chains");
+    return get(`chains/${chainIdentifier}`, { mode: "server" }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch ${chainIdentifier} chain: ${res.statusText}`);
         }
@@ -53,8 +55,10 @@ export async function fetchChain(
     });
 }
 
-export async function fetchActiveChains(revalidate: number = 60 * 60 * 24): Promise<RezervoChain[]> {
-    return get("chains", { mode: "server", revalidate }).then((res) => {
+export async function fetchActiveChains(): Promise<RezervoChain[]> {
+    "use cache";
+    cacheTag("chains");
+    return get("chains", { mode: "server" }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch active chains: ${res.statusText}`);
         }
@@ -62,8 +66,10 @@ export async function fetchActiveChains(revalidate: number = 60 * 60 * 24): Prom
     });
 }
 
-export async function fetchActivityCategories(revalidate: number = 60 * 60 * 24): Promise<ActivityCategory[]> {
-    return get("categories", { mode: "server", revalidate }).then((res) => {
+export async function fetchActivityCategories(): Promise<ActivityCategory[]> {
+    "use cache";
+    cacheTag("categories");
+    return get("categories", { mode: "server" }).then((res) => {
         if (!res.ok) {
             throw new Error(`Failed to fetch activity categories: ${res.statusText}`);
         }

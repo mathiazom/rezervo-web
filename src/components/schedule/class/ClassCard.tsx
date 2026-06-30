@@ -1,9 +1,9 @@
-import { CancelRounded, EventBusy, EventRepeat } from "@mui/icons-material";
-import { AvatarGroup, Badge, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
+import { EventBusy, EventRepeat } from "@mui/icons-material";
+import { AvatarGroup, Box, Card, CardContent, Collapse, Tooltip, Typography } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { useEffect, useState } from "react";
 
-import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
+import ClassAttendanceMeter from "@/components/schedule/class/ClassAttendanceMeter";
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
@@ -16,7 +16,6 @@ import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { shortenMiddleNames } from "@/lib/utils/textUtils";
 import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
 import { ChainIdentifier, RezervoClass, RezervoInstructor } from "@/types/chain";
-import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
 
 const AVATAR_SIZE = 24;
@@ -24,19 +23,17 @@ const AVATAR_SIZE = 24;
 const ClassCard = ({
     chain,
     _class,
-    popularity,
     selectable,
     selected,
     onUpdateConfig,
-    onInfo,
+    onShowClassInfo,
 }: {
     chain: ChainIdentifier;
     _class: RezervoClass;
-    popularity: ClassPopularity;
     selectable: boolean;
     selected: boolean;
     onUpdateConfig: (selected: boolean) => void;
-    onInfo: () => void;
+    onShowClassInfo: () => void;
 }) => {
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex(chain);
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
@@ -91,7 +88,7 @@ const ClassCard = ({
             }}
         >
             <Box
-                onClick={onInfo}
+                onClick={onShowClassInfo}
                 sx={{
                     opacity: isInThePast || _class.isCancelled ? 0.5 : 1,
                     background: "none",
@@ -234,20 +231,7 @@ const ClassCard = ({
                         </Collapse>
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", ml: 0.5 }}>
-                        {_class.isCancelled ? (
-                            <Tooltip title={"Timen er avlyst"}>
-                                <Badge
-                                    overlap={"circular"}
-                                    badgeContent={<CancelRounded fontSize={"small"} color={"error"} />}
-                                >
-                                    <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
-                                </Badge>
-                            </Tooltip>
-                        ) : (
-                            (_class.totalSlots !== null || (_class.isBookable && _class.waitingListCount !== null)) && (
-                                <ClassPopularityMeter _class={_class} historicPopularity={popularity} />
-                            )
-                        )}
+                        <ClassAttendanceMeter _class={_class} />
                         {showScheduleAction && (
                             <Tooltip
                                 title={(selected ? "Fjern fra" : "Legg til i") + " timeplan"}
@@ -259,7 +243,7 @@ const ClassCard = ({
                             >
                                 <IconButton
                                     onClick={(event) => {
-                                        // Prevent onInfo()
+                                        // Prevent onShowClassInfo()
                                         event.stopPropagation();
                                         selectClass();
                                         setShowSelectClassTooltip(false);

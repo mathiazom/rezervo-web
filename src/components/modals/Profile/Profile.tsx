@@ -149,7 +149,7 @@ function Profile({
                                 useFsAccessApi={false}
                                 onDrop={(acceptedFiles) => {
                                     setIsDraggingOverAvatarDropzone(false);
-                                    onAvatarUpload(acceptedFiles);
+                                    void onAvatarUpload(acceptedFiles);
                                 }}
                                 onDragEnter={() => setIsDraggingOverAvatarDropzone(true)}
                                 onDragLeave={() => setIsDraggingOverAvatarDropzone(false)}
@@ -272,7 +272,7 @@ function Profile({
                         onCancel={() => setConfirmDeleteAvatarDialogOpen(false)}
                         onConfirm={() => {
                             setConfirmDeleteAvatarDialogOpen(false);
-                            deleteAvatar();
+                            void deleteAvatar();
                         }}
                     />
                 </ModalWrapper>

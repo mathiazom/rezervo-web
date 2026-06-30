@@ -18,10 +18,10 @@ Package manager is **pnpm only** (`preinstall` runs `only-allow pnpm`; npm/yarn 
 pnpm dev            # dev server with Turbopack
 pnpm build          # production build
 pnpm prod           # build + start
-pnpm check          # prettier:check + lint + typecheck, run in parallel (CI gate)
-pnpm fix            # prettier + eslint --fix
+pnpm check          # format:check + lint + typecheck, run in parallel (CI gate)
+pnpm fix            # format + oxlint --fix
 pnpm typecheck      # tsc --noEmit
-pnpm lint           # eslint
+pnpm lint           # oxlint
 ```
 
 There is **no test runner** in this project. `pnpm check` is the verification gate — run it before considering
@@ -105,6 +105,10 @@ statusText }`) on non-OK responses — use it as the `useQuery` error type so co
 the cache in `onSuccess` with `queryClient.setQueryData(...)` and/or `invalidateQueries(...)`, and trigger dependent
 hooks' `mutate*` helpers (which wrap `invalidateQueries`) to keep sessions/configs in sync.
 
+`useClassInfo` (`src/lib/hooks/useClassInfo.ts`) syncs the open ClassInfo modal with the `classId` URL search
+param so classes are deep-linkable. Chain location id helpers live in `src/lib/helpers/chain.ts`
+(`getAllLocationIds`, `getDefaultLocationIds`).
+
 ### Recurrent class identity
 
 Recurring bookings are matched to concrete scheduled classes by a derived **recurrent id**
@@ -116,20 +120,24 @@ bookings whose class isn't in the current schedule) are merged in `Chain.tsx` so
 
 Lightweight global state uses **Zustand** (`src/stores/userStore.ts`: current user id/name, avatar cache-bust
 timestamp). Most state is local component state or the TanStack Query cache. UI-persisted filters (selected locations/categories,
-excluded class times) are stored in browser storage via `src/lib/helpers/storage.ts`, keyed per chain.
+excluded class times) are owned by `useScheduleFilters` (`src/lib/hooks/useScheduleFilters.ts`), which holds the
+state and persists it to browser storage via `src/lib/helpers/storage.ts`, keyed per chain. It also exposes
+`useDeferredValue`-deferred copies of the location/category selections for non-blocking schedule re-filtering.
 
 ### PWA / service worker
 
-PWA support via **Serwist** (`@serwist/next`). The service worker source is `src/serviceworker/index.ts`,
-compiled to `public/sw.js` through `withSerwist` in `next.config.ts` (do not edit `public/sw.js` by hand; it is
-generated and lint-ignored). Push-notification subscription logic is in `src/lib/hooks/usePushNotificationSubscription.ts`.
+PWA support via **Serwist** (`@serwist/turbopack`). The service worker source is `src/serviceworker/index.ts`;
+it is compiled and served **on demand** by `createSerwistRoute` in `src/app/serwist/[path]/route.ts` — there is
+no committed/generated `public/sw.js`. `withSerwist` wraps the config in `next.config.ts`. Push-notification
+subscription logic is in `src/lib/hooks/usePushNotificationSubscription.ts`.
 
 ## Conventions
 
-- **Imports**: use the `@/*` path alias (maps to `src/*`); relative import paths are forbidden by ESLint
-  (`no-relative-import-paths`). Import order is enforced and auto-fixable — run `pnpm fix`.
-- **React Compiler**: `eslint-plugin-react-compiler` runs as an error-level rule; avoid patterns it flags.
-- **UI**: MUI v6 (`@mui/material`) with Emotion; theme in `src/lib/theme.ts`, applied in `src/app/layout.tsx`.
+- **Tooling**: format with **oxfmt** and lint with **oxlint** (`oxfmt.config.ts` / `oxlint.config.ts`) — not
+  prettier/eslint. oxlint runs type-aware. Use the `@/*` path alias (maps to `src/*`); run `pnpm fix` to auto-fix.
+- **React Compiler** is enabled (`reactCompiler: true` in `next.config.ts`, via `babel-plugin-react-compiler`), as
+  is Next 16 `cacheComponents`. Avoid patterns React Compiler can't optimize.
+- **UI**: MUI v9 (`@mui/material`) with Emotion; theme in `src/lib/theme.ts`, applied in `src/app/layout.tsx`.
   Dates/times use Luxon (`src/lib/helpers/date.ts`), with `@mui/x-date-pickers` localized in
   `src/lib/datePickerLocalizationProvider.tsx`. Locale/UI language is Norwegian (`lang="no"`).
 - Components live in `src/components/` (modals under `modals/`, schedule grid under `schedule/`); shared logic in

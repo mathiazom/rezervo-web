@@ -1,9 +1,11 @@
 import "@/styles/globals.css";
 import "@/styles/animations.css";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
+import { SerwistProvider } from "@serwist/turbopack/react";
 import type { Metadata, Viewport } from "next";
 import { Roboto } from "next/font/google";
+import { Suspense } from "react";
 
 import AuthProvider from "@/lib/authProvider";
 import DatePickerLocalizationProvider from "@/lib/datePickerLocalizationProvider";
@@ -64,23 +66,34 @@ const roboto = Roboto({
     variable: "--font-roboto",
 });
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-    const authConfig = requireServerAuthConfig();
+async function AuthenticatedApp({ children }: { children: React.ReactNode }) {
+    const authConfig = await requireServerAuthConfig();
 
+    return (
+        <AuthProvider config={authConfig}>
+            <DatePickerLocalizationProvider>
+                <CssBaseline enableColorScheme />
+                <SnowfallProvider />
+                <div id="root">
+                    <AppRouterCacheProvider>
+                        <SerwistProvider swUrl="/serwist/sw.js">{children}</SerwistProvider>
+                    </AppRouterCacheProvider>
+                </div>
+            </DatePickerLocalizationProvider>
+        </AuthProvider>
+    );
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="no" className={roboto.className}>
             <body className={roboto.variable}>
                 <ThemeProvider theme={theme} defaultMode={"system"} disableTransitionOnChange>
                     <QueryProvider>
-                        <AuthProvider config={authConfig}>
-                            <DatePickerLocalizationProvider>
-                                <CssBaseline enableColorScheme />
-                                <SnowfallProvider />
-                                <div id="root">
-                                    <AppRouterCacheProvider>{children}</AppRouterCacheProvider>
-                                </div>
-                            </DatePickerLocalizationProvider>
-                        </AuthProvider>
+                        <Suspense fallback={null}>
+                            {/* suspends connection() call in requireServerEnv */}
+                            <AuthenticatedApp>{children}</AuthenticatedApp>
+                        </Suspense>
                     </QueryProvider>
                 </ThemeProvider>
             </body>

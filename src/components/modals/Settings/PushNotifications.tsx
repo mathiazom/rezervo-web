@@ -33,19 +33,19 @@ const PushNotifications = () => {
             setSubscriptionIsLoading(false);
             return;
         }
-        navigator.serviceWorker.ready.then((reg) => {
+        void navigator.serviceWorker.ready.then((reg) => {
             setRegistration(reg);
             if (!reg.pushManager) {
                 setSubscriptionIsLoading(false);
                 return;
             }
             setIsWebPushSupported(true);
-            reg.pushManager.getSubscription().then((sub) => {
+            void reg.pushManager.getSubscription().then((sub) => {
                 if (!sub || (sub.expirationTime && Date.now() > sub.expirationTime - 5 * 60 * 1000)) {
                     setSubscriptionIsLoading(false);
                     return;
                 }
-                verifySubscription(sub).then((isValid) => {
+                void verifySubscription(sub).then((isValid) => {
                     if (isValid) {
                         setSubscription(sub);
                     }
@@ -89,8 +89,10 @@ const PushNotifications = () => {
                             disabled={!isWebPushSupported}
                             checked={subscription !== null}
                             onChange={(_, checked) => (checked ? subscribe() : unsubscribe())}
-                            inputProps={{
-                                "aria-label": "push-varsler-aktiv",
+                            slotProps={{
+                                input: {
+                                    "aria-label": "push-varsler-aktiv",
+                                },
                             }}
                         />
                     </SwitchWrapper>

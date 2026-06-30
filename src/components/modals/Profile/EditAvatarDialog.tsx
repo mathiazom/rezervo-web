@@ -21,12 +21,14 @@ function EditAvatarDialog({
         <Dialog
             open={open}
             onClose={onClose}
-            PaperProps={{
-                sx: {
-                    minWidth: 300,
-                    backgroundColor: "white",
-                    "@media (prefers-color-scheme: dark)": {
-                        backgroundColor: "black",
+            slotProps={{
+                paper: {
+                    sx: {
+                        minWidth: 300,
+                        backgroundColor: "white",
+                        "@media (prefers-color-scheme: dark)": {
+                            backgroundColor: "black",
+                        },
                     },
                 },
             }}

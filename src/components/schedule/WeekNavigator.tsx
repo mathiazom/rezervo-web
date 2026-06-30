@@ -1,14 +1,14 @@
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import FilterAltRoundedIcon from "@mui/icons-material/FilterAltRounded";
 import { Avatar, AvatarGroup, Box, Button, Stack, Typography } from "@mui/material";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { useState } from "react";
 
 import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,
     EXCLUDE_CLASS_TIME_COLOR,
     LOCATIONS_COLOR,
 } from "@/components/modals/ScheduleFiltersDialog";
-import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { offsetWeekParam } from "@/lib/helpers/schedule";
 import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
 
 export default function WeekNavigator({
@@ -35,40 +35,27 @@ export default function WeekNavigator({
     onChangeWeek: (weekParam: string) => void;
     onToday: () => void;
     selectedLocationIds: string[];
-    setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
+    setSelectedLocationIds: (value: string[]) => void;
     allCategories: ActivityCategory[];
     selectedCategories: string[];
-    setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
+    setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
-    const isLocationFiltered = useMemo(() => {
-        const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
-        return selectedLocationIds.length < totalLocations;
-    }, [selectedLocationIds, chain]);
+    const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
+    const isLocationFiltered = selectedLocationIds.length < totalLocations;
 
-    const isCategoryFiltered = useMemo(() => {
-        return selectedCategories.length < allCategories.length;
-    }, [selectedCategories, allCategories]);
+    const isCategoryFiltered = selectedCategories.length < allCategories.length;
 
-    const isClassTimeFiltered = useMemo(() => {
-        return excludeClassTimeFilters.enabled && excludeClassTimeFilters.filters.some((filter) => filter.enabled);
-    }, [excludeClassTimeFilters]);
+    const isClassTimeFiltered =
+        excludeClassTimeFilters.enabled && excludeClassTimeFilters.filters.some((filter) => filter.enabled);
 
     const isFiltered = isLocationFiltered || isCategoryFiltered || isClassTimeFiltered;
 
     const [isScheduleFiltersOpen, setIsScheduleFiltersOpen] = useState(false);
 
-    function offsetWeekParam(offset: number) {
-        const firstDayOfWeek = weekParam
-            ? fromCompactISOWeekString(weekParam)
-            : LocalizedDateTime.now().startOf("week");
-        if (firstDayOfWeek === null) return null;
-        return compactISOWeekString(firstDayOfWeek.plus({ weeks: offset }));
-    }
-
     function changeWeekByOffset(offset: number) {
-        const week = offsetWeekParam(offset);
+        const week = offsetWeekParam(weekParam, offset);
         if (week != null) onChangeWeek(week);
     }
 

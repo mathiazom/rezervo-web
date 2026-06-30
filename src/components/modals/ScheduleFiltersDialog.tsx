@@ -64,12 +64,12 @@ export default function ScheduleFiltersDialog({
     setOpen: Dispatch<SetStateAction<boolean>>;
     chain: RezervoChain;
     selectedLocationIds: string[];
-    setSelectedLocationIds: Dispatch<SetStateAction<string[]>>;
+    setSelectedLocationIds: (value: string[]) => void;
     allCategories: ActivityCategory[];
     selectedCategories: string[];
-    setSelectedCategories: Dispatch<SetStateAction<string[]>>;
+    setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    setExcludeClassTimeFilters: Dispatch<SetStateAction<ExcludeClassTimeFiltersType>>;
+    setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
     const theme = useTheme();
     const [tab, setTab] = useState(0);
@@ -90,13 +90,15 @@ export default function ScheduleFiltersDialog({
             onClose={handleDialogClose}
             maxWidth={"xs"}
             fullWidth={true}
-            PaperProps={{
-                sx: {
-                    height: "100%",
-                    backgroundColor: "white",
-                    "@media (prefers-color-scheme: dark)": {
-                        backgroundColor: "#111",
-                        backgroundImage: "none",
+            slotProps={{
+                paper: {
+                    sx: {
+                        height: "100%",
+                        backgroundColor: "white",
+                        "@media (prefers-color-scheme: dark)": {
+                            backgroundColor: "#111",
+                            backgroundImage: "none",
+                        },
                     },
                 },
             }}
@@ -108,9 +110,11 @@ export default function ScheduleFiltersDialog({
                 textColor="inherit"
                 variant="fullWidth"
                 aria-label="schedule-filters-tabs"
-                TabIndicatorProps={{
-                    style: {
-                        backgroundColor: currentTabColor,
+                slotProps={{
+                    indicator: {
+                        style: {
+                            backgroundColor: currentTabColor,
+                        },
                     },
                 }}
             >
@@ -179,7 +183,6 @@ export default function ScheduleFiltersDialog({
                 </TabPanel>
                 <TabPanel value={tab} index={1} dir={theme.direction}>
                     <CategoryFilters
-                        chain={chain}
                         allCategories={allCategories}
                         selectedCategories={selectedCategories}
                         setSelectedCategories={setSelectedCategories}

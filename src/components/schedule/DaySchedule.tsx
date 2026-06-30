@@ -1,5 +1,4 @@
 import { Box, Chip, Divider, Typography, useTheme } from "@mui/material";
-import { useMemo } from "react";
 
 import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
@@ -12,9 +11,9 @@ import {
     isClassExcludedByTimeFilters,
 } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoDaySchedule } from "@/types/chain";
-import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({
     chain,
@@ -22,41 +21,35 @@ function DaySchedule({
     selectedLocationIds,
     selectedCategories,
     excludeClassTimeFilters,
-    classPopularityIndex,
     selectable,
     selectedClassIds,
     scrollToTodayRef,
     onUpdateConfig,
-    onInfo,
+    setClassInfoClass,
 }: {
     chain: ChainIdentifier;
     daySchedule: RezervoDaySchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
-    onInfo: (c: RezervoClass) => void;
+    setClassInfoClass: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
 
-    const filteredClasses = useMemo(
-        () =>
-            daySchedule.classes.filter(
-                (c) =>
-                    selectedLocationIds.includes(c.location.id) &&
-                    selectedCategories.includes(c.activity.category) &&
-                    !isClassExcludedByTimeFilters(c, excludeClassTimeFilters),
-            ),
-        [daySchedule.classes, selectedLocationIds, selectedCategories, excludeClassTimeFilters],
+    const filteredClasses = daySchedule.classes.filter(
+        (c) =>
+            selectedLocationIds.includes(c.location.id) &&
+            selectedCategories.includes(c.activity.category) &&
+            !isClassExcludedByTimeFilters(c, excludeClassTimeFilters),
     );
 
     const dayIsToday = isToday(daySchedule.date);
 
-    const scrollToTodayClassId = useMemo(() => {
+    const scrollToTodayClassId = (() => {
         if (!dayIsToday) return null;
         const now = LocalizedDateTime.now();
         let mostRecent = null;
@@ -69,7 +62,7 @@ function DaySchedule({
             }
         }
         return mostRecent?.id ?? null;
-    }, [dayIsToday, filteredClasses]);
+    })();
 
     return (
         <Box
@@ -95,7 +88,7 @@ function DaySchedule({
                               },
                           }
                         : {
-                              backgroundColor: theme.palette.background.default,
+                              backgroundColor: vars(theme).palette.background.default,
                           },
                 ]}
             >
@@ -158,15 +151,12 @@ function DaySchedule({
                                 <ClassCard
                                     chain={chain}
                                     _class={_class}
-                                    popularity={
-                                        classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown
-                                    }
                                     selectable={selectable}
                                     selected={
                                         selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))
                                     }
                                     onUpdateConfig={(s) => onUpdateConfig(classRecurrentId(_class), s)}
-                                    onInfo={() => onInfo(_class)}
+                                    onShowClassInfo={() => setClassInfoClass(_class)}
                                 />
                             </Box>
                         </Box>

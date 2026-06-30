@@ -1,6 +1,5 @@
 import { alpha, Box, Chip, Divider, Stack, Typography, useTheme } from "@mui/material";
 import { DateTime } from "luxon";
-import { useMemo } from "react";
 
 import ClassCardSkeleton from "@/components/schedule/class/ClassCardSkeleton";
 import {
@@ -11,6 +10,7 @@ import {
     isToday,
     LocalizedDateTime,
 } from "@/lib/helpers/date";
+import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 
 // Plausible per-day card counts so the skeleton grid does not look uniform while loading.
@@ -40,7 +40,7 @@ function DayScheduleSkeleton({ date, cardCount }: { date: DateTime; cardCount: n
                                   backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.2, 0),
                               },
                           }
-                        : { backgroundColor: theme.palette.background.default },
+                        : { backgroundColor: vars(theme).palette.background.default },
                 ]}
             >
                 <Box sx={{ opacity: isDayPassed(date) ? 1 : 0.5, padding: "0.5rem 1rem" }}>
@@ -86,7 +86,7 @@ function DayScheduleSkeleton({ date, cardCount }: { date: DateTime; cardCount: n
 
 export default function WeekScheduleSkeleton({ weekParam }: { weekParam: string }) {
     const theme = useTheme();
-    const days = useMemo(() => weekDates(weekParam), [weekParam]);
+    const days = weekDates(weekParam);
 
     return (
         <Box sx={{ display: "flex", flexGrow: 1, overflow: "auto", position: "relative", zIndex: 0 }}>

@@ -1,5 +1,11 @@
-import { compactISOWeekString, firstDateOfWeekByOffset, fromCompactISOWeekString } from "@/lib/helpers/date";
+import {
+    compactISOWeekString,
+    firstDateOfWeekByOffset,
+    fromCompactISOWeekString,
+    LocalizedDateTime,
+} from "@/lib/helpers/date";
 import { fetcher } from "@/lib/utils/fetchUtils";
+import { RezervoWeekSchedule } from "@/types/chain";
 import { RezervoWeekScheduleDTO } from "@/types/serialization";
 
 // Schedule data is cached for an hour server-side; client queries reuse that window and silently refresh on load.
@@ -9,7 +15,7 @@ export const SCHEDULE_STALE_TIME_MS = 60 * 60 * 1000;
 export const ADJACENT_WEEK_OFFSETS = [-1, 1, 2, 3];
 
 export function constructScheduleUrl(chainIdentifier: string, compactISOWeek: string, locationIds: string[]) {
-    const searchParams = new URLSearchParams([...locationIds.map((locationId) => ["location", locationId])]);
+    const searchParams = new URLSearchParams(locationIds.map((locationId) => ["location", locationId]));
     return `schedule/${chainIdentifier}/${compactISOWeek}?${searchParams.toString()}`;
 }
 
@@ -21,6 +27,18 @@ export function offsetWeekParam(weekParam: string, offset: number): string | nul
     const reference = fromCompactISOWeekString(weekParam);
     if (!reference.isValid) return null;
     return compactISOWeekString(firstDateOfWeekByOffset(reference, offset));
+}
+
+export function getWeekNumber(weekSchedule: RezervoWeekSchedule | null, weekParam: string): number {
+    if (weekSchedule != null) {
+        const firstDay = weekSchedule.days[0];
+        if (firstDay === undefined) {
+            throw new Error("Week schedule is empty (missing first day)");
+        }
+        return firstDay.date.weekNumber;
+    }
+    const date = fromCompactISOWeekString(weekParam);
+    return date.isValid ? date.weekNumber : LocalizedDateTime.now().weekNumber;
 }
 
 /**

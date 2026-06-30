@@ -6,6 +6,7 @@ import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { vars } from "@/lib/theme";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 
 function ChainSwitcher({
@@ -36,7 +37,15 @@ function ChainSwitcher({
                 anchor={"left"}
                 open={open}
                 onClose={() => chainLoading == null && setOpen(false)}
-                PaperProps={{ sx: { width: "75%", maxWidth: "18rem", background: theme.palette.background.default } }}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            width: "75%",
+                            maxWidth: "18rem",
+                            background: vars(theme).palette.background.default,
+                        },
+                    },
+                }}
             >
                 <List>
                     <Typography variant={"h6"} sx={{ padding: "0.5rem", textAlign: "center" }}>

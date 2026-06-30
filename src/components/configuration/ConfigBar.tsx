@@ -8,12 +8,13 @@ import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
 import { Badge, Box, Tooltip, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useMyUser } from "@/lib/hooks/useMyUser";
 import { useUser } from "@/lib/hooks/useUser";
+import { vars } from "@/lib/theme";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
@@ -50,16 +51,13 @@ function ConfigBar({
     const friendRequestCount =
         community?.users.filter((cu) => cu.relationship === UserRelationship.REQUEST_RECEIVED).length ?? 0;
 
-    const bookingPaused = useMemo(() => {
-        if (chainConfigs == null) return false;
-        const configsArray = Object.values(chainConfigs);
-        return configsArray.length > 0 && configsArray.every((config) => !config.active);
-    }, [chainConfigs]);
+    const configsArray = chainConfigs == null ? [] : Object.values(chainConfigs);
+    const bookingPaused = configsArray.length > 0 && configsArray.every((config) => !config.active);
 
     useEffect(() => {
         if (myUserId != null && !configRefetchedRef.current) {
             configRefetchedRef.current = true;
-            onRefetchConfig().then(() => setIsUserUpserted(true));
+            void onRefetchConfig().then(() => setIsUserUpserted(true));
         }
     }, [myUserId, onRefetchConfig]);
 
@@ -144,7 +142,7 @@ function ConfigBar({
                                                     color={"disabled"}
                                                     sx={{
                                                         cursor: "pointer",
-                                                        backgroundColor: theme.palette.background.default,
+                                                        backgroundColor: vars(theme).palette.background.default,
                                                         borderRadius: "50%",
                                                         marginTop: "-0.5rem",
                                                         marginLeft: "-0.5rem",

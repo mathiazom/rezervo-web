@@ -1,6 +1,8 @@
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { useTheme } from "@mui/material";
 
+import { vars } from "@/lib/theme";
+
 export function PlannedNotBookedBadgeIcon() {
     const theme = useTheme();
     return (
@@ -8,7 +10,7 @@ export function PlannedNotBookedBadgeIcon() {
             fontSize={"small"}
             color={"error"}
             sx={{
-                backgroundColor: theme.palette.background.default,
+                backgroundColor: vars(theme).palette.background.default,
                 borderRadius: "50%",
                 fontSize: "1.1rem",
                 marginTop: "-0.2rem",

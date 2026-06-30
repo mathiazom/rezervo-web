@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import { TAuthConfig } from "react-oauth2-code-pkce";
 
 import { popStoredPreLoginPath, storePreLoginPath } from "@/lib/helpers/storage";
+import type { Route } from "next";
 
 const DynamicAuthProvider = dynamic(() => import("react-oauth2-code-pkce").then((mod) => mod.AuthProvider), {
     ssr: false,
@@ -29,8 +30,7 @@ export default function AuthProvider({ config, children }: { config: BaseAuthCon
                 scope: "openid offline_access email profile",
                 // redirect back to original path after login has completed
                 preLogin: () => storePreLoginPath(pathname == null || pathname == "/login" ? "/" : pathname),
-                // @ts-expect-error TODO: bad route type
-                postLogin: () => router.replace(popStoredPreLoginPath() || ""),
+                postLogin: () => router.replace((popStoredPreLoginPath() || "") as Route),
             }}
         >
             {children}

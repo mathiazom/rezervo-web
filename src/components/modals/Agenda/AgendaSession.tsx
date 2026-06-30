@@ -8,6 +8,7 @@ import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { compactISOWeekString, getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier } from "@/types/chain";
 import { ChainConfig, ClassConfig } from "@/types/config";
@@ -109,10 +110,10 @@ export default function AgendaSession({
                             ? {
                                   background: `repeating-linear-gradient(
                 -55deg,
-                ${theme.palette.background.default},
-                ${theme.palette.background.default} 10px,
-                ${theme.palette.background.paper} 10px,
-                ${theme.palette.background.paper} 20px)`,
+                ${vars(theme).palette.background.default},
+                ${vars(theme).palette.background.default} 10px,
+                ${vars(theme).palette.background.paper} 10px,
+                ${vars(theme).palette.background.paper} 20px)`,
                               }
                             : {
                                   background: null,

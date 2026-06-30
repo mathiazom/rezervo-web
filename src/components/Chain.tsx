@@ -1,8 +1,8 @@
 "use client";
 
 import { Box, Divider, Stack } from "@mui/material";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { memo, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
 import AgendaModal from "@/components/modals/Agenda/AgendaModal";
@@ -19,37 +19,23 @@ import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
-import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
+import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import {
-    getStoredExcludeClassTimeFilters,
-    getStoredSelectedCategories,
-    getStoredSelectedLocations,
-} from "@/lib/helpers/storage";
-import { useClassPopularityIndex, usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
+import { getWeekNumber } from "@/lib/helpers/schedule";
+import { useClassInfo } from "@/lib/hooks/useClassInfo";
+import { useScheduleFilters } from "@/lib/hooks/useScheduleFilters";
+import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
-import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
-import {
-    ActivityCategory,
-    BookingPopupAction,
-    BookingPopupState,
-    ChainProfile,
-    ExcludeClassTimeFiltersType,
-    RezervoChain,
-    RezervoClass,
-    RezervoWeekSchedule,
-} from "@/types/chain";
-import { ClassConfig } from "@/types/config";
+import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
+import { ActivityCategory, BookingPopupAction, BookingPopupState, ChainProfile, RezervoChain } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { SessionStatus } from "@/types/userSessions";
-
-// Memoize to avoid redundant schedule re-render on class selection change
-const WeekScheduleMemo = memo(WeekSchedule);
 
 function Chain({
     weekParam,
@@ -68,7 +54,6 @@ function Chain({
 }) {
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const router = useRouter();
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
         chain.profile.identifier,
     );
@@ -83,40 +68,27 @@ function Chain({
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const deferredSelectedClassIds = useDeferredValue(selectedClassIds);
 
-    const [isCommunityOpen, setIsCommunityOpen] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isAgendaOpen, setIsAgendaOpen] = useState(false);
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [activeModal, setActiveModal] = useState<"community" | "settings" | "agenda" | "profile" | null>(null);
+    const closeModal = () => setActiveModal(null);
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
-    const allLocationIds = useMemo(
-        () => chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier)),
-        [chain.branches],
-    );
+    // Memoized (despite React Compiler) because these feed useEffect dependency arrays — directly
+    // (defaultLocationIds) and via the schedule hooks' internal effects (allLocationIds). Manual
+    // memoization keeps a stable reference so those effects don't re-run on every render.
+    const allLocationIds = useMemo(() => getAllLocationIds(chain), [chain]);
 
-    const defaultLocationIds = useMemo(() => {
-        const firstBranch = chain.branches[0];
-        return firstBranch ? firstBranch.locations.map(({ identifier }) => identifier) : [];
-    }, [chain.branches]);
+    const defaultLocationIds = useMemo(() => getDefaultLocationIds(chain), [chain]);
 
-    const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
-    const deferredSelectedLocationIds = useDeferredValue(selectedLocationIds);
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(activityCategories.map((ac) => ac.name));
-    const deferredSelectedCategories = useDeferredValue(selectedCategories);
-    const [excludeClassTimeFilters, setExcludeClassTimeFilters] = useState<ExcludeClassTimeFiltersType>({
-        enabled: true,
-        filters: [],
-    });
-    const [classInfoClass, setClassInfoClass] = useState<RezervoClass | null>(null);
-
-    useEffect(() => {
-        const locationIds = getStoredSelectedLocations(chain.profile.identifier) ?? defaultLocationIds;
-        setSelectedLocationIds(locationIds);
-        setSelectedCategories(
-            getStoredSelectedCategories(chain.profile.identifier) ?? activityCategories.map((ac) => ac.name),
-        );
-        setExcludeClassTimeFilters(getStoredExcludeClassTimeFilters() ?? { enabled: true, filters: [] });
-    }, [chain.profile.identifier, defaultLocationIds, activityCategories]);
+    const {
+        selectedLocationIds,
+        setSelectedLocationIds,
+        deferredSelectedLocationIds,
+        selectedCategories,
+        setSelectedCategories,
+        deferredSelectedCategories,
+        excludeClassTimeFilters,
+        setExcludeClassTimeFilters,
+    } = useScheduleFilters(chain.profile.identifier, activityCategories, initialLocationIds, defaultLocationIds);
 
     const {
         weekSchedule: currentWeekSchedule,
@@ -128,98 +100,49 @@ function Chain({
 
     usePrefetchAdjacentWeeks(chain.profile.identifier, currentWeek, allLocationIds, currentWeekSchedule != null);
 
-    const classPopularityIndex = useClassPopularityIndex(chain.profile.identifier, currentWeek, allLocationIds);
-
+    // Memoized because it is a useEffect dependency below (stable reference avoids re-running the effect each render).
     const classes = useMemo(
         () => currentWeekSchedule?.days.flatMap((daySchedule) => daySchedule.classes) ?? [],
         [currentWeekSchedule?.days],
     );
 
-    useEffect(() => {
-        if (showClassId === null) {
-            setClassInfoClass(null);
-            return;
-        }
-        const linkedClass = classes.find((_class) => _class.id === showClassId);
-        if (linkedClass !== undefined) {
-            setClassInfoClass(linkedClass);
-        }
-    }, [showClassId, classes, setClassInfoClass]);
+    const { classInfoClass, setClassInfoClass } = useClassInfo(showClassId, classes);
 
-    const onSetClassInfoClass = useCallback(
-        (c: RezervoClass | null) => {
-            const newSearchParams = new URLSearchParams(searchParams);
-            if (c !== null) newSearchParams.set(CLASS_ID_QUERY_PARAM, c.id);
-            else newSearchParams.delete(CLASS_ID_QUERY_PARAM);
-            // @ts-expect-error TODO: bad route type
-            router.replace(pathname + "?" + newSearchParams.toString());
-            setClassInfoClass(c);
-        },
-        [pathname, router, searchParams],
-    );
+    const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
-    // Pre-generate all non-ghost class config strings
-    const classesConfigMap = useMemo(() => buildConfigMapFromClasses(classes), [classes]);
-
-    // Combine all class config strings
-    const allClassesConfigMap = useMemo(() => {
-        // Locate any class configs from the user config that do not exist in the current schedule
-        const ghostClassesConfigs =
-            userConfig?.recurringBookings
-                ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
-                .reduce<Record<string, ClassConfig>>(
-                    (o, c) => ({
-                        ...o,
-                        [classConfigRecurrentId(c)]: c,
-                    }),
-                    {},
-                ) ?? {};
-        return { ...classesConfigMap, ...ghostClassesConfigs };
-    }, [classesConfigMap, userConfig?.recurringBookings]);
-
-    const onUpdateConfig = useCallback(
-        async (classId: string, selected: boolean) => {
-            const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
-            if (selectedClass?.isBookable) {
-                const isBooked =
-                    userSessionsIndex?.[selectedClass.id]?.some(
-                        (userSession) => userSession.isSelf && userSession.status === SessionStatus.BOOKED,
-                    ) ?? false;
-                if (selected && !isBooked) {
-                    setBookingPopupState({
-                        chain: chain.profile.identifier,
-                        _class: selectedClass,
-                        action: BookingPopupAction.BOOK,
-                    });
-                } else if (!selected && isBooked) {
-                    setBookingPopupState({
-                        chain: chain.profile.identifier,
-                        _class: selectedClass,
-                        action: BookingPopupAction.CANCEL,
-                    });
-                }
+    const onUpdateConfig = async (classId: string, selected: boolean) => {
+        const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
+        if (selectedClass?.isBookable) {
+            const isBooked =
+                userSessionsIndex?.[selectedClass.id]?.some(
+                    (userSession) => userSession.isSelf && userSession.status === SessionStatus.BOOKED,
+                ) ?? false;
+            if (selected && !isBooked) {
+                setBookingPopupState({
+                    chain: chain.profile.identifier,
+                    _class: selectedClass,
+                    action: BookingPopupAction.BOOK,
+                });
+            } else if (!selected && isBooked) {
+                setBookingPopupState({
+                    chain: chain.profile.identifier,
+                    _class: selectedClass,
+                    action: BookingPopupAction.CANCEL,
+                });
             }
-            if (deferredSelectedClassIds == null) return;
-            const newSelectedClassIds = updateValueSelection(deferredSelectedClassIds, classId, selected);
-            setSelectedClassIds(newSelectedClassIds);
-            return await putUserConfig({
-                active: userConfigActive,
-                recurringBookings: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
-            });
-        },
-        [
-            classes,
-            userSessionsIndex,
-            chain.profile.identifier,
-            deferredSelectedClassIds,
-            putUserConfig,
-            userConfigActive,
-            allClassesConfigMap,
-        ],
-    );
+        }
+        if (deferredSelectedClassIds == null) return;
+        const newSelectedClassIds = updateValueSelection(deferredSelectedClassIds, classId, selected);
+        setSelectedClassIds(newSelectedClassIds);
+        return await putUserConfig({
+            active: userConfigActive,
+            recurringBookings: newSelectedClassIds?.flatMap((id) => allClassesConfigMap[id] ?? []) ?? [],
+        });
+    };
 
     const scrollToTodayRef = useRef<HTMLDivElement | null>(null);
 
+    // Memoized because it is a useEffect dependency below.
     const scrollToToday = useCallback(() => {
         scrollToTodayRef.current?.scrollIntoView({
             behavior: "smooth",
@@ -242,37 +165,27 @@ function Chain({
         setUserConfigActive(userConfig?.active ?? false);
     }, [userConfig?.active, userConfig?.recurringBookings]);
 
-    const syncWeekUrl = useCallback(
-        (week: string) => {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set(ISO_WEEK_QUERY_PARAM, week);
-            window.history.replaceState(null, "", `${pathname}?${newSearchParams.toString()}`);
-        },
-        [pathname, searchParams],
-    );
+    const syncWeekUrl = (week: string) => {
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set(ISO_WEEK_QUERY_PARAM, week);
+        window.history.replaceState(null, "", `${pathname}?${newSearchParams.toString()}`);
+    };
 
-    const goToWeek = useCallback(
-        (week: string) => {
-            setCurrentWeek(week);
-            syncWeekUrl(week);
-        },
-        [syncWeekUrl],
-    );
+    const goToWeek = (week: string) => {
+        setCurrentWeek(week);
+        syncWeekUrl(week);
+    };
 
-    const goToToday = useCallback(() => {
+    const goToToday = () => {
         const today = compactISOWeekString(LocalizedDateTime.now());
         if (today != null) {
             setCurrentWeek(today);
             syncWeekUrl(today);
         }
         setScrollPending(true);
-    }, [syncWeekUrl]);
+    };
 
-    const weekNumber = useMemo(() => {
-        if (currentWeekSchedule != null) return getWeekNumber(currentWeekSchedule);
-        const date = fromCompactISOWeekString(currentWeek);
-        return date.isValid ? date.weekNumber : LocalizedDateTime.now().weekNumber;
-    }, [currentWeekSchedule, currentWeek]);
+    const weekNumber = getWeekNumber(currentWeekSchedule, currentWeek);
 
     const [showPWAInstall, setShowPWAInstall] = useState(false);
     const [isPWAInstalled, setIsPWAInstalled] = useState(false);
@@ -292,10 +205,10 @@ function Chain({
                                 isLoadingConfig={userConfigLoading}
                                 isConfigError={userConfigError != null}
                                 onRefetchConfig={mutateUserConfig}
-                                onCommunityOpen={() => setIsCommunityOpen(true)}
-                                onSettingsOpen={() => setIsSettingsOpen(true)}
-                                onAgendaOpen={() => setIsAgendaOpen(true)}
-                                onProfileOpen={() => setIsProfileOpen(true)}
+                                onCommunityOpen={() => setActiveModal("community")}
+                                onSettingsOpen={() => setActiveModal("settings")}
+                                onAgendaOpen={() => setActiveModal("agenda")}
+                                onProfileOpen={() => setActiveModal("profile")}
                             />
                         }
                     />
@@ -322,17 +235,16 @@ function Chain({
                 {weekScheduleError != null ? (
                     <ErrorMessage error={RezervoError.CHAIN_SCHEDULE_UNAVAILABLE} chainProfile={chain.profile} />
                 ) : currentWeekSchedule != null ? (
-                    <WeekScheduleMemo
+                    <WeekSchedule
                         chain={chain.profile.identifier}
                         weekSchedule={currentWeekSchedule}
                         selectedLocationIds={deferredSelectedLocationIds}
                         selectedCategories={deferredSelectedCategories}
                         excludeClassTimeFilters={excludeClassTimeFilters}
-                        classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         onUpdateConfig={onUpdateConfig}
-                        onInfo={onSetClassInfoClass}
+                        setClassInfoClass={setClassInfoClass}
                         scrollToTodayRef={scrollToTodayRef}
                     />
                 ) : (
@@ -343,31 +255,30 @@ function Chain({
             <ClassInfoModal
                 chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
-                classPopularityIndex={classPopularityIndex}
                 onUpdateConfig={onUpdateConfig}
-                onClose={() => onSetClassInfoClass(null)}
+                onClose={() => setClassInfoClass(null)}
             />
-            <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
+            <CommunityModal open={activeModal === "community"} onClose={closeModal} chainProfiles={chainProfiles} />
             {userSessions !== null && userChainConfigs !== null && (
                 <AgendaModal
                     userSessions={userSessions}
                     chainConfigs={userChainConfigs}
                     chainProfiles={chainProfiles}
-                    open={isAgendaOpen}
-                    setOpen={setIsAgendaOpen}
+                    open={activeModal === "agenda"}
+                    onClose={closeModal}
                 />
             )}
             {userChainConfigs !== null && (
                 <SettingsModal
-                    open={isSettingsOpen}
-                    setOpen={setIsSettingsOpen}
+                    open={activeModal === "settings"}
+                    onClose={closeModal}
                     chainProfiles={chainProfiles}
                     chainConfigs={userChainConfigs}
                     isPWAInstalled={isPWAInstalled}
                     showPWAInstall={() => setShowPWAInstall(true)}
                 />
             )}
-            <ProfileModal open={isProfileOpen} setOpen={setIsProfileOpen} />
+            <ProfileModal open={activeModal === "profile"} onClose={closeModal} />
             {bookingPopupState && (
                 <BookingPopupModal
                     onClose={() => setBookingPopupState(null)}
@@ -379,21 +290,10 @@ function Chain({
             <PWAInstallPrompt
                 show={showPWAInstall}
                 onClose={() => setShowPWAInstall(false)}
-                onIsInstalledChanged={useCallback(
-                    (isInstalled: boolean) => setIsPWAInstalled(isInstalled),
-                    [setIsPWAInstalled],
-                )}
+                onIsInstalledChanged={(isInstalled: boolean) => setIsPWAInstalled(isInstalled)}
             />
         </>
     );
 }
 
 export default Chain;
-
-function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
-    const firstDay = weekSchedule.days[0];
-    if (firstDay === undefined) {
-        throw new Error("Week schedule is empty (missing first day)");
-    }
-    return firstDay.date.weekNumber;
-}

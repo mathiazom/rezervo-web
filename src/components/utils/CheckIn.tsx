@@ -88,7 +88,10 @@ export default function CheckIn({
     const { token } = useUser();
     const { chainUser } = useChainUser(chain.profile.identifier);
 
-    // Prevent infinite re-rendering
+    // Keep manual memoization despite React Compiler: `filterAvailableCheckInLocations` is an
+    // external function that returns freshly-mapped objects each call, and the compiler does not
+    // memoize external call results. Without this, the array identity changes every render, the
+    // effect below re-fires and calls setState, causing an infinite re-render loop.
     const availableCheckInLocations = useMemo(
         () => filterAvailableCheckInLocations(chain, selectedLocationIds),
         [chain, selectedLocationIds],
@@ -299,7 +302,11 @@ export default function CheckIn({
                             </Select>
                         </FormControl>
 
-                        <Stack alignItems={"center"}>
+                        <Stack
+                            sx={{
+                                alignItems: "center",
+                            }}
+                        >
                             <FormControl sx={{ alignItems: "center" }}>
                                 <FormControlLabel
                                     disabled={loading || terminal?.hasPrinter === false}

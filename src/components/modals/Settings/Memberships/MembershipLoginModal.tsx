@@ -118,22 +118,25 @@ const MembershipLoginModal = ({
         <Dialog
             open={open}
             onClose={() => authenticationState !== AuthenticationState.TOTP && onClose()}
-            TransitionProps={{
-                onExited: () => {
-                    setTotp("");
-                    setIsTotpValid(false);
-                    setPassword("");
-                    setAuthenticationStatus(AuthenticationStatus.INITIAL);
-                    setAuthenticationState(AuthenticationState.USERNAME_PASSWORD);
-                },
-            }}
             maxWidth={"xs"}
             fullWidth={true}
-            PaperProps={{
-                sx: {
-                    backgroundColor: "white",
-                    "@media (prefers-color-scheme: dark)": {
-                        backgroundColor: "black",
+            slotProps={{
+                transition: {
+                    onExited: () => {
+                        setTotp("");
+                        setIsTotpValid(false);
+                        setPassword("");
+                        setAuthenticationStatus(AuthenticationStatus.INITIAL);
+                        setAuthenticationState(AuthenticationState.USERNAME_PASSWORD);
+                    },
+                },
+
+                paper: {
+                    sx: {
+                        backgroundColor: "white",
+                        "@media (prefers-color-scheme: dark)": {
+                            backgroundColor: "black",
+                        },
                     },
                 },
             }}
@@ -208,11 +211,11 @@ const MembershipLoginModal = ({
                                     disabled={isTotpValid}
                                     label={"Engangskode"}
                                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        onTotpChange(event.target.value);
+                                        void onTotpChange(event.target.value);
                                     }}
                                     onKeyDown={(event: React.KeyboardEvent) => {
                                         if (event.key === "Enter" && isTotpValid) {
-                                            submitTotp(totp);
+                                            void submitTotp(totp);
                                         }
                                     }}
                                     slotProps={{
@@ -245,7 +248,7 @@ const MembershipLoginModal = ({
                                     }}
                                     onKeyDown={(event: React.KeyboardEvent) => {
                                         if (event.key === "Enter" && isUsernamePasswordValid) {
-                                            submitUsernamePassword({
+                                            void submitUsernamePassword({
                                                 username,
                                                 password,
                                             });
@@ -265,7 +268,7 @@ const MembershipLoginModal = ({
                                     }}
                                     onKeyDown={(event: React.KeyboardEvent) => {
                                         if (event.key === "Enter" && isUsernamePasswordValid) {
-                                            submitUsernamePassword({
+                                            void submitUsernamePassword({
                                                 username,
                                                 password,
                                             });
@@ -307,9 +310,9 @@ const MembershipLoginModal = ({
                             }
                             onClick={() => {
                                 if (authenticationState === AuthenticationState.TOTP) {
-                                    submitTotp(totp);
+                                    void submitTotp(totp);
                                 } else if (isUsernamePasswordValid) {
-                                    submitUsernamePassword({
+                                    void submitUsernamePassword({
                                         username,
                                         password,
                                     });

@@ -4,7 +4,7 @@ export interface RequestOptions {
     accessToken?: string | undefined;
     body?: BodyInit | undefined;
     cache?: RequestCache;
-    withContentType?: string | "NO_CONTENT_TYPE";
+    withContentType?: string;
     mode?: RequestMode;
     revalidate?: number;
 }

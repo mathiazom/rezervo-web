@@ -193,7 +193,7 @@ const CommunityUserCard = ({
                     onCancel={() => setConfirmDialogOpen(false)}
                     onConfirm={() => {
                         if (confirmDialogAction !== null) {
-                            updateUserRelationship(confirmDialogAction);
+                            void updateUserRelationship(confirmDialogAction);
                         }
                         setConfirmDialogOpen(false);
                     }}

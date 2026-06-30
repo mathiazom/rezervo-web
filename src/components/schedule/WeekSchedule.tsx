@@ -3,7 +3,6 @@ import { alpha, Box, Stack, useTheme } from "@mui/material";
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { isToday } from "@/lib/helpers/date";
 import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
-import { ClassPopularityIndex } from "@/types/popularity";
 
 function WeekSchedule({
     chain,
@@ -11,24 +10,22 @@ function WeekSchedule({
     selectedLocationIds,
     selectedCategories,
     excludeClassTimeFilters,
-    classPopularityIndex,
     selectable,
     selectedClassIds,
     scrollToTodayRef,
     onUpdateConfig,
-    onInfo,
+    setClassInfoClass,
 }: {
     chain: ChainIdentifier;
     weekSchedule: RezervoWeekSchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
     onUpdateConfig: (classId: string, selected: boolean) => void;
-    onInfo: (c: RezervoClass) => void;
+    setClassInfoClass: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();
 
@@ -68,12 +65,11 @@ function WeekSchedule({
                                     selectedLocationIds={selectedLocationIds}
                                     selectedCategories={selectedCategories}
                                     excludeClassTimeFilters={excludeClassTimeFilters}
-                                    classPopularityIndex={classPopularityIndex}
                                     selectable={selectable}
                                     selectedClassIds={selectedClassIds}
                                     scrollToTodayRef={scrollToTodayRef}
                                     onUpdateConfig={onUpdateConfig}
-                                    onInfo={onInfo}
+                                    setClassInfoClass={setClassInfoClass}
                                 />
                             </Box>
                         );

@@ -1,15 +1,13 @@
 {
     "extends": ["@tsconfig/strictest/tsconfig.json", "@tsconfig/next/tsconfig.json"],
     "compilerOptions": {
-        "target": "es5",
-        "lib": ["dom", "dom.iterable", "webworker", "esnext"],
-        "strict": true,
+        "lib": ["dom", "webworker", "esnext"],
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
-        "types": ["@serwist/next/typings"],
         "paths": {
             "@/*": ["./src/*"]
-        }
+        },
+        "target": "ES2017"
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
     "exclude": ["node_modules"]

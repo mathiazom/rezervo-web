@@ -15,7 +15,7 @@ export function UserAvatar({
     previewOverride,
     onIsAvatarAvailableChanged,
 }: {
-    userId: string | "me";
+    userId: string;
     username: string;
     size?: number;
     previewOverride?: string | null | undefined;
@@ -39,7 +39,6 @@ export function UserAvatar({
     const avatarQuery = useQuery({
         queryKey: ["avatar", realUserId, imgSrcSize],
         queryFn: () =>
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             fetchProtectedImageAsDataUrl(buildPublicBackendPath(`user/${realUserId}/avatar/${imgSrcSize}`), token!),
         enabled: realUserId != null && token != null,
     });

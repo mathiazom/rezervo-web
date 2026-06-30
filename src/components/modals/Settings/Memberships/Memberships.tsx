@@ -32,7 +32,7 @@ function Memberships({
     const hasAllMemberships = chainProfiles.every((p) => chainsWithMembership.includes(p.identifier));
     return (
         <>
-            <SubHeader title={"Mine medlemskap"} sx={{ mb: 0 }} />
+            <SubHeader title={"Mine medlemskap"} mb={0} />
             {Object.keys(chainConfigs).length === 0 && (
                 <Alert severity={"info"}>
                     <AlertTitle>
