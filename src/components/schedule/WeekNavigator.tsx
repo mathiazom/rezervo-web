@@ -8,7 +8,7 @@ import ScheduleFiltersDialog, {
     EXCLUDE_CLASS_TIME_COLOR,
     LOCATIONS_COLOR,
 } from "@/components/modals/ScheduleFiltersDialog";
-import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { offsetWeekParam } from "@/lib/helpers/schedule";
 import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
 
 export default function WeekNavigator({
@@ -54,16 +54,8 @@ export default function WeekNavigator({
 
     const [isScheduleFiltersOpen, setIsScheduleFiltersOpen] = useState(false);
 
-    function offsetWeekParam(offset: number) {
-        const firstDayOfWeek = weekParam
-            ? fromCompactISOWeekString(weekParam)
-            : LocalizedDateTime.now().startOf("week");
-        if (firstDayOfWeek === null) return null;
-        return compactISOWeekString(firstDayOfWeek.plus({ weeks: offset }));
-    }
-
     function changeWeekByOffset(offset: number) {
-        const week = offsetWeekParam(offset);
+        const week = offsetWeekParam(weekParam, offset);
         if (week != null) onChangeWeek(week);
     }
 
