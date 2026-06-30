@@ -79,10 +79,8 @@ function Chain({
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const deferredSelectedClassIds = useDeferredValue(selectedClassIds);
 
-    const [isCommunityOpen, setIsCommunityOpen] = useState(false);
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isAgendaOpen, setIsAgendaOpen] = useState(false);
-    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [activeModal, setActiveModal] = useState<"community" | "settings" | "agenda" | "profile" | null>(null);
+    const closeModal = () => setActiveModal(null);
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
     // Memoized (despite React Compiler) because these feed useEffect dependency arrays — directly
@@ -231,10 +229,10 @@ function Chain({
                                 isLoadingConfig={userConfigLoading}
                                 isConfigError={userConfigError != null}
                                 onRefetchConfig={mutateUserConfig}
-                                onCommunityOpen={() => setIsCommunityOpen(true)}
-                                onSettingsOpen={() => setIsSettingsOpen(true)}
-                                onAgendaOpen={() => setIsAgendaOpen(true)}
-                                onProfileOpen={() => setIsProfileOpen(true)}
+                                onCommunityOpen={() => setActiveModal("community")}
+                                onSettingsOpen={() => setActiveModal("settings")}
+                                onAgendaOpen={() => setActiveModal("agenda")}
+                                onProfileOpen={() => setActiveModal("profile")}
                             />
                         }
                     />
@@ -284,31 +282,27 @@ function Chain({
                 onUpdateConfig={onUpdateConfig}
                 onClose={() => setClassInfoClass(null)}
             />
-            <CommunityModal
-                open={isCommunityOpen}
-                onClose={() => setIsCommunityOpen(false)}
-                chainProfiles={chainProfiles}
-            />
+            <CommunityModal open={activeModal === "community"} onClose={closeModal} chainProfiles={chainProfiles} />
             {userSessions !== null && userChainConfigs !== null && (
                 <AgendaModal
                     userSessions={userSessions}
                     chainConfigs={userChainConfigs}
                     chainProfiles={chainProfiles}
-                    open={isAgendaOpen}
-                    onClose={() => setIsAgendaOpen(false)}
+                    open={activeModal === "agenda"}
+                    onClose={closeModal}
                 />
             )}
             {userChainConfigs !== null && (
                 <SettingsModal
-                    open={isSettingsOpen}
-                    onClose={() => setIsSettingsOpen(false)}
+                    open={activeModal === "settings"}
+                    onClose={closeModal}
                     chainProfiles={chainProfiles}
                     chainConfigs={userChainConfigs}
                     isPWAInstalled={isPWAInstalled}
                     showPWAInstall={() => setShowPWAInstall(true)}
                 />
             )}
-            <ProfileModal open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+            <ProfileModal open={activeModal === "profile"} onClose={closeModal} />
             {bookingPopupState && (
                 <BookingPopupModal
                     onClose={() => setBookingPopupState(null)}
