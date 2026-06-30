@@ -10,6 +10,7 @@ import {
     isToday,
     LocalizedDateTime,
 } from "@/lib/helpers/date";
+import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 
 // Plausible per-day card counts so the skeleton grid does not look uniform while loading.
@@ -39,7 +40,7 @@ function DayScheduleSkeleton({ date, cardCount }: { date: DateTime; cardCount: n
                                   backgroundColor: hexWithOpacityToRgb(theme.palette.primary.main, 0.2, 0),
                               },
                           }
-                        : { backgroundColor: (theme.vars ?? theme).palette.background.default },
+                        : { backgroundColor: vars(theme).palette.background.default },
                 ]}
             >
                 <Box sx={{ opacity: isDayPassed(date) ? 1 : 0.5, padding: "0.5rem 1rem" }}>

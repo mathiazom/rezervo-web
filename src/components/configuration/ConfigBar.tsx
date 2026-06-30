@@ -14,6 +14,7 @@ import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useMyUser } from "@/lib/hooks/useMyUser";
 import { useUser } from "@/lib/hooks/useUser";
+import { vars } from "@/lib/theme";
 import { ChainIdentifier } from "@/types/chain";
 import { UserRelationship } from "@/types/community";
 import { ChainConfig } from "@/types/config";
@@ -141,8 +142,7 @@ function ConfigBar({
                                                     color={"disabled"}
                                                     sx={{
                                                         cursor: "pointer",
-                                                        backgroundColor: (theme.vars ?? theme).palette.background
-                                                            .default,
+                                                        backgroundColor: vars(theme).palette.background.default,
                                                         borderRadius: "50%",
                                                         marginTop: "-0.5rem",
                                                         marginLeft: "-0.5rem",

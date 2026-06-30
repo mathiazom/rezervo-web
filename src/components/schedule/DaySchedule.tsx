@@ -11,6 +11,7 @@ import {
     isClassExcludedByTimeFilters,
 } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoDaySchedule } from "@/types/chain";
 
@@ -87,7 +88,7 @@ function DaySchedule({
                               },
                           }
                         : {
-                              backgroundColor: (theme.vars ?? theme).palette.background.default,
+                              backgroundColor: vars(theme).palette.background.default,
                           },
                 ]}
             >

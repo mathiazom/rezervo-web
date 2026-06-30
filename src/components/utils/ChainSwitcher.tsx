@@ -6,6 +6,7 @@ import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { vars } from "@/lib/theme";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
 
 function ChainSwitcher({
@@ -41,7 +42,7 @@ function ChainSwitcher({
                         sx: {
                             width: "75%",
                             maxWidth: "18rem",
-                            background: (theme.vars ?? theme).palette.background.default,
+                            background: vars(theme).palette.background.default,
                         },
                     },
                 }}

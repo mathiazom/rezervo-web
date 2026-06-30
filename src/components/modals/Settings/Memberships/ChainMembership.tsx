@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { vars } from "@/lib/theme";
 import { ChainProfile } from "@/types/chain";
 import { ChainConfigPayload } from "@/types/config";
 
@@ -51,7 +52,7 @@ function ChainMembership({
             <FormGroup
                 sx={{
                     paddingBottom: "0.75rem",
-                    backgroundColor: (theme.vars ?? theme).palette.secondaryBackground.default,
+                    backgroundColor: vars(theme).palette.secondaryBackground.default,
                     padding: "1rem 1.25rem",
                     borderRadius: "6px",
                     width: "100%",
@@ -94,7 +95,7 @@ function ChainMembership({
                             sx={{
                                 flexGrow: 1,
                                 opacity: 0.6,
-                                color: (theme.vars ?? theme).palette.primary.contrastText,
+                                color: vars(theme).palette.primary.contrastText,
                             }}
                         >
                             {chainUser?.username}
