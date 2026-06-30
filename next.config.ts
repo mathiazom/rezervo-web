@@ -1,6 +1,7 @@
 import { withSerwist } from "@serwist/turbopack";
+import { requireServerEnv } from "@/lib/helpers/env";
 
-const configHost = new URL(global.process.env["NEXT_PUBLIC_CONFIG_HOST"] ?? "");
+const configHost = new URL(requireServerEnv("NEXT_PUBLIC_CONFIG_HOST") ?? "");
 
 const isLocalConfigHost = ["localhost", "127.0.0.1", "0.0.0.0", "[::1]", "host.docker.internal"].includes(
     configHost.hostname,
