@@ -1,9 +1,9 @@
 import { zeroIndexedWeekday } from "@/lib/helpers/date";
-import { classRecurrentId } from "@/lib/helpers/recurrentId";
+import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { RezervoClass } from "@/types/chain";
 import { ClassConfig } from "@/types/config";
 
-export function buildConfigMapFromClasses(classes: RezervoClass[]) {
+function buildConfigMapFromClasses(classes: RezervoClass[]) {
     return classes.reduce<Record<string, ClassConfig>>((o, c) => {
         const { hour, minute, weekday } = c.startTime;
         return {
@@ -17,4 +17,24 @@ export function buildConfigMapFromClasses(classes: RezervoClass[]) {
             } as ClassConfig,
         };
     }, {});
+}
+
+// Build a config map for all classes, including "ghost" configs from the user config (recurring
+// bookings whose class is not present in the current schedule), keyed by recurrent id.
+export function buildAllClassesConfigMap(
+    classes: RezervoClass[],
+    recurringBookings: ClassConfig[] | undefined,
+): Record<string, ClassConfig> {
+    const classesConfigMap = buildConfigMapFromClasses(classes);
+    const ghostClassesConfigs =
+        recurringBookings
+            ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
+            .reduce<Record<string, ClassConfig>>(
+                (o, c) => ({
+                    ...o,
+                    [classConfigRecurrentId(c)]: c,
+                }),
+                {},
+            ) ?? {};
+    return { ...classesConfigMap, ...ghostClassesConfigs };
 }

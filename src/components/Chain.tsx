@@ -33,7 +33,7 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
-import { buildConfigMapFromClasses } from "@/lib/utils/configUtils";
+import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
 import {
     ActivityCategory,
     BookingPopupAction,
@@ -44,7 +44,6 @@ import {
     RezervoClass,
     RezervoWeekSchedule,
 } from "@/types/chain";
-import { ClassConfig } from "@/types/config";
 import { RezervoError } from "@/types/errors";
 import { SessionStatus } from "@/types/userSessions";
 import type { Route } from "next";
@@ -154,22 +153,7 @@ function Chain({
         setClassInfoClass(c);
     };
 
-    // Pre-generate all non-ghost class config strings
-    const classesConfigMap = buildConfigMapFromClasses(classes);
-
-    // Combine all class config strings, including any ghost configs from the user config
-    // that do not exist in the current schedule
-    const ghostClassesConfigs =
-        userConfig?.recurringBookings
-            ?.filter((c) => !(classConfigRecurrentId(c) in classesConfigMap))
-            .reduce<Record<string, ClassConfig>>(
-                (o, c) => ({
-                    ...o,
-                    [classConfigRecurrentId(c)]: c,
-                }),
-                {},
-            ) ?? {};
-    const allClassesConfigMap = { ...classesConfigMap, ...ghostClassesConfigs };
+    const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
     const onUpdateConfig = async (classId: string, selected: boolean) => {
         const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
