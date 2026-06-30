@@ -13,7 +13,6 @@ import {
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoDaySchedule } from "@/types/chain";
-import { ClassPopularity, ClassPopularityIndex } from "@/types/popularity";
 
 function DaySchedule({
     chain,
@@ -21,7 +20,6 @@ function DaySchedule({
     selectedLocationIds,
     selectedCategories,
     excludeClassTimeFilters,
-    classPopularityIndex,
     selectable,
     selectedClassIds,
     scrollToTodayRef,
@@ -33,7 +31,6 @@ function DaySchedule({
     selectedLocationIds: string[];
     selectedCategories: string[];
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
-    classPopularityIndex: ClassPopularityIndex;
     selectable: boolean;
     selectedClassIds: string[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
@@ -153,9 +150,6 @@ function DaySchedule({
                                 <ClassCard
                                     chain={chain}
                                     _class={_class}
-                                    popularity={
-                                        classPopularityIndex[classRecurrentId(_class)] ?? ClassPopularity.Unknown
-                                    }
                                     selectable={selectable}
                                     selected={
                                         selectedClassIds != null && selectedClassIds.includes(classRecurrentId(_class))

@@ -22,12 +22,10 @@ import { useState } from "react";
 import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
 import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
 import ModalWrapper from "@/components/modals/ModalWrapper";
-import ClassPopularityMeter from "@/components/schedule/class/ClassPopularityMeter";
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { isClassInThePast } from "@/lib/helpers/date";
-import { hasWaitingList, stringifyClassPopularity } from "@/lib/helpers/popularity";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { post } from "@/lib/helpers/requests";
 import { useLiveClassData } from "@/lib/hooks/useLiveClassData";
@@ -37,18 +35,17 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { ChainIdentifier, RezervoClass } from "@/types/chain";
-import { ClassPopularity } from "@/types/popularity";
 import { SessionStatus, StatusColors } from "@/types/userSessions";
+import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
+import ClassAttendanceMeter from "@/components/schedule/class/ClassAttendanceMeter";
 
 export default function ClassInfo({
     chain,
     initialClassData,
-    classPopularity,
     onUpdateConfig,
 }: {
     chain: ChainIdentifier;
     initialClassData: RezervoClass;
-    classPopularity: ClassPopularity;
     onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
     const { token, authStatus } = useUser();
@@ -158,10 +155,10 @@ export default function ClassInfo({
                     cancelled={_class.isCancelled}
                 />
             )}
-            {!_class.isCancelled && _class.totalSlots !== null && _class.availableSlots !== null && (
+            {shouldShowClassAttendance(_class) && (
                 <ClassInfoEntry
-                    icon={<ClassPopularityMeter _class={_class} historicPopularity={classPopularity} />}
-                    label={stringifyClassPopularity(_class, classPopularity) ?? ""}
+                    icon={<ClassAttendanceMeter _class={_class} />}
+                    label={stringifyClassAttendance(_class) ?? ""}
                     cancelled={_class.isCancelled}
                 />
             )}

@@ -4,7 +4,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { useState } from "react";
 
-import { hasWaitingList } from "@/lib/helpers/popularity";
+import { hasWaitingList } from "@/lib/helpers/attendance";
 import { post } from "@/lib/helpers/requests";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";

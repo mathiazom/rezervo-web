@@ -27,7 +27,7 @@ import {
     getStoredSelectedCategories,
     getStoredSelectedLocations,
 } from "@/lib/helpers/storage";
-import { useClassPopularityIndex, usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
+import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
@@ -128,8 +128,6 @@ function Chain({
     } = useScheduleWeek(chain.profile.identifier, currentWeek, allLocationIds);
 
     usePrefetchAdjacentWeeks(chain.profile.identifier, currentWeek, allLocationIds, currentWeekSchedule != null);
-
-    const classPopularityIndex = useClassPopularityIndex(chain.profile.identifier, currentWeek, allLocationIds);
 
     // Memoized because it is a useEffect dependency below (stable reference avoids re-running the effect each render).
     const classes = useMemo(
@@ -310,7 +308,6 @@ function Chain({
                         selectedLocationIds={deferredSelectedLocationIds}
                         selectedCategories={deferredSelectedCategories}
                         excludeClassTimeFilters={excludeClassTimeFilters}
-                        classPopularityIndex={classPopularityIndex}
                         selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         onUpdateConfig={onUpdateConfig}
@@ -325,7 +322,6 @@ function Chain({
             <ClassInfoModal
                 chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
-                classPopularityIndex={classPopularityIndex}
                 onUpdateConfig={onUpdateConfig}
                 onClose={() => onSetClassInfoClass(null)}
             />
