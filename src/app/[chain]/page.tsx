@@ -6,6 +6,7 @@ import ChainPageFallback from "@/app/[chain]/ChainPageFallback";
 import StoreSelectedChain from "@/app/[chain]/storeSelectedChain";
 import Chain from "@/components/Chain";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { getAllLocationIds } from "@/lib/helpers/chain";
 import {
     fetchActiveChains,
     fetchChain,
@@ -36,12 +37,12 @@ async function ChainPageContent({
         fetchChainPageStaticProps(c, Array.isArray(rawWeekParam) ? rawWeekParam[0] : rawWeekParam),
     );
 
-    const defaultLocationIds = chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));
+    const allLocationIds = getAllLocationIds(chain);
 
     const queryClient = new QueryClient();
     await queryClient.prefetchQuery({
         queryKey: scheduleQueryKey(chain.profile.identifier, weekParam),
-        queryFn: () => fetchScheduleWeekDTOServer(chain.profile.identifier, weekParam, defaultLocationIds),
+        queryFn: () => fetchScheduleWeekDTOServer(chain.profile.identifier, weekParam, allLocationIds),
     });
 
     return (
@@ -52,7 +53,7 @@ async function ChainPageContent({
                 showClassId={Array.isArray(showClassId) ? showClassId[0] : showClassId}
                 chain={chain}
                 chainProfiles={chainProfiles}
-                initialLocationIds={defaultLocationIds}
+                initialLocationIds={allLocationIds}
                 activityCategories={activityCategories}
             />
         </HydrationBoundary>

@@ -20,6 +20,7 @@ import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
+import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
 import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import {
@@ -89,15 +90,9 @@ function Chain({
     // Memoized (despite React Compiler) because these feed useEffect dependency arrays — directly
     // (defaultLocationIds) and via the schedule hooks' internal effects (allLocationIds). Manual
     // memoization keeps a stable reference so those effects don't re-run on every render.
-    const allLocationIds = useMemo(
-        () => chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier)),
-        [chain.branches],
-    );
+    const allLocationIds = useMemo(() => getAllLocationIds(chain), [chain]);
 
-    const defaultLocationIds = useMemo(() => {
-        const firstBranch = chain.branches[0];
-        return firstBranch ? firstBranch.locations.map(({ identifier }) => identifier) : [];
-    }, [chain.branches]);
+    const defaultLocationIds = useMemo(() => getDefaultLocationIds(chain), [chain]);
 
     const [selectedLocationIds, setSelectedLocationIds] = useState<string[]>(initialLocationIds);
     const deferredSelectedLocationIds = useDeferredValue(selectedLocationIds);
