@@ -21,8 +21,9 @@ import ErrorMessage from "@/components/utils/ErrorMessage";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
-import { compactISOWeekString, fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { getWeekNumber } from "@/lib/helpers/schedule";
 import { useClassInfo } from "@/lib/hooks/useClassInfo";
 import { useScheduleFilters } from "@/lib/hooks/useScheduleFilters";
 import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
@@ -32,14 +33,7 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
-import {
-    ActivityCategory,
-    BookingPopupAction,
-    BookingPopupState,
-    ChainProfile,
-    RezervoChain,
-    RezervoWeekSchedule,
-} from "@/types/chain";
+import { ActivityCategory, BookingPopupAction, BookingPopupState, ChainProfile, RezervoChain } from "@/types/chain";
 import { RezervoError } from "@/types/errors";
 import { SessionStatus } from "@/types/userSessions";
 
@@ -191,13 +185,7 @@ function Chain({
         setScrollPending(true);
     };
 
-    let weekNumber: number;
-    if (currentWeekSchedule != null) {
-        weekNumber = getWeekNumber(currentWeekSchedule);
-    } else {
-        const date = fromCompactISOWeekString(currentWeek);
-        weekNumber = date.isValid ? date.weekNumber : LocalizedDateTime.now().weekNumber;
-    }
+    const weekNumber = getWeekNumber(currentWeekSchedule, currentWeek);
 
     const [showPWAInstall, setShowPWAInstall] = useState(false);
     const [isPWAInstalled, setIsPWAInstalled] = useState(false);
@@ -309,11 +297,3 @@ function Chain({
 }
 
 export default Chain;
-
-function getWeekNumber(weekSchedule: RezervoWeekSchedule): number {
-    const firstDay = weekSchedule.days[0];
-    if (firstDay === undefined) {
-        throw new Error("Week schedule is empty (missing first day)");
-    }
-    return firstDay.date.weekNumber;
-}
