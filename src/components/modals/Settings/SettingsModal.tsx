@@ -1,5 +1,4 @@
 import { Modal } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
 
 import Settings from "@/components/modals/Settings/Settings";
 import { useFeatures } from "@/lib/hooks/useFeatures";
@@ -8,14 +7,14 @@ import { ChainConfig } from "@/types/config";
 
 const SettingsModal = ({
     open,
-    setOpen,
+    onClose,
     chainProfiles,
     chainConfigs,
     isPWAInstalled,
     showPWAInstall,
 }: {
     open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>;
+    onClose: () => void;
     chainProfiles: ChainProfile[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     isPWAInstalled: boolean;
@@ -24,7 +23,7 @@ const SettingsModal = ({
     const { features } = useFeatures();
 
     return (
-        <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal open={open} onClose={onClose}>
             <Settings
                 chainProfiles={chainProfiles}
                 chainConfigs={chainConfigs}

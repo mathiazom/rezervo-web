@@ -1,10 +1,10 @@
 import { Modal } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import Dropzone from "react-dropzone";
 
 import Profile from "@/components/modals/Profile/Profile";
 
-const ProfileModal = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<SetStateAction<boolean>> }) => {
+const ProfileModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
     const [isDraggingOverBackdrop, setIsDraggingOverBackdrop] = useState(false);
     const [backdropDraggingPosition, setBackdropDraggingPosition] = useState<{ x: number; y: number } | null>(null);
 
@@ -19,7 +19,7 @@ const ProfileModal = ({ open, setOpen }: { open: boolean; setOpen: Dispatch<SetS
             {({ getRootProps }) => (
                 <Modal
                     open={open}
-                    onClose={() => setOpen(false)}
+                    onClose={onClose}
                     sx={[
                         {
                             transition: "background-color 225ms cubic-bezier(0.4, 0, 0.2, 1)",

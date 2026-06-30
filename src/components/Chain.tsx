@@ -284,27 +284,31 @@ function Chain({
                 onUpdateConfig={onUpdateConfig}
                 onClose={() => setClassInfoClass(null)}
             />
-            <CommunityModal open={isCommunityOpen} setOpen={setIsCommunityOpen} chainProfiles={chainProfiles} />
+            <CommunityModal
+                open={isCommunityOpen}
+                onClose={() => setIsCommunityOpen(false)}
+                chainProfiles={chainProfiles}
+            />
             {userSessions !== null && userChainConfigs !== null && (
                 <AgendaModal
                     userSessions={userSessions}
                     chainConfigs={userChainConfigs}
                     chainProfiles={chainProfiles}
                     open={isAgendaOpen}
-                    setOpen={setIsAgendaOpen}
+                    onClose={() => setIsAgendaOpen(false)}
                 />
             )}
             {userChainConfigs !== null && (
                 <SettingsModal
                     open={isSettingsOpen}
-                    setOpen={setIsSettingsOpen}
+                    onClose={() => setIsSettingsOpen(false)}
                     chainProfiles={chainProfiles}
                     chainConfigs={userChainConfigs}
                     isPWAInstalled={isPWAInstalled}
                     showPWAInstall={() => setShowPWAInstall(true)}
                 />
             )}
-            <ProfileModal open={isProfileOpen} setOpen={setIsProfileOpen} />
+            <ProfileModal open={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
             {bookingPopupState && (
                 <BookingPopupModal
                     onClose={() => setBookingPopupState(null)}

@@ -1,5 +1,4 @@
 import { Modal } from "@mui/material";
-import { Dispatch, SetStateAction } from "react";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
 import { ChainIdentifier, ChainProfile } from "@/types/chain";
@@ -11,16 +10,16 @@ const AgendaModal = ({
     chainConfigs,
     chainProfiles,
     open,
-    setOpen,
+    onClose,
 }: {
     userSessions: BaseUserSession[];
     chainConfigs: Record<ChainIdentifier, ChainConfig>;
     chainProfiles: ChainProfile[];
     open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>;
+    onClose: () => void;
 }) => {
     return (
-        <Modal open={open} onClose={() => setOpen(false)}>
+        <Modal open={open} onClose={onClose}>
             <Agenda userSessions={userSessions} chainConfigs={chainConfigs} chainProfiles={chainProfiles} />
         </Modal>
     );
