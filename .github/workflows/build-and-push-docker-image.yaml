@@ -52,4 +52,4 @@ jobs:
                   tags: ${{ steps.meta.outputs.tags }}
                   labels: ${{ steps.meta.outputs.labels }}
               env:
-                  NEXT_PUBLIC_CONFIG_HOST: https://api.rezervo.no
+                  VITE_CONFIG_HOST: https://api.rezervo.no

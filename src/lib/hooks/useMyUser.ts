@@ -1,29 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
-
-import { put } from "@/lib/helpers/requests";
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { FetchError } from "@/lib/utils/fetchUtils";
-
-interface MyUser {
-    id: string;
-    name: string;
-}
 
 export function useMyUser() {
-    const { isAuthenticated, token } = useUser();
+    const { isAuthenticated } = useUser();
 
-    const { data } = useQuery<MyUser, FetchError>({
-        queryKey: ["my-user"],
-        queryFn: async (): Promise<MyUser> => {
-            const res = await put("user", { accessToken: token! });
-            if (!res.ok) {
-                throw { status: res.status, statusText: res.statusText } as FetchError;
-            }
-            return await res.json();
-        },
-        enabled: isAuthenticated && token != null,
-        staleTime: Infinity,
-    });
+    const { data } = $api.useQuery("put", "/user", {}, { enabled: isAuthenticated });
 
     return {
         userId: data?.id ?? null,

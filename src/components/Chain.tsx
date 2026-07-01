@@ -1,7 +1,5 @@
-"use client";
-
 import { Box, Divider, Stack } from "@mui/material";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -39,21 +37,18 @@ import { SessionStatus } from "@/types/userSessions";
 
 function Chain({
     weekParam,
-    showClassId,
     chain,
     chainProfiles,
     initialLocationIds,
     activityCategories,
 }: {
     weekParam: string;
-    showClassId: string | undefined;
     chain: RezervoChain;
     chainProfiles: ChainProfile[];
     initialLocationIds: string[];
     activityCategories: ActivityCategory[];
 }) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+    const navigate = useNavigate();
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
         chain.profile.identifier,
     );
@@ -106,7 +101,7 @@ function Chain({
         [currentWeekSchedule?.days],
     );
 
-    const { classInfoClass, setClassInfoClass } = useClassInfo(showClassId, classes);
+    const { classInfoClass, setClassInfoClass } = useClassInfo(classes);
 
     const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
@@ -166,9 +161,7 @@ function Chain({
     }, [userConfig?.active, userConfig?.recurringBookings]);
 
     const syncWeekUrl = (week: string) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set(ISO_WEEK_QUERY_PARAM, week);
-        window.history.replaceState(null, "", `${pathname}?${newSearchParams.toString()}`);
+        void navigate({ to: ".", search: (prev) => ({ ...prev, [ISO_WEEK_QUERY_PARAM]: week }), replace: true });
     };
 
     const goToWeek = (week: string) => {

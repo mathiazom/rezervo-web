@@ -78,7 +78,7 @@ const MembershipLoginModal = ({
             .then((res) => {
                 if (res.status === "initiated_totp_flow") {
                     setAuthenticationState(AuthenticationState.TOTP);
-                    setTotpRegex(new RegExp(res.totpRegex));
+                    setTotpRegex(res.totpRegex ? new RegExp(res.totpRegex) : null);
                     return;
                 }
                 onClose();

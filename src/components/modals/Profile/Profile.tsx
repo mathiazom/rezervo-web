@@ -12,7 +12,7 @@ import EditAvatarDialog from "@/components/modals/Profile/EditAvatarDialog";
 import ProfileAvatar from "@/components/modals/Profile/ProfileAvatar";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
-import { destroy, put } from "@/lib/helpers/requests";
+import { apiClient } from "@/lib/api/client";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
 import { useUser } from "@/lib/hooks/useUser";
 import { Position } from "@/types/math";
@@ -32,7 +32,7 @@ function Profile({
 }) {
     const theme = useTheme();
 
-    const { token, user, logOut } = useUser();
+    const { user, logOut } = useUser();
 
     const queryClient = useQueryClient();
 
@@ -75,43 +75,48 @@ function Profile({
     }
 
     async function uploadAvatarFile(file: File) {
-        if (token == null) return; // TODO: error handling
         setShowAvatarMutateError(false);
         setIsAvatarUpdating(true);
         setEditAvatarDialogOpen(false);
         setAvatarPreviewDataURL(URL.createObjectURL(file));
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await put("user/me/avatar", {
-            body: formData,
-            withContentType: "NO_CONTENT_TYPE",
-            mode: "client",
-            accessToken: token,
-        });
-        if (res.ok) {
-            await queryClient.invalidateQueries({ queryKey: ["avatar"] });
-        } else if (res.status === 413) {
-            onAvatarMutateError(AvatarMutateError.TOO_LARGE);
-        } else if (res.status === 415) {
-            onAvatarMutateError(AvatarMutateError.INVALID_IMAGE);
-        } else {
+        try {
+            const { response } = await apiClient.PUT("/user/me/avatar", {
+                body: { file: file as unknown as string },
+                bodySerializer: () => {
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    return formData;
+                },
+            });
+            if (response.status === 413) {
+                onAvatarMutateError(AvatarMutateError.TOO_LARGE);
+            } else if (response.status === 415) {
+                onAvatarMutateError(AvatarMutateError.INVALID_IMAGE);
+            } else if (!response.ok) {
+                onAvatarMutateError(AvatarMutateError.UNKNOWN);
+            } else {
+                await queryClient.invalidateQueries({ queryKey: ["avatar"] });
+            }
+        } catch {
             onAvatarMutateError(AvatarMutateError.UNKNOWN);
+        } finally {
+            setIsAvatarUpdating(false);
         }
-        setIsAvatarUpdating(false);
     }
 
     async function deleteAvatar() {
-        if (token == null) return; // TODO: error handling
         try {
-            const res = await destroy("user/me/avatar", { mode: "client", accessToken: token });
-            if (!res.ok) {
+            const { response } = await apiClient.DELETE("/user/me/avatar");
+            if (!response.ok) {
                 onAvatarMutateError(AvatarMutateError.UNKNOWN);
-                return;
+            } else {
+                setShowAvatarMutateError(false);
+                setAvatarPreviewDataURL(undefined);
+                setIsAvatarAvailable(false);
+                await queryClient.invalidateQueries({ queryKey: ["avatar"] });
             }
-            setShowAvatarMutateError(false);
-            setAvatarPreviewDataURL(undefined);
-            setIsAvatarAvailable(false);
-            await queryClient.invalidateQueries({ queryKey: ["avatar"] });
+        } catch {
+            onAvatarMutateError(AvatarMutateError.UNKNOWN);
         } finally {
             setEditAvatarDialogOpen(false);
         }

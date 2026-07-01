@@ -84,7 +84,7 @@ function ChainMembership({
                             >
                                 <Avatar
                                     sx={{ width: { xs: 24, md: 32 }, height: { xs: 24, md: 32 } }}
-                                    src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainProfile.images.common.smallLogo}`}
+                                    src={`${import.meta.env.VITE_CONFIG_HOST}/${chainProfile.images.common.smallLogo}`}
                                 >
                                     {chainProfile.identifier}
                                 </Avatar>

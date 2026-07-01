@@ -1,5 +1,3 @@
-"use client";
-
 import { CalendarMonth, CalendarToday, PauseCircleRounded, People } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";

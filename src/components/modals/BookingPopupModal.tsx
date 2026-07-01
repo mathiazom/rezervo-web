@@ -2,11 +2,9 @@ import { Add, Clear, HourglassTop } from "@mui/icons-material";
 import { Button, Dialog, DialogActions, DialogTitle, Typography } from "@mui/material";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import { useState } from "react";
 
+import { $api } from "@/lib/api/client";
 import { hasWaitingList } from "@/lib/helpers/attendance";
-import { post } from "@/lib/helpers/requests";
-import { useUser } from "@/lib/hooks/useUser";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
@@ -22,41 +20,31 @@ const BookingPopupModal = ({
     _class: RezervoClass;
     action: BookingPopupAction;
 }) => {
-    const { token } = useUser();
     const { mutateSessionsIndex } = useUserSessionsIndex(chain);
     const { mutateUserSessions } = useUserSessions();
-    const [bookingLoading, setBookingLoading] = useState(false);
+
+    const onBookingSuccess = async () => {
+        await mutateSessionsIndex();
+        await mutateUserSessions();
+        onClose();
+    };
+    const bookMutation = $api.useMutation("post", "/{chain_identifier}/book", { onSuccess: onBookingSuccess });
+    const cancelBookingMutation = $api.useMutation("post", "/{chain_identifier}/cancel-booking", {
+        onSuccess: onBookingSuccess,
+    });
+    const bookingLoading = bookMutation.isPending || cancelBookingMutation.isPending;
+
     const isCancellation = action === BookingPopupAction.CANCEL;
     const classDescription = `${_class.activity.name} (${_class.startTime.weekdayLong}, ${_class.startTime.toFormat(
         "HH:mm",
     )})`;
 
-    async function book() {
-        if (token == null) return; // TODO: error handling
-        setBookingLoading(true);
-        await post(`${chain}/book`, {
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "client",
-            accessToken: token,
-        });
-        await mutateSessionsIndex();
-        await mutateUserSessions();
-        setBookingLoading(false);
-        onClose();
+    function book() {
+        bookMutation.mutate({ params: { path: { chain_identifier: chain } }, body: { classId: _class.id } });
     }
 
-    async function cancelBooking() {
-        if (token == null) return; // TODO: error handling
-        setBookingLoading(true);
-        await post(`${chain}/cancel-booking`, {
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "client",
-            accessToken: token,
-        });
-        await mutateSessionsIndex();
-        await mutateUserSessions();
-        setBookingLoading(false);
-        onClose();
+    function cancelBooking() {
+        cancelBookingMutation.mutate({ params: { path: { chain_identifier: chain } }, body: { classId: _class.id } });
     }
 
     return (

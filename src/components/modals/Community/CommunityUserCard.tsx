@@ -9,7 +9,7 @@ import { useCommunity } from "@/lib/hooks/useCommunity";
 import { ChainProfile } from "@/types/chain";
 import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
 
-type ConfirmDialogAction = UserRelationshipAction.REMOVE_FRIEND | UserRelationshipAction.DENY_FRIEND;
+type ConfirmDialogAction = typeof UserRelationshipAction.REMOVE_FRIEND | typeof UserRelationshipAction.DENY_FRIEND;
 
 const CommunityUserCard = ({
     communityUser,
@@ -173,7 +173,7 @@ const CommunityUserCard = ({
                                             <Tooltip title={chainProfile.name} key={chain}>
                                                 <Avatar
                                                     sx={{ width: 16, height: 16 }}
-                                                    src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainProfile.images.common.smallLogo}`}
+                                                    src={`${import.meta.env.VITE_CONFIG_HOST}/${chainProfile.images.common.smallLogo}`}
                                                 >
                                                     {chain}
                                                 </Avatar>

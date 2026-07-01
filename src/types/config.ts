@@ -1,63 +1,21 @@
-export interface ClassTimeConfig {
-    hour: number;
-    minute: number;
-}
+import { Schemas } from "@/types/api-helpers";
 
-export interface ClassConfig {
-    activityId: string;
-    locationId: string;
-    weekday: number;
-    startTime: ClassTimeConfig;
-    displayName: string;
-}
+export type ClassConfig = Schemas["Class"];
 
-export interface ChainConfig {
-    active: boolean;
-    recurringBookings: ClassConfig[];
-}
-export type ChainConfigPayload = ChainConfig;
+export type ChainConfig = Schemas["ChainConfig"];
 
-export interface ChainUser {
-    username: string;
-}
+export type ChainConfigPayload = Schemas["BaseChainConfig"];
 
-export type ChainUserProfile = ChainUser & {
-    isAuthVerified: boolean;
-};
+export type ChainUserPayload = Schemas["ChainUserCredentials"];
 
-export type ChainUserPayload = ChainUser & {
-    password: string;
-};
+export type ChainUserTotpPayload = Schemas["ChainUserTOTPPayload"];
 
-export interface ChainUserTotpPayload {
-    totp: string;
-}
+export type HourAndMinute = Schemas["HourAndMinute"];
 
-export interface HourAndMinute {
-    hour: number;
-    minute: number;
-}
+export type AllowedTimeWindow = Schemas["AllowedTimeWindowConfig"];
 
-export interface AllowedTimeWindow {
-    notBefore: HourAndMinute;
-    notAfter: HourAndMinute;
-}
+export type NotificationsConfig = Schemas["Notifications"];
 
-export interface NotificationsConfig {
-    reminderHoursBefore: number | null;
-    reminderAllowedTimeWindow: AllowedTimeWindow | null;
-}
+export type PreferencesPayload = Schemas["UserPreferences"];
 
-export interface Preferences {
-    notifications: NotificationsConfig | null;
-}
-
-export type PreferencesPayload = Preferences;
-
-export interface UserNameWithIsSelf {
-    isSelf: boolean;
-    userId: string;
-    userName: string;
-}
-
-export type AllConfigsIndex = Record<string, UserNameWithIsSelf[]>;
+export type UserNameWithIsSelf = Schemas["UserIdAndNameWithIsSelf"];

@@ -1,35 +1,14 @@
-import { ActivityCategory, ChainIdentifier, ChainProfile, RezervoChain, RezervoClassBase } from "@/types/chain";
-import { SessionStatus } from "@/types/userSessions";
+import { Schemas } from "@/types/api-helpers";
+import { ChainProfile } from "@/types/chain";
 
-export interface RezervoWeekScheduleDTO {
-    locationIds: string[];
-    days: RezervoDayScheduleDTO[];
-}
+export type RezervoWeekScheduleDTO = Schemas["RezervoSchedule"] & { locationIds: string[] };
 
-export interface RezervoDayScheduleDTO {
-    date: string;
-    classes: RezervoClassDTO[];
-}
+export type RezervoDayScheduleDTO = Schemas["RezervoDay"];
 
-export type RezervoClassDTO = RezervoClassBase & {
-    startTime: string;
-    endTime: string;
-};
+export type RezervoClassDTO = Schemas["RezervoClass"];
 
-export interface ChainPageProps {
-    chain: RezervoChain;
-    weekParam: string;
-    chainProfiles: ChainProfile[];
-    activityCategories: ActivityCategory[];
-}
+export type BaseUserSessionDTO = Schemas["BaseUserSession"];
 
 export interface IndexPageProps {
     chainProfiles: ChainProfile[];
-}
-
-export interface BaseUserSessionDTO {
-    chain: ChainIdentifier;
-    status: SessionStatus;
-    positionInWaitList: number | null;
-    classData: RezervoClassDTO;
 }

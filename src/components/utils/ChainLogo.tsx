@@ -1,7 +1,5 @@
 import { Box, useMediaQuery } from "@mui/material";
-import Image from "next/image";
 
-import { shimmerPlaceholder } from "@/lib/helpers/image";
 import { ChainProfile } from "@/types/chain";
 
 function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
@@ -9,15 +7,15 @@ function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
 
     return (
         <Box sx={{ position: "relative", height: "100%", width: "100%" }}>
-            <Image
-                src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${prefersDark ? chainProfile.images.dark.largeLogo : chainProfile.images.light.largeLogo}`}
+            <img
+                src={`${import.meta.env.VITE_CONFIG_HOST}/${prefersDark ? chainProfile.images.dark.largeLogo : chainProfile.images.light.largeLogo}`}
                 alt={`${chainProfile.identifier}-rezervo`}
-                fill={true}
                 style={{
+                    width: "100%",
+                    height: "100%",
                     objectFit: "contain",
                     objectPosition: "center",
                 }}
-                placeholder={shimmerPlaceholder(900, 300)}
             />
         </Box>
     );

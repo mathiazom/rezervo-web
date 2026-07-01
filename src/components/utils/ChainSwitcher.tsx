@@ -1,9 +1,9 @@
-import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, Typography, useTheme } from "@mui/material";
-import Link from "next/link";
+import { Box, Button, Divider, Drawer, List, ListItem, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import { ListItemButtonLink } from "@/components/utils/links";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { vars } from "@/lib/theme";
@@ -66,12 +66,11 @@ function ChainSwitcher({
                                     (isCurrentChain ? setOpen(false) : setChainLoading(chainProfile.identifier))
                                 }
                             >
-                                <ListItemButton
-                                    href={{
-                                        pathname: `/${chainProfile.identifier}`,
-                                        query: {
-                                            [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(LocalizedDateTime.now()),
-                                        },
+                                <ListItemButtonLink
+                                    to="/$chain"
+                                    params={{ chain: chainProfile.identifier }}
+                                    search={{
+                                        [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(LocalizedDateTime.now()),
                                     }}
                                     sx={[
                                         {
@@ -91,14 +90,13 @@ function ChainSwitcher({
                                     disableTouchRipple
                                     disabled={isLoading && !isCurrentLoadingChain}
                                     selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}
-                                    component={Link}
                                 >
                                     {!isLoading || chainLoading !== chainProfile.identifier ? (
                                         <ChainLogo chainProfile={chainProfile} />
                                     ) : (
                                         <ChainLogoSpinner chainProfile={chainProfile} />
                                     )}
-                                </ListItemButton>
+                                </ListItemButtonLink>
                             </ListItem>
                         );
                     })}

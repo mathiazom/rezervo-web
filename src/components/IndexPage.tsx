@@ -1,12 +1,10 @@
-"use client";
-
-import { Box, Button, Divider, Typography, useTheme } from "@mui/material";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Box, Divider, Typography, useTheme } from "@mui/material";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import { ButtonLink } from "@/components/utils/links";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { ChainIdentifier } from "@/types/chain";
@@ -14,18 +12,18 @@ import { IndexPageProps } from "@/types/serialization";
 
 const IndexPage = ({ chainProfiles }: IndexPageProps) => {
     const theme = useTheme();
-    const router = useRouter();
+    const navigate = useNavigate();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
     const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
 
     useEffect(() => {
         const storedChain = getStoredSelectedChain();
         if (storedChain !== null) {
-            router.push(`/${storedChain}`);
+            void navigate({ to: "/$chain", params: { chain: storedChain } });
         } else {
             setCheckedLocalStorage(true);
         }
-    }, [router]);
+    }, [navigate]);
 
     if (!checkedLocalStorage) {
         return;
@@ -67,7 +65,7 @@ const IndexPage = ({ chainProfiles }: IndexPageProps) => {
                 >
                     {chainProfiles.map((chainProfile) => {
                         return (
-                            <Button
+                            <ButtonLink
                                 key={chainProfile.identifier}
                                 sx={{
                                     display: "flex",
@@ -77,8 +75,8 @@ const IndexPage = ({ chainProfiles }: IndexPageProps) => {
                                     width: "18rem",
                                 }}
                                 disableTouchRipple
-                                component={Link}
-                                href={`/${chainProfile.identifier}`}
+                                to="/$chain"
+                                params={{ chain: chainProfile.identifier }}
                                 onClick={() => setChainLoading(chainProfile.identifier)}
                             >
                                 {chainLoading !== chainProfile.identifier ? (
@@ -86,7 +84,7 @@ const IndexPage = ({ chainProfiles }: IndexPageProps) => {
                                 ) : (
                                     <ChainLogoSpinner chainProfile={chainProfile} />
                                 )}
-                            </Button>
+                            </ButtonLink>
                         );
                     })}
                 </Box>

@@ -1,9 +1,8 @@
 import { Avatar, Box, Skeleton } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { buildPublicBackendPath, fetchProtectedImageAsDataUrl } from "@/lib/helpers/requests";
+import { fetchAvatarDataUrl } from "@/lib/api/image";
 import { useMyUser } from "@/lib/hooks/useMyUser";
 import { useUser } from "@/lib/hooks/useUser";
 import { avatarColor } from "@/lib/utils/colorUtils";
@@ -21,29 +20,35 @@ export function UserAvatar({
     previewOverride?: string | null | undefined;
     onIsAvatarAvailableChanged?: (available: boolean) => void;
 }) {
-    const { token } = useUser();
+    const { isAuthenticated } = useUser();
     const { userId: myUserId } = useMyUser();
     const realUserId = userId === "me" ? myUserId : userId;
 
-    const [isAvatarAvailable, setIsAvatarAvailable] = useState<boolean | null>(null);
-
     const imgSrcSize = size <= 75 ? "small" : "medium";
 
-    function doSetPictureAvailable(available: boolean) {
-        setIsAvatarAvailable(available);
-        if (onIsAvatarAvailableChanged) {
-            onIsAvatarAvailableChanged(available);
-        }
-    }
+    const queryEnabled = realUserId != null && isAuthenticated;
 
     const avatarQuery = useQuery({
         queryKey: ["avatar", realUserId, imgSrcSize],
-        queryFn: () =>
-            fetchProtectedImageAsDataUrl(buildPublicBackendPath(`user/${realUserId}/avatar/${imgSrcSize}`), token!),
-        enabled: realUserId != null && token != null,
+        queryFn: () => fetchAvatarDataUrl(realUserId!, imgSrcSize),
+        enabled: queryEnabled,
     });
 
     const imageUrl = previewOverride ?? avatarQuery.data ?? null;
+
+    const [isImageBroken, setIsImageBroken] = useState(false);
+    useEffect(() => setIsImageBroken(false), [imageUrl]);
+
+    const showImage = imageUrl != null && !isImageBroken;
+    const isResolving =
+        !showImage && isAuthenticated && (!queryEnabled || !(avatarQuery.isSuccess || avatarQuery.isError));
+    const isAvailable = showImage ? true : isResolving ? null : false;
+
+    useEffect(() => {
+        if (isAvailable != null) {
+            onIsAvatarAvailableChanged?.(isAvailable);
+        }
+    }, [isAvailable, onIsAvatarAvailableChanged]);
 
     return (
         <Box
@@ -52,25 +57,20 @@ export function UserAvatar({
                 height: size,
             }}
         >
-            {isAvatarAvailable !== false ? (
-                <>
-                    {imageUrl && (
-                        <Image
-                            src={imageUrl}
-                            alt={username}
-                            width={size}
-                            height={size}
-                            onError={() => doSetPictureAvailable(false)}
-                            onLoad={() => doSetPictureAvailable(true)}
-                            style={{
-                                borderRadius: "50%",
-                                objectFit: "cover",
-                            }}
-                            unoptimized={true} // ensures fresh avatars
-                        />
-                    )}
-                    {avatarQuery.isPending && <Skeleton variant={"circular"} width={size} height={size} />}
-                </>
+            {showImage ? (
+                <img
+                    src={imageUrl}
+                    alt={username}
+                    width={size}
+                    height={size}
+                    onError={() => setIsImageBroken(true)}
+                    style={{
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                    }}
+                />
+            ) : isResolving ? (
+                <Skeleton variant={"circular"} width={size} height={size} />
             ) : (
                 <Avatar
                     sx={{

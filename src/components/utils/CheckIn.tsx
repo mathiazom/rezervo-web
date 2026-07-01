@@ -19,7 +19,7 @@ import Button from "@mui/material/Button";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import ModalWrapper from "@/components/modals/ModalWrapper";
-import { post } from "@/lib/helpers/requests";
+import { $api } from "@/lib/api/client";
 import { getStoredCheckInConfiguration, storeCheckInConfiguration } from "@/lib/helpers/storage";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUser } from "@/lib/hooks/useUser";
@@ -56,13 +56,14 @@ function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationId
     return chain.branches.flatMap((branch) =>
         branch.locations
             .filter(
-                (location) => selectedLocationIds.includes(location.identifier) && location.checkInTerminals.length > 0,
+                (location) =>
+                    selectedLocationIds.includes(location.identifier) && (location.checkInTerminals?.length ?? 0) > 0,
             )
             .map(
                 (location): CheckInLocation => ({
                     id: location.identifier,
                     name: `${chain.profile.name} ${location.name}`,
-                    terminals: location.checkInTerminals,
+                    terminals: location.checkInTerminals ?? [],
                 }),
             ),
     );
@@ -80,13 +81,20 @@ export default function CheckIn({
     const [terminal, setTerminal] = useState<CheckInTerminal | undefined>();
     const [printTicket, setPrintTicket] = useState<boolean>(true);
     const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
-    const [loading, setLoading] = useState(false);
     const [checkInResult, setCheckInResult] = useState<CheckInResult | undefined>();
     const [successMessage, setSuccessMessage] = useState<string | undefined>();
     const timerRef = useRef<number | null>(null);
 
     const { token } = useUser();
     const { chainUser } = useChainUser(chain.profile.identifier);
+
+    const checkInMutation = $api.useMutation("post", "/{chain_identifier}/check-in", {
+        onSuccess: () => handleSuccess(),
+        onError: (error) => {
+            console.error(error);
+            setCheckInResult(CheckInResult.FAILURE);
+        },
+    });
 
     // Keep manual memoization despite React Compiler: `filterAvailableCheckInLocations` is an
     // external function that returns freshly-mapped objects each call, and the compiler does not
@@ -107,7 +115,6 @@ export default function CheckIn({
 
     function handleClose() {
         setOpen(false);
-        setLoading(false);
         setPrintTicket(true);
         clearCheckInResult();
         setValidationErrors([]);
@@ -148,7 +155,7 @@ export default function CheckIn({
         }, 3000);
     }
 
-    async function handleSubmit() {
+    function handleSubmit() {
         if (!token) {
             setCheckInResult(CheckInResult.FAILURE);
             return;
@@ -161,38 +168,18 @@ export default function CheckIn({
             return setValidationErrors(validatedForm.errors);
         }
 
-        setLoading(true);
-
         storeCheckInConfiguration({
             previousLocation: location,
             previousTerminal: terminal,
         });
 
-        try {
-            const response = await post(`${chain.profile.identifier}/check-in`, {
-                body: JSON.stringify(
-                    {
-                        location: validatedForm.location.id,
-                        terminalId: validatedForm.terminal.id,
-                        printTicket,
-                    },
-                    null,
-                    2,
-                ),
-                mode: "client",
-                accessToken: token,
-            });
-
-            if (response.ok && response.status === 200) {
-                handleSuccess();
-            } else {
-                setCheckInResult(CheckInResult.FAILURE);
-            }
-        } catch (error) {
-            console.error(error);
-            setCheckInResult(CheckInResult.FAILURE);
-        }
-        setLoading(false);
+        checkInMutation.mutate({
+            params: { path: { chain_identifier: chain.profile.identifier } },
+            body: {
+                terminalId: validatedForm.terminal.id,
+                printTicket,
+            },
+        });
     }
 
     const applyStoredCheckInConfiguration = useCallback(() => {
@@ -246,7 +233,7 @@ export default function CheckIn({
                         <FormControl sx={{ width: 300 }}>
                             <InputLabel id="select-check-in-location">Senter</InputLabel>
                             <Select
-                                disabled={loading}
+                                disabled={checkInMutation.isPending}
                                 error={validationErrors.includes(ValidationError.LOCATION_MISSING)}
                                 fullWidth
                                 sx={{ width: "100%" }}
@@ -276,7 +263,7 @@ export default function CheckIn({
                         <FormControl sx={{ width: 300 }}>
                             <InputLabel id="select-check-in-terminal">Terminal</InputLabel>
                             <Select
-                                disabled={loading}
+                                disabled={checkInMutation.isPending}
                                 error={validationErrors.includes(ValidationError.TERMINAL_MISSING)}
                                 fullWidth
                                 onChange={(event) => {
@@ -309,7 +296,7 @@ export default function CheckIn({
                         >
                             <FormControl sx={{ alignItems: "center" }}>
                                 <FormControlLabel
-                                    disabled={loading || terminal?.hasPrinter === false}
+                                    disabled={checkInMutation.isPending || terminal?.hasPrinter === false}
                                     control={
                                         <Switch
                                             color="primary"
@@ -341,7 +328,7 @@ export default function CheckIn({
                                     </Alert>
                                 </Collapse>
                                 <Button
-                                    loading={loading}
+                                    loading={checkInMutation.isPending}
                                     onClick={handleSubmit}
                                     startIcon={<WhereToVote />}
                                     variant={"contained"}

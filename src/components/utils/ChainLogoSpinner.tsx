@@ -18,7 +18,7 @@ export default function ChainLogoSpinner({ chainProfile }: { chainProfile: Chain
                     },
                 },
             }}
-            src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainProfile.images.common.smallLogo}`}
+            src={`${import.meta.env.VITE_CONFIG_HOST}/${chainProfile.images.common.smallLogo}`}
         >
             {chainProfile.identifier}
         </Avatar>

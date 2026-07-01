@@ -1,24 +1,22 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
 import { deserializeUserSessions } from "@/lib/serialization/deserializers";
-import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
-import { BaseUserSessionDTO } from "@/types/serialization";
 
 export function useUserSessions() {
-    const { isAuthenticated, token } = useUser();
+    const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const queryKey = ["user/sessions"];
-
-    const { data } = useQuery<BaseUserSessionDTO[], FetchError>({
-        queryKey,
-        queryFn: () => authedFetcher(token ?? "")<BaseUserSessionDTO[]>("user/sessions"),
-        enabled: isAuthenticated,
-    });
+    const { data } = $api.useQuery(
+        "get",
+        "/user/sessions",
+        {},
+        { enabled: isAuthenticated, select: deserializeUserSessions },
+    );
 
     return {
-        userSessions: data ? deserializeUserSessions(data) : null,
-        mutateUserSessions: () => queryClient.invalidateQueries({ queryKey }),
+        userSessions: data ?? null,
+        mutateUserSessions: () => queryClient.invalidateQueries({ queryKey: ["get", "/user/sessions"] }),
     };
 }

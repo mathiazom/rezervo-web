@@ -1,9 +1,8 @@
-"use client";
 import { Box, Typography, useTheme } from "@mui/material";
 import Button from "@mui/material/Button";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 
-const NotFoundPage = () => {
+const NotFound = () => {
     const theme = useTheme();
 
     return (
@@ -36,7 +35,7 @@ const NotFoundPage = () => {
                 404 - Siden ble ikke funnet
             </Typography>
             <Typography variant="body1">Oops! Siden du leter etter eksisterer ikke.</Typography>
-            <Link href={"/"} passHref>
+            <Link to="/">
                 <Button variant="outlined" sx={{ marginTop: "1rem" }}>
                     Ta meg hjem
                 </Button>
@@ -45,4 +44,4 @@ const NotFoundPage = () => {
     );
 };
 
-export default NotFoundPage;
+export default NotFound;

@@ -1,6 +1,7 @@
 allowBuilds:
-    "@swc/core": true
-    core-js-pure: false
+    core-js-pure: true
     esbuild: true
-    sharp: true
-    unrs-resolver: true
+
+# Needed due to a dependency issue in nitro@3.0.260610-beta
+patchedDependencies:
+    nf3@0.3.18: patches/nf3@0.3.18.patch

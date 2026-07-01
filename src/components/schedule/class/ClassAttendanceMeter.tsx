@@ -10,12 +10,7 @@ import { StatusColors } from "@/types/userSessions";
 
 const attendanceColor = (_class: RezervoClass): string => {
     if (hasWaitingList(_class)) return "red";
-    if (
-        _class.availableSlots !== null &&
-        _class.totalSlots !== null &&
-        _class.availableSlots / _class.totalSlots <= 0.2
-    )
-        return "orange";
+    if (_class.availableSlots && _class.totalSlots && _class.availableSlots / _class.totalSlots <= 0.2) return "orange";
     return "green";
 };
 

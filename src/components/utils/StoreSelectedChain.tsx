@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 
 import { storeSelectedChain } from "@/lib/helpers/storage";

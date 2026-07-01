@@ -1,88 +1,34 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-
-import { destroy, get, post, put } from "@/lib/helpers/requests";
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { FetchError } from "@/lib/utils/fetchUtils";
+import { Schemas } from "@/types/api-helpers";
+
+const asSubscriptionBody = (subscription: PushSubscription) =>
+    subscription as unknown as Schemas["PushNotificationSubscription"];
 
 export function usePushNotificationSubscription() {
-    const { token } = useUser();
-
-    const publicKeyApiUrl = `notifications/push/public-key`;
-    const subscriptionApiUrl = `notifications/push`;
-    const subscriptionVerifyApiUrl = `notifications/push/verify`;
+    const { isAuthenticated } = useUser();
 
     const {
         data: publicKey,
         error: publicKeyError,
         isLoading: publicKeyLoading,
-    } = useQuery<string, FetchError>({
-        queryKey: [publicKeyApiUrl],
-        queryFn: async () => {
-            if (!token) {
-                throw new Error("Not authenticated");
-            }
-            return await (
-                await get(publicKeyApiUrl, { mode: "client", accessToken: token, revalidate: 60 * 60 * 24 })
-            ).json();
-        },
-        enabled: !!token,
-    });
+    } = $api.useQuery("get", "/notifications/push/public-key", {}, { enabled: isAuthenticated });
 
-    const { mutateAsync: subscribeToPush, isPending: isSubscribing } = useMutation<
-        PushSubscription,
-        FetchError,
-        PushSubscription
-    >({
-        mutationFn: (subscription) => {
-            if (!token) {
-                throw new Error("Not authenticated");
-            }
-            return put(subscriptionApiUrl, {
-                body: JSON.stringify(subscription, null, 2),
-                mode: "client",
-                accessToken: token,
-            }).then((r) => r.json());
-        },
-    });
-
-    const { mutateAsync: unsubscribeFromPush, isPending: isUnsubscribing } = useMutation<
-        boolean,
-        FetchError,
-        PushSubscription
-    >({
-        mutationFn: (subscription) => {
-            if (!token) {
-                throw new Error("Not authenticated");
-            }
-            return destroy(subscriptionApiUrl, {
-                body: JSON.stringify(subscription, null, 2),
-                mode: "client",
-                accessToken: token,
-            }).then((r) => r.ok);
-        },
-    });
-
-    const { mutateAsync: verifySubscription } = useMutation<boolean, FetchError, PushSubscription>({
-        mutationFn: (subscription) => {
-            if (!token) {
-                throw new Error("Not authenticated");
-            }
-            return post(subscriptionVerifyApiUrl, {
-                body: JSON.stringify(subscription, null, 2),
-                mode: "client",
-                accessToken: token,
-            }).then((r) => r.json());
-        },
-    });
+    const { mutateAsync: subscribe, isPending: isSubscribing } = $api.useMutation("put", "/notifications/push");
+    const { mutateAsync: unsubscribe, isPending: isUnsubscribing } = $api.useMutation("delete", "/notifications/push");
+    const { mutateAsync: verify } = $api.useMutation("post", "/notifications/push/verify");
 
     return {
         pushNotificationPublicKey: publicKey,
         pushNotificationPublicKeyError: publicKeyError,
         pushNotificationPublicKeyLoading: publicKeyLoading,
-        subscribeToPush,
-        unsubscribeFromPush,
+        subscribeToPush: (subscription: PushSubscription) => subscribe({ body: asSubscriptionBody(subscription) }),
+        unsubscribeFromPush: async (subscription: PushSubscription) => {
+            await unsubscribe({ body: asSubscriptionBody(subscription) });
+            return true;
+        },
         isSubscribingToPush: isSubscribing,
         isUnsubscribingFromPush: isUnsubscribing,
-        verifySubscription,
+        verifySubscription: (subscription: PushSubscription) => verify({ body: asSubscriptionBody(subscription) }),
     };
 }

@@ -1,14 +1,16 @@
-import { ChainIdentifier, RezervoClass } from "@/types/chain";
-import { UserNameWithIsSelf } from "@/types/config";
+import { Schemas } from "@/types/api-helpers";
+import { RezervoSessionClass } from "@/types/chain";
 
-export enum SessionStatus {
-    PLANNED = "PLANNED",
-    BOOKED = "BOOKED",
-    CONFIRMED = "CONFIRMED",
-    NOSHOW = "NOSHOW",
-    WAITLIST = "WAITLIST",
-    UNKNOWN = "UNKNOWN",
-}
+export type SessionStatus = Schemas["SessionState"];
+
+export const SessionStatus = {
+    PLANNED: "PLANNED",
+    BOOKED: "BOOKED",
+    CONFIRMED: "CONFIRMED",
+    NOSHOW: "NOSHOW",
+    WAITLIST: "WAITLIST",
+    UNKNOWN: "UNKNOWN",
+} as const satisfies Record<string, SessionStatus>;
 
 export enum StatusColors {
     ACTIVE = "#44b700",
@@ -16,15 +18,6 @@ export enum StatusColors {
     UNKNOWN = "#000",
 }
 
-export type UserNameSessionStatus = UserNameWithIsSelf & {
-    status: SessionStatus;
-    positionInWaitList: number | null;
+export type BaseUserSession = Omit<Schemas["BaseUserSession"], "classData"> & {
+    classData: RezervoSessionClass;
 };
-export type UserSessionsIndex = Record<string, UserNameSessionStatus[]>;
-
-export interface BaseUserSession {
-    chain: ChainIdentifier;
-    status: SessionStatus;
-    positionInWaitList: number | null;
-    classData: RezervoClass;
-}

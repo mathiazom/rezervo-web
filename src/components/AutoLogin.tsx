@@ -1,5 +1,3 @@
-"use client";
-
 import { useContext, useEffect } from "react";
 import { AuthContext, IAuthContext } from "react-oauth2-code-pkce";
 
