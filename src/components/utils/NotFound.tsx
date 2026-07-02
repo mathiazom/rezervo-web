@@ -1,10 +1,10 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { Link } from "@tanstack/react-router";
 
-const NotFound = () => {
-    const theme = useTheme();
+import RezervoLogo from "@/components/utils/RezervoLogo";
 
+const NotFound = () => {
     return (
         <Box
             sx={{
@@ -15,16 +15,7 @@ const NotFound = () => {
                 height: "100vh",
             }}
         >
-            <Typography
-                variant="h4"
-                sx={{
-                    fontWeight: "bold",
-                    marginBottom: "1rem",
-                    color: theme.palette.primary.main,
-                }}
-            >
-                rezervo
-            </Typography>
+            <RezervoLogo sx={{ marginBottom: "1rem" }} />
             <Typography
                 variant="h6"
                 sx={{

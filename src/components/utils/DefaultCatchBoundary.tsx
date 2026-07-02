@@ -1,6 +1,8 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { type ErrorComponentProps, Link } from "@tanstack/react-router";
 
+import RezervoLogo from "@/components/utils/RezervoLogo";
+
 export default function DefaultCatchBoundary({ error }: ErrorComponentProps) {
     const message = error instanceof Error ? error.message : String(error);
 
@@ -18,7 +20,8 @@ export default function DefaultCatchBoundary({ error }: ErrorComponentProps) {
                 px: 3,
             }}
         >
-            <Typography variant={"h5"} sx={{ fontWeight: 700 }}>
+            <RezervoLogo />
+            <Typography variant={"h6"} sx={{ fontWeight: "bold" }}>
                 Noe gikk veldig galt
             </Typography>
             {message !== "" && (

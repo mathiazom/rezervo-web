@@ -1,4 +1,4 @@
-import { Box, Divider, Typography, useTheme } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
@@ -6,11 +6,11 @@ import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import { ButtonLink } from "@/components/utils/links";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
+import RezervoLogo from "@/components/utils/RezervoLogo";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { ChainProfile } from "@/types/openapi";
 
 const IndexPage = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
-    const theme = useTheme();
     const navigate = useNavigate();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
     const [chainLoading, setChainLoading] = useState<string | null>(null);
@@ -39,17 +39,7 @@ const IndexPage = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                     justifyContent: "center",
                 }}
             >
-                <Typography
-                    variant="h4"
-                    sx={{
-                        mt: "1rem",
-                        fontWeight: "bold",
-                        marginBottom: "1rem",
-                        color: theme.palette.primary.main,
-                    }}
-                >
-                    rezervo
-                </Typography>
+                <RezervoLogo sx={{ mt: "1rem", marginBottom: "1rem" }} />
                 <Typography variant={"h6"} sx={{ padding: "0.5rem", textAlign: "center" }}>
                     Velg treningssenter
                 </Typography>

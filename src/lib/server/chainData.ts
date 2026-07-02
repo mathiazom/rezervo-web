@@ -36,7 +36,8 @@ export const getChainPageDataFn = createServerFn({ method: "GET" })
             serverApiClient.GET("/chains"),
             serverApiClient.GET("/categories"),
         ]);
-        const chain = chainRes.data!;
+        const chain = chainRes.data;
+        if (!chain) return null;
         const weekParam = resolveWeekParam(rawWeekParam);
         const allLocationIds = getAllLocationIds(chain);
         const scheduleDTO = await fetchScheduleWeekDTO(chainIdentifier, weekParam, allLocationIds);
