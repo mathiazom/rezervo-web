@@ -8,25 +8,23 @@ import ChainMembership from "@/components/modals/Settings/Memberships/ChainMembe
 import MembershipLoginModal from "@/components/modals/Settings/Memberships/MembershipLoginModal";
 import SubHeader from "@/components/modals/SubHeader";
 import { NonEmptyArray } from "@/lib/utils/arrayUtils";
-import { ChainConfig, ChainProfile } from "@/types/openapi";
+import { ChainProfile } from "@/types/openapi";
+import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 
 interface MemberShipLoginState {
     open: boolean;
     chainProfile: ChainProfile;
 }
 
-function Memberships({
-    chainProfiles,
-    chainConfigs,
-}: {
-    chainProfiles: NonEmptyArray<ChainProfile>;
-    chainConfigs: Record<string, ChainConfig>;
-}) {
+function Memberships({ chainProfiles }: { chainProfiles: NonEmptyArray<ChainProfile> }) {
     const [showAddMembershipDialog, setShowAddMembershipDialog] = useState(false);
     const [membershipLoginState, setMembershipLoginState] = useState<MemberShipLoginState>({
         open: false,
         chainProfile: chainProfiles[0],
     });
+    const { userChainConfigs } = useUserChainConfigs();
+    const chainConfigs = userChainConfigs ?? {};
+
     const chainsWithMembership = Object.keys(chainConfigs);
     const hasAllMemberships = chainProfiles.every((p) => chainsWithMembership.includes(p.identifier));
     return (

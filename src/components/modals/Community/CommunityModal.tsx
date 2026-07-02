@@ -1,11 +1,104 @@
-import { Modal } from "@mui/material";
+import { People } from "@mui/icons-material";
+import { Alert, Badge, Box, Divider, Modal, Tooltip, Typography } from "@mui/material";
+import { ReactNode } from "react";
 
-import Community from "@/components/modals/Community/Community";
+import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
+import ModalWrapper from "@/components/modals/ModalWrapper";
+import SubHeader from "@/components/modals/SubHeader";
+import { useCommunity } from "@/lib/hooks/useCommunity";
+import { CommunityUser, UserRelationship } from "@/types/openapi";
+
+const CommunityUserList = ({
+    title,
+    placeholder,
+    communityUsers,
+    badge,
+}: {
+    title: string;
+    placeholder: string;
+    communityUsers: CommunityUser[];
+    badge?: ReactNode;
+}) => {
+    return (
+        <Box>
+            <SubHeader
+                title={title}
+                endIcon={badge}
+                placeholder={placeholder}
+                showPlaceholder={communityUsers.length === 0}
+            />
+            {communityUsers.length > 0 && <Divider sx={{ mt: 1 }} />}
+            {communityUsers.map((cu) => (
+                <CommunityUserCard key={cu.name} communityUser={cu} />
+            ))}
+        </Box>
+    );
+};
 
 const CommunityModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+    const { community, communityLoading, communityError } = useCommunity();
+
+    const friendRequests =
+        community?.users.filter((user) => user.relationship === UserRelationship.REQUEST_RECEIVED) ?? [];
+    const FriendRequests = () => {
+        return (
+            <CommunityUserList
+                title={"Venneforespørsler"}
+                placeholder={"Du har ingen ubesvarte venneforespørsler"}
+                communityUsers={friendRequests}
+                badge={
+                    friendRequests.length > 0 && (
+                        <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
+                            <Badge sx={{ ml: 0.3 }} badgeContent={friendRequests.length} color={"error"} />
+                        </Tooltip>
+                    )
+                }
+            />
+        );
+    };
+
     return (
         <Modal open={open} onClose={onClose}>
-            <Community />
+            <ModalWrapper
+                title={"Venner"}
+                icon={<People />}
+                description={"Venner kan se hverandres bookinger og timeplaner"}
+            >
+                {communityError ? (
+                    <Alert severity="error">
+                        <Typography>Klarte ikke laste inn venner.</Typography>
+                    </Alert>
+                ) : (
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                        {community && !communityLoading && (
+                            <>
+                                {friendRequests.length > 0 && <FriendRequests />}
+                                <CommunityUserList
+                                    title={"Dine venner"}
+                                    placeholder={"Du har ingen venner"}
+                                    communityUsers={
+                                        community?.users.filter(
+                                            (user) => user.relationship === UserRelationship.FRIEND,
+                                        ) ?? []
+                                    }
+                                />
+                                <CommunityUserList
+                                    title={"Personer du kanskje kjenner"}
+                                    placeholder={"Du har ingen venneforslag"}
+                                    communityUsers={
+                                        community?.users.filter(
+                                            (user) =>
+                                                user.relationship === UserRelationship.REQUEST_SENT ||
+                                                user.relationship === UserRelationship.UNKNOWN,
+                                        ) ?? []
+                                    }
+                                />
+                                {friendRequests.length === 0 && <FriendRequests />}
+                            </>
+                        )}
+                    </Box>
+                )}
+            </ModalWrapper>
         </Modal>
     );
 };

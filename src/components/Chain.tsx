@@ -3,12 +3,8 @@ import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
-import AgendaModal from "@/components/modals/Agenda/AgendaModal";
 import BookingPopupModal from "@/components/modals/BookingPopupModal";
 import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
-import CommunityModal from "@/components/modals/Community/CommunityModal";
-import ProfileModal from "@/components/modals/Profile/ProfileModal";
-import SettingsModal from "@/components/modals/Settings/SettingsModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import WeekScheduleSkeleton from "@/components/schedule/WeekScheduleSkeleton";
@@ -16,7 +12,6 @@ import AppBar from "@/components/utils/AppBar";
 import ChainSwitcher from "@/components/utils/ChainSwitcher";
 import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
-import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
@@ -25,9 +20,7 @@ import { getWeekNumber } from "@/lib/helpers/schedule";
 import { useClassInfo } from "@/lib/hooks/useClassInfo";
 import { useScheduleFilters } from "@/lib/hooks/useScheduleFilters";
 import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
-import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
@@ -37,12 +30,8 @@ import { RezervoError } from "@/types/ui";
 
 function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain }) {
     const navigate = useNavigate();
-    const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
-        chain.profile.identifier,
-    );
+    const { userConfig, userConfigError, putUserConfig } = useUserConfig(chain.profile.identifier);
     const { userSessionsIndex } = useUserSessionsIndex(chain.profile.identifier);
-    const { userSessions } = useUserSessions();
-    const { userChainConfigs } = useUserChainConfigs();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -51,8 +40,6 @@ function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain })
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const deferredSelectedClassIds = useDeferredValue(selectedClassIds);
 
-    const [activeModal, setActiveModal] = useState<"community" | "settings" | "agenda" | "profile" | null>(null);
-    const closeModal = () => setActiveModal(null);
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
 
     // Memoized (despite React Compiler) because these feed useEffect dependency arrays — directly
@@ -168,28 +155,13 @@ function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain })
 
     const weekNumber = getWeekNumber(currentWeekSchedule, currentWeek);
 
-    const [showPWAInstall, setShowPWAInstall] = useState(false);
-    const [isPWAInstalled, setIsPWAInstalled] = useState(false);
-
     return (
         <>
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
                         leftComponent={<ChainSwitcher currentChainProfile={chain.profile} />}
-                        rightComponent={
-                            <ConfigBar
-                                chainConfigs={userChainConfigs}
-                                userSessions={userSessions}
-                                isLoadingConfig={userConfigLoading}
-                                isConfigError={userConfigError != null}
-                                onRefetchConfig={mutateUserConfig}
-                                onCommunityOpen={() => setActiveModal("community")}
-                                onSettingsOpen={() => setActiveModal("settings")}
-                                onAgendaOpen={() => setActiveModal("agenda")}
-                                onProfileOpen={() => setActiveModal("profile")}
-                            />
-                        }
+                        rightComponent={<ConfigBar chainIdentifier={chain.profile.identifier} />}
                     />
                     {weekScheduleError == null && (
                         <WeekNavigator
@@ -236,25 +208,6 @@ function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain })
                 onUpdateConfig={onUpdateConfig}
                 onClose={() => setClassInfoClass(null)}
             />
-            <CommunityModal open={activeModal === "community"} onClose={closeModal} />
-            {userSessions !== null && userChainConfigs !== null && (
-                <AgendaModal
-                    userSessions={userSessions}
-                    chainConfigs={userChainConfigs}
-                    open={activeModal === "agenda"}
-                    onClose={closeModal}
-                />
-            )}
-            {userChainConfigs !== null && (
-                <SettingsModal
-                    open={activeModal === "settings"}
-                    onClose={closeModal}
-                    chainConfigs={userChainConfigs}
-                    isPWAInstalled={isPWAInstalled}
-                    showPWAInstall={() => setShowPWAInstall(true)}
-                />
-            )}
-            <ProfileModal open={activeModal === "profile"} onClose={closeModal} />
             {bookingPopupState && (
                 <BookingPopupModal
                     onClose={() => setBookingPopupState(null)}
@@ -263,11 +216,6 @@ function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain })
                     action={bookingPopupState.action}
                 />
             )}
-            <PWAInstallPrompt
-                show={showPWAInstall}
-                onClose={() => setShowPWAInstall(false)}
-                onIsInstalledChanged={(isInstalled: boolean) => setIsPWAInstalled(isInstalled)}
-            />
         </>
     );
 }

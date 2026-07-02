@@ -20,6 +20,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { createServerFn } from "@tanstack/react-start";
 import { requireServerEnv } from "@/lib/helpers/env";
+import PWAInstallProvider from "@/lib/pwaInstallProvider";
 
 const getAuthConfig = createServerFn({ method: "GET" }).handler(() => ({
     clientId: requireServerEnv("FUSIONAUTH_CLIENT_ID"),
@@ -85,7 +86,7 @@ function Providers({ children }: { children: ReactNode }) {
                         <CssBaseline enableColorScheme />
                         <SnowfallProvider />
                         <SerwistRegister />
-                        {children}
+                        <PWAInstallProvider>{children}</PWAInstallProvider>
                         <ReactQueryDevtools initialIsOpen={false} />
                     </LocalizationProvider>
                 </AuthProvider>

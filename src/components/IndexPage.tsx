@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import { ButtonLink } from "@/components/utils/links";
-import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import RezervoLogo from "@/components/utils/RezervoLogo";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
@@ -31,7 +30,6 @@ const IndexPage = () => {
 
     return (
         <>
-            <PWAInstallPrompt />
             <Box
                 sx={{
                     display: "flex",
