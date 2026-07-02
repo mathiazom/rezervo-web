@@ -7,12 +7,14 @@ export function useUserChainConfigs() {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
+    const chainConfigsKey = $api.queryOptions("get", "/user/chain-configs", {}).queryKey;
+
     const { data, error, isLoading } = $api.useQuery("get", "/user/chain-configs", {}, { enabled: isAuthenticated });
 
     return {
         userChainConfigs: data ?? null,
         userChainConfigsError: error,
         userChainConfigsLoading: isLoading,
-        mutateUserChainConfigs: () => queryClient.invalidateQueries({ queryKey: ["get", "/user/chain-configs"] }),
+        mutateUserChainConfigs: () => queryClient.invalidateQueries({ queryKey: chainConfigsKey }),
     };
 }

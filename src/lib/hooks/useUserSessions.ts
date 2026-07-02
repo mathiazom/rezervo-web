@@ -8,6 +8,8 @@ export function useUserSessions() {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
+    const sessionsKey = $api.queryOptions("get", "/user/sessions", {}).queryKey;
+
     const { data } = $api.useQuery(
         "get",
         "/user/sessions",
@@ -17,6 +19,6 @@ export function useUserSessions() {
 
     return {
         userSessions: data ?? null,
-        mutateUserSessions: () => queryClient.invalidateQueries({ queryKey: ["get", "/user/sessions"] }),
+        mutateUserSessions: () => queryClient.invalidateQueries({ queryKey: sessionsKey }),
     };
 }
