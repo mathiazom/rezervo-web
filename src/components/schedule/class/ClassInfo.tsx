@@ -18,9 +18,9 @@ import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
-import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
-import ClassInfoUsersGroup from "@/components/modals/ClassInfo/ClassInfoUsersGroup";
-import ModalWrapper from "@/components/modals/ModalWrapper";
+import ClassInfoEntry from "@/components/schedule/class/ClassInfoEntry";
+import ClassInfoUsersGroup from "@/components/schedule/class/ClassInfoUsersGroup";
+import ModalWrapper from "@/components/utils/ModalWrapper";
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";

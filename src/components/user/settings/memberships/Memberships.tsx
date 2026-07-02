@@ -3,10 +3,10 @@ import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 
-import AddMembershipDialog from "@/components/modals/Settings/Memberships/AddMembershipDialog";
-import ChainMembership from "@/components/modals/Settings/Memberships/ChainMembership";
-import MembershipLoginModal from "@/components/modals/Settings/Memberships/MembershipLoginModal";
-import SubHeader from "@/components/modals/SubHeader";
+import AddMembershipDialog from "@/components/user/settings/memberships/AddMembershipDialog";
+import ChainMembership from "@/components/user/settings/memberships/ChainMembership";
+import MembershipLoginModal from "@/components/user/settings/memberships/MembershipLoginModal";
+import SubHeader from "@/components/utils/SubHeader";
 import { NonEmptyArray } from "@/lib/utils/arrayUtils";
 import { ChainProfile } from "@/types/openapi";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";

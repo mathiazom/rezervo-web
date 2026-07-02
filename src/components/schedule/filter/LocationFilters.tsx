@@ -1,7 +1,7 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/material";
 import { Fragment } from "react";
 
-import { LOCATIONS_COLOR } from "@/components/modals/ScheduleFiltersDialog";
+import { LOCATIONS_COLOR } from "@/components/schedule/filter/ScheduleFiltersDialog";
 import { RezervoChain } from "@/types/openapi";
 
 export default function LocationFilters({

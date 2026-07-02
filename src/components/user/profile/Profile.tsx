@@ -6,10 +6,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 
-import ModalWrapper from "@/components/modals/ModalWrapper";
-import AvatarMutateAlert from "@/components/modals/Profile/AvatarMutateAlert";
-import EditAvatarDialog from "@/components/modals/Profile/EditAvatarDialog";
-import ProfileAvatar from "@/components/modals/Profile/ProfileAvatar";
+import ModalWrapper from "@/components/utils/ModalWrapper";
+import AvatarMutateAlert from "@/components/user/profile/AvatarMutateAlert";
+import EditAvatarDialog from "@/components/user/profile/EditAvatarDialog";
+import ProfileAvatar from "@/components/user/profile/ProfileAvatar";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
 import { apiClient } from "@/lib/api/client";

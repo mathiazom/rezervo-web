@@ -1,7 +1,7 @@
 import { BrokenImageRounded, ErrorRounded, ScaleRounded } from "@mui/icons-material";
 import { Alert, AlertTitle, Box, Collapse, Typography } from "@mui/material";
 
-import { AvatarMutateError } from "@/components/modals/Profile/Profile";
+import { AvatarMutateError } from "@/components/user/profile/Profile";
 
 function AvatarMutateAlert({
     visible,

@@ -1,8 +1,8 @@
 import { Box, Button, Divider, Drawer, List, ListItem, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import ChainLogo from "@/components/utils/ChainLogo";
-import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import ChainLogo from "@/components/chain/ChainLogo";
+import ChainLogoSpinner from "@/components/chain/ChainLogoSpinner";
 import { ListItemButtonLink } from "@/components/utils/links";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";

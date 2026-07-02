@@ -8,10 +8,10 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useEffect, useRef, useState } from "react";
 
-import AgendaModal from "@/components/modals/Agenda/AgendaModal";
-import CommunityModal from "@/components/modals/Community/CommunityModal";
-import ProfileModal from "@/components/modals/Profile/ProfileModal";
-import SettingsModal from "@/components/modals/Settings/SettingsModal";
+import AgendaModal from "@/components/user/agenda/AgendaModal";
+import CommunityModal from "@/components/user/community/CommunityModal";
+import ProfileModal from "@/components/user/profile/ProfileModal";
+import SettingsModal from "@/components/user/settings/SettingsModal";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useMyUser } from "@/lib/hooks/useMyUser";
@@ -22,7 +22,7 @@ import { vars } from "@/lib/theme";
 import { UserRelationship } from "@/types/openapi";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 
-function ConfigBar({ chainIdentifier }: { chainIdentifier: string }) {
+function UserBar({ chainIdentifier }: { chainIdentifier: string }) {
     const theme = useTheme();
     const { user, authStatus, logIn } = useUser();
     const { userId: myUserId, userName: backendUserName } = useMyUser();
@@ -176,4 +176,4 @@ function ConfigBar({ chainIdentifier }: { chainIdentifier: string }) {
     );
 }
 
-export default ConfigBar;
+export default UserBar;

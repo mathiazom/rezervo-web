@@ -8,9 +8,9 @@ import {
 } from "@mui/icons-material";
 import { Alert, AlertTitle, Avatar, Box, Stack, Typography, useTheme } from "@mui/material";
 
-import AgendaEntry from "@/components/modals/Agenda/AgendaSession";
-import ModalWrapper from "@/components/modals/ModalWrapper";
-import SubHeader from "@/components/modals/SubHeader";
+import AgendaEntry from "@/components/user/agenda/AgendaSession";
+import ModalWrapper from "@/components/utils/ModalWrapper";
+import SubHeader from "@/components/utils/SubHeader";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";

@@ -2,7 +2,7 @@ import { Modal } from "@mui/material";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 
-import Profile from "@/components/modals/Profile/Profile";
+import Profile from "@/components/user/profile/Profile";
 
 const ProfileModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
     const [isDraggingOverBackdrop, setIsDraggingOverBackdrop] = useState(false);

@@ -1,7 +1,7 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
-import Chain from "@/components/Chain";
-import StoreSelectedChain from "@/components/utils/StoreSelectedChain";
+import ChainPage from "@/components/ChainPage";
+import StoreSelectedChain from "@/components/chain/StoreSelectedChain";
 import { $api } from "@/lib/api/client";
 import { scheduleQueryKey } from "@/lib/helpers/schedule";
 import { getChainPageDataFn } from "@/lib/server/chainData";
@@ -34,19 +34,17 @@ export const Route = createFileRoute("/$chain")({
         queryClient.setQueryData(scheduleQueryKey(data.chain.profile.identifier, data.weekParam), data.scheduleDTO);
         return { weekParam: data.weekParam };
     },
-    component: ChainRoute,
+    component: () => {
+        const { chain: chainIdentifier } = Route.useParams();
+        const { weekParam } = Route.useLoaderData();
+        const { data: chain } = $api.useQuery("get", "/chains/{chain_identifier}", {
+            params: { path: { chain_identifier: chainIdentifier } },
+        });
+        return (
+            <>
+                <StoreSelectedChain chainIdentifier={chain!.profile.identifier} />
+                <ChainPage weekParam={weekParam} chain={chain!} />
+            </>
+        );
+    },
 });
-
-function ChainRoute() {
-    const { chain: chainIdentifier } = Route.useParams();
-    const { weekParam } = Route.useLoaderData();
-    const { data: chain } = $api.useQuery("get", "/chains/{chain_identifier}", {
-        params: { path: { chain_identifier: chainIdentifier } },
-    });
-    return (
-        <>
-            <StoreSelectedChain chainIdentifier={chain!.profile.identifier} />
-            <Chain weekParam={weekParam} chain={chain!} />
-        </>
-    );
-}

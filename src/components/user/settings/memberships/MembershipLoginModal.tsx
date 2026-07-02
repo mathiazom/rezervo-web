@@ -16,7 +16,7 @@ import {
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
-import ChainLogo from "@/components/utils/ChainLogo";
+import ChainLogo from "@/components/chain/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { ChainProfile, ChainUserPayload } from "@/types/openapi";
 

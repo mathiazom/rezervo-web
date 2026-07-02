@@ -2,14 +2,14 @@ import { Box, Divider, Typography } from "@mui/material";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import ChainLogo from "@/components/utils/ChainLogo";
-import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import ChainLogo from "@/components/chain/ChainLogo";
+import ChainLogoSpinner from "@/components/chain/ChainLogoSpinner";
 import { ButtonLink } from "@/components/utils/links";
 import RezervoLogo from "@/components/utils/RezervoLogo";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
 import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 
-const IndexPage = () => {
+function LandingPage() {
     const navigate = useNavigate();
     const chainProfiles = useChainProfiles();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
@@ -79,6 +79,6 @@ const IndexPage = () => {
             </Box>
         </>
     );
-};
+}
 
-export default IndexPage;
+export default LandingPage;

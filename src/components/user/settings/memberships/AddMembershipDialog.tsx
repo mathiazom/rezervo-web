@@ -1,7 +1,7 @@
 import { Box, Dialog, List, ListItem, ListItemButton } from "@mui/material";
 import DialogTitle from "@mui/material/DialogTitle";
 
-import ChainLogo from "@/components/utils/ChainLogo";
+import ChainLogo from "@/components/chain/ChainLogo";
 import { ChainProfile } from "@/types/openapi";
 
 function AddMembershipDialog({

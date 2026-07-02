@@ -22,12 +22,12 @@ import { TimePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
 
-import ModalWrapper from "@/components/modals/ModalWrapper";
-import CalendarFeed from "@/components/modals/Settings/CalendarFeed";
-import Memberships from "@/components/modals/Settings/Memberships/Memberships";
-import PushNotifications from "@/components/modals/Settings/PushNotifications";
-import SwitchWrapper from "@/components/modals/Settings/SwitchWrapper";
-import SubHeader from "@/components/modals/SubHeader";
+import ModalWrapper from "@/components/utils/ModalWrapper";
+import CalendarFeed from "@/components/user/settings/CalendarFeed";
+import Memberships from "@/components/user/settings/memberships/Memberships";
+import PushNotifications from "@/components/user/settings/PushNotifications";
+import SwitchWrapper from "@/components/user/settings/SwitchWrapper";
+import SubHeader from "@/components/utils/SubHeader";
 import { INSTALL_PROMPT_DESCRIPTION } from "@/components/utils/PWAInstallPrompt";
 import SlackSvgIcon from "@/components/utils/SlackSvgIcon";
 import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "@/lib/consts";

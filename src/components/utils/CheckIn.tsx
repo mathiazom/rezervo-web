@@ -18,7 +18,7 @@ import {
 import Button from "@mui/material/Button";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import ModalWrapper from "@/components/modals/ModalWrapper";
+import ModalWrapper from "@/components/utils/ModalWrapper";
 import { $api } from "@/lib/api/client";
 import { getStoredCheckInConfiguration, storeCheckInConfiguration } from "@/lib/helpers/storage";
 import { useChainUser } from "@/lib/hooks/useChainUser";

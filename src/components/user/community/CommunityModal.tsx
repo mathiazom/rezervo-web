@@ -2,9 +2,9 @@ import { People } from "@mui/icons-material";
 import { Alert, Badge, Box, Divider, Modal, Tooltip, Typography } from "@mui/material";
 import { ReactNode } from "react";
 
-import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
-import ModalWrapper from "@/components/modals/ModalWrapper";
-import SubHeader from "@/components/modals/SubHeader";
+import CommunityUserCard from "@/components/user/community/CommunityUserCard";
+import ModalWrapper from "@/components/utils/ModalWrapper";
+import SubHeader from "@/components/utils/SubHeader";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { CommunityUser, UserRelationship } from "@/types/openapi";
 

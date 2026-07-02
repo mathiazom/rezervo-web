@@ -1,6 +1,6 @@
 import { Modal } from "@mui/material";
 
-import ClassInfo from "@/components/modals/ClassInfo/ClassInfo";
+import ClassInfo from "@/components/schedule/class/ClassInfo";
 import { RezervoClass } from "@/types/openapi";
 
 const ClassInfoModal = ({

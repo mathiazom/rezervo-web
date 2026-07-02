@@ -2,14 +2,14 @@ import { Box, Divider, Stack } from "@mui/material";
 import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
-import ConfigBar from "@/components/configuration/ConfigBar";
-import BookingPopupModal from "@/components/modals/BookingPopupModal";
-import ClassInfoModal from "@/components/modals/ClassInfo/ClassInfoModal";
+import UserBar from "@/components/user/UserBar";
+import BookingPopupModal from "@/components/schedule/BookingPopupModal";
+import ClassInfoModal from "@/components/schedule/class/ClassInfoModal";
 import WeekNavigator from "@/components/schedule/WeekNavigator";
 import WeekSchedule from "@/components/schedule/WeekSchedule";
 import WeekScheduleSkeleton from "@/components/schedule/WeekScheduleSkeleton";
 import AppBar from "@/components/utils/AppBar";
-import ChainSwitcher from "@/components/utils/ChainSwitcher";
+import ChainSwitcher from "@/components/chain/ChainSwitcher";
 import CheckIn from "@/components/utils/CheckIn";
 import ErrorMessage from "@/components/utils/ErrorMessage";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
@@ -28,7 +28,7 @@ import { RezervoChain, SessionStatus } from "@/types/openapi";
 import { BookingPopupAction, BookingPopupState } from "@/types/local";
 import { RezervoError } from "@/types/ui";
 
-function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain }) {
+function ChainPage({ weekParam, chain }: { weekParam: string; chain: RezervoChain }) {
     const navigate = useNavigate();
     const { userConfig, userConfigError, putUserConfig } = useUserConfig(chain.profile.identifier);
     const { userSessionsIndex } = useUserSessionsIndex(chain.profile.identifier);
@@ -161,7 +161,7 @@ function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain })
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
                         leftComponent={<ChainSwitcher currentChainProfile={chain.profile} />}
-                        rightComponent={<ConfigBar chainIdentifier={chain.profile.identifier} />}
+                        rightComponent={<UserBar chainIdentifier={chain.profile.identifier} />}
                     />
                     {weekScheduleError == null && (
                         <WeekNavigator
@@ -220,4 +220,4 @@ function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain })
     );
 }
 
-export default Chain;
+export default ChainPage;

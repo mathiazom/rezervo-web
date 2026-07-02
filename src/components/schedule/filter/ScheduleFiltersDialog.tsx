@@ -5,9 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import { Dispatch, SetStateAction, useState } from "react";
 
-import CategoryFilters from "@/components/modals/CategoryFilters";
-import ExcludeClassTimeFilters from "@/components/modals/ExcludeClassTimeFilters";
-import LocationFilters from "@/components/modals/LocationFilters";
+import CategoryFilters from "@/components/schedule/filter/CategoryFilters";
+import ExcludeClassTimeFilters from "@/components/schedule/filter/ExcludeClassTimeFilters";
+import LocationFilters from "@/components/schedule/filter/LocationFilters";
 import { RezervoChain } from "@/types/openapi";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 

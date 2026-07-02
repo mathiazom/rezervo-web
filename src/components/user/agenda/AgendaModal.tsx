@@ -1,6 +1,6 @@
 import { Modal } from "@mui/material";
 
-import Agenda from "@/components/modals/Agenda/Agenda";
+import Agenda from "@/components/user/agenda/Agenda";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 

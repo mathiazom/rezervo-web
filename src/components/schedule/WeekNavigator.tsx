@@ -7,7 +7,7 @@ import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,
     EXCLUDE_CLASS_TIME_COLOR,
     LOCATIONS_COLOR,
-} from "@/components/modals/ScheduleFiltersDialog";
+} from "@/components/schedule/filter/ScheduleFiltersDialog";
 import { offsetWeekParam } from "@/lib/helpers/schedule";
 import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
 import { RezervoChain } from "@/types/openapi";

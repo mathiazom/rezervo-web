@@ -3,8 +3,8 @@ import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import { Box, FormGroup, FormLabel, Switch, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import SwitchWrapper from "@/components/modals/Settings/SwitchWrapper";
-import SubHeader from "@/components/modals/SubHeader";
+import SwitchWrapper from "@/components/user/settings/SwitchWrapper";
+import SubHeader from "@/components/utils/SubHeader";
 import { usePushNotificationSubscription } from "@/lib/hooks/usePushNotificationSubscription";
 import { base64ToUint8Array } from "@/lib/utils/base64Utils";
 
