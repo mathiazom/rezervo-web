@@ -36,7 +36,7 @@ pnpm prod
 1. Make sure you have defined `.env.local` as described above
 2. With [docker](https://docs.docker.com/get-docker/) and [docker compose](https://docs.docker.com/compose/) installed, run
    ```shell
-   docker compose -f docker-compose.dev.yml up -d --build
+   docker compose --env-file .env.local -f docker-compose.dev.yml up -d --build
    ```
 
 #### 🧹 Code style, lint and type checking
