@@ -1,20 +1,11 @@
 import { Modal } from "@mui/material";
 
 import Community from "@/components/modals/Community/Community";
-import { ChainProfile } from "@/types/openapi";
 
-const CommunityModal = ({
-    open,
-    onClose,
-    chainProfiles,
-}: {
-    open: boolean;
-    onClose: () => void;
-    chainProfiles: ChainProfile[];
-}) => {
+const CommunityModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
     return (
         <Modal open={open} onClose={onClose}>
-            <Community chainProfiles={chainProfiles} />
+            <Community />
         </Modal>
     );
 };

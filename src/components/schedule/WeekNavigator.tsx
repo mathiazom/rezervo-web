@@ -9,8 +9,9 @@ import ScheduleFiltersDialog, {
     LOCATIONS_COLOR,
 } from "@/components/modals/ScheduleFiltersDialog";
 import { offsetWeekParam } from "@/lib/helpers/schedule";
+import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
 import { RezervoChain } from "@/types/openapi";
-import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/local";
+import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 export default function WeekNavigator({
     chain,
@@ -22,7 +23,6 @@ export default function WeekNavigator({
     onToday,
     selectedLocationIds,
     setSelectedLocationIds,
-    allCategories,
     selectedCategories,
     setSelectedCategories,
     excludeClassTimeFilters,
@@ -37,12 +37,13 @@ export default function WeekNavigator({
     onToday: () => void;
     selectedLocationIds: string[];
     setSelectedLocationIds: (value: string[]) => void;
-    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
+    const allCategories = useActivityCategories();
+
     const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
     const isLocationFiltered = selectedLocationIds.length < totalLocations;
 
@@ -146,7 +147,6 @@ export default function WeekNavigator({
                 setOpen={setIsScheduleFiltersOpen}
                 selectedLocationIds={selectedLocationIds}
                 setSelectedLocationIds={setSelectedLocationIds}
-                allCategories={allCategories}
                 selectedCategories={selectedCategories}
                 setSelectedCategories={setSelectedCategories}
                 excludeClassTimeFilters={excludeClassTimeFilters}

@@ -4,15 +4,15 @@ import { getCookie } from "@tanstack/react-start/server";
 import { z } from "zod";
 
 import IndexPage from "@/components/IndexPage";
-import { serverApiClient } from "@/lib/api/client";
+import { $api, serverApiClient } from "@/lib/api/client";
 
 const getSelectedChainCookie = createServerFn({ method: "GET" }).handler(() => {
     return getCookie("rezervo.selectedChain") ?? null;
 });
 
-const getChainProfiles = createServerFn({ method: "GET" }).handler(async () => {
+const getChains = createServerFn({ method: "GET" }).handler(async () => {
     const { data } = await serverApiClient.GET("/chains");
-    return data!.map((c) => c.profile);
+    return data;
 });
 
 export const Route = createFileRoute("/")({
@@ -31,11 +31,12 @@ export const Route = createFileRoute("/")({
             throw redirect({ to: "/$chain", params: { chain: selectedChain } });
         }
     },
-    loader: () => getChainProfiles(),
+    loader: async ({ context: { queryClient } }) => {
+        queryClient.setQueryData($api.queryOptions("get", "/chains", {}).queryKey, await getChains());
+    },
     component: IndexRoute,
 });
 
 function IndexRoute() {
-    const chainProfiles = Route.useLoaderData();
-    return <IndexPage chainProfiles={chainProfiles} />;
+    return <IndexPage />;
 }

@@ -8,10 +8,11 @@ import { ButtonLink } from "@/components/utils/links";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import RezervoLogo from "@/components/utils/RezervoLogo";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
-import { ChainProfile } from "@/types/openapi";
+import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 
-const IndexPage = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
+const IndexPage = () => {
     const navigate = useNavigate();
+    const chainProfiles = useChainProfiles();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
     const [chainLoading, setChainLoading] = useState<string | null>(null);
 

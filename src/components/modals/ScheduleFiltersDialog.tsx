@@ -9,7 +9,7 @@ import CategoryFilters from "@/components/modals/CategoryFilters";
 import ExcludeClassTimeFilters from "@/components/modals/ExcludeClassTimeFilters";
 import LocationFilters from "@/components/modals/LocationFilters";
 import { RezervoChain } from "@/types/openapi";
-import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/local";
+import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function a11yProps(index: number) {
     return {
@@ -55,7 +55,6 @@ export default function ScheduleFiltersDialog({
     chain,
     selectedLocationIds,
     setSelectedLocationIds,
-    allCategories,
     selectedCategories,
     setSelectedCategories,
     excludeClassTimeFilters,
@@ -66,7 +65,6 @@ export default function ScheduleFiltersDialog({
     chain: RezervoChain;
     selectedLocationIds: string[];
     setSelectedLocationIds: (value: string[]) => void;
-    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
@@ -184,7 +182,6 @@ export default function ScheduleFiltersDialog({
                 </TabPanel>
                 <TabPanel value={tab} index={1} dir={theme.direction}>
                     <CategoryFilters
-                        allCategories={allCategories}
                         selectedCategories={selectedCategories}
                         setSelectedCategories={setSelectedCategories}
                     />

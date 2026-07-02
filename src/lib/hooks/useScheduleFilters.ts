@@ -8,14 +8,15 @@ import {
     storeSelectedCategories,
     storeSelectedLocations,
 } from "@/lib/helpers/storage";
-import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/local";
+import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
+import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 export function useScheduleFilters(
     chainIdentifier: string,
-    activityCategories: ActivityCategory[],
     initialLocationIds: string[],
     defaultLocationIds: string[],
 ) {
+    const activityCategories = useActivityCategories();
     const [selectedLocationIds, setSelectedLocationIdsState] = useState<string[]>(initialLocationIds);
     const deferredSelectedLocationIds = useDeferredValue(selectedLocationIds);
     const [selectedCategories, setSelectedCategoriesState] = useState<string[]>(

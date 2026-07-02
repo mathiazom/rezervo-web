@@ -14,8 +14,9 @@ import SubHeader from "@/components/modals/SubHeader";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
-import { BaseUserSession, ChainConfig, ChainProfile, ClassConfig, SessionStatus } from "@/types/openapi";
+import { BaseUserSession, ChainConfig, ClassConfig, SessionStatus } from "@/types/openapi";
 
 function mapClassesByStartTime(classes: BaseUserSession[]) {
     const dayMap: Record<string, BaseUserSession[]> = {};
@@ -82,13 +83,12 @@ function searchForGhosts(userSessions: BaseUserSession[], chainConfigs: Record<s
 export default function Agenda({
     userSessions,
     chainConfigs,
-    chainProfiles,
 }: {
     userSessions: BaseUserSession[];
     chainConfigs: Record<string, ChainConfig>;
-    chainProfiles: ChainProfile[];
 }) {
     const theme = useTheme();
+    const chainProfiles = useChainProfiles();
     const plannedSessionsDayMap = mapClassesByStartTime(
         userSessions.filter((_class) => _class.status === SessionStatus.PLANNED),
     );

@@ -39,14 +39,12 @@ export const getChainPageDataFn = createServerFn({ method: "GET" })
         const chain = chainRes.data;
         if (!chain) return null;
         const weekParam = resolveWeekParam(rawWeekParam);
-        const allLocationIds = getAllLocationIds(chain);
-        const scheduleDTO = await fetchScheduleWeekDTO(chainIdentifier, weekParam, allLocationIds);
+        const scheduleDTO = await fetchScheduleWeekDTO(chainIdentifier, weekParam, getAllLocationIds(chain));
         return {
             chain,
             weekParam,
-            chainProfiles: chainsRes.data!.map((c) => c.profile),
+            chains: chainsRes.data!,
             activityCategories: categoriesRes.data!,
-            allLocationIds,
             scheduleDTO,
         };
     });
