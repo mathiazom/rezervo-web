@@ -1,6 +1,6 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { $api } from "@/lib/api/client";
+import { $api, apiClient } from "@/lib/api/client";
 import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
@@ -23,7 +23,16 @@ export function useUserConfig(chain: string) {
         data: userConfig,
         error,
         isLoading,
-    } = $api.useQuery("get", "/{chain_identifier}/config", configInit, {
+    } = useQuery({
+        queryKey: configKey,
+        queryFn: async () => {
+            const { data, response } = await apiClient.GET("/{chain_identifier}/config", configInit);
+            if (response.status === 404) return null;
+            if (!response.ok || data === undefined) {
+                throw new Error(`Failed to fetch user config (${response.status})`);
+            }
+            return data;
+        },
         enabled: isAuthenticated && !!chain,
     });
 
