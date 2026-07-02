@@ -20,24 +20,22 @@ import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS, StatusColors } from "@/ty
 const AVATAR_SIZE = 24;
 
 const ClassCard = ({
-    chain,
     _class,
     selectable,
     selected,
     onUpdateConfig,
     onShowClassInfo,
 }: {
-    chain: string;
     _class: RezervoClass;
     selectable: boolean;
     selected: boolean;
     onUpdateConfig: (selected: boolean) => void;
     onShowClassInfo: () => void;
 }) => {
-    const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex(chain);
+    const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError } = useUserSessionsIndex();
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
     const userSessions = userSessionsIndex?.[_class.id]?.sort(userNameWithIsSelfComparator) ?? [];
-    const { allConfigsIndex } = useUserConfig(chain);
+    const { allConfigsIndex } = useUserConfig();
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const [selectAnimation, setSelectAnimation] = useState<EnterLeaveAnimation | null>(
         selected ? (randomElementFromArray(OVER_THE_TOP_ANIMATIONS) ?? null) : null,

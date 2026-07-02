@@ -8,7 +8,6 @@ import { Dispatch, SetStateAction, useState } from "react";
 import CategoryFilters from "@/components/schedule/filter/CategoryFilters";
 import ExcludeClassTimeFilters from "@/components/schedule/filter/ExcludeClassTimeFilters";
 import LocationFilters from "@/components/schedule/filter/LocationFilters";
-import { RezervoChain } from "@/types/openapi";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function a11yProps(index: number) {
@@ -52,7 +51,6 @@ const tabColors = [LOCATIONS_COLOR[500], CATEGORIES_COLOR[500], EXCLUDE_CLASS_TI
 export default function ScheduleFiltersDialog({
     open,
     setOpen,
-    chain,
     selectedLocationIds,
     setSelectedLocationIds,
     selectedCategories,
@@ -62,7 +60,6 @@ export default function ScheduleFiltersDialog({
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    chain: RezervoChain;
     selectedLocationIds: string[];
     setSelectedLocationIds: (value: string[]) => void;
     selectedCategories: string[];
@@ -175,7 +172,6 @@ export default function ScheduleFiltersDialog({
             <DialogContent sx={{ padding: 0, margin: 0 }}>
                 <TabPanel value={tab} index={0} dir={theme.direction}>
                     <LocationFilters
-                        chain={chain}
                         selectedLocationIds={selectedLocationIds}
                         setSelectedLocationIds={setSelectedLocationIds}
                     />

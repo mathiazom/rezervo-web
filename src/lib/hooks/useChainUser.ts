@@ -5,12 +5,14 @@ import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { ChainUserPayload, ChainUserTotpPayload } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
-export function useChainUser(chain: string) {
+export function useChainUser() {
+    const chain = useChain();
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const chainUserInit = { params: { path: { chain_identifier: chain } } };
+    const chainUserInit = { params: { path: { chain_identifier: chain.profile.identifier } } };
     const chainUserKey = $api.queryOptions("get", "/{chain_identifier}/user", chainUserInit).queryKey;
 
     const {
@@ -18,10 +20,10 @@ export function useChainUser(chain: string) {
         error,
         isLoading,
     } = $api.useQuery("get", "/{chain_identifier}/user", chainUserInit, {
-        enabled: isAuthenticated && !!chain,
+        enabled: isAuthenticated,
     });
 
-    const { mutateUserConfig } = useUserConfig(chain);
+    const { mutateUserConfig } = useUserConfig();
     const { mutateUserChainConfigs } = useUserChainConfigs();
     const dependantMutations = async () => {
         await queryClient.invalidateQueries({ queryKey: chainUserKey });

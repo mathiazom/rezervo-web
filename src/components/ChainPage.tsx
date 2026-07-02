@@ -17,6 +17,7 @@ import { getAllLocationIds, getDefaultLocationIds } from "@/lib/helpers/chain";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { getWeekNumber } from "@/lib/helpers/schedule";
+import { useChain } from "@/lib/hooks/useChain";
 import { useClassInfo } from "@/lib/hooks/useClassInfo";
 import { useScheduleFilters } from "@/lib/hooks/useScheduleFilters";
 import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
@@ -24,14 +25,15 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
-import { RezervoChain, SessionStatus } from "@/types/openapi";
+import { SessionStatus } from "@/types/openapi";
 import { BookingPopupAction, BookingPopupState } from "@/types/local";
 import { RezervoError } from "@/types/ui";
 
-function ChainPage({ weekParam, chain }: { weekParam: string; chain: RezervoChain }) {
+function ChainPage({ weekParam }: { weekParam: string }) {
     const navigate = useNavigate();
-    const { userConfig, userConfigError, putUserConfig } = useUserConfig(chain.profile.identifier);
-    const { userSessionsIndex } = useUserSessionsIndex(chain.profile.identifier);
+    const chain = useChain();
+    const { userConfig, userConfigError, putUserConfig } = useUserConfig();
+    const { userSessionsIndex } = useUserSessionsIndex();
 
     const [userConfigActive, setUserConfigActive] = useState(true);
 
@@ -161,11 +163,10 @@ function ChainPage({ weekParam, chain }: { weekParam: string; chain: RezervoChai
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
                         leftComponent={<ChainSwitcher currentChainProfile={chain.profile} />}
-                        rightComponent={<UserBar chainIdentifier={chain.profile.identifier} />}
+                        rightComponent={<UserBar />}
                     />
                     {weekScheduleError == null && (
                         <WeekNavigator
-                            chain={chain}
                             weekParam={currentWeek}
                             isLoadingPreviousWeek={isLoadingPreviousWeek}
                             isLoadingNextWeek={isLoadingNextWeek}
@@ -186,7 +187,6 @@ function ChainPage({ weekParam, chain }: { weekParam: string; chain: RezervoChai
                     <ErrorMessage error={RezervoError.CHAIN_SCHEDULE_UNAVAILABLE} chainProfile={chain.profile} />
                 ) : currentWeekSchedule != null ? (
                     <WeekSchedule
-                        chain={chain.profile.identifier}
                         weekSchedule={currentWeekSchedule}
                         selectedLocationIds={deferredSelectedLocationIds}
                         selectedCategories={deferredSelectedCategories}
@@ -201,9 +201,8 @@ function ChainPage({ weekParam, chain }: { weekParam: string; chain: RezervoChai
                     isLoadingInitial && <WeekScheduleSkeleton weekParam={currentWeek} />
                 )}
             </Stack>
-            <CheckIn chain={chain} selectedLocationIds={deferredSelectedLocationIds} />
+            <CheckIn selectedLocationIds={deferredSelectedLocationIds} />
             <ClassInfoModal
-                chain={chain.profile.identifier}
                 classInfoClass={classInfoClass}
                 onUpdateConfig={onUpdateConfig}
                 onClose={() => setClassInfoClass(null)}
@@ -211,7 +210,6 @@ function ChainPage({ weekParam, chain }: { weekParam: string; chain: RezervoChai
             {bookingPopupState && (
                 <BookingPopupModal
                     onClose={() => setBookingPopupState(null)}
-                    chain={bookingPopupState.chain}
                     _class={bookingPopupState._class}
                     action={bookingPopupState.action}
                 />

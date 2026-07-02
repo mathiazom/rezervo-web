@@ -47,7 +47,6 @@ function Memberships({ chainProfiles }: { chainProfiles: NonEmptyArray<ChainProf
                         chainProfile && (
                             <ChainMembership
                                 key={chain}
-                                chainProfile={chainProfile}
                                 openMembershipLoginModal={() => setMembershipLoginState({ open: true, chainProfile })}
                             />
                         )

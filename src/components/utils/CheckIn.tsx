@@ -21,6 +21,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ModalWrapper from "@/components/utils/ModalWrapper";
 import { $api } from "@/lib/api/client";
 import { getStoredCheckInConfiguration, storeCheckInConfiguration } from "@/lib/helpers/storage";
+import { useChain } from "@/lib/hooks/useChain";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUser } from "@/lib/hooks/useUser";
 import { CheckInTerminal, RezervoChain } from "@/types/openapi";
@@ -69,13 +70,8 @@ function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationId
     );
 }
 
-export default function CheckIn({
-    chain,
-    selectedLocationIds,
-}: {
-    chain: RezervoChain;
-    selectedLocationIds: string[];
-}) {
+export default function CheckIn({ selectedLocationIds }: { selectedLocationIds: string[] }) {
+    const chain = useChain();
     const [open, setOpen] = useState(false);
     const [location, setLocation] = useState<CheckInLocation | undefined>();
     const [terminal, setTerminal] = useState<CheckInTerminal | undefined>();
@@ -86,7 +82,7 @@ export default function CheckIn({
     const timerRef = useRef<number | null>(null);
 
     const { token } = useUser();
-    const { chainUser } = useChainUser(chain.profile.identifier);
+    const { chainUser } = useChainUser();
 
     const checkInMutation = $api.useMutation("post", "/{chain_identifier}/check-in", {
         onSuccess: () => handleSuccess(),

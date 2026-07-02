@@ -10,11 +10,10 @@ import ScheduleFiltersDialog, {
 } from "@/components/schedule/filter/ScheduleFiltersDialog";
 import { offsetWeekParam } from "@/lib/helpers/schedule";
 import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
-import { RezervoChain } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 export default function WeekNavigator({
-    chain,
     weekParam,
     isLoadingPreviousWeek,
     isLoadingNextWeek,
@@ -28,7 +27,6 @@ export default function WeekNavigator({
     excludeClassTimeFilters,
     setExcludeClassTimeFilters,
 }: {
-    chain: RezervoChain;
     weekParam: string;
     isLoadingPreviousWeek: boolean;
     isLoadingNextWeek: boolean;
@@ -42,6 +40,7 @@ export default function WeekNavigator({
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
+    const chain = useChain();
     const allCategories = useActivityCategories();
 
     const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
@@ -142,7 +141,6 @@ export default function WeekNavigator({
                 )}
             </Button>
             <ScheduleFiltersDialog
-                chain={chain}
                 open={isScheduleFiltersOpen}
                 setOpen={setIsScheduleFiltersOpen}
                 selectedLocationIds={selectedLocationIds}

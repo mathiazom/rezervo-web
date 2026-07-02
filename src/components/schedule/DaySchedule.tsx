@@ -17,7 +17,6 @@ import { RezervoClass, RezervoDaySchedule } from "@/types/openapi";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function DaySchedule({
-    chain,
     daySchedule,
     selectedLocationIds,
     selectedCategories,
@@ -28,7 +27,6 @@ function DaySchedule({
     onUpdateConfig,
     setClassInfoClass,
 }: {
-    chain: string;
     daySchedule: RezervoDaySchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
@@ -150,7 +148,6 @@ function DaySchedule({
                                 }}
                             >
                                 <ClassCard
-                                    chain={chain}
                                     _class={_class}
                                     selectable={selectable}
                                     selected={

@@ -1,11 +1,12 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import ChainPage from "@/components/ChainPage";
-import StoreSelectedChain from "@/components/chain/StoreSelectedChain";
 import { $api } from "@/lib/api/client";
 import { scheduleQueryKey } from "@/lib/helpers/schedule";
 import { getChainPageDataFn } from "@/lib/server/chainData";
 import { z } from "zod";
+import { useEffect } from "react";
+import { storeSelectedChain } from "@/lib/helpers/storage";
 
 export const Route = createFileRoute("/$chain")({
     validateSearch: z.object({
@@ -35,16 +36,13 @@ export const Route = createFileRoute("/$chain")({
         return { weekParam: data.weekParam };
     },
     component: () => {
-        const { chain: chainIdentifier } = Route.useParams();
+        const { chain } = Route.useParams();
         const { weekParam } = Route.useLoaderData();
-        const { data: chain } = $api.useQuery("get", "/chains/{chain_identifier}", {
-            params: { path: { chain_identifier: chainIdentifier } },
-        });
-        return (
-            <>
-                <StoreSelectedChain chainIdentifier={chain!.profile.identifier} />
-                <ChainPage weekParam={weekParam} chain={chain!} />
-            </>
-        );
+
+        useEffect(() => {
+            storeSelectedChain(chain);
+        }, [chain]);
+
+        return <ChainPage weekParam={weekParam} />;
     },
 });

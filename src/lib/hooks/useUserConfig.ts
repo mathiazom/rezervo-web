@@ -6,14 +6,16 @@ import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { ChainConfigPayload } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
-export function useUserConfig(chain: string) {
+export function useUserConfig() {
+    const chain = useChain();
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const configInit = { params: { path: { chain_identifier: chain } } };
+    const configInit = { params: { path: { chain_identifier: chain.profile.identifier } } };
 
-    const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(chain);
+    const { allConfigsIndex, mutateAllConfigs } = useAllConfigs(chain.profile.identifier);
     const { mutateUserSessions } = useUserSessions();
     const { mutateUserChainConfigs } = useUserChainConfigs();
 
@@ -33,7 +35,7 @@ export function useUserConfig(chain: string) {
             }
             return data;
         },
-        enabled: isAuthenticated && !!chain,
+        enabled: isAuthenticated,
     });
 
     const { mutateAsync, isPending } = $api.useMutation("put", "/{chain_identifier}/config", {

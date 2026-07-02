@@ -18,18 +18,14 @@ import RippleBadge from "@/components/utils/RippleBadge";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
-import { ChainConfigPayload, ChainProfile } from "@/types/openapi";
+import { ChainConfigPayload } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
-function ChainMembership({
-    chainProfile,
-    openMembershipLoginModal,
-}: {
-    chainProfile: ChainProfile;
-    openMembershipLoginModal: () => void;
-}) {
-    const { userConfig, putUserConfig } = useUserConfig(chainProfile.identifier);
+function ChainMembership({ openMembershipLoginModal }: { openMembershipLoginModal: () => void }) {
+    const { profile: chainProfile } = useChain();
+    const { userConfig, putUserConfig } = useUserConfig();
     const theme = useTheme();
-    const { chainUser, chainUserError, chainUserLoading } = useChainUser(chainProfile.identifier);
+    const { chainUser, chainUserError, chainUserLoading } = useChainUser();
     const hasChainUser = chainUser !== undefined && chainUserError == undefined && !chainUserLoading;
 
     const [bookingActiveLoading, setBookingActiveLoading] = useState(false);

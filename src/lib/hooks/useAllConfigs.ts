@@ -11,7 +11,7 @@ export function useAllConfigs(chain: string) {
     const allConfigsKey = $api.queryOptions("get", "/{chain_identifier}/all-configs", allConfigsInit).queryKey;
 
     const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/all-configs", allConfigsInit, {
-        enabled: isAuthenticated && !!chain,
+        enabled: isAuthenticated,
     });
 
     return {

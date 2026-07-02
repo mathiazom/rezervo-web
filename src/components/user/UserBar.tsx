@@ -22,7 +22,7 @@ import { vars } from "@/lib/theme";
 import { UserRelationship } from "@/types/openapi";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 
-function UserBar({ chainIdentifier }: { chainIdentifier: string }) {
+function UserBar() {
     const theme = useTheme();
     const { user, authStatus, logIn } = useUser();
     const { userId: myUserId, userName: backendUserName } = useMyUser();
@@ -30,7 +30,7 @@ function UserBar({ chainIdentifier }: { chainIdentifier: string }) {
     const [isUserUpserted, setIsUserUpserted] = useState(false);
     const configRefetchedRef = useRef(false);
     const { community } = useCommunity();
-    const { userConfigError, userConfigLoading, mutateUserConfig } = useUserConfig(chainIdentifier);
+    const { userConfigError, userConfigLoading, mutateUserConfig } = useUserConfig();
     const { userChainConfigs } = useUserChainConfigs();
     const { userSessions } = useUserSessions();
     const [activeModal, setActiveModal] = useState<"community" | "settings" | "agenda" | "profile" | null>(null);

@@ -37,22 +37,22 @@ import { RezervoClass, SessionStatus } from "@/types/openapi";
 import { StatusColors } from "@/types/ui";
 import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
 import ClassAttendanceMeter from "@/components/schedule/class/ClassAttendanceMeter";
+import { useChain } from "@/lib/hooks/useChain";
 
 export default function ClassInfo({
-    chain,
     initialClassData,
     onUpdateConfig,
 }: {
-    chain: string;
     initialClassData: RezervoClass;
     onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
+    const chain = useChain();
     const { authStatus } = useUser();
-    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
-    const { liveClassData: _class } = useLiveClassData(chain, initialClassData);
+    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig();
+    const { liveClassData: _class } = useLiveClassData(initialClassData);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
-        useUserSessionsIndex(chain);
+        useUserSessionsIndex();
     const { mutateUserSessions } = useUserSessions();
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
@@ -87,7 +87,10 @@ export default function ClassInfo({
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
     function book() {
-        bookMutation.mutate({ params: { path: { chain_identifier: chain } }, body: { classId: _class.id } });
+        bookMutation.mutate({
+            params: { path: { chain_identifier: chain.profile.identifier } },
+            body: { classId: _class.id },
+        });
     }
 
     // We might not know their position in the wait list before the sessions are pulled, depending on provider implementation
@@ -219,10 +222,10 @@ export default function ClassInfo({
             {authStatus === "authenticated" && userConfig === undefined && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>
-                        Koble til <b>{chain.toUpperCase()}</b>-medlemskap
+                        Koble til <b>{chain.profile.identifier.toUpperCase()}</b>-medlemskap
                     </AlertTitle>
-                    Du må koble <b>{chain.toUpperCase()}</b>-medlemskapet ditt til <b>rezervo</b> for å kunne booke
-                    eller legge til timer i timeplanen. Trykk på{" "}
+                    Du må koble <b>{chain.profile.identifier.toUpperCase()}</b>-medlemskapet ditt til <b>rezervo</b> for
+                    å kunne booke eller legge til timer i timeplanen. Trykk på{" "}
                     <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger for å komme i gang.
                 </Alert>
             )}
@@ -340,7 +343,6 @@ export default function ClassInfo({
                 open={cancelBookingConfirmationOpen}
                 setOpen={setCancelBookingConfirmationOpen}
                 setLoading={setCancelBookingLoading}
-                chain={chain}
                 _class={_class}
             />
         </ModalWrapper>

@@ -2,17 +2,16 @@ import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/ma
 import { Fragment } from "react";
 
 import { LOCATIONS_COLOR } from "@/components/schedule/filter/ScheduleFiltersDialog";
-import { RezervoChain } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
 export default function LocationFilters({
-    chain,
     selectedLocationIds,
     setSelectedLocationIds,
 }: {
-    chain: RezervoChain;
     selectedLocationIds: string[];
     setSelectedLocationIds: (value: string[]) => void;
 }) {
+    const chain = useChain();
     const allLocationIds = chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));
     const allChecked = chain.branches.every((branch) =>
         branch.locations.every(({ identifier }) => selectedLocationIds.includes(identifier)),

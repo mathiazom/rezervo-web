@@ -6,7 +6,6 @@ import { RezervoClass, RezervoWeekSchedule } from "@/types/openapi";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function WeekSchedule({
-    chain,
     weekSchedule,
     selectedLocationIds,
     selectedCategories,
@@ -17,7 +16,6 @@ function WeekSchedule({
     onUpdateConfig,
     setClassInfoClass,
 }: {
-    chain: string;
     weekSchedule: RezervoWeekSchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
@@ -61,7 +59,6 @@ function WeekSchedule({
                                 ]}
                             >
                                 <DaySchedule
-                                    chain={chain}
                                     daySchedule={daySchedule}
                                     selectedLocationIds={selectedLocationIds}
                                     selectedCategories={selectedCategories}
