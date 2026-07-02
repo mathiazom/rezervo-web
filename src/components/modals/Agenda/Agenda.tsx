@@ -17,14 +17,13 @@ import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurren
 import { formatNameArray } from "@/lib/utils/arrayUtils";
 import { BaseUserSession, ChainConfig, ChainProfile, ClassConfig, SessionStatus } from "@/types/openapi";
 
-function mapClassesByStartTime(classes: BaseUserSession[]): Record<string, BaseUserSession[]> {
-    return classes.reduce<Record<string, BaseUserSession[]>>((acc, next) => {
-        const prettyStartTime = capitalizeFirstCharacter(next.classData.startTime.toFormat("cccc d. LLLL") ?? "");
-        return {
-            ...acc,
-            [prettyStartTime]: [...(acc[prettyStartTime] ?? []), next],
-        };
-    }, {});
+function mapClassesByStartTime(classes: BaseUserSession[]) {
+    const dayMap: Record<string, BaseUserSession[]> = {};
+    for (const session of classes) {
+        const prettyStartTime = capitalizeFirstCharacter(session.classData.startTime.toFormat("cccc d. LLLL") ?? "");
+        (dayMap[prettyStartTime] ??= []).push(session);
+    }
+    return dayMap;
 }
 
 function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
@@ -61,10 +60,7 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
     );
 }
 
-function searchForGhosts(
-    userSessions: BaseUserSession[],
-    chainConfigs: Record<string, ChainConfig>,
-): Record<string, ClassConfig[]> {
+function searchForGhosts(userSessions: BaseUserSession[], chainConfigs: Record<string, ChainConfig>) {
     const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.classData));
     return Object.entries(chainConfigs).reduce<Record<string, ClassConfig[]>>((acc, [chainIdentifier, config]) => {
         if (!config.active) {
