@@ -14,7 +14,7 @@ export function stringifyClassAttendance(_class: RezervoClass): string | null {
             ? `${_class.waitingListCount} ${isInThePast ? "fikk ikke plass" : "er på venteliste"}`
             : null;
 
-    if (!_class.availableSlots || !_class.totalSlots) {
+    if (_class.availableSlots == null || _class.totalSlots == null) {
         return waitListText ?? (isInThePast ? "Timen hadde ledige plasser" : "Timen har ledige plasser");
     }
 
