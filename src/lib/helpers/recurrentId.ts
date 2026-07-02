@@ -1,5 +1,4 @@
-import { RezervoSessionClass } from "@/types/chain";
-import { ClassConfig } from "@/types/config";
+import { ClassConfig, RezervoSessionClass } from "@/types/openapi";
 
 export function classConfigRecurrentId(classConfig: ClassConfig) {
     return recurrentClassId(

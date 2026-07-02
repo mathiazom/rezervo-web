@@ -108,7 +108,7 @@ The `$chain` loader **seeds the query cache** so the first client render is inst
 **Query keys do not include locations** — `scheduleQueryKey(chain, week)` = `["schedule", chain, week]`. The cached
 schedule always holds **all** locations (both the server loader and client fetch use all location ids), so
 components must still **filter classes down to the currently selected locations** when displaying. Schedule key /
-fetch helpers live in `src/lib/helpers/schedule.ts` (`scheduleQueryKey`, `fetchScheduleWeekDTO`, `offsetWeekParam`).
+fetch helpers live in `src/lib/helpers/local.ts` (`scheduleQueryKey`, `fetchScheduleWeekDTO`, `offsetWeekParam`).
 The schedule query is written manually (not via `$api`) so it can keep this custom key and inject `locationIds`.
 
 **The React Query cache stores the serializable `*DTO` form, not the deserialized domain form**, so it survives

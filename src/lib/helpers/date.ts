@@ -2,7 +2,8 @@ import { DateTime, Info, Settings } from "luxon";
 // @ts-expect-error bad internal import
 import { IfValid, Valid } from "luxon/src/_util";
 
-import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType, RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
+import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/local";
 
 export const compactISOWeekString = <IsValid extends boolean>(
     date: DateTime<IsValid>,
@@ -75,10 +76,7 @@ export const isClassExcludedByTimeFilters = (
     });
 };
 
-const isClassExcludedByTimeFilter = (
-    _class: RezervoClass,
-    excludeClassTimeFilter: ExcludeClassTimeFilter,
-): boolean => {
+const isClassExcludedByTimeFilter = (_class: RezervoClass, excludeClassTimeFilter: ExcludeClassTimeFilter): boolean => {
     if (!excludeClassTimeFilter.enabled) {
         return false;
     }

@@ -7,7 +7,7 @@ import { ListItemButtonLink } from "@/components/utils/links";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { vars } from "@/lib/theme";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
+import { ChainProfile } from "@/types/openapi";
 
 function ChainSwitcher({
     currentChainProfile,
@@ -19,7 +19,7 @@ function ChainSwitcher({
     const theme = useTheme();
 
     const [open, setOpen] = useState(false);
-    const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
+    const [chainLoading, setChainLoading] = useState<string | null>(null);
 
     useEffect(() => {
         setOpen(false);

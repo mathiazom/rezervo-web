@@ -18,8 +18,7 @@ import RippleBadge from "@/components/utils/RippleBadge";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
-import { ChainProfile } from "@/types/chain";
-import { ChainConfigPayload } from "@/types/config";
+import { ChainConfigPayload, ChainProfile } from "@/types/openapi";
 
 function ChainMembership({
     chainProfile,

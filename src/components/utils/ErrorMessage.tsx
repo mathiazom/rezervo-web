@@ -1,7 +1,7 @@
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 
-import { ChainProfile } from "@/types/chain";
-import { RezervoError } from "@/types/errors";
+import { ChainProfile } from "@/types/openapi";
+import { RezervoError } from "@/types/ui";
 
 function ErrorMessage({ error, chainProfile }: { error: RezervoError; chainProfile: ChainProfile }) {
     return (

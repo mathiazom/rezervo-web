@@ -9,7 +9,8 @@ import ScheduleFiltersDialog, {
     LOCATIONS_COLOR,
 } from "@/components/modals/ScheduleFiltersDialog";
 import { offsetWeekParam } from "@/lib/helpers/schedule";
-import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
+import { RezervoChain } from "@/types/openapi";
+import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/local";
 
 export default function WeekNavigator({
     chain,

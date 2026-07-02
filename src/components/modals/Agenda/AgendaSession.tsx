@@ -10,15 +10,13 @@ import { compactISOWeekString, getCapitalizedWeekdays, zeroIndexedWeekday } from
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { ChainIdentifier } from "@/types/chain";
-import { ChainConfigPayload, ClassConfig } from "@/types/config";
-import { SessionStatus, BaseUserSession } from "@/types/userSessions";
+import { BaseUserSession, ChainConfigPayload, ClassConfig, SessionStatus } from "@/types/openapi";
 
 export default function AgendaSession({
     chain,
     classConfig,
     userSession,
-}: { chain: ChainIdentifier } & (
+}: { chain: string } & (
     | { classConfig: ClassConfig; userSession?: never }
     | { classConfig?: never; userSession: BaseUserSession }
 )) {

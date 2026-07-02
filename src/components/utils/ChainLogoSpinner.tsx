@@ -1,6 +1,6 @@
 import { Avatar } from "@mui/material";
 
-import { ChainProfile } from "@/types/chain";
+import { ChainProfile } from "@/types/openapi";
 
 export default function ChainLogoSpinner({ chainProfile }: { chainProfile: ChainProfile }) {
     return (

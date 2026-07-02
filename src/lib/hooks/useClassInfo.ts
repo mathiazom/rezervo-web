@@ -1,7 +1,7 @@
 import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
 
 const routeApi = getRouteApi("/$chain");
 

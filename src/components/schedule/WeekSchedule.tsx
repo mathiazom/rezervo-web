@@ -2,7 +2,8 @@ import { alpha, Box, Stack, useTheme } from "@mui/material";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { isToday } from "@/lib/helpers/date";
-import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoWeekSchedule } from "@/types/chain";
+import { RezervoClass, RezervoWeekSchedule } from "@/types/openapi";
+import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function WeekSchedule({
     chain,
@@ -16,7 +17,7 @@ function WeekSchedule({
     onUpdateConfig,
     setClassInfoClass,
 }: {
-    chain: ChainIdentifier;
+    chain: string;
     weekSchedule: RezervoWeekSchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];

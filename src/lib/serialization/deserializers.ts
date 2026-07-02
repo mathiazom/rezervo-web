@@ -1,13 +1,15 @@
-import { WithLuxonTimes } from "@/types/api-helpers";
 import { LocalizedDateTime } from "@/lib/helpers/date";
-import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
 import {
+    BaseUserSession,
     BaseUserSessionDTO,
+    RezervoClass,
     RezervoClassDTO,
+    RezervoDaySchedule,
     RezervoDayScheduleDTO,
+    RezervoWeekSchedule,
     RezervoWeekScheduleDTO,
-} from "@/types/serialization";
-import { BaseUserSession } from "@/types/userSessions";
+    WithLuxonTimes,
+} from "@/types/openapi";
 
 function withLuxonTimes<T extends { startTime: string; endTime: string }>(dto: T): WithLuxonTimes<T> {
     return {

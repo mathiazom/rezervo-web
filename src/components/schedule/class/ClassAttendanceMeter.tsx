@@ -5,8 +5,8 @@ import { Badge, Tooltip } from "@mui/material";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
-import { RezervoClass } from "@/types/chain";
-import { StatusColors } from "@/types/userSessions";
+import { RezervoClass } from "@/types/openapi";
+import { StatusColors } from "@/types/ui";
 
 const attendanceColor = (_class: RezervoClass): string => {
     if (hasWaitingList(_class)) return "red";

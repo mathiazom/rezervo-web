@@ -1,9 +1,8 @@
 import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { Schemas } from "@/types/api-helpers";
+import { PushNotificationSubscription } from "@/types/openapi";
 
-const asSubscriptionBody = (subscription: PushSubscription) =>
-    subscription as unknown as Schemas["PushNotificationSubscription"];
+const asSubscriptionBody = (subscription: PushSubscription) => subscription as unknown as PushNotificationSubscription;
 
 export function usePushNotificationSubscription() {
     const { isAuthenticated } = useUser();

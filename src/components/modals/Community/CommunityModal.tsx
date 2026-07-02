@@ -1,7 +1,7 @@
 import { Modal } from "@mui/material";
 
 import Community from "@/components/modals/Community/Community";
-import { ChainProfile } from "@/types/chain";
+import { ChainProfile } from "@/types/openapi";
 
 const CommunityModal = ({
     open,

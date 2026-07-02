@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { PreferencesPayload } from "@/types/config";
+import { PreferencesPayload } from "@/types/openapi";
 
 export function usePreferences() {
     const { isAuthenticated } = useUser();

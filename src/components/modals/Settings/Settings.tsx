@@ -33,9 +33,15 @@ import { DEFAULT_REMINDER_HOURS, MAX_REMINDER_HOURS, MIN_REMINDER_HOURS } from "
 import { LocalizedDateTime } from "@/lib/helpers/date";
 import { usePreferences } from "@/lib/hooks/usePreferences";
 import { isNonEmptyArray } from "@/lib/utils/arrayUtils";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { AllowedTimeWindow, ChainConfig, HourAndMinute, NotificationsConfig, PreferencesPayload } from "@/types/config";
-import { Features } from "@/types/features";
+import {
+    AllowedTimeWindow,
+    ChainConfig,
+    ChainProfile,
+    Features,
+    HourAndMinute,
+    NotificationsConfig,
+    PreferencesPayload,
+} from "@/types/openapi";
 
 // Fix track not visible with "system" color scheme
 const Switch = styled(MaterialUISwitch)(({ theme }) => ({
@@ -68,7 +74,7 @@ export default function Settings({
     showPWAInstall,
 }: {
     chainProfiles: ChainProfile[];
-    chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    chainConfigs: Record<string, ChainConfig>;
     features: Features | undefined;
     isPWAInstalled: boolean;
     showPWAInstall: () => void;

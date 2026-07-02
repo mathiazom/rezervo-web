@@ -8,7 +8,7 @@ import {
     storeSelectedCategories,
     storeSelectedLocations,
 } from "@/lib/helpers/storage";
-import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/chain";
+import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/local";
 
 export function useScheduleFilters(
     chainIdentifier: string,

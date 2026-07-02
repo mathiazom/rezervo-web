@@ -31,9 +31,9 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
-import { ActivityCategory, BookingPopupAction, BookingPopupState, ChainProfile, RezervoChain } from "@/types/chain";
-import { RezervoError } from "@/types/errors";
-import { SessionStatus } from "@/types/userSessions";
+import { ChainProfile, RezervoChain, SessionStatus } from "@/types/openapi";
+import { ActivityCategory, BookingPopupAction, BookingPopupState } from "@/types/local";
+import { RezervoError } from "@/types/ui";
 
 function Chain({
     weekParam,

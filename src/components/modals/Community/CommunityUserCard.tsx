@@ -6,8 +6,7 @@ import { useState } from "react";
 import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { ChainProfile } from "@/types/chain";
-import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
+import { ChainProfile, CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/openapi";
 
 type ConfirmDialogAction = typeof UserRelationshipAction.REMOVE_FRIEND | typeof UserRelationshipAction.DENY_FRIEND;
 

@@ -5,10 +5,9 @@ import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { ChainIdentifier } from "@/types/chain";
-import { ChainConfigPayload } from "@/types/config";
+import { ChainConfigPayload } from "@/types/openapi";
 
-export function useUserConfig(chain: ChainIdentifier) {
+export function useUserConfig(chain: string) {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 

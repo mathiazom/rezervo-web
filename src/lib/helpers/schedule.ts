@@ -5,8 +5,7 @@ import {
     LocalizedDateTime,
 } from "@/lib/helpers/date";
 import { apiClient } from "@/lib/api/client";
-import { RezervoWeekSchedule } from "@/types/chain";
-import { RezervoWeekScheduleDTO } from "@/types/serialization";
+import { RezervoWeekSchedule, RezervoWeekScheduleDTO } from "@/types/openapi";
 
 // Background-prefetched weeks relative to the current week: previous week + next 3 weeks.
 export const ADJACENT_WEEK_OFFSETS = [-1, 1, 2, 3];

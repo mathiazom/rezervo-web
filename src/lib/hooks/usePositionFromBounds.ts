@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { Position } from "@/types/math";
+import { Position } from "@/types/ui";
 
 export function usePositionFromBounds() {
     const boundsRef = useRef<HTMLDivElement>(undefined);

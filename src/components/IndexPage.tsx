@@ -7,14 +7,13 @@ import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
 import { ButtonLink } from "@/components/utils/links";
 import PWAInstallPrompt from "@/components/utils/PWAInstallPrompt";
 import { getStoredSelectedChain } from "@/lib/helpers/storage";
-import { ChainIdentifier } from "@/types/chain";
-import { IndexPageProps } from "@/types/serialization";
+import { ChainProfile } from "@/types/openapi";
 
-const IndexPage = ({ chainProfiles }: IndexPageProps) => {
+const IndexPage = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const [checkedLocalStorage, setCheckedLocalStorage] = useState(false);
-    const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
+    const [chainLoading, setChainLoading] = useState<string | null>(null);
 
     useEffect(() => {
         const storedChain = getStoredSelectedChain();

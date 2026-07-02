@@ -1,6 +1,6 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/material";
 import { CATEGORIES_COLOR } from "@/components/modals/ScheduleFiltersDialog";
-import { ActivityCategory } from "@/types/chain";
+import { ActivityCategory } from "@/types/local";
 
 export default function CategoryFilters({
     allCategories,

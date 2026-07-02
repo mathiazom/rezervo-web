@@ -15,9 +15,7 @@ import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { ChainConfig, ClassConfig } from "@/types/config";
-import { SessionStatus, BaseUserSession } from "@/types/userSessions";
+import { BaseUserSession, ChainConfig, ChainProfile, ClassConfig, SessionStatus } from "@/types/openapi";
 
 function mapClassesByStartTime(classes: BaseUserSession[]): Record<string, BaseUserSession[]> {
     return classes.reduce<Record<string, BaseUserSession[]>>((acc, next) => {
@@ -65,27 +63,24 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
 
 function searchForGhosts(
     userSessions: BaseUserSession[],
-    chainConfigs: Record<ChainIdentifier, ChainConfig>,
-): Record<ChainIdentifier, ClassConfig[]> {
+    chainConfigs: Record<string, ChainConfig>,
+): Record<string, ClassConfig[]> {
     const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.classData));
-    return Object.entries(chainConfigs).reduce<Record<ChainIdentifier, ClassConfig[]>>(
-        (acc, [chainIdentifier, config]) => {
-            if (!config.active) {
-                return acc;
-            }
-
-            const ghostClasses = config.recurringBookings.filter(
-                (classConfig) => !classRecurrentIds.includes(classConfigRecurrentId(classConfig)),
-            );
-
-            if (ghostClasses.length > 0) {
-                acc[chainIdentifier] = ghostClasses;
-            }
-
+    return Object.entries(chainConfigs).reduce<Record<string, ClassConfig[]>>((acc, [chainIdentifier, config]) => {
+        if (!config.active) {
             return acc;
-        },
-        {},
-    );
+        }
+
+        const ghostClasses = config.recurringBookings.filter(
+            (classConfig) => !classRecurrentIds.includes(classConfigRecurrentId(classConfig)),
+        );
+
+        if (ghostClasses.length > 0) {
+            acc[chainIdentifier] = ghostClasses;
+        }
+
+        return acc;
+    }, {});
 }
 
 export default function Agenda({
@@ -94,7 +89,7 @@ export default function Agenda({
     chainProfiles,
 }: {
     userSessions: BaseUserSession[];
-    chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    chainConfigs: Record<string, ChainConfig>;
     chainProfiles: ChainProfile[];
 }) {
     const theme = useTheme();

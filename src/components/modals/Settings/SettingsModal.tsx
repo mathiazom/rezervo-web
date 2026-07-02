@@ -2,8 +2,7 @@ import { Modal } from "@mui/material";
 
 import Settings from "@/components/modals/Settings/Settings";
 import { useFeatures } from "@/lib/hooks/useFeatures";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { ChainConfig } from "@/types/config";
+import { ChainConfig, ChainProfile } from "@/types/openapi";
 
 const SettingsModal = ({
     open,
@@ -16,7 +15,7 @@ const SettingsModal = ({
     open: boolean;
     onClose: () => void;
     chainProfiles: ChainProfile[];
-    chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    chainConfigs: Record<string, ChainConfig>;
     isPWAInstalled: boolean;
     showPWAInstall: () => void;
 }) => {

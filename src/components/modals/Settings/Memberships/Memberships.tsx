@@ -8,8 +8,7 @@ import ChainMembership from "@/components/modals/Settings/Memberships/ChainMembe
 import MembershipLoginModal from "@/components/modals/Settings/Memberships/MembershipLoginModal";
 import SubHeader from "@/components/modals/SubHeader";
 import { NonEmptyArray } from "@/lib/utils/arrayUtils";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { ChainConfig } from "@/types/config";
+import { ChainConfig, ChainProfile } from "@/types/openapi";
 
 interface MemberShipLoginState {
     open: boolean;
@@ -21,7 +20,7 @@ function Memberships({
     chainConfigs,
 }: {
     chainProfiles: NonEmptyArray<ChainProfile>;
-    chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    chainConfigs: Record<string, ChainConfig>;
 }) {
     const [showAddMembershipDialog, setShowAddMembershipDialog] = useState(false);
     const [membershipLoginState, setMembershipLoginState] = useState<MemberShipLoginState>({

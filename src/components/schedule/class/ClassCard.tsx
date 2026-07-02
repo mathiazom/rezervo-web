@@ -14,9 +14,8 @@ import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { randomElementFromArray, userNameWithIsSelfComparator } from "@/lib/utils/arrayUtils";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
 import { shortenMiddleNames } from "@/lib/utils/textUtils";
-import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS } from "@/types/animation";
-import { ChainIdentifier, RezervoClass, RezervoInstructor } from "@/types/chain";
-import { SessionStatus, StatusColors } from "@/types/userSessions";
+import { RezervoClass, RezervoInstructor, SessionStatus } from "@/types/openapi";
+import { EnterLeaveAnimation, OVER_THE_TOP_ANIMATIONS, StatusColors } from "@/types/ui";
 
 const AVATAR_SIZE = 24;
 
@@ -28,7 +27,7 @@ const ClassCard = ({
     onUpdateConfig,
     onShowClassInfo,
 }: {
-    chain: ChainIdentifier;
+    chain: string;
     _class: RezervoClass;
     selectable: boolean;
     selected: boolean;

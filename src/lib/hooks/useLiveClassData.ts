@@ -1,7 +1,7 @@
 import { $api } from "@/lib/api/client";
 import { deserializeClass } from "@/lib/serialization/deserializers";
 import { deepMerge } from "@/lib/utils/objectUtils";
-import { RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
 
 export function useLiveClassData(chainIdentifier: string, _class: RezervoClass) {
     const { data, error, isLoading } = $api.useQuery(

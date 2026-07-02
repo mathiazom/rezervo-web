@@ -1,7 +1,6 @@
 import { zeroIndexedWeekday } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { RezervoClass } from "@/types/chain";
-import { ClassConfig } from "@/types/config";
+import { ClassConfig, RezervoClass } from "@/types/openapi";
 
 function buildConfigMapFromClasses(classes: RezervoClass[]) {
     return classes.reduce<Record<string, ClassConfig>>((o, c) => {

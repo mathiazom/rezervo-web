@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { UserRelationshipAction } from "@/types/community";
+import { UserRelationshipAction } from "@/types/openapi";
 
 export function useCommunity() {
     const { isAuthenticated } = useUser();

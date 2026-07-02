@@ -23,7 +23,7 @@ import { $api } from "@/lib/api/client";
 import { getStoredCheckInConfiguration, storeCheckInConfiguration } from "@/lib/helpers/storage";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUser } from "@/lib/hooks/useUser";
-import { CheckInTerminal, RezervoChain } from "@/types/chain";
+import { CheckInTerminal, RezervoChain } from "@/types/openapi";
 
 export interface CheckInLocation {
     id: string;

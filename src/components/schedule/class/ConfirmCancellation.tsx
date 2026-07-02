@@ -5,7 +5,7 @@ import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { $api } from "@/lib/api/client";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
-import { ChainIdentifier, RezervoSessionClass } from "@/types/chain";
+import { RezervoSessionClass } from "@/types/openapi";
 
 function ConfirmCancellation({
     open,
@@ -17,7 +17,7 @@ function ConfirmCancellation({
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     setLoading: Dispatch<SetStateAction<boolean>>;
-    chain: ChainIdentifier;
+    chain: string;
     _class: RezervoSessionClass;
 }) {
     const { mutateSessionsIndex } = useUserSessionsIndex(chain);

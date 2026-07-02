@@ -15,7 +15,7 @@ import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
 import { apiClient } from "@/lib/api/client";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
 import { useUser } from "@/lib/hooks/useUser";
-import { Position } from "@/types/math";
+import { Position } from "@/types/ui";
 
 export enum AvatarMutateError {
     INVALID_IMAGE = "invalid_image",

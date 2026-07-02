@@ -6,8 +6,7 @@ import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import SubHeader from "@/components/modals/SubHeader";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { ChainProfile } from "@/types/chain";
-import { CommunityUser, UserRelationship } from "@/types/community";
+import { ChainProfile, CommunityUser, UserRelationship } from "@/types/openapi";
 
 const CommunityUserList = ({
     title,

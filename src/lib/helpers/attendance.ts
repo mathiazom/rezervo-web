@@ -1,5 +1,5 @@
 import { isClassInThePast } from "@/lib/helpers/date";
-import { RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
 
 export function shouldShowClassAttendance(_class: RezervoClass): boolean {
     return _class.isBookable || _class.isCancelled || isClassInThePast(_class);

@@ -7,7 +7,8 @@ import { $api } from "@/lib/api/client";
 import { hasWaitingList } from "@/lib/helpers/attendance";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
-import { BookingPopupAction, ChainIdentifier, RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
+import { BookingPopupAction } from "@/types/local";
 
 const BookingPopupModal = ({
     onClose,
@@ -16,7 +17,7 @@ const BookingPopupModal = ({
     action,
 }: {
     onClose: () => void;
-    chain: ChainIdentifier;
+    chain: string;
     _class: RezervoClass;
     action: BookingPopupAction;
 }) => {

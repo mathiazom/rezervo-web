@@ -4,10 +4,9 @@ import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
-import { ChainIdentifier } from "@/types/chain";
-import { ChainUserPayload, ChainUserTotpPayload } from "@/types/config";
+import { ChainUserPayload, ChainUserTotpPayload } from "@/types/openapi";
 
-export function useChainUser(chain: ChainIdentifier) {
+export function useChainUser(chain: string) {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 

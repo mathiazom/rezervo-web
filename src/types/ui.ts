@@ -1,3 +1,8 @@
+export interface Position {
+    x: number;
+    y: number;
+}
+
 export interface EnterLeaveAnimation {
     enter: string;
     leave: string;
@@ -11,3 +16,13 @@ export const OVER_THE_TOP_ANIMATIONS: EnterLeaveAnimation[] = [
     { enter: "chevron-enter-active", leave: "chevron-leave-active" },
     { enter: "drops-enter-active", leave: "drops-leave-active" },
 ];
+
+export enum RezervoError {
+    CHAIN_SCHEDULE_UNAVAILABLE,
+}
+
+export enum StatusColors {
+    ACTIVE = "#44b700",
+    WAITLIST = "#b75f00",
+    UNKNOWN = "#000",
+}

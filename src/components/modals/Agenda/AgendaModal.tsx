@@ -1,9 +1,7 @@
 import { Modal } from "@mui/material";
 
 import Agenda from "@/components/modals/Agenda/Agenda";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { ChainConfig } from "@/types/config";
-import { BaseUserSession } from "@/types/userSessions";
+import { BaseUserSession, ChainConfig, ChainProfile } from "@/types/openapi";
 
 const AgendaModal = ({
     userSessions,
@@ -13,7 +11,7 @@ const AgendaModal = ({
     onClose,
 }: {
     userSessions: BaseUserSession[];
-    chainConfigs: Record<ChainIdentifier, ChainConfig>;
+    chainConfigs: Record<string, ChainConfig>;
     chainProfiles: ChainProfile[];
     open: boolean;
     onClose: () => void;

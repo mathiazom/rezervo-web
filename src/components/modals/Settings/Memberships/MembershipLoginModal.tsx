@@ -18,8 +18,7 @@ import { useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";
-import { ChainProfile } from "@/types/chain";
-import { ChainUserPayload } from "@/types/config";
+import { ChainProfile, ChainUserPayload } from "@/types/openapi";
 
 enum AuthenticationState {
     USERNAME_PASSWORD = "USERNAME_PASSWORD",

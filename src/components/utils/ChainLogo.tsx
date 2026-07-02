@@ -1,6 +1,6 @@
 import { Box, useMediaQuery } from "@mui/material";
 
-import { ChainProfile } from "@/types/chain";
+import { ChainProfile } from "@/types/openapi";
 
 function ChainLogo({ chainProfile }: { chainProfile: ChainProfile }) {
     const prefersDark = useMediaQuery("(prefers-color-scheme: dark)");

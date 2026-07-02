@@ -8,7 +8,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import CategoryFilters from "@/components/modals/CategoryFilters";
 import ExcludeClassTimeFilters from "@/components/modals/ExcludeClassTimeFilters";
 import LocationFilters from "@/components/modals/LocationFilters";
-import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
+import { RezervoChain } from "@/types/openapi";
+import { ActivityCategory, ExcludeClassTimeFiltersType } from "@/types/local";
 
 function a11yProps(index: number) {
     return {
