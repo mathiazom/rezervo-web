@@ -7,18 +7,17 @@ export function useUserSessionsIndex(chain: string) {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const { data, error, isLoading } = $api.useQuery(
-        "get",
-        "/{chain_identifier}/sessions-index",
-        { params: { path: { chain_identifier: chain } } },
-        { enabled: isAuthenticated && !!chain },
-    );
+    const sessionsIndexInit = { params: { path: { chain_identifier: chain } } };
+    const sessionsIndexKey = $api.queryOptions("get", "/{chain_identifier}/sessions-index", sessionsIndexInit).queryKey;
+
+    const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/sessions-index", sessionsIndexInit, {
+        enabled: isAuthenticated && !!chain,
+    });
 
     return {
         userSessionsIndex: data,
         userSessionsIndexError: error,
         userSessionsIndexLoading: isLoading,
-        mutateSessionsIndex: () =>
-            queryClient.invalidateQueries({ queryKey: ["get", "/{chain_identifier}/sessions-index"] }),
+        mutateSessionsIndex: () => queryClient.invalidateQueries({ queryKey: sessionsIndexKey }),
     };
 }

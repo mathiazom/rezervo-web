@@ -7,17 +7,17 @@ export function useAllConfigs(chain: string) {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const { data, error, isLoading } = $api.useQuery(
-        "get",
-        "/{chain_identifier}/all-configs",
-        { params: { path: { chain_identifier: chain } } },
-        { enabled: isAuthenticated && !!chain },
-    );
+    const allConfigsInit = { params: { path: { chain_identifier: chain } } };
+    const allConfigsKey = $api.queryOptions("get", "/{chain_identifier}/all-configs", allConfigsInit).queryKey;
+
+    const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/all-configs", allConfigsInit, {
+        enabled: isAuthenticated && !!chain,
+    });
 
     return {
         allConfigsIndex: data,
         allConfigsError: error,
         allConfigsLoading: isLoading,
-        mutateAllConfigs: () => queryClient.invalidateQueries({ queryKey: ["get", "/{chain_identifier}/all-configs"] }),
+        mutateAllConfigs: () => queryClient.invalidateQueries({ queryKey: allConfigsKey }),
     };
 }

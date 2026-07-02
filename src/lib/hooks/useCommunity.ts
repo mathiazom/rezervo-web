@@ -8,7 +8,7 @@ export function useCommunity() {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const communityKey = ["get", "/community"];
+    const communityKey = $api.queryOptions("get", "/community", {}).queryKey;
 
     const { data, error, isLoading } = $api.useQuery("get", "/community", {}, { enabled: isAuthenticated });
 
