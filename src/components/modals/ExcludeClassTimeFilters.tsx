@@ -22,7 +22,7 @@ import { DateTime, HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 import { useState } from "react";
 
 import { getCapitalizedWeekdays } from "@/lib/helpers/date";
-import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/chain";
+import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/local";
 
 export default function ExcludeClassTimeFilters({
     excludeClassTimeFilters,

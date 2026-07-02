@@ -1,7 +1,5 @@
-"use client";
-
 import { Box, Divider, Stack } from "@mui/material";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 
 import ConfigBar from "@/components/configuration/ConfigBar";
@@ -33,27 +31,12 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
-import { ActivityCategory, BookingPopupAction, BookingPopupState, ChainProfile, RezervoChain } from "@/types/chain";
-import { RezervoError } from "@/types/errors";
-import { SessionStatus } from "@/types/userSessions";
+import { RezervoChain, SessionStatus } from "@/types/openapi";
+import { BookingPopupAction, BookingPopupState } from "@/types/local";
+import { RezervoError } from "@/types/ui";
 
-function Chain({
-    weekParam,
-    showClassId,
-    chain,
-    chainProfiles,
-    initialLocationIds,
-    activityCategories,
-}: {
-    weekParam: string;
-    showClassId: string | undefined;
-    chain: RezervoChain;
-    chainProfiles: ChainProfile[];
-    initialLocationIds: string[];
-    activityCategories: ActivityCategory[];
-}) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
+function Chain({ weekParam, chain }: { weekParam: string; chain: RezervoChain }) {
+    const navigate = useNavigate();
     const { userConfig, userConfigError, userConfigLoading, putUserConfig, mutateUserConfig } = useUserConfig(
         chain.profile.identifier,
     );
@@ -88,7 +71,7 @@ function Chain({
         deferredSelectedCategories,
         excludeClassTimeFilters,
         setExcludeClassTimeFilters,
-    } = useScheduleFilters(chain.profile.identifier, activityCategories, initialLocationIds, defaultLocationIds);
+    } = useScheduleFilters(chain.profile.identifier, allLocationIds, defaultLocationIds);
 
     const {
         weekSchedule: currentWeekSchedule,
@@ -106,7 +89,7 @@ function Chain({
         [currentWeekSchedule?.days],
     );
 
-    const { classInfoClass, setClassInfoClass } = useClassInfo(showClassId, classes);
+    const { classInfoClass, setClassInfoClass } = useClassInfo(classes);
 
     const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
@@ -166,9 +149,7 @@ function Chain({
     }, [userConfig?.active, userConfig?.recurringBookings]);
 
     const syncWeekUrl = (week: string) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set(ISO_WEEK_QUERY_PARAM, week);
-        window.history.replaceState(null, "", `${pathname}?${newSearchParams.toString()}`);
+        void navigate({ to: ".", search: (prev) => ({ ...prev, [ISO_WEEK_QUERY_PARAM]: week }), replace: true });
     };
 
     const goToWeek = (week: string) => {
@@ -195,9 +176,7 @@ function Chain({
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
                     <AppBar
-                        leftComponent={
-                            <ChainSwitcher currentChainProfile={chain.profile} chainProfiles={chainProfiles} />
-                        }
+                        leftComponent={<ChainSwitcher currentChainProfile={chain.profile} />}
                         rightComponent={
                             <ConfigBar
                                 chainConfigs={userChainConfigs}
@@ -223,7 +202,6 @@ function Chain({
                             onToday={goToToday}
                             selectedLocationIds={selectedLocationIds}
                             setSelectedLocationIds={setSelectedLocationIds}
-                            allCategories={activityCategories}
                             selectedCategories={selectedCategories}
                             setSelectedCategories={setSelectedCategories}
                             excludeClassTimeFilters={excludeClassTimeFilters}
@@ -258,12 +236,11 @@ function Chain({
                 onUpdateConfig={onUpdateConfig}
                 onClose={() => setClassInfoClass(null)}
             />
-            <CommunityModal open={activeModal === "community"} onClose={closeModal} chainProfiles={chainProfiles} />
+            <CommunityModal open={activeModal === "community"} onClose={closeModal} />
             {userSessions !== null && userChainConfigs !== null && (
                 <AgendaModal
                     userSessions={userSessions}
                     chainConfigs={userChainConfigs}
-                    chainProfiles={chainProfiles}
                     open={activeModal === "agenda"}
                     onClose={closeModal}
                 />
@@ -272,7 +249,6 @@ function Chain({
                 <SettingsModal
                     open={activeModal === "settings"}
                     onClose={closeModal}
-                    chainProfiles={chainProfiles}
                     chainConfigs={userChainConfigs}
                     isPWAInstalled={isPWAInstalled}
                     showPWAInstall={() => setShowPWAInstall(true)}

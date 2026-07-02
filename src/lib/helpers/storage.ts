@@ -1,11 +1,6 @@
 import Cookies from "js-cookie";
 
-import {
-    ChainIdentifier,
-    CheckInConfiguration,
-    ExcludeClassTimeFilter,
-    ExcludeClassTimeFiltersType,
-} from "@/types/chain";
+import { type CheckInConfiguration, ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/local";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
 const STORAGE_KEYS = {
@@ -23,12 +18,12 @@ function storeValue<T>(key: string, value: T) {
     storeAsCookie(key, value);
 }
 
-export function storeSelectedChain(chain: ChainIdentifier) {
+export function storeSelectedChain(chain: string) {
     storeValue(STORAGE_KEYS.SELECTED_CHAIN, chain);
 }
 
-export function getStoredSelectedChain(): ChainIdentifier | null {
-    return getStoredValue<ChainIdentifier>(STORAGE_KEYS.SELECTED_CHAIN, false);
+export function getStoredSelectedChain(): string | null {
+    return getStoredValue<string>(STORAGE_KEYS.SELECTED_CHAIN, false);
 }
 
 export function storePWAInstallDismissed() {

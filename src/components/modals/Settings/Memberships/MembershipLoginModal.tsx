@@ -18,15 +18,14 @@ import { useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";
-import { ChainProfile } from "@/types/chain";
-import { ChainUserPayload } from "@/types/config";
+import { ChainProfile, ChainUserPayload } from "@/types/openapi";
 
-export enum AuthenticationState {
+enum AuthenticationState {
     USERNAME_PASSWORD = "USERNAME_PASSWORD",
     TOTP = "TOTP",
 }
 
-export enum AuthenticationStatus {
+enum AuthenticationStatus {
     INITIAL = "INITIAL",
     FAILED = "FAILED",
 }
@@ -78,7 +77,7 @@ const MembershipLoginModal = ({
             .then((res) => {
                 if (res.status === "initiated_totp_flow") {
                     setAuthenticationState(AuthenticationState.TOTP);
-                    setTotpRegex(new RegExp(res.totpRegex));
+                    setTotpRegex(res.totpRegex ? new RegExp(res.totpRegex) : null);
                     return;
                 }
                 onClose();

@@ -1,4 +1,4 @@
-import { RezervoChain } from "@/types/chain";
+import { RezervoChain } from "@/types/openapi";
 
 export function getAllLocationIds(chain: RezervoChain): string[] {
     return chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));

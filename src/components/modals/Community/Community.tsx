@@ -6,20 +6,17 @@ import CommunityUserCard from "@/components/modals/Community/CommunityUserCard";
 import ModalWrapper from "@/components/modals/ModalWrapper";
 import SubHeader from "@/components/modals/SubHeader";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { ChainProfile } from "@/types/chain";
-import { CommunityUser, UserRelationship } from "@/types/community";
+import { CommunityUser, UserRelationship } from "@/types/openapi";
 
 const CommunityUserList = ({
     title,
     placeholder,
     communityUsers,
-    chainProfiles,
     badge,
 }: {
     title: string;
     placeholder: string;
     communityUsers: CommunityUser[];
-    chainProfiles: ChainProfile[];
     badge?: ReactNode;
 }) => {
     return (
@@ -32,13 +29,13 @@ const CommunityUserList = ({
             />
             {communityUsers.length > 0 && <Divider sx={{ mt: 1 }} />}
             {communityUsers.map((cu) => (
-                <CommunityUserCard key={cu.name} communityUser={cu} chainProfiles={chainProfiles} />
+                <CommunityUserCard key={cu.name} communityUser={cu} />
             ))}
         </Box>
     );
 };
 
-const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
+const Community = () => {
     const { community, communityLoading, communityError } = useCommunity();
 
     const friendRequests =
@@ -49,7 +46,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                 title={"Venneforespørsler"}
                 placeholder={"Du har ingen ubesvarte venneforespørsler"}
                 communityUsers={friendRequests}
-                chainProfiles={chainProfiles}
                 badge={
                     friendRequests.length > 0 && (
                         <Tooltip title={`Du har ${friendRequests.length} ubesvarte venneforespørsler`}>
@@ -83,7 +79,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                                     community?.users.filter((user) => user.relationship === UserRelationship.FRIEND) ??
                                     []
                                 }
-                                chainProfiles={chainProfiles}
                             />
                             <CommunityUserList
                                 title={"Personer du kanskje kjenner"}
@@ -95,7 +90,6 @@ const Community = ({ chainProfiles }: { chainProfiles: ChainProfile[] }) => {
                                             user.relationship === UserRelationship.UNKNOWN,
                                     ) ?? []
                                 }
-                                chainProfiles={chainProfiles}
                             />
                             {friendRequests.length === 0 && <FriendRequests />}
                         </>

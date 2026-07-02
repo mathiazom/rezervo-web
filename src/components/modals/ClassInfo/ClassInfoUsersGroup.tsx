@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 import ClassUsersAvatarGroup from "@/components/schedule/class/ClassUsersAvatarGroup";
 import { formatNameArray, userNameWithIsSelfComparator } from "@/lib/utils/arrayUtils";
-import { UserNameWithIsSelf } from "@/types/config";
+import { UserNameWithIsSelf } from "@/types/openapi";
 
 export default function ClassInfoUsersGroup({
     users,

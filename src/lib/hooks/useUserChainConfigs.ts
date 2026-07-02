@@ -1,26 +1,20 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
-import { ChainIdentifier } from "@/types/chain";
-import { ChainConfig } from "@/types/config";
 
 export function useUserChainConfigs() {
-    const { isAuthenticated, token } = useUser();
+    const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const queryKey = ["user/chain-configs"];
+    const chainConfigsKey = $api.queryOptions("get", "/user/chain-configs", {}).queryKey;
 
-    const { data, error, isLoading } = useQuery<Record<ChainIdentifier, ChainConfig>, FetchError>({
-        queryKey,
-        queryFn: () => authedFetcher(token ?? "")<Record<ChainIdentifier, ChainConfig>>("user/chain-configs"),
-        enabled: isAuthenticated,
-    });
+    const { data, error, isLoading } = $api.useQuery("get", "/user/chain-configs", {}, { enabled: isAuthenticated });
 
     return {
         userChainConfigs: data ?? null,
         userChainConfigsError: error,
         userChainConfigsLoading: isLoading,
-        mutateUserChainConfigs: () => queryClient.invalidateQueries({ queryKey }),
+        mutateUserChainConfigs: () => queryClient.invalidateQueries({ queryKey: chainConfigsKey }),
     };
 }

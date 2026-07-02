@@ -2,17 +2,8 @@ import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-quer
 import { useEffect, useState } from "react";
 
 import { fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
-import {
-    ADJACENT_WEEK_OFFSETS,
-    fetchScheduleWeekDTO,
-    offsetWeekParam,
-    SCHEDULE_STALE_TIME_MS,
-    scheduleQueryKey,
-} from "@/lib/helpers/schedule";
+import { ADJACENT_WEEK_OFFSETS, fetchScheduleWeekDTO, offsetWeekParam, scheduleQueryKey } from "@/lib/helpers/schedule";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
-import { FetchError } from "@/lib/utils/fetchUtils";
-import { RezervoWeekSchedule } from "@/types/chain";
-import { RezervoWeekScheduleDTO } from "@/types/serialization";
 
 export function useScheduleWeek(
     chainIdentifier: string | null,
@@ -25,17 +16,12 @@ export function useScheduleWeek(
     const currentWeekDate =
         dateFromWeekParam !== null && dateFromWeekParam.isValid ? dateFromWeekParam : LocalizedDateTime.now();
 
-    const { data, error, isLoading, isFetching, isPlaceholderData, isSuccess, dataUpdatedAt } = useQuery<
-        RezervoWeekScheduleDTO,
-        FetchError,
-        RezervoWeekSchedule
-    >({
+    const { data, error, isLoading, isFetching, isPlaceholderData, isSuccess, dataUpdatedAt } = useQuery({
         queryKey: scheduleQueryKey(chainIdentifier ?? "", weekParam ?? ""),
         queryFn: () => fetchScheduleWeekDTO(chainIdentifier ?? "", weekParam ?? "", locationIds ?? []),
         enabled,
         select: deserializeWeekSchedule,
         placeholderData: keepPreviousData,
-        staleTime: SCHEDULE_STALE_TIME_MS,
     });
 
     const [latestLoadedWeekParam, setLatestLoadedWeekParam] = useState<string | null>(null);
@@ -74,7 +60,6 @@ export function usePrefetchAdjacentWeeks(
             void queryClient.prefetchQuery({
                 queryKey: scheduleQueryKey(chainIdentifier, week),
                 queryFn: () => fetchScheduleWeekDTO(chainIdentifier, week, locationIds),
-                staleTime: SCHEDULE_STALE_TIME_MS,
             });
         }
     }, [queryClient, chainIdentifier, weekParam, locationIds, ready]);

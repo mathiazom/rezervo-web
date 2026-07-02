@@ -6,18 +6,13 @@ import { useState } from "react";
 import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
-import { ChainProfile } from "@/types/chain";
-import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/community";
+import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
+import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/openapi";
 
-type ConfirmDialogAction = UserRelationshipAction.REMOVE_FRIEND | UserRelationshipAction.DENY_FRIEND;
+type ConfirmDialogAction = typeof UserRelationshipAction.REMOVE_FRIEND | typeof UserRelationshipAction.DENY_FRIEND;
 
-const CommunityUserCard = ({
-    communityUser,
-    chainProfiles,
-}: {
-    communityUser: CommunityUser;
-    chainProfiles: ChainProfile[];
-}) => {
+const CommunityUserCard = ({ communityUser }: { communityUser: CommunityUser }) => {
+    const chainProfiles = useChainProfiles();
     const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [confirmDialogAction, setConfirmDialogAction] = useState<ConfirmDialogAction | null>(null);
@@ -173,7 +168,7 @@ const CommunityUserCard = ({
                                             <Tooltip title={chainProfile.name} key={chain}>
                                                 <Avatar
                                                     sx={{ width: 16, height: 16 }}
-                                                    src={`${process.env["NEXT_PUBLIC_CONFIG_HOST"]}/${chainProfile.images.common.smallLogo}`}
+                                                    src={`${import.meta.env.VITE_CONFIG_HOST}/${chainProfile.images.common.smallLogo}`}
                                                 >
                                                     {chain}
                                                 </Avatar>

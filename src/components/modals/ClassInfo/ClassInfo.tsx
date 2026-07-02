@@ -16,7 +16,6 @@ import LocationOnRoundedIcon from "@mui/icons-material/LocationOnRounded";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import Image from "next/image";
 import { useState } from "react";
 
 import ClassInfoEntry from "@/components/modals/ClassInfo/ClassInfoEntry";
@@ -27,15 +26,15 @@ import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
 import { PlannedNotBookedBadgeIcon } from "@/components/utils/PlannedNotBookedBadgeIcon";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
-import { post } from "@/lib/helpers/requests";
+import { $api } from "@/lib/api/client";
 import { useLiveClassData } from "@/lib/hooks/useLiveClassData";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { ChainIdentifier, RezervoClass } from "@/types/chain";
-import { SessionStatus, StatusColors } from "@/types/userSessions";
+import { RezervoClass, SessionStatus } from "@/types/openapi";
+import { StatusColors } from "@/types/ui";
 import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
 import ClassAttendanceMeter from "@/components/schedule/class/ClassAttendanceMeter";
 
@@ -44,11 +43,11 @@ export default function ClassInfo({
     initialClassData,
     onUpdateConfig,
 }: {
-    chain: ChainIdentifier;
+    chain: string;
     initialClassData: RezervoClass;
     onUpdateConfig: (classId: string, selected: boolean) => void;
 }) {
-    const { token, authStatus } = useUser();
+    const { authStatus } = useUser();
     const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain);
     const { liveClassData: _class } = useLiveClassData(chain, initialClassData);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
@@ -76,21 +75,19 @@ export default function ClassInfo({
         ?.map(classConfigRecurrentId)
         .includes(classRecurrentId(_class));
 
-    const [bookingLoading, setBookingLoading] = useState(false);
+    const bookMutation = $api.useMutation("post", "/{chain_identifier}/book", {
+        onSuccess: async () => {
+            await mutateSessionsIndex();
+            await mutateUserSessions();
+        },
+    });
+    const [cancelBookingLoading, setCancelBookingLoading] = useState(false);
+    const bookingLoading = bookMutation.isPending || cancelBookingLoading;
 
     const [cancelBookingConfirmationOpen, setCancelBookingConfirmationOpen] = useState(false);
 
-    async function book() {
-        if (token == null) return; // TODO: error handling
-        setBookingLoading(true);
-        await post(`${chain}/book`, {
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "client",
-            accessToken: token,
-        });
-        await mutateSessionsIndex();
-        await mutateUserSessions();
-        setBookingLoading(false);
+    function book() {
+        bookMutation.mutate({ params: { path: { chain_identifier: chain } }, body: { classId: _class.id } });
     }
 
     // We might not know their position in the wait list before the sessions are pulled, depending on provider implementation
@@ -240,7 +237,7 @@ export default function ClassInfo({
                         pt: 2,
                     }}
                 >
-                    <Image
+                    <img
                         src={_class.activity.image}
                         alt={_class.activity.name}
                         width={600}
@@ -256,7 +253,7 @@ export default function ClassInfo({
                                   }
                                 : {}),
                         }}
-                    ></Image>
+                    />
                 </Box>
             )}
             <Typography
@@ -342,7 +339,7 @@ export default function ClassInfo({
             <ConfirmCancellation
                 open={cancelBookingConfirmationOpen}
                 setOpen={setCancelBookingConfirmationOpen}
-                setLoading={setBookingLoading}
+                setLoading={setCancelBookingLoading}
                 chain={chain}
                 _class={_class}
             />

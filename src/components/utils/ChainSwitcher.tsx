@@ -1,25 +1,21 @@
-import { Box, Button, Divider, Drawer, List, ListItem, ListItemButton, Typography, useTheme } from "@mui/material";
-import Link from "next/link";
+import { Box, Button, Divider, Drawer, List, ListItem, Typography, useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import ChainLogo from "@/components/utils/ChainLogo";
 import ChainLogoSpinner from "@/components/utils/ChainLogoSpinner";
+import { ListItemButtonLink } from "@/components/utils/links";
 import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
+import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 import { vars } from "@/lib/theme";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
+import { ChainProfile } from "@/types/openapi";
 
-function ChainSwitcher({
-    currentChainProfile,
-    chainProfiles,
-}: {
-    currentChainProfile: ChainProfile;
-    chainProfiles: ChainProfile[];
-}) {
+function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProfile }) {
     const theme = useTheme();
+    const chainProfiles = useChainProfiles();
 
     const [open, setOpen] = useState(false);
-    const [chainLoading, setChainLoading] = useState<ChainIdentifier | null>(null);
+    const [chainLoading, setChainLoading] = useState<string | null>(null);
 
     useEffect(() => {
         setOpen(false);
@@ -66,12 +62,11 @@ function ChainSwitcher({
                                     (isCurrentChain ? setOpen(false) : setChainLoading(chainProfile.identifier))
                                 }
                             >
-                                <ListItemButton
-                                    href={{
-                                        pathname: `/${chainProfile.identifier}`,
-                                        query: {
-                                            [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(LocalizedDateTime.now()),
-                                        },
+                                <ListItemButtonLink
+                                    to="/$chain"
+                                    params={{ chain: chainProfile.identifier }}
+                                    search={{
+                                        [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(LocalizedDateTime.now()),
                                     }}
                                     sx={[
                                         {
@@ -91,14 +86,13 @@ function ChainSwitcher({
                                     disableTouchRipple
                                     disabled={isLoading && !isCurrentLoadingChain}
                                     selected={isCurrentLoadingChain || (!isLoading && isCurrentChain)}
-                                    component={Link}
                                 >
                                     {!isLoading || chainLoading !== chainProfile.identifier ? (
                                         <ChainLogo chainProfile={chainProfile} />
                                     ) : (
                                         <ChainLogoSpinner chainProfile={chainProfile} />
                                     )}
-                                </ListItemButton>
+                                </ListItemButtonLink>
                             </ListItem>
                         );
                     })}

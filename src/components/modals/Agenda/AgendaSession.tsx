@@ -1,29 +1,27 @@
 import { Clear, EventBusy, HourglassTopRounded } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Chip, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
+import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { compactISOWeekString, getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { ChainIdentifier } from "@/types/chain";
-import { ChainConfig, ClassConfig } from "@/types/config";
-import { SessionStatus, BaseUserSession } from "@/types/userSessions";
+import { BaseUserSession, ChainConfigPayload, ClassConfig, SessionStatus } from "@/types/openapi";
 
 export default function AgendaSession({
     chain,
     classConfig,
     userSession,
-}: { chain: ChainIdentifier } & (
+}: { chain: string } & (
     | { classConfig: ClassConfig; userSession?: never }
     | { classConfig?: never; userSession: BaseUserSession }
 )) {
     const theme = useTheme();
-    const router = useRouter();
+    const navigate = useNavigate();
     const { putUserConfig, userConfig } = useUserConfig(chain);
 
     const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
@@ -53,7 +51,7 @@ export default function AgendaSession({
         if (userConfig == undefined) {
             return;
         }
-        const config: ChainConfig = userConfig;
+        const config: ChainConfigPayload = userConfig;
         setIsLoading(true);
         const weekday = userSession
             ? zeroIndexedWeekday(userSession.classData.startTime.weekday)
@@ -94,9 +92,14 @@ export default function AgendaSession({
                     if (!userSession) {
                         return;
                     }
-                    router.push(
-                        `/${chain}?${ISO_WEEK_QUERY_PARAM}=${compactISOWeekString(userSession.classData.startTime)}&${CLASS_ID_QUERY_PARAM}=${userSession.classData.id}`,
-                    );
+                    void navigate({
+                        to: "/$chain",
+                        params: { chain },
+                        search: {
+                            w: compactISOWeekString(userSession.classData.startTime),
+                            c: userSession.classData.id,
+                        },
+                    });
                 }}
             >
                 <Box

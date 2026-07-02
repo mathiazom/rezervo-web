@@ -14,19 +14,17 @@ import SubHeader from "@/components/modals/SubHeader";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
+import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
-import { ChainIdentifier, ChainProfile } from "@/types/chain";
-import { ChainConfig, ClassConfig } from "@/types/config";
-import { SessionStatus, BaseUserSession } from "@/types/userSessions";
+import { BaseUserSession, ChainConfig, ClassConfig, SessionStatus } from "@/types/openapi";
 
-function mapClassesByStartTime(classes: BaseUserSession[]): Record<string, BaseUserSession[]> {
-    return classes.reduce<Record<string, BaseUserSession[]>>((acc, next) => {
-        const prettyStartTime = capitalizeFirstCharacter(next.classData.startTime.toFormat("cccc d. LLLL") ?? "");
-        return {
-            ...acc,
-            [prettyStartTime]: [...(acc[prettyStartTime] ?? []), next],
-        };
-    }, {});
+function mapClassesByStartTime(classes: BaseUserSession[]) {
+    const dayMap: Record<string, BaseUserSession[]> = {};
+    for (const session of classes) {
+        const prettyStartTime = capitalizeFirstCharacter(session.classData.startTime.toFormat("cccc d. LLLL") ?? "");
+        (dayMap[prettyStartTime] ??= []).push(session);
+    }
+    return dayMap;
 }
 
 function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
@@ -63,41 +61,34 @@ function AgendaDays({ dayMap }: { dayMap: Record<string, BaseUserSession[]> }) {
     );
 }
 
-function searchForGhosts(
-    userSessions: BaseUserSession[],
-    chainConfigs: Record<ChainIdentifier, ChainConfig>,
-): Record<ChainIdentifier, ClassConfig[]> {
+function searchForGhosts(userSessions: BaseUserSession[], chainConfigs: Record<string, ChainConfig>) {
     const classRecurrentIds = userSessions.map((_class) => classRecurrentId(_class.classData));
-    return Object.entries(chainConfigs).reduce<Record<ChainIdentifier, ClassConfig[]>>(
-        (acc, [chainIdentifier, config]) => {
-            if (!config.active) {
-                return acc;
-            }
-
-            const ghostClasses = config.recurringBookings.filter(
-                (classConfig) => !classRecurrentIds.includes(classConfigRecurrentId(classConfig)),
-            );
-
-            if (ghostClasses.length > 0) {
-                acc[chainIdentifier] = ghostClasses;
-            }
-
+    return Object.entries(chainConfigs).reduce<Record<string, ClassConfig[]>>((acc, [chainIdentifier, config]) => {
+        if (!config.active) {
             return acc;
-        },
-        {},
-    );
+        }
+
+        const ghostClasses = config.recurringBookings.filter(
+            (classConfig) => !classRecurrentIds.includes(classConfigRecurrentId(classConfig)),
+        );
+
+        if (ghostClasses.length > 0) {
+            acc[chainIdentifier] = ghostClasses;
+        }
+
+        return acc;
+    }, {});
 }
 
 export default function Agenda({
     userSessions,
     chainConfigs,
-    chainProfiles,
 }: {
     userSessions: BaseUserSession[];
-    chainConfigs: Record<ChainIdentifier, ChainConfig>;
-    chainProfiles: ChainProfile[];
+    chainConfigs: Record<string, ChainConfig>;
 }) {
     const theme = useTheme();
+    const chainProfiles = useChainProfiles();
     const plannedSessionsDayMap = mapClassesByStartTime(
         userSessions.filter((_class) => _class.status === SessionStatus.PLANNED),
     );

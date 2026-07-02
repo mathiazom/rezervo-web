@@ -1,23 +1,31 @@
 import { LocalizedDateTime } from "@/lib/helpers/date";
-import { RezervoClass, RezervoDaySchedule, RezervoWeekSchedule } from "@/types/chain";
 import {
+    BaseUserSession,
     BaseUserSessionDTO,
+    RezervoClass,
     RezervoClassDTO,
+    RezervoDaySchedule,
     RezervoDayScheduleDTO,
+    RezervoWeekSchedule,
     RezervoWeekScheduleDTO,
-} from "@/types/serialization";
-import { BaseUserSession } from "@/types/userSessions";
+    WithLuxonTimes,
+} from "@/types/openapi";
+
+function withLuxonTimes<T extends { startTime: string; endTime: string }>(dto: T): WithLuxonTimes<T> {
+    return {
+        ...dto,
+        startTime: LocalizedDateTime.fromISO(dto.startTime),
+        endTime: LocalizedDateTime.fromISO(dto.endTime),
+    };
+}
 
 export function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
-    return {
-        ...classDTO,
-        startTime: LocalizedDateTime.fromISO(classDTO.startTime),
-        endTime: LocalizedDateTime.fromISO(classDTO.endTime),
-    };
+    return withLuxonTimes(classDTO);
 }
 
 function deserializeDaySchedule(dayScheduleDTO: RezervoDayScheduleDTO): RezervoDaySchedule {
     return {
+        ...dayScheduleDTO,
         date: LocalizedDateTime.fromISO(dayScheduleDTO.date),
         classes: dayScheduleDTO.classes.map(deserializeClass),
     };
@@ -33,6 +41,6 @@ export function deserializeWeekSchedule(weekScheduleDTO: RezervoWeekScheduleDTO)
 export function deserializeUserSessions(userSessionsDTO: BaseUserSessionDTO[]): BaseUserSession[] {
     return userSessionsDTO.map((userSessionDTO) => ({
         ...userSessionDTO,
-        classData: deserializeClass(userSessionDTO.classData),
+        classData: withLuxonTimes(userSessionDTO.classData),
     }));
 }

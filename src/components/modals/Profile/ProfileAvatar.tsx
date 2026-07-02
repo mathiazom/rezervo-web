@@ -7,7 +7,7 @@ import { DropzoneInputProps } from "react-dropzone";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { VisuallyHiddenInput } from "@/components/utils/VisuallyHiddenInput";
 import { rotationAnimation } from "@/lib/helpers/animations";
-import { Position } from "@/types/math";
+import { Position } from "@/types/ui";
 
 function ProfileAvatar({
     username,

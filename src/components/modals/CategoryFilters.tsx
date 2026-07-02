@@ -1,16 +1,15 @@
 import { Box, Checkbox, FormControl, FormControlLabel, FormGroup } from "@mui/material";
 import { CATEGORIES_COLOR } from "@/components/modals/ScheduleFiltersDialog";
-import { ActivityCategory } from "@/types/chain";
+import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
 
 export default function CategoryFilters({
-    allCategories,
     selectedCategories,
     setSelectedCategories,
 }: {
-    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: (value: string[]) => void;
 }) {
+    const allCategories = useActivityCategories();
     const allChecked = allCategories.every((category) => selectedCategories.includes(category.name));
     const allIndeterminate =
         !allChecked && allCategories.some((category) => selectedCategories.includes(category.name));

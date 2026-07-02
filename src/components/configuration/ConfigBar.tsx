@@ -1,5 +1,3 @@
-"use client";
-
 import { CalendarMonth, CalendarToday, PauseCircleRounded, People } from "@mui/icons-material";
 import CloudOffRoundedIcon from "@mui/icons-material/CloudOffRounded";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
@@ -15,10 +13,7 @@ import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useMyUser } from "@/lib/hooks/useMyUser";
 import { useUser } from "@/lib/hooks/useUser";
 import { vars } from "@/lib/theme";
-import { ChainIdentifier } from "@/types/chain";
-import { UserRelationship } from "@/types/community";
-import { ChainConfig } from "@/types/config";
-import { BaseUserSession } from "@/types/userSessions";
+import { BaseUserSession, ChainConfig, UserRelationship } from "@/types/openapi";
 
 function ConfigBar({
     chainConfigs,
@@ -31,7 +26,7 @@ function ConfigBar({
     onAgendaOpen,
     onProfileOpen,
 }: {
-    chainConfigs: Record<ChainIdentifier, ChainConfig> | null;
+    chainConfigs: Record<string, ChainConfig> | null;
     userSessions: BaseUserSession[] | null;
     isLoadingConfig: boolean;
     isConfigError: boolean;

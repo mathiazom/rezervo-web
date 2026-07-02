@@ -1,14 +1,18 @@
 {
-    "extends": ["@tsconfig/strictest/tsconfig.json", "@tsconfig/next/tsconfig.json"],
+    "extends": ["@tsconfig/strictest/tsconfig.json"],
     "compilerOptions": {
-        "lib": ["dom", "webworker", "esnext"],
+        "lib": ["dom", "esnext", "webworker"],
+        "moduleResolution": "bundler",
+        "jsx": "react-jsx",
+        "allowJs": true,
+        "noEmit": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
+        "types": ["vite/client", "@serwist/vite/typings"],
         "paths": {
             "@/*": ["./src/*"]
-        },
-        "target": "ES2017"
+        }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-    "exclude": ["node_modules"]
+    "include": ["src", "vite.config.ts", "src/routeTree.gen.ts"],
+    "exclude": ["node_modules", ".output", ".nitro"]
 }

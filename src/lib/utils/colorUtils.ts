@@ -10,7 +10,7 @@ export function avatarColor(username: string, darkMode = false) {
     return hexWithOpacityToRgb(hexColorHash(username), darkMode ? 0.85 : 1, darkMode ? 255 : 0);
 }
 
-export function hexColorHash(s: string) {
+function hexColorHash(s: string) {
     let hash = 0;
     for (let i = 0; i < s.length; i++) {
         hash = s.charCodeAt(i) + ((hash << 5) - hash);

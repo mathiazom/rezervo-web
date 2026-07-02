@@ -1,5 +1,5 @@
 import { defineConfig } from "oxfmt";
 
 export default defineConfig({
-    ignorePatterns: [".next/*", "next-env.d.ts", "public/sw.js"],
+    ignorePatterns: ["src/routeTree.gen.ts", "src/types/api.d.ts", "public/sw.js"],
 });
