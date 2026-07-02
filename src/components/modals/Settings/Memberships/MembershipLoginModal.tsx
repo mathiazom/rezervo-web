@@ -21,12 +21,12 @@ import { useChainUser } from "@/lib/hooks/useChainUser";
 import { ChainProfile } from "@/types/chain";
 import { ChainUserPayload } from "@/types/config";
 
-export enum AuthenticationState {
+enum AuthenticationState {
     USERNAME_PASSWORD = "USERNAME_PASSWORD",
     TOTP = "TOTP",
 }
 
-export enum AuthenticationStatus {
+enum AuthenticationStatus {
     INITIAL = "INITIAL",
     FAILED = "FAILED",
 }

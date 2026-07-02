@@ -15,7 +15,7 @@ export const fromCompactISOWeekString = (weekString: string) =>
         weekNumber: Number.parseInt(weekString.slice(5, 7)),
     });
 
-export const calculateMondayOffset = (date: DateTime<true>) => date.weekday - 1;
+const calculateMondayOffset = (date: DateTime<true>) => date.weekday - 1;
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
@@ -41,7 +41,7 @@ export function isClassInThePast(_class: { startTime: DateTime }): boolean {
     return _class.startTime < LocalizedDateTime.now();
 }
 
-export function sameDay(a: DateTime, b: DateTime): boolean {
+function sameDay(a: DateTime, b: DateTime): boolean {
     return a.startOf("day") <= b && b <= a.endOf("day");
 }
 
@@ -75,7 +75,7 @@ export const isClassExcludedByTimeFilters = (
     });
 };
 
-export const isClassExcludedByTimeFilter = (
+const isClassExcludedByTimeFilter = (
     _class: RezervoClass,
     excludeClassTimeFilter: ExcludeClassTimeFilter,
 ): boolean => {

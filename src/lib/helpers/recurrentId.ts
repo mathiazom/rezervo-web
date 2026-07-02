@@ -15,6 +15,6 @@ export function classRecurrentId(_class: RezervoSessionClass) {
     return recurrentClassId(_class.activity.id.toString(), (weekday + 6) % 7, hour, minute);
 }
 
-export function recurrentClassId(activityId: string, weekday: number, hour: number, minute: number) {
+function recurrentClassId(activityId: string, weekday: number, hour: number, minute: number) {
     return `${activityId}_${weekday}_${hour}_${minute}`;
 }
