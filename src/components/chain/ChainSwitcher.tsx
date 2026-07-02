@@ -8,9 +8,10 @@ import { ISO_WEEK_QUERY_PARAM } from "@/lib/consts";
 import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 import { vars } from "@/lib/theme";
-import { ChainProfile } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
-function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProfile }) {
+function ChainSwitcher() {
+    const chain = useChain();
     const theme = useTheme();
     const chainProfiles = useChainProfiles();
 
@@ -20,13 +21,13 @@ function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProf
     useEffect(() => {
         setOpen(false);
         setTimeout(() => setChainLoading(null), 250);
-    }, [currentChainProfile.identifier]);
+    }, [chain.profile.identifier]);
 
     return (
         <>
             <Button onClick={() => setOpen(true)} sx={{ paddingX: 0 }}>
                 <Box sx={{ height: 25, width: 75 }}>
-                    <ChainLogo chainProfile={currentChainProfile} />
+                    <ChainLogo chainProfile={chain.profile} />
                 </Box>
             </Button>
             <Drawer
@@ -51,7 +52,7 @@ function ChainSwitcher({ currentChainProfile }: { currentChainProfile: ChainProf
                     {chainProfiles.map((chainProfile) => {
                         const isLoading = chainLoading !== null;
                         const isCurrentLoadingChain = chainProfile.identifier === chainLoading;
-                        const isCurrentChain = chainProfile.identifier === currentChainProfile.identifier;
+                        const isCurrentChain = chainProfile.identifier === chain.profile.identifier;
                         return (
                             <ListItem
                                 value={chainProfile.identifier}

@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { ADJACENT_WEEK_OFFSETS, fetchScheduleWeekDTO, offsetWeekParam, scheduleQueryKey } from "@/lib/helpers/schedule";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
+import { useChain } from "@/lib/hooks/useChain";
 
-export function useScheduleWeek(
-    chainIdentifier: string | null,
-    weekParam: string | null,
-    locationIds: string[] | null,
-) {
+export function useScheduleWeek(weekParam: string | null, locationIds: string[] | null) {
+    const {
+        profile: { identifier: chainIdentifier },
+    } = useChain();
     const enabled = chainIdentifier != null && weekParam != null && locationIds != null;
 
     const dateFromWeekParam = weekParam ? fromCompactISOWeekString(weekParam) : null;
@@ -43,12 +43,10 @@ export function useScheduleWeek(
     };
 }
 
-export function usePrefetchAdjacentWeeks(
-    chainIdentifier: string | null,
-    weekParam: string | null,
-    locationIds: string[] | null,
-    ready: boolean,
-) {
+export function usePrefetchAdjacentWeeks(weekParam: string | null, locationIds: string[] | null, ready: boolean) {
+    const {
+        profile: { identifier: chainIdentifier },
+    } = useChain();
     const queryClient = useQueryClient();
     useEffect(() => {
         if (!ready || chainIdentifier == null || weekParam == null || locationIds == null) {

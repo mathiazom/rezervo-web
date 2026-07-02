@@ -60,7 +60,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
         deferredSelectedCategories,
         excludeClassTimeFilters,
         setExcludeClassTimeFilters,
-    } = useScheduleFilters(chain.profile.identifier, allLocationIds, defaultLocationIds);
+    } = useScheduleFilters(allLocationIds, defaultLocationIds);
 
     const {
         weekSchedule: currentWeekSchedule,
@@ -68,9 +68,9 @@ function ChainPage({ weekParam }: { weekParam: string }) {
         isLoadingInitial,
         isLoadingPreviousWeek,
         isLoadingNextWeek,
-    } = useScheduleWeek(chain.profile.identifier, currentWeek, allLocationIds);
+    } = useScheduleWeek(currentWeek, allLocationIds);
 
-    usePrefetchAdjacentWeeks(chain.profile.identifier, currentWeek, allLocationIds, currentWeekSchedule != null);
+    usePrefetchAdjacentWeeks(currentWeek, allLocationIds, currentWeekSchedule != null);
 
     // Memoized because it is a useEffect dependency below (stable reference avoids re-running the effect each render).
     const classes = useMemo(
@@ -161,10 +161,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
         <>
             <Stack sx={{ height: "100%", overflow: "hidden" }}>
                 <Box sx={{ flexShrink: 0 }}>
-                    <AppBar
-                        leftComponent={<ChainSwitcher currentChainProfile={chain.profile} />}
-                        rightComponent={<UserBar />}
-                    />
+                    <AppBar leftComponent={<ChainSwitcher />} rightComponent={<UserBar />} />
                     {weekScheduleError == null && (
                         <WeekNavigator
                             weekParam={currentWeek}
@@ -184,7 +181,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
                     <Divider orientation="horizontal" />
                 </Box>
                 {weekScheduleError != null ? (
-                    <ErrorMessage error={RezervoError.CHAIN_SCHEDULE_UNAVAILABLE} chainProfile={chain.profile} />
+                    <ErrorMessage error={RezervoError.CHAIN_SCHEDULE_UNAVAILABLE} />
                 ) : currentWeekSchedule != null ? (
                     <WeekSchedule
                         weekSchedule={currentWeekSchedule}
