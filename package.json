@@ -6,6 +6,7 @@
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "gen:api": "openapi-typescript ${CONFIG_HOST:-http://localhost:8000}/openapi.json -o src/types/api.d.ts",
+        "check:api": "openapi-typescript ${CONFIG_HOST:-http://localhost:8000}/openapi.json --check -o src/types/api.d.ts",
         "dev": "vite dev",
         "build": "vite build",
         "start": "node --env-file-if-exists=.env.local .output/server/index.mjs",
