@@ -22,7 +22,7 @@ export default function AgendaSession({
 )) {
     const theme = useTheme();
     const navigate = useNavigate();
-    const { putUserConfig, userConfig } = useUserConfig();
+    const { putUserConfig, userConfig } = useUserConfig(chain);
 
     const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
     const [isLoading, setIsLoading] = useState(false);

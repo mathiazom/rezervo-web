@@ -82,7 +82,7 @@ export default function CheckIn({ selectedLocationIds }: { selectedLocationIds: 
     const timerRef = useRef<number | null>(null);
 
     const { token } = useUser();
-    const { chainUser } = useChainUser();
+    const { chainUser } = useChainUser(chain.profile.identifier);
 
     const checkInMutation = $api.useMutation("post", "/{chain_identifier}/check-in", {
         onSuccess: () => handleSuccess(),

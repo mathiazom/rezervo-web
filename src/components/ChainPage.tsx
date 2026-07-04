@@ -32,7 +32,7 @@ import { RezervoError } from "@/types/ui";
 function ChainPage({ weekParam }: { weekParam: string }) {
     const navigate = useNavigate();
     const chain = useChain();
-    const { userConfig, userConfigError, putUserConfig } = useUserConfig();
+    const { userConfig, userConfigError, putUserConfig } = useUserConfig(chain.profile.identifier);
     const { userSessionsIndex } = useUserSessionsIndex();
 
     const [userConfigActive, setUserConfigActive] = useState(true);

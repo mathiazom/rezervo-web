@@ -21,16 +21,18 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { vars } from "@/lib/theme";
 import { UserRelationship } from "@/types/openapi";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
+import { useChain } from "@/lib/hooks/useChain";
 
 function UserBar() {
     const theme = useTheme();
+    const chain = useChain();
     const { user, authStatus, logIn } = useUser();
     const { userId: myUserId, userName: backendUserName } = useMyUser();
     const userName = backendUserName ?? user?.name ?? null;
     const [isUserUpserted, setIsUserUpserted] = useState(false);
     const configRefetchedRef = useRef(false);
     const { community } = useCommunity();
-    const { userConfigError, userConfigLoading, mutateUserConfig } = useUserConfig();
+    const { userConfigError, userConfigLoading, mutateUserConfig } = useUserConfig(chain.profile.identifier);
     const { userChainConfigs } = useUserChainConfigs();
     const { userSessions } = useUserSessions();
     const [activeModal, setActiveModal] = useState<"community" | "settings" | "agenda" | "profile" | null>(null);

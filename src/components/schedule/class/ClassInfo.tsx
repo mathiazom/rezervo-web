@@ -48,7 +48,7 @@ export default function ClassInfo({
 }) {
     const chain = useChain();
     const { authStatus } = useUser();
-    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig();
+    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain.profile.identifier);
     const { liveClassData: _class } = useLiveClassData(initialClassData);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =

@@ -48,7 +48,7 @@ const MembershipLoginModal = ({
         putChainUserTotp,
         putChainUserIsMutating,
         putChainUserTotpIsMutating,
-    } = useChainUser();
+    } = useChainUser(chainProfile.identifier);
 
     const [authenticationState, setAuthenticationState] = useState<AuthenticationState>(
         AuthenticationState.USERNAME_PASSWORD,
