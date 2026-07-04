@@ -541,8 +541,7 @@ export interface components {
         };
         /** BaseLocation */
         BaseLocation: {
-            /** Identifier */
-            identifier: string;
+            identifier: components["schemas"]["LocationIdentifier"];
             /** Name */
             name: string;
             /**
@@ -575,10 +574,10 @@ export interface components {
             /** Classid */
             classId: string;
         };
+        BranchIdentifier: string;
         /** BranchProfile */
         BranchProfile: {
-            /** Identifier */
-            identifier: string;
+            identifier: components["schemas"]["BranchIdentifier"];
             /** Name */
             name: string;
             /** Locations */
@@ -715,6 +714,7 @@ export interface components {
             /** Totpregex */
             totpRegex?: string | null;
         };
+        LocationIdentifier: string;
         /** Notifications */
         Notifications: {
             /** Reminderhoursbefore */
@@ -1022,7 +1022,7 @@ export interface operations {
     get_chain_week_schedule_schedule__chain_identifier___compact_iso_week__get: {
         parameters: {
             query?: {
-                location?: string[] | null;
+                location?: components["schemas"]["LocationIdentifier"][] | null;
             };
             header?: never;
             path: {
