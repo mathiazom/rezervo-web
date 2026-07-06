@@ -2,6 +2,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import ChainPage from "@/components/ChainPage";
 import { $api } from "@/lib/api/client";
+import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
 import { scheduleQueryKey } from "@/lib/helpers/schedule";
 import { getChainPageDataFn } from "@/lib/server/chainData";
 import { z } from "zod";
@@ -10,16 +11,16 @@ import { storeSelectedChain } from "@/lib/helpers/storage";
 
 export const Route = createFileRoute("/$chain")({
     validateSearch: z.object({
-        w: z.string().optional(),
-        c: z.string().optional(),
-        now: z.boolean().optional(),
+        [ISO_WEEK_QUERY_PARAM]: z.string().optional(),
+        [CLASS_ID_QUERY_PARAM]: z.string().optional(),
+        [SCROLL_TO_NOW_QUERY_PARAM]: z.boolean().optional(),
     }),
     loaderDeps: ({ search }) => ({
-        w: search.w,
+        [ISO_WEEK_QUERY_PARAM]: search[ISO_WEEK_QUERY_PARAM],
     }),
     loader: async ({ params, deps, context: { queryClient } }) => {
         const data = await getChainPageDataFn({
-            data: { chainIdentifier: params.chain, weekParam: deps.w },
+            data: { chainIdentifier: params.chain, weekParam: deps[ISO_WEEK_QUERY_PARAM] },
         });
         if (data === null) {
             throw notFound();

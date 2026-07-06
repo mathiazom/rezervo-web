@@ -5,3 +5,5 @@ export const PLANNED_SESSIONS_NEXT_WHOLE_WEEKS = 4; // should match rezervo/cons
 export const ALLOWED_AVATAR_FILE_TYPES = "image/*";
 
 export const ISO_WEEK_QUERY_PARAM = "w";
+export const CLASS_ID_QUERY_PARAM = "c";
+export const SCROLL_TO_NOW_QUERY_PARAM = "now";

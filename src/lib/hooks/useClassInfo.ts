@@ -1,12 +1,13 @@
 import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
+import { CLASS_ID_QUERY_PARAM } from "@/lib/consts";
 import { RezervoClass } from "@/types/openapi";
 
 const routeApi = getRouteApi("/$chain");
 
 export function useClassInfo(classes: RezervoClass[]) {
-    const { c: showClassId } = routeApi.useSearch();
+    const { [CLASS_ID_QUERY_PARAM]: showClassId } = routeApi.useSearch();
     const navigate = routeApi.useNavigate();
 
     const [classInfoClass, setClassInfoClassState] = useState<RezervoClass | null>(null);
@@ -25,7 +26,9 @@ export function useClassInfo(classes: RezervoClass[]) {
     const setClassInfoClass = (_class: RezervoClass | null) => {
         void navigate({
             search: (prev) => {
-                return _class ? { ...prev, c: _class.id } : { ...prev, c: undefined };
+                return _class
+                    ? { ...prev, [CLASS_ID_QUERY_PARAM]: _class.id }
+                    : { ...prev, [CLASS_ID_QUERY_PARAM]: undefined };
             },
             replace: true,
         });

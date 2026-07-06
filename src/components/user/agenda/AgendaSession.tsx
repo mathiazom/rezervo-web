@@ -5,7 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
-import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
+import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
 import { compactISOWeekString, getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
@@ -96,8 +96,8 @@ export default function AgendaSession({
                         to: "/$chain",
                         params: { chain },
                         search: {
-                            w: compactISOWeekString(userSession.classData.startTime),
-                            c: userSession.classData.id,
+                            [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(userSession.classData.startTime),
+                            [CLASS_ID_QUERY_PARAM]: userSession.classData.id,
                         },
                     });
                 }}
