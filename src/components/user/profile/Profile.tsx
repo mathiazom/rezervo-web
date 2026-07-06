@@ -13,6 +13,7 @@ import ProfileAvatar from "@/components/user/profile/ProfileAvatar";
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
 import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
 import { apiClient } from "@/lib/api/client";
+import { fileUploadRequestInit } from "@/lib/api/multipart";
 import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
 import { useUser } from "@/lib/hooks/useUser";
 import { Position } from "@/types/ui";
@@ -21,19 +22,6 @@ export enum AvatarMutateError {
     INVALID_IMAGE = "invalid_image",
     TOO_LARGE = "too_large",
     UNKNOWN = "unknown",
-}
-
-// OpenAPI types a binary-format file field as `string`, since it has no native representation for `File`;
-// the real `File` is sent as multipart/form-data via a custom `bodySerializer` instead of the typed `body`.
-function fileUploadRequestInit<Field extends string>(field: Field, file: File) {
-    return {
-        body: { [field]: file } as unknown as Record<Field, string>,
-        bodySerializer: () => {
-            const formData = new FormData();
-            formData.append(field, file);
-            return formData;
-        },
-    };
 }
 
 function Profile({
