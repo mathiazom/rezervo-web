@@ -23,6 +23,19 @@ export enum AvatarMutateError {
     UNKNOWN = "unknown",
 }
 
+// OpenAPI types a binary-format file field as `string`, since it has no native representation for `File`;
+// the real `File` is sent as multipart/form-data via a custom `bodySerializer` instead of the typed `body`.
+function fileUploadRequestInit<Field extends string>(field: Field, file: File) {
+    return {
+        body: { [field]: file } as unknown as Record<Field, string>,
+        bodySerializer: () => {
+            const formData = new FormData();
+            formData.append(field, file);
+            return formData;
+        },
+    };
+}
+
 function Profile({
     isDraggingOverOutside,
     dragOverOutsidePosition,
@@ -80,14 +93,7 @@ function Profile({
         setEditAvatarDialogOpen(false);
         setAvatarPreviewDataURL(URL.createObjectURL(file));
         try {
-            const { response } = await apiClient.PUT("/user/me/avatar", {
-                body: { file: file as unknown as string },
-                bodySerializer: () => {
-                    const formData = new FormData();
-                    formData.append("file", file);
-                    return formData;
-                },
-            });
+            const { response } = await apiClient.PUT("/user/me/avatar", fileUploadRequestInit("file", file));
             if (response.status === 413) {
                 onAvatarMutateError(AvatarMutateError.TOO_LARGE);
             } else if (response.status === 415) {

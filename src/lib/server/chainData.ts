@@ -22,8 +22,11 @@ async function fetchScheduleWeekDTO(chainIdentifier: string, weekParam: string, 
             query: { location: locationIds },
         },
     });
+    if (!data) {
+        throw new Error(`Failed to fetch schedule for chain "${chainIdentifier}", week ${weekParam}`);
+    }
     // The backend response does not include the requested locationIds, so inject them for deserialization.
-    return { ...data!, locationIds };
+    return { ...data, locationIds };
 }
 
 export const getChainPageDataFn = createServerFn({ method: "GET" })
@@ -38,13 +41,18 @@ export const getChainPageDataFn = createServerFn({ method: "GET" })
         ]);
         const chain = chainRes.data;
         if (!chain) return null;
+        const chains = chainsRes.data;
+        const activityCategories = categoriesRes.data;
+        if (!chains || !activityCategories) {
+            throw new Error("Failed to fetch chains or categories");
+        }
         const weekParam = resolveWeekParam(rawWeekParam);
         const scheduleDTO = await fetchScheduleWeekDTO(chainIdentifier, weekParam, getAllLocationIds(chain));
         return {
             chain,
             weekParam,
-            chains: chainsRes.data!,
-            activityCategories: categoriesRes.data!,
+            chains,
+            activityCategories,
             scheduleDTO,
         };
     });

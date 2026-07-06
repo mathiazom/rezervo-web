@@ -43,6 +43,9 @@ export async function fetchScheduleWeekDTO(
             query: { location: locationIds },
         },
     });
+    if (!data) {
+        throw new Error(`Failed to fetch schedule for chain "${chainIdentifier}", week ${weekParam}`);
+    }
     // The backend response does not include the requested locationIds, so inject them for deserialization.
-    return { ...data!, locationIds };
+    return { ...data, locationIds };
 }
