@@ -17,7 +17,9 @@ const injectAuthToken: Middleware = {
     },
 };
 
-export const serverApiClient = createFetchClient<paths>({ baseUrl: process.env["INTERNAL_CONFIG_HOST"]! });
+export const serverApiClient = createFetchClient<paths>({
+    baseUrl: process.env["INTERNAL_CONFIG_HOST"] ?? import.meta.env.VITE_CONFIG_HOST,
+});
 
 export const apiClient = createFetchClient<paths>({ baseUrl: import.meta.env.VITE_CONFIG_HOST });
 apiClient.use(injectAuthToken);
