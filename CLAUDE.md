@@ -60,8 +60,8 @@ The backend host is referenced two ways (see `src/lib/api/client.ts`, which buil
   server routes), read via `process.env` and falling back to `VITE_CONFIG_HOST`. This split exists so server-side
   calls can use an internal network address (e.g. `host.docker.internal`) while the browser uses the public one.
 
-Server-only env vars (`INTERNAL_CONFIG_HOST`, `FUSIONAUTH_*`, `APP_HOST`, `REVALIDATION_SECRET_TOKEN`) are read from
-`process.env` only inside server functions/server routes, via `requireServerEnv` / `requireServerAuthConfig` in
+Server-only env vars (`INTERNAL_CONFIG_HOST`, `FUSIONAUTH_*`, `APP_HOST`) are read from
+`process.env` only inside server functions/server routes, via `requireServerEnv` in
 `src/lib/helpers/env.ts`. `APP_HOST` (the public URL of this web app, used for auth redirect URIs) is deliberately
 **not** named `HOST`: Nitro's `node-server` runtime reserves `HOST` (and `PORT`) for the server's bind address, so
 a `HOST` set to a full URL would break server startup. Note the Nitro `node-server` runtime does **not** auto-load
@@ -69,8 +69,8 @@ a `HOST` set to a full URL would break server startup. Note the Nitro `node-serv
 
 Auth is **FusionAuth** via OAuth2 Authorization Code + PKCE (`react-oauth2-code-pkce`). The token exchange is
 proxied through the server route `src/routes/api/auth/token.ts` so the `FUSIONAUTH_CLIENT_SECRET` stays
-server-side. The client-safe auth config is exposed to the browser `AuthProvider` via the `getAuthConfigFn`
-server function (`src/lib/server/authConfig.ts`), loaded in the root route.
+server-side. The client-safe auth config is exposed to the browser `AuthProvider` via the `getAuthConfig`
+server function.
 
 ## Architecture
 
@@ -81,13 +81,10 @@ The app is multi-tenant by gym chain, using TanStack Router file-based routes in
 - `src/routes/$chain.tsx` is the main route. Its `loader` runs the `getChainPageDataFn` server function
   (`src/lib/server/chainData.ts`), which validates the chain (returns `null` → loader throws `notFound()` for
   unknown chains) and returns chain metadata + the current week's schedule.
-- Rendering is **dynamic SSR** (no static generation / ISR). Server-side fetches are cached with **Nitro v3's
-  `defineCachedFunction({ swr: true })`** (serve-stale-instantly, revalidate-in-background) — see
-  `src/lib/server/cachedFetchers.ts`. On-demand cache purge is available via the token-guarded server route
-  `src/routes/api/revalidate.ts` (guarded by `REVALIDATION_SECRET_TOKEN`).
+- Rendering is **dynamic SSR** (no static generation / ISR). **Server-side fetches are uncached** —
+  `getChainPageDataFn` calls `serverApiClient` directly on every request; there is no server-side response cache.
 - `src/routes/index.tsx` (`/`) redirects to `/$chain` in `beforeLoad` based on the `rezervo.selectedChain`
-  cookie (read server-side via `getCookie`); otherwise it renders the chain picker (`IndexPage`).
-  `src/components/utils/StoreSelectedChain.tsx` writes the cookie on the chain page.
+  cookie (read server-side via `getCookie`); otherwise it renders the chain picker.
 
 ### Server → client data flow
 
@@ -99,7 +96,8 @@ defaults to 60s globally.
 
 The `$chain` loader **seeds the query cache** so the first client render is instant:
 
-1. The loader calls `getChainPageDataFn(...)` (a `createServerFn`) which runs the Nitro-SWR-cached fetchers.
+1. The loader calls `getChainPageDataFn(...)` (a `createServerFn`), which fetches data
+   from `serverApiClient` directly (uncached).
 2. It writes the schedule DTO into the query cache with
    `queryClient.setQueryData(scheduleQueryKey(chain, weekParam), scheduleDTO)`.
 3. The SSR-query integration dehydrates that cache and hydrates it on the client; client hooks
@@ -108,8 +106,10 @@ The `$chain` loader **seeds the query cache** so the first client render is inst
 **Query keys do not include locations** — `scheduleQueryKey(chain, week)` = `["schedule", chain, week]`. The cached
 schedule always holds **all** locations (both the server loader and client fetch use all location ids), so
 components must still **filter classes down to the currently selected locations** when displaying. Schedule key /
-fetch helpers live in `src/lib/helpers/local.ts` (`scheduleQueryKey`, `fetchScheduleWeekDTO`, `offsetWeekParam`).
-The schedule query is written manually (not via `$api`) so it can keep this custom key and inject `locationIds`.
+fetch helpers live in `src/lib/helpers/schedule.ts` (`scheduleQueryKey`, `fetchScheduleWeekDTO`, `offsetWeekParam`),
+used by the client hooks; `src/lib/server/chainData.ts` has its own private `fetchScheduleWeekDTO` for the SSR
+loader (same shape, calls `serverApiClient` instead of `apiClient`). The schedule query is written manually (not
+via `$api`) so it can keep this custom key and inject `locationIds`.
 
 **The React Query cache stores the serializable `*DTO` form, not the deserialized domain form**, so it survives
 server→client dehydration without losing Luxon `DateTime`s. Hooks pass `select:` (e.g. `deserializeWeekSchedule`)
@@ -119,7 +119,8 @@ to deserialize/transform on read — use **module-level stable `select` function
 
 **Client SWR:** the schedule query uses `SCHEDULE_STALE_TIME_MS = 0` plus `refetchOnMount: "always"`, so the
 hydrated (possibly stale) week renders instantly and then revalidates in the background — no loading spinner.
-Server-side freshness is handled by the Nitro SWR cache; the two together provide the no-spinner guarantee.
+This client-side revalidation is the only freshness mechanism, since server-side fetches are uncached (each SSR
+render hits the backend directly).
 
 ### Serialization (DTO ↔ domain)
 
