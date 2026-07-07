@@ -2,11 +2,6 @@ import { HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
 import { type CheckInTerminal, RezervoClass } from "@/types/openapi";
 import type { CheckInLocation } from "@/components/utils/CheckIn";
 
-export interface ActivityCategory {
-    name: string;
-    color: string;
-}
-
 export enum BookingPopupAction {
     BOOK = "BOOK",
     CANCEL = "CANCEL",

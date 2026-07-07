@@ -149,8 +149,7 @@ common FastAPI `{detail}` errors — most hooks just read `error` truthiness. Wh
 (e.g. treating 404 as "not linked yet" / "no config yet"), it does **not** use `$api`: it uses a plain
 `useQuery` whose `queryFn` calls `apiClient` and inspects `response.status`/`response.ok` directly — returning
 `null` on 404 and throwing otherwise (see `useChainUser` / `useUserConfig`; they still derive the cache key from
-`$api.queryOptions(...).queryKey` so mutations stay in sync). Endpoints with no response model in the schema
-(`/categories`, `/classes/{chain}/{id}`) come back as `unknown` and are cast at the call site. Imperative user
+`$api.queryOptions(...).queryKey` so mutations stay in sync). Imperative user
 actions (book/cancel/check-in) are `$api.useMutation`s; avatar upload/delete call `apiClient` directly and branch
 on `response.status`/`response.ok` (413/415). Server functions/routes similarly check `response.ok` on
 `serverApiClient` calls (see `chainData.ts`, which returns `null` on a 404 chain so the loader can `notFound()`).

@@ -11,6 +11,7 @@ export type WithLuxonTimes<T extends { startTime: string; endTime: string }> = O
 
 export type ChainProfile = OpenApi["ChainProfile"];
 export type RezervoChain = OpenApi["ChainResponse"];
+export type ActivityCategory = OpenApi["RezervoBaseCategory"];
 export type CheckInTerminal = OpenApi["CheckInTerminal"];
 export type RezervoInstructor = OpenApi["RezervoInstructor"];
 export type ClassConfig = OpenApi["Class"];
