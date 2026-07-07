@@ -689,8 +689,8 @@ export interface components {
         };
         /** Features */
         Features: {
-            /** Classremindernotifications */
-            classReminderNotifications: boolean;
+            /** Slackconnected */
+            slackConnected: boolean;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -717,15 +717,39 @@ export interface components {
         LocationIdentifier: string;
         /** Notifications */
         Notifications: {
+            /**
+             * Reminderslack
+             * @default false
+             */
+            reminderSlack: boolean;
             /** Reminderhoursbefore */
             reminderHoursBefore?: number | null;
             reminderAllowedTimeWindow?: components["schemas"]["AllowedTimeWindowConfig"] | null;
+        };
+        /** PushNotificationGrants */
+        PushNotificationGrants: {
+            /**
+             * Booking
+             * @default false
+             */
+            booking: boolean;
+            /**
+             * Community
+             * @default false
+             */
+            community: boolean;
+            /**
+             * Reminder
+             * @default false
+             */
+            reminder: boolean;
         };
         /** PushNotificationSubscription */
         PushNotificationSubscription: {
             /** Endpoint */
             endpoint: string;
             keys: components["schemas"]["PushNotificationSubscriptionKeys"];
+            grants?: components["schemas"]["PushNotificationGrants"];
         };
         /** PushNotificationSubscriptionKeys */
         PushNotificationSubscriptionKeys: {
@@ -1665,7 +1689,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": boolean;
+                    "application/json": components["schemas"]["PushNotificationGrants"] | null;
                 };
             };
             /** @description Validation Error */
