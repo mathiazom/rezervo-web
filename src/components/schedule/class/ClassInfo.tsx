@@ -222,11 +222,11 @@ export default function ClassInfo({
             {authStatus === "authenticated" && userConfig === undefined && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>
-                        Koble til <b>{chain.profile.identifier.toUpperCase()}</b>-medlemskap
+                        Koble til <b>{chain.profile.name}</b>-medlemskap
                     </AlertTitle>
-                    Du må koble <b>{chain.profile.identifier.toUpperCase()}</b>-medlemskapet ditt til <b>rezervo</b> for
-                    å kunne booke eller legge til timer i timeplanen. Trykk på{" "}
-                    <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger for å komme i gang.
+                    Du må koble <b>{chain.profile.name}</b>-medlemskapet ditt til <b>rezervo</b> for å kunne booke eller
+                    legge til timer i timeplanen. Trykk på <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} />{" "}
+                    Innstillinger for å komme i gang.
                 </Alert>
             )}
             {_class.activity.additionalInformation && (
