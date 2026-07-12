@@ -39,6 +39,12 @@ function ChainPage({ weekParam }: { weekParam: string }) {
 
     const [currentWeek, setCurrentWeek] = useState(weekParam);
 
+    // weekParam only affects the initial state above, so deep-links that change the week search
+    // param without remounting this component (e.g. from AgendaSession) need this to take effect.
+    useEffect(() => {
+        setCurrentWeek(weekParam);
+    }, [weekParam]);
+
     const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
     const deferredSelectedClassIds = useDeferredValue(selectedClassIds);
 
