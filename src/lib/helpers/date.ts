@@ -38,8 +38,12 @@ export const getCapitalizedWeekdays = (): string[] => {
     return Info.weekdays("long").map((weekday) => capitalizeFirstCharacter(weekday));
 };
 
-export function isClassInThePast(_class: { startTime: DateTime }): boolean {
-    return _class.startTime < LocalizedDateTime.now();
+export function isClassInThePast(_class: RezervoClass): boolean {
+    return isInThePast(_class.startTime);
+}
+
+export function isInThePast(dt: DateTime): boolean {
+    return dt < LocalizedDateTime.now();
 }
 
 function sameDay(a: DateTime, b: DateTime): boolean {

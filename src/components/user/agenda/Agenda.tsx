@@ -12,7 +12,7 @@ import AgendaEntry from "@/components/user/agenda/AgendaSession";
 import ModalWrapper from "@/components/utils/ModalWrapper";
 import SubHeader from "@/components/utils/SubHeader";
 import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
-import { capitalizeFirstCharacter, isClassInThePast } from "@/lib/helpers/date";
+import { capitalizeFirstCharacter, isInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
@@ -95,7 +95,7 @@ export default function Agenda({
     const bookedSessionsDayMap = mapClassesByStartTime(
         userSessions.filter(
             (_class) =>
-                !isClassInThePast(_class.classData) &&
+                !isInThePast(_class.classData.startTime) &&
                 (_class.status === SessionStatus.WAITLIST || _class.status === SessionStatus.BOOKED),
         ),
     );
