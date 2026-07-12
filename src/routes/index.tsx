@@ -5,9 +5,10 @@ import { z } from "zod";
 
 import { $api, serverApiClient } from "@/lib/api/client";
 import LandingPage from "@/components/LandingPage";
+import { SELECTED_CHAIN_COOKIE_KEY } from "@/lib/helpers/storage";
 
 const getSelectedChainCookie = createServerFn({ method: "GET" }).handler(() => {
-    return getCookie("rezervo.selectedChain") ?? null;
+    return getCookie(SELECTED_CHAIN_COOKIE_KEY) ?? null;
 });
 
 const getChains = createServerFn({ method: "GET" }).handler(async () => {
