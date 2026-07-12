@@ -20,6 +20,7 @@ import { useState } from "react";
 
 import ClassInfoEntry from "@/components/schedule/class/ClassInfoEntry";
 import ClassInfoUsersGroup from "@/components/schedule/class/ClassInfoUsersGroup";
+import ImageWithSkeleton from "@/components/utils/ImageWithSkeleton";
 import ModalWrapper from "@/components/utils/ModalWrapper";
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
 import { NoShowBadgeIcon } from "@/components/utils/NoShowBadgeIcon";
@@ -240,7 +241,7 @@ export default function ClassInfo({
                         pt: 2,
                     }}
                 >
-                    <img
+                    <ImageWithSkeleton
                         src={_class.activity.image}
                         alt={_class.activity.name}
                         width={600}
