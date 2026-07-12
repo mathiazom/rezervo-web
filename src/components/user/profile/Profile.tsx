@@ -1,0 +1,283 @@
+import { PersonRounded } from "@mui/icons-material";
+import LogoutRoundedIcon from "@mui/icons-material/LogoutRounded";
+import { Box, Stack, Typography, useTheme } from "@mui/material";
+import Button from "@mui/material/Button";
+import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import Dropzone from "react-dropzone";
+
+import ModalWrapper from "@/components/utils/ModalWrapper";
+import AvatarMutateAlert from "@/components/user/profile/AvatarMutateAlert";
+import EditAvatarDialog from "@/components/user/profile/EditAvatarDialog";
+import ProfileAvatar from "@/components/user/profile/ProfileAvatar";
+import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
+import { ALLOWED_AVATAR_FILE_TYPES } from "@/lib/consts";
+import { apiClient } from "@/lib/api/client";
+import { fileUploadRequestInit } from "@/lib/api/multipart";
+import { usePositionFromBounds } from "@/lib/hooks/usePositionFromBounds";
+import { useUser } from "@/lib/hooks/useUser";
+import { Position } from "@/types/ui";
+
+export enum AvatarMutateError {
+    INVALID_IMAGE = "invalid_image",
+    TOO_LARGE = "too_large",
+    UNKNOWN = "unknown",
+}
+
+function Profile({
+    isDraggingOverOutside,
+    dragOverOutsidePosition,
+}: {
+    isDraggingOverOutside: boolean;
+    dragOverOutsidePosition: Position | null;
+}) {
+    const theme = useTheme();
+
+    const { user, logOut } = useUser();
+
+    const queryClient = useQueryClient();
+
+    const [editAvatarDialogOpen, setEditAvatarDialogOpen] = useState(false);
+    const [confirmDeleteAvatarDialogOpen, setConfirmDeleteAvatarDialogOpen] = useState(false);
+
+    const [isAvatarAvailable, setIsAvatarAvailable] = useState<boolean | null>(null);
+    const [isAvatarUpdating, setIsAvatarUpdating] = useState(false);
+    const [avatarPreviewDataURL, setAvatarPreviewDataURL] = useState<string | undefined>();
+    const [avatarMutateError, setAvatarMutateError] = useState<AvatarMutateError | null>(null);
+    const [showAvatarMutateError, setShowAvatarMutateError] = useState(false);
+
+    const [isDraggingOverAvatarDropzone, setIsDraggingOverAvatarDropzone] = useState(false);
+    const [isDraggingOverDialog, setIsDraggingOverDialog] = useState(false);
+    const [dragOverDialogPosition, setDragOverDialogPosition] = useState<Position | null>(null);
+    const isDraggingOver = isDraggingOverOutside || isDraggingOverDialog || isDraggingOverAvatarDropzone;
+
+    function onAvatarMutateError(error: AvatarMutateError) {
+        setAvatarMutateError(error);
+        setShowAvatarMutateError(true);
+    }
+
+    async function onAvatarUploadFromInput(event: React.ChangeEvent<HTMLInputElement>) {
+        await onAvatarUpload(event.target.files);
+        // reset to allow subsequent file uploads
+        event.target.value = "";
+    }
+
+    function onAvatarUpload(files: FileList | File[] | null) {
+        if (files == null || files.length === 0) {
+            onAvatarMutateError(AvatarMutateError.INVALID_IMAGE);
+            return;
+        }
+        const file = files[0];
+        if (file == undefined) {
+            onAvatarMutateError(AvatarMutateError.INVALID_IMAGE);
+            return;
+        }
+        return uploadAvatarFile(file);
+    }
+
+    async function uploadAvatarFile(file: File) {
+        setShowAvatarMutateError(false);
+        setIsAvatarUpdating(true);
+        setEditAvatarDialogOpen(false);
+        setAvatarPreviewDataURL(URL.createObjectURL(file));
+        try {
+            const { response } = await apiClient.PUT("/user/me/avatar", fileUploadRequestInit("file", file));
+            if (response.status === 413) {
+                onAvatarMutateError(AvatarMutateError.TOO_LARGE);
+            } else if (response.status === 415) {
+                onAvatarMutateError(AvatarMutateError.INVALID_IMAGE);
+            } else if (!response.ok) {
+                onAvatarMutateError(AvatarMutateError.UNKNOWN);
+            } else {
+                await queryClient.invalidateQueries({ queryKey: ["avatar"] });
+            }
+        } catch {
+            onAvatarMutateError(AvatarMutateError.UNKNOWN);
+        } finally {
+            setIsAvatarUpdating(false);
+        }
+    }
+
+    async function deleteAvatar() {
+        try {
+            const { response } = await apiClient.DELETE("/user/me/avatar");
+            if (!response.ok) {
+                onAvatarMutateError(AvatarMutateError.UNKNOWN);
+            } else {
+                setShowAvatarMutateError(false);
+                setAvatarPreviewDataURL(undefined);
+                setIsAvatarAvailable(false);
+                await queryClient.invalidateQueries({ queryKey: ["avatar"] });
+            }
+        } catch {
+            onAvatarMutateError(AvatarMutateError.UNKNOWN);
+        } finally {
+            setEditAvatarDialogOpen(false);
+        }
+    }
+
+    const {
+        boundsRef: dropzoneBoundsRef,
+        position: avatarDropzonePosition,
+        recalculate: recalculateDropzonePosition,
+    } = usePositionFromBounds();
+
+    return (
+        <Dropzone
+            noClick={true}
+            onDragEnter={() => setIsDraggingOverDialog(true)}
+            onDragLeave={() => setIsDraggingOverDialog(false)}
+            onDrop={() => setIsDraggingOverDialog(false)}
+            onDragOver={(e) => {
+                recalculateDropzonePosition();
+                setDragOverDialogPosition({ x: e.clientX, y: e.clientY });
+            }}
+        >
+            {({ getRootProps: getDialogRootProps }) => (
+                <ModalWrapper {...getDialogRootProps()} title={"Profil"} icon={<PersonRounded />}>
+                    <AvatarMutateAlert
+                        visible={showAvatarMutateError}
+                        error={avatarMutateError}
+                        onClosed={() => setAvatarMutateError(null)}
+                    />
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: "1.5rem", marginY: "1.5rem" }}>
+                        <Box ref={dropzoneBoundsRef} sx={{ margin: "0 auto" }}>
+                            <Dropzone
+                                multiple={false}
+                                noClick={true}
+                                useFsAccessApi={false}
+                                onDrop={(acceptedFiles) => {
+                                    setIsDraggingOverAvatarDropzone(false);
+                                    void onAvatarUpload(acceptedFiles);
+                                }}
+                                onDragEnter={() => setIsDraggingOverAvatarDropzone(true)}
+                                onDragLeave={() => setIsDraggingOverAvatarDropzone(false)}
+                                accept={{ [ALLOWED_AVATAR_FILE_TYPES]: [] }}
+                            >
+                                {({ getRootProps: getDropzoneRootProps, getInputProps: getDropzoneInputProps }) => (
+                                    <Box
+                                        {...getDropzoneRootProps()}
+                                        sx={[
+                                            {
+                                                display: "flex",
+                                                gap: "1rem",
+                                                margin: "0 auto",
+                                                "& .MuiAvatar-root": {
+                                                    fontSize: 42,
+                                                },
+                                            },
+                                            isDraggingOver
+                                                ? {
+                                                      position: "relative",
+                                                      zIndex: theme.zIndex.tooltip,
+                                                  }
+                                                : {},
+                                        ]}
+                                    >
+                                        <ProfileAvatar
+                                            username={user?.name ?? ""}
+                                            previewDataURL={avatarPreviewDataURL ?? null}
+                                            isAvailable={isAvatarAvailable}
+                                            isUpdating={isAvatarUpdating}
+                                            isDraggingOverOutside={isDraggingOverOutside || isDraggingOverDialog}
+                                            isDraggingOverAvatarDropzone={isDraggingOverAvatarDropzone}
+                                            dragOverOutsidePosition={
+                                                isDraggingOverDialog ? dragOverDialogPosition : dragOverOutsidePosition
+                                            }
+                                            onIsAvailableChanged={(available) => setIsAvatarAvailable(available)}
+                                            onEdit={() => setEditAvatarDialogOpen(true)}
+                                            onUploadFromInput={onAvatarUploadFromInput}
+                                            dropzonePosition={avatarDropzonePosition}
+                                            dropzoneInputProps={getDropzoneInputProps()}
+                                        />
+                                    </Box>
+                                )}
+                            </Dropzone>
+                        </Box>
+                        <Box>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    textAlign: "center",
+                                }}
+                            >
+                                {user?.name}
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    textAlign: "center",
+                                    color: "text.secondary",
+                                    fontSize: 14,
+                                }}
+                            >
+                                {user?.email}
+                            </Typography>
+                        </Box>
+                        <Box
+                            sx={[
+                                {
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    bottom: 0,
+                                    right: 0,
+                                    background: "black",
+                                    transition: "opacity 225ms cubic-bezier(0.4, 0, 0.2, 1)",
+                                    pointerEvents: "none",
+                                },
+                                isDraggingOver
+                                    ? {
+                                          opacity: 0.5,
+                                      }
+                                    : {
+                                          opacity: 0,
+                                      },
+                            ]}
+                        />
+                        <Stack
+                            sx={{
+                                alignItems: "center",
+                                mt: 2,
+                            }}
+                        >
+                            <Button
+                                variant={"outlined"}
+                                color={"error"}
+                                startIcon={<LogoutRoundedIcon />}
+                                onClick={() => logOut()}
+                            >
+                                Logg ut
+                            </Button>
+                        </Stack>
+                    </Box>
+                    <EditAvatarDialog
+                        open={editAvatarDialogOpen}
+                        onClose={() => setEditAvatarDialogOpen(false)}
+                        onAvatarUploadFromInput={onAvatarUploadFromInput}
+                        onDeleteAvatar={() => setConfirmDeleteAvatarDialogOpen(true)}
+                    />
+                    <ConfirmationDialog
+                        open={confirmDeleteAvatarDialogOpen}
+                        title={"Slette bilde?"}
+                        description={
+                            <>
+                                <Typography>Er du sikker på at du vil slette profilbildet ditt?</Typography>
+                                <br />
+                                <Typography>Dette kan ikke angres!</Typography>
+                            </>
+                        }
+                        confirmText={"Slett"}
+                        onCancel={() => setConfirmDeleteAvatarDialogOpen(false)}
+                        onConfirm={() => {
+                            setConfirmDeleteAvatarDialogOpen(false);
+                            void deleteAvatar();
+                        }}
+                    />
+                </ModalWrapper>
+            )}
+        </Dropzone>
+    );
+}
+
+export default Profile;

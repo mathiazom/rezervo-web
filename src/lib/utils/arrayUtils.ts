@@ -1,4 +1,4 @@
-import { UserNameWithIsSelf } from "@/types/config";
+import { UserNameWithIsSelf } from "@/types/openapi";
 
 export function randomElementFromArray<T>(array: T[]) {
     return array[Math.floor(Math.random() * array.length)];

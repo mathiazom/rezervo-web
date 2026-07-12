@@ -4,19 +4,19 @@ import ClassCard from "@/components/schedule/class/ClassCard";
 import CurrentTimeDivider from "@/components/schedule/CurrentTimeDivider";
 import {
     getCapitalizedWeekday,
+    isClassExcludedByTimeFilters,
     isClassInThePast,
     isDayPassed,
     isToday,
     LocalizedDateTime,
-    isClassExcludedByTimeFilters,
 } from "@/lib/helpers/date";
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
-import { ChainIdentifier, ExcludeClassTimeFiltersType, RezervoClass, RezervoDaySchedule } from "@/types/chain";
+import { RezervoClass, RezervoDaySchedule } from "@/types/openapi";
+import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function DaySchedule({
-    chain,
     daySchedule,
     selectedLocationIds,
     selectedCategories,
@@ -27,7 +27,6 @@ function DaySchedule({
     onUpdateConfig,
     setClassInfoClass,
 }: {
-    chain: ChainIdentifier;
     daySchedule: RezervoDaySchedule;
     selectedLocationIds: string[];
     selectedCategories: string[];
@@ -149,7 +148,6 @@ function DaySchedule({
                                 }}
                             >
                                 <ClassCard
-                                    chain={chain}
                                     _class={_class}
                                     selectable={selectable}
                                     selected={

@@ -1,15 +1,13 @@
 import Cookies from "js-cookie";
 
-import {
-    ChainIdentifier,
-    CheckInConfiguration,
-    ExcludeClassTimeFilter,
-    ExcludeClassTimeFiltersType,
-} from "@/types/chain";
+import { type CheckInConfiguration, ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/local";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
+
+export const SELECTED_CHAIN_COOKIE_KEY = `${STORAGE_KEY_PREFIX}selectedChain`;
+
 const STORAGE_KEYS = {
-    SELECTED_CHAIN: `${STORAGE_KEY_PREFIX}selectedChain`,
+    SELECTED_CHAIN: SELECTED_CHAIN_COOKIE_KEY,
     PWA_INSTALL_DISMISSED: `${STORAGE_KEY_PREFIX}pwaInstallDismissed`,
     selectedLocations: (chain: string) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
     selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
@@ -23,12 +21,12 @@ function storeValue<T>(key: string, value: T) {
     storeAsCookie(key, value);
 }
 
-export function storeSelectedChain(chain: ChainIdentifier) {
+export function storeSelectedChain(chain: string) {
     storeValue(STORAGE_KEYS.SELECTED_CHAIN, chain);
 }
 
-export function getStoredSelectedChain(): ChainIdentifier | null {
-    return getStoredValue<ChainIdentifier>(STORAGE_KEYS.SELECTED_CHAIN, false);
+export function getStoredSelectedChain(): string | null {
+    return getStoredValue<string>(STORAGE_KEYS.SELECTED_CHAIN, false);
 }
 
 export function storePWAInstallDismissed() {

@@ -38,10 +38,44 @@ jobs:
                   cache: pnpm
             - name: Install dependencies
               run: pnpm install
-            - name: Next Typegen
-              run: pnpm next typegen
             - name: Lint
               run: pnpm run lint
+
+    typecheck:
+        name: Typecheck
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: 11
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: "24"
+                  cache: pnpm
+            - name: Install dependencies
+              run: pnpm install
+            - name: Typecheck
+              run: pnpm run typecheck
+
+    api_types:
+        name: OpenAPI Check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: 11
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: "24"
+                  cache: pnpm
+            - name: Install dependencies
+              run: pnpm install
+            - name: Check generated API types are up to date
+              run: pnpm run check:api
+              env:
+                  CONFIG_HOST: https://api.rezervo.no
 
     build:
         name: Build

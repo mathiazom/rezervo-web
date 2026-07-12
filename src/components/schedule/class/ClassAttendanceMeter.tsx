@@ -5,17 +5,12 @@ import { Badge, Tooltip } from "@mui/material";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { isClassInThePast } from "@/lib/helpers/date";
 import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
-import { RezervoClass } from "@/types/chain";
-import { StatusColors } from "@/types/userSessions";
+import { RezervoClass } from "@/types/openapi";
+import { StatusColors } from "@/types/ui";
 
 const attendanceColor = (_class: RezervoClass): string => {
     if (hasWaitingList(_class)) return "red";
-    if (
-        _class.availableSlots !== null &&
-        _class.totalSlots !== null &&
-        _class.availableSlots / _class.totalSlots <= 0.2
-    )
-        return "orange";
+    if (_class.availableSlots && _class.totalSlots && _class.availableSlots / _class.totalSlots <= 0.2) return "orange";
     return "green";
 };
 

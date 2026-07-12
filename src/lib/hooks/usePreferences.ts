@@ -1,44 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { put } from "@/lib/helpers/requests";
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
-import { Preferences, PreferencesPayload } from "@/types/config";
+import { PreferencesPayload } from "@/types/openapi";
 
 export function usePreferences() {
-    const { isAuthenticated, token } = useUser();
+    const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const preferencesApiUrl = `preferences`;
-    const queryKey = [preferencesApiUrl];
+    const { data, error, isLoading } = $api.useQuery("get", "/preferences", {}, { enabled: isAuthenticated });
 
-    const { data, error, isLoading } = useQuery<Preferences, FetchError>({
-        queryKey,
-        queryFn: () => authedFetcher(token ?? "")<Preferences>(preferencesApiUrl),
-        enabled: isAuthenticated,
-    });
-
-    const { mutateAsync, isPending } = useMutation<Preferences, FetchError, PreferencesPayload>({
-        mutationFn: (preferences) => {
-            if (!token) {
-                throw new Error("Not authenticated");
-            }
-            return put(preferencesApiUrl, {
-                body: JSON.stringify(preferences, null, 2),
-                mode: "client",
-                accessToken: token,
-            }).then((r) => r.json());
-        },
-        onSuccess: (updated) => {
-            // use the updated data from the response instead of revalidating
-            queryClient.setQueryData(queryKey, updated);
-        },
+    const preferencesKey = $api.queryOptions("get", "/preferences", {}).queryKey;
+    const { mutateAsync, isPending } = $api.useMutation("put", "/preferences", {
+        // use the updated data from the response instead of revalidating
+        onSuccess: (updated) => queryClient.setQueryData(preferencesKey, updated),
     });
 
     return {
         preferences: data,
         preferencesError: error,
         preferencesLoading: isLoading || isPending,
-        putPreferences: mutateAsync,
+        putPreferences: (preferences: PreferencesPayload) => mutateAsync({ body: preferences }),
     };
 }

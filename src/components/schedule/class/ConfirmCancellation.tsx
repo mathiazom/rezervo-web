@@ -2,41 +2,40 @@ import { Typography } from "@mui/material";
 import { Dispatch, SetStateAction } from "react";
 
 import ConfirmationDialog from "@/components/utils/ConfirmationDialog";
-import { post } from "@/lib/helpers/requests";
-import { useUser } from "@/lib/hooks/useUser";
+import { $api } from "@/lib/api/client";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
-import { ChainIdentifier, RezervoClass } from "@/types/chain";
+import { RezervoSessionClass } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
 function ConfirmCancellation({
     open,
     setOpen,
     setLoading,
-    chain,
     _class,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     setLoading: Dispatch<SetStateAction<boolean>>;
-    chain: ChainIdentifier;
-    _class: RezervoClass;
+    _class: RezervoSessionClass;
 }) {
-    const { token } = useUser();
-    const { mutateSessionsIndex } = useUserSessionsIndex(chain);
+    const chain = useChain();
+    const { mutateSessionsIndex } = useUserSessionsIndex();
     const { mutateUserSessions } = useUserSessions();
-    async function cancelBooking() {
-        if (token == null) return; // TODO: error handling
+    const cancelBookingMutation = $api.useMutation("post", "/{chain_identifier}/cancel-booking", {
+        onSuccess: async () => {
+            await mutateSessionsIndex();
+            await mutateUserSessions();
+        },
+        onSettled: () => setLoading(false),
+    });
+    function cancelBooking() {
         setOpen(false);
         setLoading(true);
-        await post(`${chain}/cancel-booking`, {
-            body: JSON.stringify({ classId: _class.id.toString() }, null, 2),
-            mode: "client",
-            accessToken: token,
+        cancelBookingMutation.mutate({
+            params: { path: { chain_identifier: chain.profile.identifier } },
+            body: { classId: _class.id },
         });
-        await mutateSessionsIndex();
-        await mutateUserSessions();
-        setLoading(false);
-        setOpen(false);
     }
 
     const classDescription = _class

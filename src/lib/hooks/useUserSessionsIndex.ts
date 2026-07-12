@@ -1,27 +1,25 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
-import { ChainIdentifier } from "@/types/chain";
-import { UserSessionsIndex } from "@/types/userSessions";
+import { useChain } from "@/lib/hooks/useChain";
 
-export function useUserSessionsIndex(chain: ChainIdentifier) {
-    const { isAuthenticated, token } = useUser();
+export function useUserSessionsIndex() {
+    const chain = useChain();
+    const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const userSessionsIndexApiUrl = `${chain}/sessions-index`;
-    const queryKey = [userSessionsIndexApiUrl];
+    const sessionsIndexInit = { params: { path: { chain_identifier: chain.profile.identifier } } };
+    const sessionsIndexKey = $api.queryOptions("get", "/{chain_identifier}/sessions-index", sessionsIndexInit).queryKey;
 
-    const { data, error, isLoading } = useQuery<UserSessionsIndex, FetchError>({
-        queryKey,
-        queryFn: () => authedFetcher(token ?? "")<UserSessionsIndex>(userSessionsIndexApiUrl),
-        enabled: isAuthenticated && !!chain,
+    const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/sessions-index", sessionsIndexInit, {
+        enabled: isAuthenticated,
     });
 
     return {
         userSessionsIndex: data,
         userSessionsIndexError: error,
         userSessionsIndexLoading: isLoading,
-        mutateSessionsIndex: () => queryClient.invalidateQueries({ queryKey }),
+        mutateSessionsIndex: () => queryClient.invalidateQueries({ queryKey: sessionsIndexKey }),
     };
 }

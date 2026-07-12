@@ -7,12 +7,13 @@ import ScheduleFiltersDialog, {
     CATEGORIES_COLOR,
     EXCLUDE_CLASS_TIME_COLOR,
     LOCATIONS_COLOR,
-} from "@/components/modals/ScheduleFiltersDialog";
+} from "@/components/schedule/filter/ScheduleFiltersDialog";
 import { offsetWeekParam } from "@/lib/helpers/schedule";
-import { ActivityCategory, ExcludeClassTimeFiltersType, RezervoChain } from "@/types/chain";
+import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
+import { useChain } from "@/lib/hooks/useChain";
+import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 export default function WeekNavigator({
-    chain,
     weekParam,
     isLoadingPreviousWeek,
     isLoadingNextWeek,
@@ -21,13 +22,11 @@ export default function WeekNavigator({
     onToday,
     selectedLocationIds,
     setSelectedLocationIds,
-    allCategories,
     selectedCategories,
     setSelectedCategories,
     excludeClassTimeFilters,
     setExcludeClassTimeFilters,
 }: {
-    chain: RezervoChain;
     weekParam: string;
     isLoadingPreviousWeek: boolean;
     isLoadingNextWeek: boolean;
@@ -36,12 +35,14 @@ export default function WeekNavigator({
     onToday: () => void;
     selectedLocationIds: string[];
     setSelectedLocationIds: (value: string[]) => void;
-    allCategories: ActivityCategory[];
     selectedCategories: string[];
     setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     setExcludeClassTimeFilters: (value: ExcludeClassTimeFiltersType) => void;
 }) {
+    const chain = useChain();
+    const allCategories = useActivityCategories();
+
     const totalLocations = chain.branches.reduce((acc, branch) => acc + branch.locations.length, 0);
     const isLocationFiltered = selectedLocationIds.length < totalLocations;
 
@@ -140,12 +141,10 @@ export default function WeekNavigator({
                 )}
             </Button>
             <ScheduleFiltersDialog
-                chain={chain}
                 open={isScheduleFiltersOpen}
                 setOpen={setIsScheduleFiltersOpen}
                 selectedLocationIds={selectedLocationIds}
                 setSelectedLocationIds={setSelectedLocationIds}
-                allCategories={allCategories}
                 selectedCategories={selectedCategories}
                 setSelectedCategories={setSelectedCategories}
                 excludeClassTimeFilters={excludeClassTimeFilters}

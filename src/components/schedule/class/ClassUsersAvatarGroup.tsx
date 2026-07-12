@@ -1,7 +1,7 @@
 import { AvatarGroup } from "@mui/material";
 
 import ClassUserAvatar from "@/components/schedule/class/ClassUserAvatar";
-import { UserNameWithIsSelf } from "@/types/config";
+import { UserNameWithIsSelf } from "@/types/openapi";
 
 const AVATAR_SIZE = 24;
 

@@ -1,5 +1,5 @@
 import { isClassInThePast } from "@/lib/helpers/date";
-import { RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
 
 export function shouldShowClassAttendance(_class: RezervoClass): boolean {
     return _class.isBookable || _class.isCancelled || isClassInThePast(_class);
@@ -14,7 +14,7 @@ export function stringifyClassAttendance(_class: RezervoClass): string | null {
             ? `${_class.waitingListCount} ${isInThePast ? "fikk ikke plass" : "er på venteliste"}`
             : null;
 
-    if (_class.availableSlots === null || _class.totalSlots === null) {
+    if (_class.availableSlots == null || _class.totalSlots == null) {
         return waitListText ?? (isInThePast ? "Timen hadde ledige plasser" : "Timen har ledige plasser");
     }
 
@@ -25,5 +25,5 @@ export function stringifyClassAttendance(_class: RezervoClass): string | null {
 }
 
 export function hasWaitingList(_class: RezervoClass): boolean {
-    return _class.availableSlots === null ? (_class.waitingListCount ?? 0) > 0 : _class.availableSlots <= 0;
+    return !_class.availableSlots ? (_class.waitingListCount ?? 0) > 0 : _class.availableSlots <= 0;
 }

@@ -4,7 +4,7 @@ import Tooltip from "@mui/material/Tooltip";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useMyUser } from "@/lib/hooks/useMyUser";
-import { StatusColors } from "@/types/userSessions";
+import { StatusColors } from "@/types/ui";
 
 export default function ClassUserAvatar({
     userId,

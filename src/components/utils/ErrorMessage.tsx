@@ -1,9 +1,10 @@
 import { Alert, AlertTitle, Box, Typography } from "@mui/material";
 
-import { ChainProfile } from "@/types/chain";
-import { RezervoError } from "@/types/errors";
+import { RezervoError } from "@/types/ui";
+import { useChain } from "@/lib/hooks/useChain";
 
-function ErrorMessage({ error, chainProfile }: { error: RezervoError; chainProfile: ChainProfile }) {
+function ErrorMessage({ error }: { error: RezervoError }) {
+    const chain = useChain();
     return (
         <Box sx={{ display: "flex", justifyContent: "center", bgcolor: "error.main" }}>
             <Alert
@@ -15,7 +16,7 @@ function ErrorMessage({ error, chainProfile }: { error: RezervoError; chainProfi
                 <Typography>
                     {error === RezervoError.CHAIN_SCHEDULE_UNAVAILABLE ? (
                         <>
-                            Klarte ikke hente timeplan for <strong>{chainProfile.name}</strong>
+                            Klarte ikke hente timeplan for <strong>{chain.profile.name}</strong>
                         </>
                     ) : (
                         <>En ukjent feil har oppstått️</>

@@ -5,16 +5,11 @@
 /.pnp
 .pnp.js
 
-# testing
-/coverage
-
-# next.js
-/.next/
-next-env.d.ts
-/out/
-
-# production
-/build
+# Vite / TanStack Start / Nitro
+dist/
+.output/
+.nitro/
+.tanstack/
 
 # misc
 .DS_Store
@@ -32,17 +27,11 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 
 .idea/
 
-**/public/workbox-*.js
-**/public/sw.js
-**/public/worker-*.js
-**/public/workbox-*.js.map
-**/public/sw.js.map
-**/public/worker-*.js.map
+# Serwist
+public/sw*
+public/swe-worker*

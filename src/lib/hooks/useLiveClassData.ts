@@ -1,23 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
-
+import { $api } from "@/lib/api/client";
 import { deserializeClass } from "@/lib/serialization/deserializers";
-import { fetcher, FetchError } from "@/lib/utils/fetchUtils";
 import { deepMerge } from "@/lib/utils/objectUtils";
-import { RezervoClass } from "@/types/chain";
-import { RezervoClassDTO } from "@/types/serialization";
+import { RezervoClass } from "@/types/openapi";
+import { useChain } from "@/lib/hooks/useChain";
 
-export function useLiveClassData(chainIdentifier: string, _class: RezervoClass) {
-    const { data, error, isLoading } = useQuery<RezervoClass, FetchError>({
-        queryKey: [`classes/${chainIdentifier}/${_class.id}`],
-        queryFn: async () => {
-            const dto = await fetcher<RezervoClassDTO>(`classes/${chainIdentifier}/${_class.id}`);
-            return deserializeClass(dto);
-        },
-        refetchInterval: 10 * 1000,
-        placeholderData: _class,
-    });
+export function useLiveClassData(_class: RezervoClass) {
+    const chain = useChain();
+    const { data, error, isLoading } = $api.useQuery(
+        "get",
+        "/classes/{chain_identifier}/{class_id}",
+        { params: { path: { chain_identifier: chain.profile.identifier, class_id: _class.id } } },
+        { refetchInterval: 10 * 1000 },
+    );
 
-    const liveClassData = data ? deepMerge(_class, data) : _class;
+    const liveClassData = data ? deepMerge(_class, deserializeClass(data)) : _class;
 
     return {
         liveClassData,

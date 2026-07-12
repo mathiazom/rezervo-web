@@ -2,7 +2,8 @@ import { DateTime, Info, Settings } from "luxon";
 // @ts-expect-error bad internal import
 import { IfValid, Valid } from "luxon/src/_util";
 
-import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType, RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
+import { ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/local";
 
 export const compactISOWeekString = <IsValid extends boolean>(
     date: DateTime<IsValid>,
@@ -15,7 +16,7 @@ export const fromCompactISOWeekString = (weekString: string) =>
         weekNumber: Number.parseInt(weekString.slice(5, 7)),
     });
 
-export const calculateMondayOffset = (date: DateTime<true>) => date.weekday - 1;
+const calculateMondayOffset = (date: DateTime<true>) => date.weekday - 1;
 
 export const zeroIndexedWeekday = (oneIndexedWeekday: number): number => (oneIndexedWeekday + 6) % 7;
 
@@ -38,10 +39,14 @@ export const getCapitalizedWeekdays = (): string[] => {
 };
 
 export function isClassInThePast(_class: RezervoClass): boolean {
-    return _class.startTime < LocalizedDateTime.now();
+    return isInThePast(_class.startTime);
 }
 
-export function sameDay(a: DateTime, b: DateTime): boolean {
+export function isInThePast(dt: DateTime): boolean {
+    return dt < LocalizedDateTime.now();
+}
+
+function sameDay(a: DateTime, b: DateTime): boolean {
     return a.startOf("day") <= b && b <= a.endOf("day");
 }
 
@@ -75,10 +80,7 @@ export const isClassExcludedByTimeFilters = (
     });
 };
 
-export const isClassExcludedByTimeFilter = (
-    _class: RezervoClass,
-    excludeClassTimeFilter: ExcludeClassTimeFilter,
-): boolean => {
+const isClassExcludedByTimeFilter = (_class: RezervoClass, excludeClassTimeFilter: ExcludeClassTimeFilter): boolean => {
     if (!excludeClassTimeFilter.enabled) {
         return false;
     }

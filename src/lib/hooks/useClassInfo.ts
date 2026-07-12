@@ -1,14 +1,14 @@
-import type { Route } from "next";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { getRouteApi } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { CLASS_ID_QUERY_PARAM } from "@/lib/consts";
-import { RezervoClass } from "@/types/chain";
+import { RezervoClass } from "@/types/openapi";
 
-export function useClassInfo(showClassId: string | undefined, classes: RezervoClass[]) {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const router = useRouter();
+const routeApi = getRouteApi("/$chain");
+
+export function useClassInfo(classes: RezervoClass[]) {
+    const { [CLASS_ID_QUERY_PARAM]: showClassId } = routeApi.useSearch();
+    const navigate = routeApi.useNavigate();
 
     const [classInfoClass, setClassInfoClassState] = useState<RezervoClass | null>(null);
 
@@ -23,12 +23,16 @@ export function useClassInfo(showClassId: string | undefined, classes: RezervoCl
         }
     }, [showClassId, classes]);
 
-    const setClassInfoClass = (c: RezervoClass | null) => {
-        const newSearchParams = new URLSearchParams(searchParams);
-        if (c !== null) newSearchParams.set(CLASS_ID_QUERY_PARAM, c.id);
-        else newSearchParams.delete(CLASS_ID_QUERY_PARAM);
-        router.replace((pathname + "?" + newSearchParams.toString()) as Route);
-        setClassInfoClassState(c);
+    const setClassInfoClass = (_class: RezervoClass | null) => {
+        void navigate({
+            search: (prev) => {
+                return _class
+                    ? { ...prev, [CLASS_ID_QUERY_PARAM]: _class.id }
+                    : { ...prev, [CLASS_ID_QUERY_PARAM]: undefined };
+            },
+            replace: true,
+        });
+        setClassInfoClassState(_class);
     };
 
     return { classInfoClass, setClassInfoClass };

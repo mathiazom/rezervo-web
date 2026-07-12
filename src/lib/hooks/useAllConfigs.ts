@@ -1,27 +1,23 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
+import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
-import { authedFetcher, FetchError } from "@/lib/utils/fetchUtils";
-import { ChainIdentifier } from "@/types/chain";
-import { AllConfigsIndex } from "@/types/config";
 
-export function useAllConfigs(chain: ChainIdentifier) {
-    const { isAuthenticated, token } = useUser();
+export function useAllConfigs(chain: string) {
+    const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const allConfigsApiUrl = `${chain}/all-configs`;
-    const queryKey = [allConfigsApiUrl];
+    const allConfigsInit = { params: { path: { chain_identifier: chain } } };
+    const allConfigsKey = $api.queryOptions("get", "/{chain_identifier}/all-configs", allConfigsInit).queryKey;
 
-    const { data, error, isLoading } = useQuery<AllConfigsIndex, FetchError>({
-        queryKey,
-        queryFn: () => authedFetcher(token ?? "")<AllConfigsIndex>(allConfigsApiUrl),
-        enabled: isAuthenticated && !!chain,
+    const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/all-configs", allConfigsInit, {
+        enabled: isAuthenticated,
     });
 
     return {
         allConfigsIndex: data,
         allConfigsError: error,
         allConfigsLoading: isLoading,
-        mutateAllConfigs: () => queryClient.invalidateQueries({ queryKey }),
+        mutateAllConfigs: () => queryClient.invalidateQueries({ queryKey: allConfigsKey }),
     };
 }

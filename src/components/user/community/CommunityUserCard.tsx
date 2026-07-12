@@ -1,0 +1,202 @@
+import { PersonAdd, PersonRemove } from "@mui/icons-material";
+import { Avatar, Box, CircularProgress, Divider, Tooltip, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import { useState } from "react";
+
+import ConfirmationDialog, { ConfirmationDialogProps } from "@/components/utils/ConfirmationDialog";
+import { UserAvatar } from "@/components/utils/UserAvatar";
+import { useCommunity } from "@/lib/hooks/useCommunity";
+import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
+import { CommunityUser, UserRelationship, UserRelationshipAction } from "@/types/openapi";
+
+type ConfirmDialogAction = typeof UserRelationshipAction.REMOVE_FRIEND | typeof UserRelationshipAction.DENY_FRIEND;
+
+const CommunityUserCard = ({ communityUser }: { communityUser: CommunityUser }) => {
+    const chainProfiles = useChainProfiles();
+    const { communityLoading, updateRelationship, isUpdatingRelationship } = useCommunity();
+    const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+    const [confirmDialogAction, setConfirmDialogAction] = useState<ConfirmDialogAction | null>(null);
+
+    const updateUserRelationship = (action: UserRelationshipAction) => {
+        return updateRelationship({
+            userId: communityUser.userId,
+            action,
+        });
+    };
+
+    const isLoading = communityLoading || isUpdatingRelationship;
+
+    function showConfirmDialog(action: ConfirmDialogAction) {
+        setConfirmDialogAction(action);
+        setConfirmDialogOpen(true);
+    }
+
+    const renderRelationshipActions = (relationship: UserRelationship) => {
+        switch (relationship) {
+            case UserRelationship.FRIEND:
+                return (
+                    <Button
+                        loading={isLoading}
+                        startIcon={<PersonRemove />}
+                        color={"error"}
+                        onClick={() => showConfirmDialog(UserRelationshipAction.REMOVE_FRIEND)}
+                    >
+                        Fjern venn
+                    </Button>
+                );
+            case UserRelationship.REQUEST_RECEIVED:
+                return (
+                    <Box>
+                        {isLoading ? (
+                            <CircularProgress size={22} thickness={4} sx={{ mr: "1rem" }} />
+                        ) : (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    flexDirection: { xs: "column", sm: "row" },
+                                }}
+                            >
+                                <Button
+                                    startIcon={<PersonRemove />}
+                                    color={"error"}
+                                    onClick={() => showConfirmDialog(UserRelationshipAction.DENY_FRIEND)}
+                                >
+                                    Avslå
+                                </Button>
+                                <Button
+                                    startIcon={<PersonAdd />}
+                                    onClick={() => updateUserRelationship(UserRelationshipAction.ACCEPT_FRIEND)}
+                                >
+                                    Godta
+                                </Button>
+                            </Box>
+                        )}
+                    </Box>
+                );
+            case UserRelationship.REQUEST_SENT:
+                return (
+                    <Button disabled={true} sx={{ fontSize: { xs: 12, sm: 14 } }}>
+                        Forespørsel sendt
+                    </Button>
+                );
+            case UserRelationship.UNKNOWN:
+            default:
+                return (
+                    <Button
+                        loading={isLoading}
+                        startIcon={<PersonAdd />}
+                        onClick={() => updateUserRelationship(UserRelationshipAction.ADD_FRIEND)}
+                    >
+                        Legg til venn
+                    </Button>
+                );
+        }
+    };
+    const confirmDialogPropsMap: Record<
+        ConfirmDialogAction,
+        Required<Pick<ConfirmationDialogProps, "title" | "confirmText" | "description">> &
+            Partial<ConfirmationDialogProps>
+    > = {
+        [UserRelationshipAction.REMOVE_FRIEND]: {
+            title: "Fjerne venn?",
+            confirmText: "Fjern venn",
+            description: (
+                <>
+                    <Typography>
+                        Du er i ferd med å fjerne <b>{communityUser.name}</b> som venn.
+                    </Typography>
+                    <Typography>Dette kan ikke angres!</Typography>
+                </>
+            ),
+        },
+        [UserRelationshipAction.DENY_FRIEND]: {
+            title: "Avslå venneforespørsel?",
+            confirmText: "Avslå forespørsel",
+            description: (
+                <>
+                    <Typography>
+                        Du er i ferd med å avslå <b>{communityUser.name}</b> sin venneforespørsel.
+                    </Typography>
+                    <Typography>Dette kan ikke angres!</Typography>
+                </>
+            ),
+        },
+    };
+    return (
+        <>
+            <Box sx={{ display: "flex" }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                        px: 0,
+                        py: 2,
+                    }}
+                >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <Box
+                            sx={{
+                                mr: 1.5,
+                                "& .MuiAvatar-root": {
+                                    fontSize: 18,
+                                },
+                            }}
+                        >
+                            <UserAvatar userId={communityUser.userId} username={communityUser.name} />
+                        </Box>
+                        <Box>
+                            <Typography
+                                variant={"subtitle2"}
+                                sx={{
+                                    fontWeight: "bold",
+                                }}
+                            >
+                                {communityUser.name}
+                            </Typography>
+                            <Box sx={{ display: "flex", gap: 0.5 }}>
+                                {communityUser.chains
+                                    .sort((a, b) => a.localeCompare(b))
+                                    .map((chain) => {
+                                        const chainProfile = chainProfiles.find(
+                                            (chainProfile) => chainProfile.identifier === chain,
+                                        );
+                                        if (chainProfile === undefined) return <></>;
+                                        return (
+                                            <Tooltip title={chainProfile.name} key={chain}>
+                                                <Avatar
+                                                    sx={{ width: 16, height: 16 }}
+                                                    src={`${import.meta.env.VITE_CONFIG_HOST}/${chainProfile.images.common.smallLogo}`}
+                                                >
+                                                    {chain}
+                                                </Avatar>
+                                            </Tooltip>
+                                        );
+                                    })}
+                            </Box>
+                        </Box>
+                    </Box>
+                    {renderRelationshipActions(communityUser.relationship)}
+                </Box>
+            </Box>
+            <Divider />
+            {confirmDialogAction != null && (
+                <ConfirmationDialog
+                    open={confirmDialogOpen}
+                    onCancel={() => setConfirmDialogOpen(false)}
+                    onConfirm={() => {
+                        if (confirmDialogAction !== null) {
+                            void updateUserRelationship(confirmDialogAction);
+                        }
+                        setConfirmDialogOpen(false);
+                    }}
+                    {...confirmDialogPropsMap[confirmDialogAction]}
+                />
+            )}
+        </>
+    );
+};
+
+export default CommunityUserCard;
