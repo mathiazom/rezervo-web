@@ -38,22 +38,24 @@ import { RezervoClass, SessionStatus } from "@/types/openapi";
 import { StatusColors } from "@/types/ui";
 import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
 import ClassAttendanceMeter from "@/components/schedule/class/ClassAttendanceMeter";
-import { useChain } from "@/lib/hooks/useChain";
+import { useChainByIdentifier } from "@/lib/hooks/useChainByIdentifier";
 
 export default function ClassInfo({
+    chainIdentifier,
     initialClassData,
     onUpdateConfig,
 }: {
+    chainIdentifier: string;
     initialClassData: RezervoClass;
-    onUpdateConfig: (classId: string, selected: boolean) => void;
+    onUpdateConfig: (_class: RezervoClass, selected: boolean) => void;
 }) {
-    const chain = useChain();
+    const chain = useChainByIdentifier(chainIdentifier);
     const { authStatus } = useUser();
-    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chain.profile.identifier);
-    const { liveClassData: _class } = useLiveClassData(initialClassData);
+    const { userConfig, userConfigLoading, userConfigError, allConfigsIndex } = useUserConfig(chainIdentifier);
+    const { liveClassData: _class } = useLiveClassData(chainIdentifier, initialClassData);
     const configUsers = allConfigsIndex ? (allConfigsIndex[classRecurrentId(_class)] ?? []) : [];
     const { userSessionsIndex, userSessionsIndexLoading, userSessionsIndexError, mutateSessionsIndex } =
-        useUserSessionsIndex();
+        useUserSessionsIndex(chainIdentifier);
     const { mutateUserSessions } = useUserSessions();
     const userSessionsLoading = userSessionsIndexLoading || userSessionsIndexError != null;
     const userSessions = userSessionsIndex?.[_class.id] ?? [];
@@ -89,7 +91,7 @@ export default function ClassInfo({
 
     function book() {
         bookMutation.mutate({
-            params: { path: { chain_identifier: chain.profile.identifier } },
+            params: { path: { chain_identifier: chainIdentifier } },
             body: { classId: _class.id },
         });
     }
@@ -223,11 +225,11 @@ export default function ClassInfo({
             {authStatus === "authenticated" && userConfig === undefined && !isInThePast && (
                 <Alert severity="info" sx={{ mt: 1.5 }}>
                     <AlertTitle>
-                        Koble til <b>{chain.profile.name}</b>-medlemskap
+                        Koble til <b>{chain?.profile.name}</b>-medlemskap
                     </AlertTitle>
-                    Du må koble <b>{chain.profile.name}</b>-medlemskapet ditt til <b>rezervo</b> for å kunne booke eller
-                    legge til timer i timeplanen. Trykk på <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} />{" "}
-                    Innstillinger for å komme i gang.
+                    Du må koble <b>{chain?.profile.name}</b>-medlemskapet ditt til <b>rezervo</b> for å kunne booke
+                    eller legge til timer i timeplanen. Trykk på{" "}
+                    <SettingsRounded fontSize={"small"} sx={{ mb: -0.6 }} /> Innstillinger for å komme i gang.
                 </Alert>
             )}
             {_class.activity.additionalInformation && (
@@ -307,7 +309,7 @@ export default function ClassInfo({
                                 variant={"outlined"}
                                 color={"error"}
                                 startIcon={<EventBusy />}
-                                onClick={() => onUpdateConfig(classRecurrentId(_class), false)}
+                                onClick={() => onUpdateConfig(_class, false)}
                             >
                                 Fjern fra timeplan
                             </Button>
@@ -316,7 +318,7 @@ export default function ClassInfo({
                                 sx={{ mt: 2 }}
                                 variant={"outlined"}
                                 startIcon={<EventRepeat />}
-                                onClick={() => onUpdateConfig(classRecurrentId(_class), true)}
+                                onClick={() => onUpdateConfig(_class, true)}
                             >
                                 Legg til i timeplan
                             </Button>
@@ -344,6 +346,7 @@ export default function ClassInfo({
                 open={cancelBookingConfirmationOpen}
                 setOpen={setCancelBookingConfirmationOpen}
                 setLoading={setCancelBookingLoading}
+                chainIdentifier={chainIdentifier}
                 _class={_class}
             />
         </ModalWrapper>

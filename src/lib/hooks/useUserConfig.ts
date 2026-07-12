@@ -33,7 +33,7 @@ export function useUserConfig(chainIdentifier: string) {
             }
             return data;
         },
-        enabled: isAuthenticated,
+        enabled: isAuthenticated && chainIdentifier !== "",
     });
 
     const { mutateAsync, isPending } = $api.useMutation("put", "/{chain_identifier}/config", {

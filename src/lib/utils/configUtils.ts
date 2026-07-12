@@ -2,22 +2,19 @@ import { zeroIndexedWeekday } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { ClassConfig, RezervoClass } from "@/types/openapi";
 
+export function classToConfig(c: RezervoClass): ClassConfig {
+    const { hour, minute, weekday } = c.startTime;
+    return {
+        activityId: c.activity.id.toString(),
+        weekday: zeroIndexedWeekday(weekday),
+        locationId: c.location.id,
+        startTime: { hour, minute },
+        displayName: c.activity.name,
+    };
+}
+
 function buildConfigMapFromClasses(classes: RezervoClass[]) {
-    return Object.fromEntries(
-        classes.map((c) => {
-            const { hour, minute, weekday } = c.startTime;
-            return [
-                classRecurrentId(c),
-                {
-                    activityId: c.activity.id.toString(),
-                    weekday: zeroIndexedWeekday(weekday),
-                    locationId: c.location.id,
-                    startTime: { hour, minute },
-                    displayName: c.activity.name,
-                },
-            ];
-        }),
-    );
+    return Object.fromEntries(classes.map((c) => [classRecurrentId(c), classToConfig(c)]));
 }
 
 // Build a config map for all classes, including "ghost" configs from the user config (recurring

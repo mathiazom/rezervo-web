@@ -1,12 +1,12 @@
 import { Clear, EventBusy, HourglassTopRounded } from "@mui/icons-material";
 import { Avatar, Box, Card, CardContent, Chip, CircularProgress, Tooltip, Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import ConfirmCancellation from "@/components/schedule/class/ConfirmCancellation";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
-import { compactISOWeekString, getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { PLANNED_SESSIONS_NEXT_WHOLE_WEEKS } from "@/lib/consts";
+import { getCapitalizedWeekdays, zeroIndexedWeekday } from "@/lib/helpers/date";
+import { useOpenClassInfo } from "@/lib/hooks/useClassInfo";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
@@ -21,7 +21,7 @@ export default function AgendaSession({
     | { classConfig?: never; userSession: BaseUserSession }
 )) {
     const theme = useTheme();
-    const navigate = useNavigate();
+    const openClassInfo = useOpenClassInfo();
     const { putUserConfig, userConfig } = useUserConfig(chain);
 
     const [showCancelConfirmation, setShowCancelConfirmation] = useState(false);
@@ -92,14 +92,7 @@ export default function AgendaSession({
                     if (!userSession) {
                         return;
                     }
-                    void navigate({
-                        to: "/$chain",
-                        params: { chain },
-                        search: {
-                            [ISO_WEEK_QUERY_PARAM]: compactISOWeekString(userSession.classData.startTime),
-                            [CLASS_ID_QUERY_PARAM]: userSession.classData.id,
-                        },
-                    });
+                    openClassInfo(chain, userSession.classData.id);
                 }}
             >
                 <Box
@@ -283,6 +276,7 @@ export default function AgendaSession({
                     open={showCancelConfirmation}
                     setOpen={setShowCancelConfirmation}
                     setLoading={setIsLoading}
+                    chainIdentifier={chain}
                     _class={userSession.classData}
                 />
             )}

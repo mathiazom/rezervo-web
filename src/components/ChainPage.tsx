@@ -18,7 +18,7 @@ import { compactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { getWeekNumber } from "@/lib/helpers/schedule";
 import { useChain } from "@/lib/hooks/useChain";
-import { useClassInfo } from "@/lib/hooks/useClassInfo";
+import { useOpenClassInfo } from "@/lib/hooks/useClassInfo";
 import { useScheduleFilters } from "@/lib/hooks/useScheduleFilters";
 import { usePrefetchAdjacentWeeks, useScheduleWeek } from "@/lib/hooks/useSchedule";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
@@ -84,7 +84,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
         [currentWeekSchedule?.days],
     );
 
-    const { classInfoClass, setClassInfoClass } = useClassInfo(classes);
+    const openClassInfo = useOpenClassInfo();
 
     const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
@@ -197,7 +197,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
                         selectable={userConfig != undefined && !userConfigError}
                         selectedClassIds={selectedClassIds}
                         onUpdateConfig={onUpdateConfig}
-                        setClassInfoClass={setClassInfoClass}
+                        setClassInfoClass={(c) => openClassInfo(chain.profile.identifier, c.id)}
                         scrollToTodayRef={scrollToTodayRef}
                     />
                 ) : (
@@ -205,13 +205,10 @@ function ChainPage({ weekParam }: { weekParam: string }) {
                 )}
             </Stack>
             <CheckIn selectedLocationIds={deferredSelectedLocationIds} />
-            <ClassInfoModal
-                classInfoClass={classInfoClass}
-                onUpdateConfig={onUpdateConfig}
-                onClose={() => setClassInfoClass(null)}
-            />
+            <ClassInfoModal />
             {bookingPopupState && (
                 <BookingPopupModal
+                    chainIdentifier={bookingPopupState.chain}
                     onClose={() => setBookingPopupState(null)}
                     _class={bookingPopupState._class}
                     action={bookingPopupState.action}

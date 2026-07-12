@@ -4,16 +4,17 @@ import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
 import { useChain } from "@/lib/hooks/useChain";
 
-export function useUserSessionsIndex() {
-    const chain = useChain();
+export function useUserSessionsIndex(chainIdentifier?: string) {
+    const currentChain = useChain();
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
-    const sessionsIndexInit = { params: { path: { chain_identifier: chain.profile.identifier } } };
+    const resolvedChainIdentifier = chainIdentifier ?? currentChain.profile.identifier;
+    const sessionsIndexInit = { params: { path: { chain_identifier: resolvedChainIdentifier } } };
     const sessionsIndexKey = $api.queryOptions("get", "/{chain_identifier}/sessions-index", sessionsIndexInit).queryKey;
 
     const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/sessions-index", sessionsIndexInit, {
-        enabled: isAuthenticated,
+        enabled: isAuthenticated && resolvedChainIdentifier !== "",
     });
 
     return {

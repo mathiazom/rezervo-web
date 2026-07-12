@@ -1,39 +1,48 @@
 import { getRouteApi } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 
-import { CLASS_ID_QUERY_PARAM } from "@/lib/consts";
-import { RezervoClass } from "@/types/openapi";
+import { CLASS_CHAIN_QUERY_PARAM, CLASS_ID_QUERY_PARAM } from "@/lib/consts";
+import { useClassById } from "@/lib/hooks/useClassById";
 
 const routeApi = getRouteApi("/$chain");
 
-export function useClassInfo(classes: RezervoClass[]) {
-    const { [CLASS_ID_QUERY_PARAM]: showClassId } = routeApi.useSearch();
+export function useOpenClassInfo() {
+    const { chain: viewedChainIdentifier } = routeApi.useParams();
     const navigate = routeApi.useNavigate();
-
-    const [classInfoClass, setClassInfoClassState] = useState<RezervoClass | null>(null);
-
-    useEffect(() => {
-        if (!showClassId) {
-            setClassInfoClassState(null);
-            return;
-        }
-        const linkedClass = classes.find((_class) => _class.id === showClassId);
-        if (linkedClass !== undefined) {
-            setClassInfoClassState(linkedClass);
-        }
-    }, [showClassId, classes]);
-
-    const setClassInfoClass = (_class: RezervoClass | null) => {
+    return (chainIdentifier: string, classId: string) => {
         void navigate({
-            search: (prev) => {
-                return _class
-                    ? { ...prev, [CLASS_ID_QUERY_PARAM]: _class.id }
-                    : { ...prev, [CLASS_ID_QUERY_PARAM]: undefined };
-            },
+            search: (prev) => ({
+                ...prev,
+                [CLASS_ID_QUERY_PARAM]: classId,
+                [CLASS_CHAIN_QUERY_PARAM]: chainIdentifier === viewedChainIdentifier ? undefined : chainIdentifier,
+            }),
             replace: true,
         });
-        setClassInfoClassState(_class);
+    };
+}
+
+export function useClassInfo() {
+    const { chain: viewedChainIdentifier } = routeApi.useParams();
+    const { [CLASS_ID_QUERY_PARAM]: classId, [CLASS_CHAIN_QUERY_PARAM]: classChainIdentifier } = routeApi.useSearch();
+    const navigate = routeApi.useNavigate();
+    const chainIdentifier = classChainIdentifier ?? viewedChainIdentifier;
+    const { _class, isLoading, error } = useClassById(chainIdentifier, classId);
+
+    const closeClassInfo = () => {
+        void navigate({
+            search: (prev) => ({
+                ...prev,
+                [CLASS_ID_QUERY_PARAM]: undefined,
+                [CLASS_CHAIN_QUERY_PARAM]: undefined,
+            }),
+            replace: true,
+        });
     };
 
-    return { classInfoClass, setClassInfoClass };
+    return {
+        classInfoClass: classId ? _class : null,
+        classInfoChainIdentifier: classId ? chainIdentifier : null,
+        classInfoLoading: classId != null && isLoading,
+        classInfoError: error,
+        closeClassInfo,
+    };
 }

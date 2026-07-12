@@ -2,7 +2,12 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 
 import ChainPage from "@/components/ChainPage";
 import { $api } from "@/lib/api/client";
-import { CLASS_ID_QUERY_PARAM, ISO_WEEK_QUERY_PARAM, SCROLL_TO_NOW_QUERY_PARAM } from "@/lib/consts";
+import {
+    CLASS_CHAIN_QUERY_PARAM,
+    CLASS_ID_QUERY_PARAM,
+    ISO_WEEK_QUERY_PARAM,
+    SCROLL_TO_NOW_QUERY_PARAM,
+} from "@/lib/consts";
 import { scheduleQueryKey } from "@/lib/helpers/schedule";
 import { getChainPageDataFn } from "@/lib/server/chainData";
 import { z } from "zod";
@@ -13,6 +18,7 @@ export const Route = createFileRoute("/$chain")({
     validateSearch: z.object({
         [ISO_WEEK_QUERY_PARAM]: z.string().optional(),
         [CLASS_ID_QUERY_PARAM]: z.string().optional(),
+        [CLASS_CHAIN_QUERY_PARAM]: z.string().optional(),
         [SCROLL_TO_NOW_QUERY_PARAM]: z.boolean().optional(),
     }),
     loaderDeps: ({ search }) => ({

@@ -6,21 +6,21 @@ import { $api } from "@/lib/api/client";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { RezervoSessionClass } from "@/types/openapi";
-import { useChain } from "@/lib/hooks/useChain";
 
 function ConfirmCancellation({
     open,
     setOpen,
     setLoading,
+    chainIdentifier,
     _class,
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
     setLoading: Dispatch<SetStateAction<boolean>>;
+    chainIdentifier: string;
     _class: RezervoSessionClass;
 }) {
-    const chain = useChain();
-    const { mutateSessionsIndex } = useUserSessionsIndex();
+    const { mutateSessionsIndex } = useUserSessionsIndex(chainIdentifier);
     const { mutateUserSessions } = useUserSessions();
     const cancelBookingMutation = $api.useMutation("post", "/{chain_identifier}/cancel-booking", {
         onSuccess: async () => {
@@ -33,7 +33,7 @@ function ConfirmCancellation({
         setOpen(false);
         setLoading(true);
         cancelBookingMutation.mutate({
-            params: { path: { chain_identifier: chain.profile.identifier } },
+            params: { path: { chain_identifier: chainIdentifier } },
             body: { classId: _class.id },
         });
     }

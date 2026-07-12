@@ -2,14 +2,12 @@ import { $api } from "@/lib/api/client";
 import { deserializeClass } from "@/lib/serialization/deserializers";
 import { deepMerge } from "@/lib/utils/objectUtils";
 import { RezervoClass } from "@/types/openapi";
-import { useChain } from "@/lib/hooks/useChain";
 
-export function useLiveClassData(_class: RezervoClass) {
-    const chain = useChain();
+export function useLiveClassData(chainIdentifier: string, _class: RezervoClass) {
     const { data, error, isLoading } = $api.useQuery(
         "get",
         "/classes/{chain_identifier}/{class_id}",
-        { params: { path: { chain_identifier: chain.profile.identifier, class_id: _class.id } } },
+        { params: { path: { chain_identifier: chainIdentifier, class_id: _class.id } } },
         { refetchInterval: 10 * 1000 },
     );
 

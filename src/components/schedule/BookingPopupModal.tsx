@@ -9,19 +9,19 @@ import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { RezervoClass } from "@/types/openapi";
 import { BookingPopupAction } from "@/types/local";
-import { useChain } from "@/lib/hooks/useChain";
 
 const BookingPopupModal = ({
+    chainIdentifier,
     onClose,
     _class,
     action,
 }: {
+    chainIdentifier: string;
     onClose: () => void;
     _class: RezervoClass;
     action: BookingPopupAction;
 }) => {
-    const chain = useChain();
-    const { mutateSessionsIndex } = useUserSessionsIndex();
+    const { mutateSessionsIndex } = useUserSessionsIndex(chainIdentifier);
     const { mutateUserSessions } = useUserSessions();
 
     const onBookingSuccess = async () => {
@@ -42,14 +42,14 @@ const BookingPopupModal = ({
 
     function book() {
         bookMutation.mutate({
-            params: { path: { chain_identifier: chain.profile.identifier } },
+            params: { path: { chain_identifier: chainIdentifier } },
             body: { classId: _class.id },
         });
     }
 
     function cancelBooking() {
         cancelBookingMutation.mutate({
-            params: { path: { chain_identifier: chain.profile.identifier } },
+            params: { path: { chain_identifier: chainIdentifier } },
             body: { classId: _class.id },
         });
     }
