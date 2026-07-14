@@ -27,6 +27,7 @@ export type UserNameWithIsSelf = OpenApi["UserIdAndNameWithIsSelf"];
 export type Features = OpenApi["Features"];
 export type CommunityUser = OpenApi["CommunityUser"];
 export type PushNotificationSubscription = OpenApi["PushNotificationSubscription"];
+export type PushNotificationGrants = OpenApi["PushNotificationGrants"];
 export type RezervoClassDTO = OpenApi["RezervoClass"];
 export type RezervoDayScheduleDTO = OpenApi["RezervoDay"];
 export type BaseUserSessionDTO = OpenApi["BaseUserSession"];

@@ -15,6 +15,8 @@ import SettingsModal from "@/components/user/settings/SettingsModal";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useCommunity } from "@/lib/hooks/useCommunity";
 import { useMyUser } from "@/lib/hooks/useMyUser";
+import { usePreferences } from "@/lib/hooks/usePreferences";
+import { PushSubscriptionProvider } from "@/lib/pushSubscriptionProvider";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
@@ -35,6 +37,8 @@ function UserBar() {
     const { userConfigError, userConfigLoading, mutateUserConfig } = useUserConfig(chain.profile.identifier);
     const { userChainConfigs } = useUserChainConfigs();
     const { userSessions } = useUserSessions();
+    // Prewarm the preferences query on page load so the settings modal opens fully resolved.
+    usePreferences();
     const [activeModal, setActiveModal] = useState<"community" | "settings" | "agenda" | "profile" | null>(null);
     const closeModal = () => setActiveModal(null);
     const friendRequestCount =
@@ -58,7 +62,7 @@ function UserBar() {
                         Logg inn
                     </Button>
                 ) : (
-                    <>
+                    <PushSubscriptionProvider>
                         <Box
                             sx={{
                                 display: "flex",
@@ -171,7 +175,7 @@ function UserBar() {
                         <AgendaModal open={activeModal === "agenda"} onClose={closeModal} />
                         <SettingsModal open={activeModal === "settings"} onClose={closeModal} />
                         <ProfileModal open={activeModal === "profile"} onClose={closeModal} />
-                    </>
+                    </PushSubscriptionProvider>
                 )}
             </>
         )
