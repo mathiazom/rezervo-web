@@ -41,7 +41,7 @@
         "openapi-react-query": "^0.5.4",
         "react": "19.2.7",
         "react-dom": "19.2.7",
-        "react-dropzone": "^15.0.0",
+        "react-dropzone": "^20.1.2",
         "react-oauth2-code-pkce": "^1.24.0",
         "react-snowfall": "^2.4.0",
         "zod": "^4.4.3"
