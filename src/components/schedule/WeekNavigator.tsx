@@ -11,6 +11,7 @@ import ScheduleFiltersDialog, {
 import { offsetWeekParam } from "@/lib/helpers/schedule";
 import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
 import { useChain } from "@/lib/hooks/useChain";
+import { LocationId } from "@/types/brand";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 export default function WeekNavigator({
@@ -33,8 +34,8 @@ export default function WeekNavigator({
     weekNumber: number;
     onChangeWeek: (weekParam: string) => void;
     onToday: () => void;
-    selectedLocationIds: string[];
-    setSelectedLocationIds: (value: string[]) => void;
+    selectedLocationIds: LocationId[];
+    setSelectedLocationIds: (value: LocationId[]) => void;
     selectedCategories: string[];
     setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;

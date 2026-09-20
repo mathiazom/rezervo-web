@@ -9,15 +9,16 @@ import {
     storeSelectedLocations,
 } from "@/lib/helpers/storage";
 import { useActivityCategories } from "@/lib/hooks/useActivityCategories";
+import { LocationId } from "@/types/brand";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 import { useChain } from "@/lib/hooks/useChain";
 
-export function useScheduleFilters(initialLocationIds: string[], defaultLocationIds: string[]) {
+export function useScheduleFilters(initialLocationIds: LocationId[], defaultLocationIds: LocationId[]) {
     const {
         profile: { identifier: chainIdentifier },
     } = useChain();
     const activityCategories = useActivityCategories();
-    const [selectedLocationIds, setSelectedLocationIdsState] = useState<string[]>(initialLocationIds);
+    const [selectedLocationIds, setSelectedLocationIdsState] = useState<LocationId[]>(initialLocationIds);
     const deferredSelectedLocationIds = useDeferredValue(selectedLocationIds);
     const [selectedCategories, setSelectedCategoriesState] = useState<string[]>(
         activityCategories.map((ac) => ac.name),
@@ -36,7 +37,7 @@ export function useScheduleFilters(initialLocationIds: string[], defaultLocation
         setExcludeClassTimeFiltersState(getStoredExcludeClassTimeFilters() ?? { enabled: true, filters: [] });
     }, [chainIdentifier, defaultLocationIds, activityCategories]);
 
-    const setSelectedLocationIds = (value: string[]) => {
+    const setSelectedLocationIds = (value: LocationId[]) => {
         setSelectedLocationIdsState(value);
         storeSelectedLocations(chainIdentifier, value);
     };

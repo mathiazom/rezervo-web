@@ -4,11 +4,12 @@ import ClassInfo from "@/components/schedule/class/ClassInfo";
 import BookingPopupModal from "@/components/schedule/BookingPopupModal";
 import { useClassInfo } from "@/lib/hooks/useClassInfo";
 import { useClassInfoConfig } from "@/lib/hooks/useClassInfoConfig";
+import { brandChainId } from "@/types/brand";
 
 const ClassInfoModal = () => {
     const { classInfoClass, classInfoChainIdentifier, classInfoLoading, closeClassInfo } = useClassInfo();
     const { onUpdateConfig, bookingPopupState, setBookingPopupState } = useClassInfoConfig(
-        classInfoChainIdentifier ?? "",
+        classInfoChainIdentifier ?? brandChainId(""),
     );
 
     return (

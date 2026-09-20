@@ -5,8 +5,9 @@ import { fromCompactISOWeekString, LocalizedDateTime } from "@/lib/helpers/date"
 import { ADJACENT_WEEK_OFFSETS, fetchScheduleWeekDTO, offsetWeekParam, scheduleQueryKey } from "@/lib/helpers/schedule";
 import { deserializeWeekSchedule } from "@/lib/serialization/deserializers";
 import { useChain } from "@/lib/hooks/useChain";
+import { LocationId } from "@/types/brand";
 
-export function useScheduleWeek(weekParam: string | null, locationIds: string[] | null) {
+export function useScheduleWeek(weekParam: string | null, locationIds: LocationId[] | null) {
     const {
         profile: { identifier: chainIdentifier },
     } = useChain();
@@ -17,8 +18,8 @@ export function useScheduleWeek(weekParam: string | null, locationIds: string[] 
         dateFromWeekParam !== null && dateFromWeekParam.isValid ? dateFromWeekParam : LocalizedDateTime.now();
 
     const { data, error, isLoading, isFetching, isPlaceholderData, isSuccess, dataUpdatedAt } = useQuery({
-        queryKey: scheduleQueryKey(chainIdentifier ?? "", weekParam ?? ""),
-        queryFn: () => fetchScheduleWeekDTO(chainIdentifier ?? "", weekParam ?? "", locationIds ?? []),
+        queryKey: scheduleQueryKey(chainIdentifier, weekParam ?? ""),
+        queryFn: () => fetchScheduleWeekDTO(chainIdentifier, weekParam ?? "", locationIds ?? []),
         enabled,
         select: deserializeWeekSchedule,
         placeholderData: keepPreviousData,
@@ -43,7 +44,7 @@ export function useScheduleWeek(weekParam: string | null, locationIds: string[] 
     };
 }
 
-export function usePrefetchAdjacentWeeks(weekParam: string | null, locationIds: string[] | null, ready: boolean) {
+export function usePrefetchAdjacentWeeks(weekParam: string | null, locationIds: LocationId[] | null, ready: boolean) {
     const {
         profile: { identifier: chainIdentifier },
     } = useChain();

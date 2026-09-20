@@ -5,9 +5,10 @@ import { useAllConfigs } from "@/lib/hooks/useAllConfigs";
 import { useUser } from "@/lib/hooks/useUser";
 import { useUserChainConfigs } from "@/lib/hooks/useUserChainConfigs";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
-import { ChainConfigPayload } from "@/types/openapi";
+import { ChainId } from "@/types/brand";
+import { brandChainConfigPayload, ChainConfigPayload } from "@/types/openapi";
 
-export function useUserConfig(chainIdentifier: string) {
+export function useUserConfig(chainIdentifier: ChainId) {
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
 
@@ -31,7 +32,7 @@ export function useUserConfig(chainIdentifier: string) {
             if (!response.ok || data === undefined) {
                 throw new Error(`Failed to fetch user config (${response.status})`);
             }
-            return data;
+            return brandChainConfigPayload(data);
         },
         enabled: isAuthenticated && chainIdentifier !== "",
     });

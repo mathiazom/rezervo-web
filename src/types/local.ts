@@ -1,4 +1,5 @@
 import { HourNumbers, MinuteNumbers, WeekdayNumbers } from "luxon";
+import type { ChainId } from "@/types/brand";
 import { type CheckInTerminal, RezervoClass } from "@/types/openapi";
 import type { CheckInLocation } from "@/components/utils/CheckIn";
 
@@ -8,7 +9,7 @@ export enum BookingPopupAction {
 }
 
 export interface BookingPopupState {
-    chain: string;
+    chain: ChainId;
     _class: RezervoClass;
     action: BookingPopupAction;
 }

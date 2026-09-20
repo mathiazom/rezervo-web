@@ -13,6 +13,7 @@ import {
 import { classRecurrentId } from "@/lib/helpers/recurrentId";
 import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { LocationId, RecurrentClassId } from "@/types/brand";
 import { RezervoClass, RezervoDaySchedule } from "@/types/openapi";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
@@ -28,13 +29,13 @@ function DaySchedule({
     setClassInfoClass,
 }: {
     daySchedule: RezervoDaySchedule;
-    selectedLocationIds: string[];
+    selectedLocationIds: LocationId[];
     selectedCategories: string[];
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     selectable: boolean;
-    selectedClassIds: string[] | null;
+    selectedClassIds: RecurrentClassId[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
-    onUpdateConfig: (classId: string, selected: boolean) => void;
+    onUpdateConfig: (classId: RecurrentClassId, selected: boolean) => void;
     setClassInfoClass: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();

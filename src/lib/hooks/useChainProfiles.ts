@@ -1,7 +1,8 @@
 import { $api } from "@/lib/api/client";
-import { ChainProfile, RezervoChain } from "@/types/openapi";
+import { brandRezervoChain, ChainProfile, OpenApi } from "@/types/openapi";
 
-const selectChainProfiles = (chains: RezervoChain[]): ChainProfile[] => chains.map((chain) => chain.profile);
+const selectChainProfiles = (chains: OpenApi["ChainResponse"][]): ChainProfile[] =>
+    chains.map((chain) => brandRezervoChain(chain).profile);
 export function useChainProfiles() {
     const { data } = $api.useQuery("get", "/chains", {}, { select: selectChainProfiles });
     return data ?? [];

@@ -1,15 +1,18 @@
 import { getRouteApi } from "@tanstack/react-router";
 
 import { $api } from "@/lib/api/client";
-import { RezervoChain } from "@/types/openapi";
+import { brandRezervoChain, RezervoChain } from "@/types/openapi";
 
 const routeApi = getRouteApi("/$chain");
 
 export function useChain(): RezervoChain {
     const { chain: chainIdentifier } = routeApi.useParams();
-    const { data: chain } = $api.useQuery("get", "/chains/{chain_identifier}", {
-        params: { path: { chain_identifier: chainIdentifier } },
-    });
+    const { data: chain } = $api.useQuery(
+        "get",
+        "/chains/{chain_identifier}",
+        { params: { path: { chain_identifier: chainIdentifier } } },
+        { select: brandRezervoChain },
+    );
     // The `$chain` route loader seeds this exact query (see src/routes/$chain.tsx) before this component
     // ever renders, so `chain` should always be defined here.
     if (chain == null) {

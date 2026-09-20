@@ -1,7 +1,9 @@
 import { LocalizedDateTime } from "@/lib/helpers/date";
 import {
     BaseUserSession,
-    BaseUserSessionDTO,
+    brandBaseUserSessionDTO,
+    brandRezervoClassDTO,
+    OpenApi,
     RezervoClass,
     RezervoClassDTO,
     RezervoDaySchedule,
@@ -19,7 +21,11 @@ function withLuxonTimes<T extends { startTime: string; endTime: string }>(dto: T
     };
 }
 
-export function deserializeClass(classDTO: RezervoClassDTO): RezervoClass {
+export function deserializeClass(classDTO: OpenApi["RezervoClass"]): RezervoClass {
+    return withLuxonTimes(brandRezervoClassDTO(classDTO));
+}
+
+function deserializeBrandedClass(classDTO: RezervoClassDTO): RezervoClass {
     return withLuxonTimes(classDTO);
 }
 
@@ -27,7 +33,7 @@ function deserializeDaySchedule(dayScheduleDTO: RezervoDayScheduleDTO): RezervoD
     return {
         ...dayScheduleDTO,
         date: LocalizedDateTime.fromISO(dayScheduleDTO.date),
-        classes: dayScheduleDTO.classes.map(deserializeClass),
+        classes: dayScheduleDTO.classes.map(deserializeBrandedClass),
     };
 }
 
@@ -38,8 +44,8 @@ export function deserializeWeekSchedule(weekScheduleDTO: RezervoWeekScheduleDTO)
     };
 }
 
-export function deserializeUserSessions(userSessionsDTO: BaseUserSessionDTO[]): BaseUserSession[] {
-    return userSessionsDTO.map((userSessionDTO) => ({
+export function deserializeUserSessions(userSessionsDTO: OpenApi["BaseUserSession"][]): BaseUserSession[] {
+    return userSessionsDTO.map(brandBaseUserSessionDTO).map((userSessionDTO) => ({
         ...userSessionDTO,
         classData: withLuxonTimes(userSessionDTO.classData),
     }));

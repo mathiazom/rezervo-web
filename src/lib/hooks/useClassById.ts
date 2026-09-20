@@ -1,7 +1,8 @@
 import { $api } from "@/lib/api/client";
 import { deserializeClass } from "@/lib/serialization/deserializers";
+import { ChainId, ClassId } from "@/types/brand";
 
-export function useClassById(chainIdentifier: string, classId: string | undefined) {
+export function useClassById(chainIdentifier: ChainId, classId: ClassId | undefined) {
     const { data, error, isLoading } = $api.useQuery(
         "get",
         "/classes/{chain_identifier}/{class_id}",

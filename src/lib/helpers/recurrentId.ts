@@ -1,6 +1,7 @@
+import { ActivityId, RecurrentClassId, brandRecurrentClassId } from "@/types/brand";
 import { ClassConfig, RezervoSessionClass } from "@/types/openapi";
 
-export function classConfigRecurrentId(classConfig: ClassConfig) {
+export function classConfigRecurrentId(classConfig: ClassConfig): RecurrentClassId {
     return recurrentClassId(
         classConfig.activityId,
         classConfig.weekday,
@@ -9,11 +10,11 @@ export function classConfigRecurrentId(classConfig: ClassConfig) {
     );
 }
 
-export function classRecurrentId(_class: RezervoSessionClass) {
+export function classRecurrentId(_class: RezervoSessionClass): RecurrentClassId {
     const { hour, minute, weekday } = _class.startTime;
-    return recurrentClassId(_class.activity.id.toString(), (weekday + 6) % 7, hour, minute);
+    return recurrentClassId(_class.activity.id, (weekday + 6) % 7, hour, minute);
 }
 
-function recurrentClassId(activityId: string, weekday: number, hour: number, minute: number) {
-    return `${activityId}_${weekday}_${hour}_${minute}`;
+function recurrentClassId(activityId: ActivityId, weekday: number, hour: number, minute: number): RecurrentClassId {
+    return brandRecurrentClassId(`${activityId}_${weekday}_${hour}_${minute}`);
 }

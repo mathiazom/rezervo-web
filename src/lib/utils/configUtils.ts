@@ -5,7 +5,7 @@ import { ClassConfig, RezervoClass } from "@/types/openapi";
 export function classToConfig(c: RezervoClass): ClassConfig {
     const { hour, minute, weekday } = c.startTime;
     return {
-        activityId: c.activity.id.toString(),
+        activityId: c.activity.id,
         weekday: zeroIndexedWeekday(weekday),
         locationId: c.location.id,
         startTime: { hour, minute },

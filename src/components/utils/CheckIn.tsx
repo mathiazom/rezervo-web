@@ -24,10 +24,11 @@ import { getStoredCheckInConfiguration, storeCheckInConfiguration } from "@/lib/
 import { useChain } from "@/lib/hooks/useChain";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { useUser } from "@/lib/hooks/useUser";
+import { LocationId } from "@/types/brand";
 import { CheckInTerminal, RezervoChain } from "@/types/openapi";
 
 export interface CheckInLocation {
-    id: string;
+    id: LocationId;
     name: string;
     terminals: CheckInTerminal[];
 }
@@ -53,7 +54,7 @@ function getRandomCheckInMessage() {
     return checkInMessages[randomIndex];
 }
 
-function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationIds: string[]) {
+function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationIds: LocationId[]) {
     return chain.branches.flatMap((branch) =>
         branch.locations
             .filter(
@@ -70,7 +71,7 @@ function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationId
     );
 }
 
-export default function CheckIn({ selectedLocationIds }: { selectedLocationIds: string[] }) {
+export default function CheckIn({ selectedLocationIds }: { selectedLocationIds: LocationId[] }) {
     const chain = useChain();
     const [open, setOpen] = useState(false);
     const [location, setLocation] = useState<CheckInLocation | undefined>();

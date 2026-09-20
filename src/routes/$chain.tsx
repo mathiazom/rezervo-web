@@ -13,12 +13,13 @@ import { getChainPageDataFn } from "@/lib/server/chainData";
 import { z } from "zod";
 import { useEffect } from "react";
 import { storeSelectedChain } from "@/lib/helpers/storage";
+import { brandChainId, brandClassId } from "@/types/brand";
 
 export const Route = createFileRoute("/$chain")({
     validateSearch: z.object({
         [ISO_WEEK_QUERY_PARAM]: z.string().optional(),
-        [CLASS_ID_QUERY_PARAM]: z.string().optional(),
-        [CLASS_CHAIN_QUERY_PARAM]: z.string().optional(),
+        [CLASS_ID_QUERY_PARAM]: z.string().transform(brandClassId).optional(),
+        [CLASS_CHAIN_QUERY_PARAM]: z.string().transform(brandChainId).optional(),
         [SCROLL_TO_NOW_QUERY_PARAM]: z.boolean().optional(),
     }),
     loaderDeps: ({ search }) => ({
@@ -47,7 +48,7 @@ export const Route = createFileRoute("/$chain")({
         const { weekParam } = Route.useLoaderData();
 
         useEffect(() => {
-            storeSelectedChain(chain);
+            storeSelectedChain(brandChainId(chain));
         }, [chain]);
 
         return <ChainPage weekParam={weekParam} />;

@@ -1,9 +1,10 @@
 import { $api } from "@/lib/api/client";
 import { deserializeClass } from "@/lib/serialization/deserializers";
 import { deepMerge } from "@/lib/utils/objectUtils";
+import { ChainId } from "@/types/brand";
 import { RezervoClass } from "@/types/openapi";
 
-export function useLiveClassData(chainIdentifier: string, _class: RezervoClass) {
+export function useLiveClassData(chainIdentifier: ChainId, _class: RezervoClass) {
     const { data, error, isLoading } = $api.useQuery(
         "get",
         "/classes/{chain_identifier}/{class_id}",

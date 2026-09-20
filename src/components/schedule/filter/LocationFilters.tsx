@@ -3,13 +3,14 @@ import { Fragment } from "react";
 
 import { LOCATIONS_COLOR } from "@/components/schedule/filter/ScheduleFiltersDialog";
 import { useChain } from "@/lib/hooks/useChain";
+import { LocationId } from "@/types/brand";
 
 export default function LocationFilters({
     selectedLocationIds,
     setSelectedLocationIds,
 }: {
-    selectedLocationIds: string[];
-    setSelectedLocationIds: (value: string[]) => void;
+    selectedLocationIds: LocationId[];
+    setSelectedLocationIds: (value: LocationId[]) => void;
 }) {
     const chain = useChain();
     const allLocationIds = chain.branches.flatMap((branch) => branch.locations.map(({ identifier }) => identifier));

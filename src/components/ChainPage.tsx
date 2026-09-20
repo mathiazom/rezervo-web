@@ -25,6 +25,7 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { updateValueSelection } from "@/lib/utils/arrayUtils";
 import { buildAllClassesConfigMap } from "@/lib/utils/configUtils";
+import { RecurrentClassId } from "@/types/brand";
 import { SessionStatus } from "@/types/openapi";
 import { BookingPopupAction, BookingPopupState } from "@/types/local";
 import { RezervoError } from "@/types/ui";
@@ -45,7 +46,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
         setCurrentWeek(weekParam);
     }, [weekParam]);
 
-    const [selectedClassIds, setSelectedClassIds] = useState<string[] | null>(null);
+    const [selectedClassIds, setSelectedClassIds] = useState<RecurrentClassId[] | null>(null);
     const deferredSelectedClassIds = useDeferredValue(selectedClassIds);
 
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);
@@ -88,7 +89,7 @@ function ChainPage({ weekParam }: { weekParam: string }) {
 
     const allClassesConfigMap = buildAllClassesConfigMap(classes, userConfig?.recurringBookings);
 
-    const onUpdateConfig = async (classId: string, selected: boolean) => {
+    const onUpdateConfig = async (classId: RecurrentClassId, selected: boolean) => {
         const selectedClass = classes.find((c) => classRecurrentId(c) === classId);
         if (selectedClass?.isBookable) {
             const isBooked =

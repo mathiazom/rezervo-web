@@ -4,6 +4,7 @@ import Tooltip from "@mui/material/Tooltip";
 import RippleBadge from "@/components/utils/RippleBadge";
 import { UserAvatar } from "@/components/utils/UserAvatar";
 import { useMyUser } from "@/lib/hooks/useMyUser";
+import { UserId } from "@/types/brand";
 import { StatusColors } from "@/types/ui";
 
 export default function ClassUserAvatar({
@@ -16,7 +17,7 @@ export default function ClassUserAvatar({
     loading = false,
     withSelfPrefix = true,
 }: {
-    userId: string;
+    userId: UserId;
     username: string;
     size?: number | undefined;
     rippleColor?: string | undefined;

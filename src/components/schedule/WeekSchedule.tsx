@@ -2,6 +2,7 @@ import { alpha, Box, Stack, useTheme } from "@mui/material";
 
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { isToday } from "@/lib/helpers/date";
+import { LocationId, RecurrentClassId } from "@/types/brand";
 import { RezervoClass, RezervoWeekSchedule } from "@/types/openapi";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
@@ -17,13 +18,13 @@ function WeekSchedule({
     setClassInfoClass,
 }: {
     weekSchedule: RezervoWeekSchedule;
-    selectedLocationIds: string[];
+    selectedLocationIds: LocationId[];
     selectedCategories: string[];
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;
     selectable: boolean;
-    selectedClassIds: string[] | null;
+    selectedClassIds: RecurrentClassId[] | null;
     scrollToTodayRef: React.RefObject<HTMLDivElement | null>;
-    onUpdateConfig: (classId: string, selected: boolean) => void;
+    onUpdateConfig: (classId: RecurrentClassId, selected: boolean) => void;
     setClassInfoClass: (c: RezervoClass) => void;
 }) {
     const theme = useTheme();

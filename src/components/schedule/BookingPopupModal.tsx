@@ -7,6 +7,7 @@ import { $api } from "@/lib/api/client";
 import { hasWaitingList } from "@/lib/helpers/attendance";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
+import { ChainId } from "@/types/brand";
 import { RezervoClass } from "@/types/openapi";
 import { BookingPopupAction } from "@/types/local";
 
@@ -16,7 +17,7 @@ const BookingPopupModal = ({
     _class,
     action,
 }: {
-    chainIdentifier: string;
+    chainIdentifier: ChainId;
     onClose: () => void;
     _class: RezervoClass;
     action: BookingPopupAction;
@@ -56,7 +57,7 @@ const BookingPopupModal = ({
 
     return (
         <Dialog open={action !== null} maxWidth={"xs"} fullWidth={true}>
-            {_class !== null && action !== null && (
+            {action !== null && (
                 <>
                     <DialogTitle>{isCancellation ? "Avbestille timen?" : "Booke førstkommende time?"}</DialogTitle>
                     <DialogContent>

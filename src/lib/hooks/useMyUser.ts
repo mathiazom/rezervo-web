@@ -1,5 +1,6 @@
 import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
+import { brandUserId } from "@/types/brand";
 
 export function useMyUser() {
     const { isAuthenticated } = useUser();
@@ -7,7 +8,7 @@ export function useMyUser() {
     const { data } = $api.useQuery("put", "/user", {}, { enabled: isAuthenticated });
 
     return {
-        userId: data?.id ?? null,
+        userId: data?.id != null ? brandUserId(data.id) : null,
         userName: data?.name ?? null,
     };
 }

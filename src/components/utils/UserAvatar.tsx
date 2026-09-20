@@ -6,6 +6,7 @@ import { fetchAvatarDataUrl } from "@/lib/api/image";
 import { useMyUser } from "@/lib/hooks/useMyUser";
 import { useUser } from "@/lib/hooks/useUser";
 import { avatarColor } from "@/lib/utils/colorUtils";
+import { UserId } from "@/types/brand";
 
 export function UserAvatar({
     userId,
@@ -14,7 +15,7 @@ export function UserAvatar({
     previewOverride,
     onIsAvatarAvailableChanged,
 }: {
-    userId: string;
+    userId: UserId | "me";
     username: string;
     size?: number;
     previewOverride?: string | null | undefined;

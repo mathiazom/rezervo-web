@@ -4,6 +4,7 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { classToConfig } from "@/lib/utils/configUtils";
+import { ChainId } from "@/types/brand";
 import { BookingPopupAction, BookingPopupState } from "@/types/local";
 import { RezervoClass, SessionStatus } from "@/types/openapi";
 
@@ -11,7 +12,7 @@ import { RezervoClass, SessionStatus } from "@/types/openapi";
 // class and its own chain identifier rather than the schedule's classes/config map or the
 // currently viewed chain — so it works regardless of which chain/week (if any) is loaded behind
 // the modal.
-export function useClassInfoConfig(chainIdentifier: string) {
+export function useClassInfoConfig(chainIdentifier: ChainId) {
     const { userConfig, putUserConfig } = useUserConfig(chainIdentifier);
     const { userSessionsIndex } = useUserSessionsIndex(chainIdentifier);
     const [bookingPopupState, setBookingPopupState] = useState<BookingPopupState | null>(null);

@@ -5,12 +5,13 @@ import {
     LocalizedDateTime,
 } from "@/lib/helpers/date";
 import { apiClient } from "@/lib/api/client";
-import { RezervoWeekSchedule, RezervoWeekScheduleDTO } from "@/types/openapi";
+import { ChainId, LocationId } from "@/types/brand";
+import { brandRezervoWeekScheduleDTO, RezervoWeekSchedule, RezervoWeekScheduleDTO } from "@/types/openapi";
 
 // Background-prefetched weeks relative to the current week: previous week + next 3 weeks.
 export const ADJACENT_WEEK_OFFSETS = [-1, 1, 2, 3];
 
-export function scheduleQueryKey(chainIdentifier: string, weekParam: string) {
+export function scheduleQueryKey(chainIdentifier: ChainId, weekParam: string) {
     return ["schedule", chainIdentifier, weekParam] as const;
 }
 
@@ -33,9 +34,9 @@ export function getWeekNumber(weekSchedule: RezervoWeekSchedule | null, weekPara
 }
 
 export async function fetchScheduleWeekDTO(
-    chainIdentifier: string,
+    chainIdentifier: ChainId,
     weekParam: string,
-    locationIds: string[],
+    locationIds: LocationId[],
 ): Promise<RezervoWeekScheduleDTO> {
     const { data } = await apiClient.GET("/schedule/{chain_identifier}/{compact_iso_week}", {
         params: {
@@ -47,5 +48,5 @@ export async function fetchScheduleWeekDTO(
         throw new Error(`Failed to fetch schedule for chain "${chainIdentifier}", week ${weekParam}`);
     }
     // The backend response does not include the requested locationIds, so inject them for deserialization.
-    return { ...data, locationIds };
+    return brandRezervoWeekScheduleDTO(data, locationIds);
 }

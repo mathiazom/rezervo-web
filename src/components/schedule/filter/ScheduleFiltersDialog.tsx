@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import CategoryFilters from "@/components/schedule/filter/CategoryFilters";
 import ExcludeClassTimeFilters from "@/components/schedule/filter/ExcludeClassTimeFilters";
 import LocationFilters from "@/components/schedule/filter/LocationFilters";
+import { LocationId } from "@/types/brand";
 import { ExcludeClassTimeFiltersType } from "@/types/local";
 
 function a11yProps(index: number) {
@@ -60,8 +61,8 @@ export default function ScheduleFiltersDialog({
 }: {
     open: boolean;
     setOpen: Dispatch<SetStateAction<boolean>>;
-    selectedLocationIds: string[];
-    setSelectedLocationIds: (value: string[]) => void;
+    selectedLocationIds: LocationId[];
+    setSelectedLocationIds: (value: LocationId[]) => void;
     selectedCategories: string[];
     setSelectedCategories: (value: string[]) => void;
     excludeClassTimeFilters: ExcludeClassTimeFiltersType;

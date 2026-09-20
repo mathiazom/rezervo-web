@@ -1,5 +1,6 @@
 import Cookies from "js-cookie";
 
+import { ChainId, LocationId } from "@/types/brand";
 import { type CheckInConfiguration, ExcludeClassTimeFilter, ExcludeClassTimeFiltersType } from "@/types/local";
 
 const STORAGE_KEY_PREFIX = "rezervo.";
@@ -9,8 +10,8 @@ export const SELECTED_CHAIN_COOKIE_KEY = `${STORAGE_KEY_PREFIX}selectedChain`;
 const STORAGE_KEYS = {
     SELECTED_CHAIN: SELECTED_CHAIN_COOKIE_KEY,
     PWA_INSTALL_DISMISSED: `${STORAGE_KEY_PREFIX}pwaInstallDismissed`,
-    selectedLocations: (chain: string) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
-    selectedCategories: (chain: string) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
+    selectedLocations: (chain: ChainId) => `${STORAGE_KEY_PREFIX}selectedLocations.${chain}`,
+    selectedCategories: (chain: ChainId) => `${STORAGE_KEY_PREFIX}selectedCategories.${chain}`,
     excludeClassTimeFilters: `${STORAGE_KEY_PREFIX}excludeClassTimeFilters`,
     preLoginPath: `${STORAGE_KEY_PREFIX}preLoginPath`,
     checkInConfiguration: `${STORAGE_KEY_PREFIX}checkInConfiguration`,
@@ -21,12 +22,12 @@ function storeValue<T>(key: string, value: T) {
     storeAsCookie(key, value);
 }
 
-export function storeSelectedChain(chain: string) {
+export function storeSelectedChain(chain: ChainId) {
     storeValue(STORAGE_KEYS.SELECTED_CHAIN, chain);
 }
 
-export function getStoredSelectedChain(): string | null {
-    return getStoredValue<string>(STORAGE_KEYS.SELECTED_CHAIN, false);
+export function getStoredSelectedChain(): ChainId | null {
+    return getStoredValue<ChainId>(STORAGE_KEYS.SELECTED_CHAIN, false);
 }
 
 export function storePWAInstallDismissed() {
@@ -37,19 +38,19 @@ export function getStoredPWAInstallDismissed(): boolean | null {
     return getStoredValue<boolean>(STORAGE_KEYS.PWA_INSTALL_DISMISSED, false);
 }
 
-export function storeSelectedLocations(chainIdentifier: string, locationIdentifiers: string[]) {
+export function storeSelectedLocations(chainIdentifier: ChainId, locationIdentifiers: LocationId[]) {
     storeValue(STORAGE_KEYS.selectedLocations(chainIdentifier), locationIdentifiers);
 }
 
-export function getStoredSelectedLocations(chainIdentifier: string): string[] | null {
-    return getStoredValue<string[]>(STORAGE_KEYS.selectedLocations(chainIdentifier), true);
+export function getStoredSelectedLocations(chainIdentifier: ChainId): LocationId[] | null {
+    return getStoredValue<LocationId[]>(STORAGE_KEYS.selectedLocations(chainIdentifier), true);
 }
 
-export function storeSelectedCategories(chainIdentifier: string, categories: string[]) {
+export function storeSelectedCategories(chainIdentifier: ChainId, categories: string[]) {
     storeValue(STORAGE_KEYS.selectedCategories(chainIdentifier), categories);
 }
 
-export function getStoredSelectedCategories(chainIdentifier: string): string[] | null {
+export function getStoredSelectedCategories(chainIdentifier: ChainId): string[] | null {
     return getStoredValue<string[]>(STORAGE_KEYS.selectedCategories(chainIdentifier), true);
 }
 

@@ -16,6 +16,7 @@ import { capitalizeFirstCharacter, isInThePast } from "@/lib/helpers/date";
 import { classConfigRecurrentId, classRecurrentId } from "@/lib/helpers/recurrentId";
 import { useChainProfiles } from "@/lib/hooks/useChainProfiles";
 import { formatNameArray } from "@/lib/utils/arrayUtils";
+import { brandChainId } from "@/types/brand";
 import { BaseUserSession, ChainConfig, ClassConfig, SessionStatus } from "@/types/openapi";
 
 function mapClassesByStartTime(classes: BaseUserSession[]) {
@@ -144,7 +145,7 @@ export default function Agenda({
                                     <AgendaEntry
                                         key={classConfigRecurrentId(classConfig)}
                                         classConfig={classConfig}
-                                        chain={chain}
+                                        chain={brandChainId(chain)}
                                     />
                                 )),
                             )}

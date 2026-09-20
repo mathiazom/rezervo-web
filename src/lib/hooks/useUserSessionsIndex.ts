@@ -3,8 +3,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { $api } from "@/lib/api/client";
 import { useUser } from "@/lib/hooks/useUser";
 import { useChain } from "@/lib/hooks/useChain";
+import { ChainId } from "@/types/brand";
+import { brandUserSessionsIndex } from "@/types/openapi";
 
-export function useUserSessionsIndex(chainIdentifier?: string) {
+export function useUserSessionsIndex(chainIdentifier?: ChainId) {
     const currentChain = useChain();
     const { isAuthenticated } = useUser();
     const queryClient = useQueryClient();
@@ -15,6 +17,7 @@ export function useUserSessionsIndex(chainIdentifier?: string) {
 
     const { data, error, isLoading } = $api.useQuery("get", "/{chain_identifier}/sessions-index", sessionsIndexInit, {
         enabled: isAuthenticated && resolvedChainIdentifier !== "",
+        select: brandUserSessionsIndex,
     });
 
     return {

@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api/client";
+import { UserId } from "@/types/brand";
 
 function blobToDataUrl(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -9,7 +10,7 @@ function blobToDataUrl(blob: Blob): Promise<string> {
     });
 }
 
-export async function fetchAvatarDataUrl(userId: string, sizeName: string): Promise<string | null> {
+export async function fetchAvatarDataUrl(userId: UserId, sizeName: string): Promise<string | null> {
     const { data, response } = await apiClient.GET("/user/{user_id}/avatar/{size_name}", {
         params: { path: { user_id: userId, size_name: sizeName } },
         parseAs: "blob",

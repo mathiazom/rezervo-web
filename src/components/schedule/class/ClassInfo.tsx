@@ -34,6 +34,7 @@ import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { useUserSessions } from "@/lib/hooks/useUserSessions";
 import { useUserSessionsIndex } from "@/lib/hooks/useUserSessionsIndex";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { ChainId } from "@/types/brand";
 import { RezervoClass, SessionStatus } from "@/types/openapi";
 import { StatusColors } from "@/types/ui";
 import { hasWaitingList, shouldShowClassAttendance, stringifyClassAttendance } from "@/lib/helpers/attendance";
@@ -45,7 +46,7 @@ export default function ClassInfo({
     initialClassData,
     onUpdateConfig,
 }: {
-    chainIdentifier: string;
+    chainIdentifier: ChainId;
     initialClassData: RezervoClass;
     onUpdateConfig: (_class: RezervoClass, selected: boolean) => void;
 }) {

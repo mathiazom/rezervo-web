@@ -10,13 +10,14 @@ import { useOpenClassInfo } from "@/lib/hooks/useClassInfo";
 import { useUserConfig } from "@/lib/hooks/useUserConfig";
 import { vars } from "@/lib/theme";
 import { hexWithOpacityToRgb } from "@/lib/utils/colorUtils";
+import { ChainId } from "@/types/brand";
 import { BaseUserSession, ChainConfigPayload, ClassConfig, SessionStatus } from "@/types/openapi";
 
 export default function AgendaSession({
     chain,
     classConfig,
     userSession,
-}: { chain: string } & (
+}: { chain: ChainId } & (
     | { classConfig: ClassConfig; userSession?: never }
     | { classConfig?: never; userSession: BaseUserSession }
 )) {
@@ -58,7 +59,7 @@ export default function AgendaSession({
             : classConfig?.weekday;
         const startTimeHour = userSession ? userSession.classData.startTime.hour : classConfig.startTime.hour;
         const startTimeMinute = userSession ? userSession.classData.startTime.minute : classConfig.startTime.minute;
-        const activityId = userSession ? userSession.classData.activity.id.toString() : classConfig.activityId;
+        const activityId = userSession ? userSession.classData.activity.id : classConfig.activityId;
         const locationId = userSession ? userSession.classData.location.id : classConfig.locationId;
         await putUserConfig({
             active: config.active,
