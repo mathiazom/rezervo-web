@@ -61,13 +61,11 @@ function filterAvailableCheckInLocations(chain: RezervoChain, selectedLocationId
                 (location) =>
                     selectedLocationIds.includes(location.identifier) && (location.checkInTerminals?.length ?? 0) > 0,
             )
-            .map(
-                (location): CheckInLocation => ({
-                    id: location.identifier,
-                    name: `${chain.profile.name} ${location.name}`,
-                    terminals: location.checkInTerminals ?? [],
-                }),
-            ),
+            .map((location): CheckInLocation => ({
+                id: location.identifier,
+                name: `${chain.profile.name} ${location.name}`,
+                terminals: location.checkInTerminals ?? [],
+            })),
     );
 }
 
