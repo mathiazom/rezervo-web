@@ -4,3 +4,11 @@ node_modules
 npm-debug.log
 README.md
 .git
+.env*
+.output
+dist
+.pnpm-store
+.tanstack
+.idea
+.claude
+.devcontainer
