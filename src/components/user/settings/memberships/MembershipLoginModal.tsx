@@ -1,4 +1,4 @@
-import { PasswordRounded, SmsRounded } from "@mui/icons-material";
+import { PasswordRounded } from "@mui/icons-material";
 import PersonRoundedIcon from "@mui/icons-material/PersonRounded";
 import {
     Alert,
@@ -20,11 +20,6 @@ import ChainLogo from "@/components/chain/ChainLogo";
 import { useChainUser } from "@/lib/hooks/useChainUser";
 import { ChainProfile, ChainUserPayload } from "@/types/openapi";
 
-enum AuthenticationState {
-    USERNAME_PASSWORD = "USERNAME_PASSWORD",
-    TOTP = "TOTP",
-}
-
 enum AuthenticationStatus {
     INITIAL = "INITIAL",
     FAILED = "FAILED",
@@ -45,64 +40,26 @@ const MembershipLoginModal = ({
         chainUser,
         putChainUser,
         destroyChainUser,
-        putChainUserTotp,
-        putChainUserIsMutating,
-        putChainUserTotpIsMutating,
+        putChainUserIsMutating: isMutating,
     } = useChainUser(chainProfile.identifier);
 
-    const [authenticationState, setAuthenticationState] = useState<AuthenticationState>(
-        AuthenticationState.USERNAME_PASSWORD,
-    );
     const [authenticationStatus, setAuthenticationStatus] = useState<AuthenticationStatus>(
         AuthenticationStatus.INITIAL,
     );
-    const [totpRegex, setTotpRegex] = useState<RegExp | null>(null);
 
     const [usernameInput, setUsernameInput] = useState<string | null>(null);
     const [password, setPassword] = useState<string | null>(null);
-    const [totp, setTotp] = useState("");
-    const [isTotpValid, setIsTotpValid] = useState(false);
 
     const username = usernameInput ?? chainUser?.username ?? "";
 
     const isUsernamePasswordValid =
         username != null && username.trim() !== "" && password != null && password.trim() !== "";
 
-    const isMutating =
-        authenticationState === AuthenticationState.TOTP ? putChainUserTotpIsMutating : putChainUserIsMutating;
-
     async function submitUsernamePassword(payload: ChainUserPayload) {
         setAuthenticationStatus(AuthenticationStatus.INITIAL);
         putChainUser(payload)
-            .then((res) => {
-                if (res.status === "initiated_totp_flow") {
-                    setAuthenticationState(AuthenticationState.TOTP);
-                    setTotpRegex(res.totpRegex ? new RegExp(res.totpRegex) : null);
-                    return;
-                }
-                onClose();
-            })
-            .catch(() => setAuthenticationStatus(AuthenticationStatus.FAILED));
-    }
-
-    async function submitTotp(totp: string) {
-        setAuthenticationStatus(AuthenticationStatus.INITIAL);
-        putChainUserTotp({ totp })
             .then(() => onClose())
             .catch(() => setAuthenticationStatus(AuthenticationStatus.FAILED));
-    }
-
-    function onTotpChange(totp: string) {
-        setTotp(totp);
-        if (totpRegex == null) {
-            return;
-        }
-        const valid = totpRegex.test(totp);
-        setIsTotpValid(valid);
-        if (!valid) {
-            return;
-        }
-        return submitTotp(totp);
     }
 
     function onClose() {
@@ -116,17 +73,14 @@ const MembershipLoginModal = ({
     return (
         <Dialog
             open={open}
-            onClose={() => authenticationState !== AuthenticationState.TOTP && onClose()}
+            onClose={() => onClose()}
             maxWidth={"xs"}
             fullWidth={true}
             slotProps={{
                 transition: {
                     onExited: () => {
-                        setTotp("");
-                        setIsTotpValid(false);
                         setPassword("");
                         setAuthenticationStatus(AuthenticationStatus.INITIAL);
-                        setAuthenticationState(AuthenticationState.USERNAME_PASSWORD);
                     },
                 },
 
@@ -190,93 +144,54 @@ const MembershipLoginModal = ({
                     )}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
-                    {authenticationState === AuthenticationState.TOTP ? (
-                        authenticationStatus === AuthenticationStatus.FAILED ? (
-                            <Alert severity={"error"}>
-                                <AlertTitle>Bekreftelse feilet</AlertTitle>
-                                <Typography>
-                                    En feil oppstod under bekreftelse med engangskode. Vennligst prøv igjen senere.
-                                </Typography>
-                            </Alert>
-                        ) : (
-                            <>
-                                <Alert severity={"info"} icon={<SmsRounded />}>
-                                    <AlertTitle>Engangskode på SMS</AlertTitle>
-                                    <Typography>Skriv inn koden under for å fullføre innloggingen</Typography>
-                                </Alert>
-                                <TextField
-                                    sx={{ width: "100%" }}
-                                    value={totp}
-                                    disabled={isTotpValid}
-                                    label={"Engangskode"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        void onTotpChange(event.target.value);
-                                    }}
-                                    onKeyDown={(event: React.KeyboardEvent) => {
-                                        if (event.key === "Enter" && isTotpValid) {
-                                            void submitTotp(totp);
-                                        }
-                                    }}
-                                    slotProps={{
-                                        htmlInput: {
-                                            autoComplete: "one-time-code",
-                                        },
-                                    }}
-                                />
-                            </>
-                        )
-                    ) : (
-                        <>
-                            {authenticationStatus === AuthenticationStatus.FAILED && (
-                                <Alert severity={"error"}>
-                                    <AlertTitle>Feil brukernavn eller passord</AlertTitle>
-                                    <Typography>
-                                        Klarte ikke koble til {chainProfile.name}-brukeren din. Sjekk at du har skrevet
-                                        inn riktig brukernavn og passord.
-                                    </Typography>
-                                </Alert>
-                            )}
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
-                                <PersonRoundedIcon />
-                                <TextField
-                                    sx={{ width: "100%" }}
-                                    value={username}
-                                    label={"Brukernavn"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setUsernameInput(event.target.value);
-                                    }}
-                                    onKeyDown={(event: React.KeyboardEvent) => {
-                                        if (event.key === "Enter" && isUsernamePasswordValid) {
-                                            void submitUsernamePassword({
-                                                username,
-                                                password,
-                                            });
-                                        }
-                                    }}
-                                />
-                            </Box>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                                <PasswordRounded />
-                                <TextField
-                                    sx={{ width: "100%" }}
-                                    label={"Passord"}
-                                    value={password}
-                                    type={"password"}
-                                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        setPassword(event.target.value);
-                                    }}
-                                    onKeyDown={(event: React.KeyboardEvent) => {
-                                        if (event.key === "Enter" && isUsernamePasswordValid) {
-                                            void submitUsernamePassword({
-                                                username,
-                                                password,
-                                            });
-                                        }
-                                    }}
-                                />
-                            </Box>
-                        </>
+                    {authenticationStatus === AuthenticationStatus.FAILED && (
+                        <Alert severity={"error"}>
+                            <AlertTitle>Feil brukernavn eller passord</AlertTitle>
+                            <Typography>
+                                Klarte ikke koble til {chainProfile.name}-brukeren din. Sjekk at du har skrevet inn
+                                riktig brukernavn og passord.
+                            </Typography>
+                        </Alert>
                     )}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, mt: 2 }}>
+                        <PersonRoundedIcon />
+                        <TextField
+                            sx={{ width: "100%" }}
+                            value={username}
+                            label={"Brukernavn"}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setUsernameInput(event.target.value);
+                            }}
+                            onKeyDown={(event: React.KeyboardEvent) => {
+                                if (event.key === "Enter" && isUsernamePasswordValid) {
+                                    void submitUsernamePassword({
+                                        username,
+                                        password,
+                                    });
+                                }
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <PasswordRounded />
+                        <TextField
+                            sx={{ width: "100%" }}
+                            label={"Passord"}
+                            value={password}
+                            type={"password"}
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                setPassword(event.target.value);
+                            }}
+                            onKeyDown={(event: React.KeyboardEvent) => {
+                                if (event.key === "Enter" && isUsernamePasswordValid) {
+                                    void submitUsernamePassword({
+                                        username,
+                                        password,
+                                    });
+                                }
+                            }}
+                        />
+                    </Box>
                 </Box>
             </DialogContent>
             <DialogActions>
@@ -294,37 +209,22 @@ const MembershipLoginModal = ({
                     )}
                     <Box sx={{ flexGrow: 1 }} />
                     <Button color={"inherit"} disabled={isMutating} onClick={() => onClose()}>
-                        {authenticationState === AuthenticationState.TOTP ? "Avbryt" : "Lukk"}
+                        Lukk
                     </Button>
-                    {!(
-                        authenticationState === AuthenticationState.TOTP &&
-                        authenticationStatus === AuthenticationStatus.FAILED
-                    ) && (
-                        <Button
-                            loading={isMutating}
-                            disabled={
-                                authenticationState === AuthenticationState.TOTP
-                                    ? totp.trim() == ""
-                                    : !isUsernamePasswordValid
+                    <Button
+                        loading={isMutating}
+                        disabled={!isUsernamePasswordValid}
+                        onClick={() => {
+                            if (isUsernamePasswordValid) {
+                                void submitUsernamePassword({
+                                    username,
+                                    password,
+                                });
                             }
-                            onClick={() => {
-                                if (authenticationState === AuthenticationState.TOTP) {
-                                    void submitTotp(totp);
-                                } else if (isUsernamePasswordValid) {
-                                    void submitUsernamePassword({
-                                        username,
-                                        password,
-                                    });
-                                }
-                            }}
-                        >
-                            {authenticationState === AuthenticationState.TOTP
-                                ? "Bekreft"
-                                : chainUser
-                                  ? "Oppdater"
-                                  : "Logg inn"}
-                        </Button>
-                    )}
+                        }}
+                    >
+                        {chainUser ? "Oppdater" : "Logg inn"}
+                    </Button>
                 </Stack>
             </DialogActions>
         </Dialog>

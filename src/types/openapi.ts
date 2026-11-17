@@ -58,7 +58,6 @@ export type ChainConfigPayload = Omit<OpenApi["BaseChainConfig"], "recurringBook
     recurringBookings: ClassConfig[];
 };
 export type ChainUserPayload = OpenApi["ChainUserCredentials"];
-export type ChainUserTotpPayload = OpenApi["ChainUserTOTPPayload"];
 export type HourAndMinute = OpenApi["HourAndMinute"];
 export type AllowedTimeWindow = OpenApi["AllowedTimeWindowConfig"];
 export type NotificationsConfig = OpenApi["Notifications"];

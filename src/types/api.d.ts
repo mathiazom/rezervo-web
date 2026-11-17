@@ -108,23 +108,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/{chain_identifier}/user/totp": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Put Chain User Totp */
-        put: operations["put_chain_user_totp__chain_identifier__user_totp_put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/{chain_identifier}/config": {
         parameters: {
             query?: never;
@@ -629,11 +612,6 @@ export interface components {
             /** Isauthverified */
             isAuthVerified: boolean;
         };
-        /** ChainUserTOTPPayload */
-        ChainUserTOTPPayload: {
-            /** Totp */
-            totp: string;
-        };
         /** CheckInPayload */
         CheckInPayload: {
             /** Terminalid */
@@ -703,16 +681,6 @@ export interface components {
             hour: number;
             /** Minute */
             minute: number;
-        };
-        /** InitiatedTOTPFlowResponse */
-        InitiatedTOTPFlowResponse: {
-            /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
-             */
-            status: "initiated_totp_flow";
-            /** Totpregex */
-            totpRegex?: string | null;
         };
         LocationIdentifier: string;
         /** Notifications */
@@ -824,8 +792,6 @@ export interface components {
             /** Days */
             days: components["schemas"]["RezervoDay"][];
         };
-        /** RootModel[Annotated[Union[UpdatedChainUserCredsResponse, InitiatedTOTPFlowResponse], FieldInfo(annotation=NoneType, required=True, discriminator='status')]] */
-        RootModel_Annotated_Union_UpdatedChainUserCredsResponse__InitiatedTOTPFlowResponse___FieldInfo_annotation_NoneType__required_True__discriminator__status____: components["schemas"]["UpdatedChainUserCredsResponse"] | components["schemas"]["InitiatedTOTPFlowResponse"];
         /** SessionRezervoClass */
         SessionRezervoClass: {
             /** Id */
@@ -863,8 +829,9 @@ export interface components {
         /** UpdatedChainUserCredsResponse */
         UpdatedChainUserCredsResponse: {
             /**
-             * @description discriminator enum property added by openapi-typescript
-             * @enum {string}
+             * Status
+             * @default updated
+             * @constant
              */
             status: "updated";
             profile: components["schemas"]["ChainUserProfile"];
@@ -1157,7 +1124,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["RootModel_Annotated_Union_UpdatedChainUserCredsResponse__InitiatedTOTPFlowResponse___FieldInfo_annotation_NoneType__required_True__discriminator__status____"];
+                    "application/json": components["schemas"]["UpdatedChainUserCredsResponse"];
                 };
             };
             /** @description Validation Error */
@@ -1188,41 +1155,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    put_chain_user_totp__chain_identifier__user_totp_put: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                chain_identifier: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ChainUserTOTPPayload"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
             };
             /** @description Validation Error */
             422: {
