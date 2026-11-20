@@ -22,7 +22,7 @@ const ClassInfoModal = () => {
                         onUpdateConfig={onUpdateConfig}
                     />
                 ) : (
-                    <></>
+                    <div />
                 )}
             </Modal>
             {bookingPopupState && (
